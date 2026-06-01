@@ -720,5 +720,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click'
 (function(){const qBtn=document.getElementById('jumpBtn');const qMenu=document.getElementById('qm');if(!qBtn||!qMenu)return;qBtn.addEventListener('click',function(e){e.stopPropagation();qMenu.classList.toggle('active');qBtn.setAttribute('aria-expanded',qMenu.classList.contains('active'));});document.addEventListener('click',function(e){if(!qMenu.contains(e.target)&&!qBtn.contains(e.target)&&qMenu.classList.contains('active')){qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}});qMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}));})();
 updateProgress();highlightActive();
 </script>
+<script src="search-index.js"></script>
+<script src="global-search.js"></script>
 </body>
 </html>

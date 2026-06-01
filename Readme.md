@@ -37,6 +37,7 @@ The project is intentionally simple to deploy: it uses plain HTML, CSS, and Java
 
 - Interactive 3D dashboard built with Three.js.
 - Topic-wise interview notes with structured sections and examples.
+- Global search across topics and important interview concepts.
 - Light and dark mode on study pages.
 - Hyperjump menu for moving between topics without returning to the dashboard.
 - Responsive layout improvements for mobile and desktop reading.
@@ -73,4 +74,3 @@ Visit: [https://prepsphere-os.vercel.app](https://prepsphere-os.vercel.app)
 ## Notes
 
 This is a public study resource. It does not include login, cloud sync, personalized progress tracking, or backend storage.
-

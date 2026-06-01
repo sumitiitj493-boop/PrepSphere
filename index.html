@@ -291,6 +291,23 @@
         align-items: center;
         gap: 8px;
       }
+      .hud-btn {
+        cursor: pointer;
+        pointer-events: all;
+        font-family: "Space Mono", monospace;
+        text-transform: uppercase;
+        transition:
+          border-color 0.2s,
+          color 0.2s,
+          background 0.2s;
+      }
+      .hud-btn:hover,
+      .hud-btn:focus-visible {
+        color: #fff;
+        border-color: rgba(245, 160, 30, 0.65);
+        background: rgba(245, 160, 30, 0.12);
+        outline: none;
+      }
       .hud-pill .val {
         color: var(--gold);
         font-weight: 700;
@@ -606,6 +623,154 @@
         color: #fff;
       }
 
+      .about-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: flex;
+        justify-content: flex-end;
+        align-items: stretch;
+        padding: 24px;
+        background:
+          linear-gradient(90deg, rgba(3, 2, 10, 0.1), rgba(3, 2, 10, 0.76)),
+          rgba(3, 2, 10, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.24s ease;
+      }
+      .about-backdrop.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .about-panel {
+        width: min(430px, calc(100vw - 48px));
+        align-self: center;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        background: rgba(11, 11, 20, 0.96);
+        border: 1px solid rgba(245, 160, 30, 0.26);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow:
+          0 28px 110px rgba(0, 0, 0, 0.68),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transform: translateX(24px) scale(0.98);
+        transition: transform 0.24s ease;
+      }
+      .about-backdrop.open .about-panel {
+        transform: translateX(0) scale(1);
+      }
+      .about-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+      .about-kicker {
+        font-size: 8px;
+        letter-spacing: 4px;
+        color: rgba(245, 160, 30, 0.7);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .about-title {
+        font-family: "Syne", sans-serif;
+        font-size: 28px;
+        line-height: 1;
+        letter-spacing: -1px;
+        font-weight: 800;
+      }
+      .about-close {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.58);
+        cursor: pointer;
+        flex: 0 0 auto;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s;
+      }
+      .about-close:hover,
+      .about-close:focus-visible {
+        background: rgba(245, 160, 30, 0.14);
+        border-color: rgba(245, 160, 30, 0.42);
+        color: #fff;
+        outline: none;
+      }
+      .about-copy {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+        line-height: 1.8;
+        margin-bottom: 18px;
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 18px 0;
+      }
+      .about-stat {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 12px 10px;
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .about-stat strong {
+        display: block;
+        color: var(--gold);
+        font-family: "Syne", sans-serif;
+        font-size: 22px;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
+      .about-stat span {
+        color: rgba(255, 255, 255, 0.42);
+        font-size: 8px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .about-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .about-row {
+        display: flex;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      .about-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 12px rgba(245, 160, 30, 0.8);
+        margin-top: 7px;
+        flex: 0 0 auto;
+      }
+
+      @media (max-width: 700px) {
+        .about-backdrop {
+          padding: 14px;
+          align-items: flex-end;
+        }
+        .about-panel {
+          width: 100%;
+          max-height: min(620px, calc(100vh - 28px));
+          padding: 20px;
+        }
+        .about-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
       /* ── PROGRESS RING ── */
     </style>
   </head>
@@ -646,6 +811,9 @@
       </div>
       <div class="hud">
         <div class="hud-pill">Topics &nbsp;<span class="val">12</span></div>
+        <button class="hud-pill hud-btn" id="about-btn" type="button">
+          About
+        </button>
       </div>
     </div>
 
@@ -680,6 +848,74 @@
       </div>
       <div class="dt-enter" id="dt-enter">Enter Topic &nbsp;→</div>
     </div>
+
+    <!-- ABOUT PANEL -->
+    <section
+      class="about-backdrop"
+      id="about"
+      aria-hidden="true"
+      aria-labelledby="about-title"
+    >
+      <div class="about-panel" role="dialog" aria-modal="true">
+        <div class="about-top">
+          <div>
+            <div class="about-kicker">About</div>
+            <h2 class="about-title" id="about-title">PrepSphere</h2>
+          </div>
+          <button
+            class="about-close"
+            id="about-close"
+            type="button"
+            aria-label="Close about panel"
+          >
+            x
+          </button>
+        </div>
+        <p class="about-copy">
+          PrepSphere is an interactive interview-preparation dashboard for core
+          CS, language, tooling, SQL, puzzles, and behavioral rounds. It keeps
+          the home page visual and fast, then opens each topic as focused notes
+          built for revision.
+        </p>
+        <div class="about-grid" aria-label="Project highlights">
+          <div class="about-stat">
+            <strong>12</strong>
+            <span>Topics</span>
+          </div>
+          <div class="about-stat">
+            <strong>3D</strong>
+            <span>Dashboard</span>
+          </div>
+          <div class="about-stat">
+            <strong>0</strong>
+            <span>Backend</span>
+          </div>
+        </div>
+        <div class="about-list">
+          <div class="about-row">
+            <span class="about-dot"></span>
+            <span>
+              Topic pages combine definitions, diagrams, code examples,
+              comparisons, and interview traps.
+            </span>
+          </div>
+          <div class="about-row">
+            <span class="about-dot"></span>
+            <span>
+              Built with plain HTML, CSS, JavaScript, and Three.js so it stays
+              simple to host and maintain.
+            </span>
+          </div>
+          <div class="about-row">
+            <span class="about-dot"></span>
+            <span>
+              Designed as a public study resource for quick review before
+              technical interviews.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- BOTTOM BAR -->
     <div class="btm">
@@ -1615,6 +1851,21 @@
       const dtName = document.getElementById("dt-name");
       const dtTag = document.getElementById("dt-tag");
       const dtClose = document.getElementById("dt-close");
+      const aboutBtn = document.getElementById("about-btn");
+      const aboutPanel = document.getElementById("about");
+      const aboutClose = document.getElementById("about-close");
+
+      function openAbout() {
+        detail.classList.remove("open");
+        selectedIdx = -1;
+        aboutPanel.classList.add("open");
+        aboutPanel.setAttribute("aria-hidden", "false");
+      }
+
+      function closeAbout() {
+        aboutPanel.classList.remove("open");
+        aboutPanel.setAttribute("aria-hidden", "true");
+      }
 
       function openDetail(idx) {
         selectedIdx = idx;
@@ -1625,6 +1876,15 @@
         dtEnter.onclick = () => navigate(t.file);
         detail.classList.add("open");
       }
+      [aboutBtn, aboutClose, aboutPanel].forEach((el) => {
+        el.addEventListener("mousedown", (e) => e.stopPropagation());
+        el.addEventListener("click", (e) => e.stopPropagation());
+      });
+      aboutBtn.addEventListener("click", openAbout);
+      aboutClose.addEventListener("click", closeAbout);
+      aboutPanel.addEventListener("click", (e) => {
+        if (e.target === aboutPanel) closeAbout();
+      });
       dtClose.addEventListener("click", () => {
         detail.classList.remove("open");
         selectedIdx = -1;
@@ -1762,6 +2022,7 @@
           updateCamera();
         }
         if (e.key === "Escape") {
+          closeAbout();
           detail.classList.remove("open");
           selectedIdx = -1;
         }
@@ -1953,5 +2214,7 @@
         animate();
       }, 1600);
     </script>
+    <script src="search-index.js"></script>
+    <script src="global-search.js"></script>
   </body>
 </html>
