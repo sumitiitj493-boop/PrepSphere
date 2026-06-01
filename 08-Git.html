@@ -728,20 +728,45 @@
 
       /* RESPONSIVE */
       @media (max-width: 768px) {
+        nav#topnav {
+          padding: 0 12px;
+          gap: 8px;
+        }
+        .nav-brand {
+          flex: 0 1 auto;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-progress-wrap {
+          max-width: 70px;
+          flex: 0 0 70px;
+        }
+        .btn-icon {
+          padding: 6px 10px;
+          font-size: 11px;
+        }
         aside#sidebar {
           display: none;
         }
         main#content {
-          padding: 16px 16px 80px;
+          padding: 16px 16px 8rem;
         }
         .hero h1 {
           font-size: 24px;
         }
         body.focus-mode main#content {
-          padding: 16px 16px 80px;
+          padding: 16px 16px 8rem;
         }
         .resource-cards {
           flex-direction: column;
+        }
+        .quick-jump {
+          left: 1rem;
+          bottom: calc(1.25rem + env(safe-area-inset-bottom));
+        }
+        .jump-btn {
+          padding: 10px 16px;
         }
       }
 
@@ -772,6 +797,10 @@
       .jump-menu.active { display: flex; }
       .jump-menu a { color: var(--text); padding: 12px 15px; text-decoration: none; border-bottom: 1px solid var(--border); transition: 0.2s; font-size: 0.9rem; }
       .jump-menu a:hover { background: rgba(245, 166, 35, 0.08); color: var(--gold); padding-left: 20px; }
+      @media (max-width: 768px) {
+        .quick-jump { left: 1rem; bottom: calc(1.25rem + env(safe-area-inset-bottom)); }
+        .jump-btn { padding: 10px 16px; }
+      }
     </style>
   </head>
   <body>

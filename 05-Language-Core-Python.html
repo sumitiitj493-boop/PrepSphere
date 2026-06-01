@@ -744,8 +744,34 @@
 
       /* ── MOBILE ── */
       @media (max-width: 768px) {
+        nav {
+          padding: 0 12px;
+          gap: 8px;
+        }
+        .nav-logo {
+          flex: 1;
+          min-width: 0;
+        }
+        .nav-title-text {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .pbar-wrap,
+        #focusBtn {
+          display: none;
+        }
+        .nav-right {
+          gap: 6px;
+        }
+        .btn-sm {
+          padding: 7px 10px;
+          font-size: 0.78rem;
+        }
         .sidebar {
           transform: translateX(calc(-1 * var(--sidebar-w)));
+          width: min(var(--sidebar-w), 82vw);
+          max-width: 82vw;
         }
         .sidebar.open {
           transform: translateX(0);
@@ -753,7 +779,7 @@
         .main {
           margin-left: 0;
           max-width: 100%;
-          padding: 20px 16px 60px;
+          padding: 20px 16px 8rem;
         }
         .ph-title {
           font-size: 22px;
@@ -763,6 +789,13 @@
         }
         #mob-menu-btn {
           display: flex !important;
+        }
+        .quick-jump {
+          left: 1rem;
+          bottom: calc(1.25rem + env(safe-area-inset-bottom));
+        }
+        .jump-btn {
+          padding: 10px 16px;
         }
       }
 
@@ -820,6 +853,15 @@
         background: rgba(245, 166, 35, 0.08);
         color: var(--gold);
         padding-left: 20px;
+      }
+      @media (max-width: 768px) {
+        .quick-jump {
+          left: 1rem;
+          bottom: calc(1.25rem + env(safe-area-inset-bottom));
+        }
+        .jump-btn {
+          padding: 10px 16px;
+        }
       }
     </style>
   </head>
