@@ -495,8 +495,13 @@
         text-align: center;
       }
       .diagram-wrap svg {
+        display: block;
+        margin: 0 auto;
         max-width: 100%;
         height: auto;
+      }
+      .cap-diagram {
+        max-width: 720px;
       }
       .diagram-label {
         font-size: 0.78rem;
@@ -597,9 +602,9 @@
         color: #e4e4e7;
         padding: 1.2rem 1.5rem;
         font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         overflow-x: auto;
-        line-height: 1.8;
+        line-height: 1.9;
       }
       .code-block .kw {
         color: #c678dd;
@@ -3180,15 +3185,13 @@
                 ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
               </div>
               <div class="code-block">
-                <span class="cm">-- Check current level</span>
+                <span class="cm">-- Check current level</span><br />
                 <span class="kw">SHOW VARIABLES LIKE</span>
-                <span class="str">'transaction_isolation'</span>;
-
-                <span class="cm">-- Set for session</span>
+                <span class="str">'transaction_isolation'</span>;<br /><br />
+                <span class="cm">-- Set for session</span><br />
                 <span class="kw">SET SESSION TRANSACTION ISOLATION LEVEL</span>
-                READ COMMITTED;
-
-                <span class="cm">-- Set for next transaction only</span>
+                READ COMMITTED;<br /><br />
+                <span class="cm">-- Set for next transaction only</span><br />
                 <span class="kw">SET TRANSACTION ISOLATION LEVEL</span>
                 SERIALIZABLE;
               </div>
@@ -3228,133 +3231,160 @@
             </div>
 
             <div class="diagram-wrap">
-              <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                class="cap-diagram"
+                viewBox="0 0 640 390"
+                xmlns="http://www.w3.org/2000/svg"
+                role="img"
+                aria-labelledby="capTitle capDesc"
+              >
+                <title id="capTitle">CAP Theorem Diagram</title>
+                <desc id="capDesc">
+                  Triangle showing Consistency, Availability, and Partition
+                  Tolerance trade-offs.
+                </desc>
                 <text
-                  x="200"
-                  y="18"
+                  x="320"
+                  y="34"
                   text-anchor="middle"
                   fill="currentColor"
                   font-weight="bold"
-                  font-size="12"
+                  font-size="24"
                 >
                   CAP Theorem
                 </text>
 
                 <!-- Triangle -->
-                <polygon
-                  points="200,40 50,200 350,200"
+                <polyline
+                  points="320,88 120,300 520,300 320,88"
                   fill="none"
                   stroke="var(--gold)"
-                  stroke-width="2"
+                  stroke-width="5"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
                 />
 
                 <!-- C -->
                 <circle
-                  cx="200"
-                  cy="50"
-                  r="30"
+                  cx="320"
+                  cy="90"
+                  r="56"
                   fill="var(--blueBg)"
                   stroke="var(--blue)"
-                  stroke-width="2"
+                  stroke-width="4"
                 />
                 <text
-                  x="200"
-                  y="45"
+                  x="320"
+                  y="82"
                   text-anchor="middle"
                   fill="var(--blue)"
-                  font-size="14"
+                  font-size="28"
                   font-weight="bold"
                 >
                   C
                 </text>
                 <text
-                  x="200"
-                  y="60"
+                  x="320"
+                  y="112"
                   text-anchor="middle"
                   fill="currentColor"
-                  font-size="8"
+                  font-size="16"
                 >
                   Consistency
                 </text>
 
                 <!-- A -->
                 <circle
-                  cx="50"
-                  cy="190"
-                  r="30"
+                  cx="120"
+                  cy="300"
+                  r="56"
                   fill="var(--greenBg)"
                   stroke="var(--green)"
-                  stroke-width="2"
+                  stroke-width="4"
                 />
                 <text
-                  x="50"
-                  y="185"
+                  x="120"
+                  y="292"
                   text-anchor="middle"
                   fill="var(--green)"
-                  font-size="14"
+                  font-size="28"
                   font-weight="bold"
                 >
                   A
                 </text>
                 <text
-                  x="50"
-                  y="200"
+                  x="120"
+                  y="322"
                   text-anchor="middle"
                   fill="currentColor"
-                  font-size="8"
+                  font-size="16"
                 >
                   Availability
                 </text>
 
                 <!-- P -->
                 <circle
-                  cx="350"
-                  cy="190"
-                  r="30"
+                  cx="520"
+                  cy="300"
+                  r="56"
                   fill="var(--amberBg)"
                   stroke="var(--amber)"
-                  stroke-width="2"
+                  stroke-width="4"
                 />
                 <text
-                  x="350"
-                  y="185"
+                  x="520"
+                  y="292"
                   text-anchor="middle"
                   fill="var(--amber)"
-                  font-size="14"
+                  font-size="28"
                   font-weight="bold"
                 >
                   P
                 </text>
                 <text
-                  x="350"
-                  y="200"
+                  x="520"
+                  y="322"
                   text-anchor="middle"
                   fill="currentColor"
-                  font-size="8"
+                  font-size="16"
                 >
                   Partition
                 </text>
 
                 <!-- Labels on edges -->
                 <text
-                  x="110"
-                  y="110"
+                  x="190"
+                  y="196"
                   fill="var(--text2)"
-                  font-size="9"
-                  transform="rotate(-55,110,110)"
+                  font-size="16"
+                  stroke="var(--surface)"
+                  stroke-width="8"
+                  paint-order="stroke fill"
+                  text-anchor="middle"
+                  transform="rotate(-47,190,196)"
                 >
                   CA: Traditional RDBMS
                 </text>
                 <text
-                  x="275"
-                  y="110"
+                  x="450"
+                  y="196"
                   fill="var(--text2)"
-                  font-size="9"
-                  transform="rotate(55,275,110)"
+                  font-size="16"
+                  stroke="var(--surface)"
+                  stroke-width="8"
+                  paint-order="stroke fill"
+                  text-anchor="middle"
+                  transform="rotate(47,450,196)"
                 >
                   CP: MongoDB, HBase
                 </text>
-                <text x="200" y="215" fill="var(--text2)" font-size="9">
+                <text
+                  x="320"
+                  y="372"
+                  fill="var(--text2)"
+                  font-size="16"
+                  text-anchor="middle"
+                >
                   AP: Cassandra, DynamoDB
                 </text>
               </svg>
@@ -3937,7 +3967,7 @@
       function copyCode(btn) {
         const code = btn
           .closest(".code-wrap")
-          .querySelector(".code-block").textContent;
+          .querySelector(".code-block").innerText;
         navigator.clipboard.writeText(code).then(() => {
           btn.textContent = "Copied!";
           setTimeout(() => (btn.textContent = "Copy"), 1500);
