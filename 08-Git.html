@@ -1,0 +1,3208 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git — Interview Prep Notes</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap");
+
+      :root {
+        --gold: #f5a623;
+        --gold-light: #ffd580;
+        --gold-dim: rgba(245, 166, 35, 0.13);
+        --bg: #f7f6f2;
+        --surface: #ffffff;
+        --surface2: #f0ede6;
+        --border: #e2ddd5;
+        --text: #1a1714;
+        --text2: #5a534a;
+        --text3: #9a9188;
+        --easy: #22c55e;
+        --medium: #f59e0b;
+        --hard: #ef4444;
+        --code-bg: #1e1b16;
+        --nav-h: 58px;
+        --sidebar-w: 260px;
+        --accent-line: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+      }
+      [data-theme="dark"] {
+        --bg: #111009;
+        --surface: #1c1a14;
+        --surface2: #252218;
+        --border: #2e2a20;
+        --text: #f0ead8;
+        --text2: #b8af9a;
+        --text3: #6e6558;
+        --code-bg: #0d0c09;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.7;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      /* NAV */
+      nav#topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        height: var(--nav-h);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        gap: 14px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      }
+      .nav-brand {
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 17px;
+        color: var(--gold);
+        white-space: nowrap;
+        letter-spacing: -0.3px;
+      }
+      .nav-progress-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        flex: 1;
+        height: 4px;
+        background: var(--border);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .nav-progress-fill {
+        height: 100%;
+        background: var(--gold);
+        width: 0%;
+        transition: width 0.2s;
+        border-radius: 4px;
+      }
+      .nav-progress-label {
+        font-size: 11px;
+        color: var(--text3);
+        white-space: nowrap;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .nav-btns {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .btn-icon {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text2);
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .btn-icon:hover {
+        background: var(--gold-dim);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .btn-icon.active {
+        background: var(--gold);
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        padding-top: var(--nav-h);
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      aside#sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        position: sticky;
+        top: var(--nav-h);
+        height: calc(100vh - var(--nav-h));
+        overflow-y: auto;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 16px 0;
+        transition:
+          transform 0.3s,
+          width 0.3s;
+      }
+      aside#sidebar.hidden {
+        transform: translateX(-100%);
+        width: 0;
+        overflow: hidden;
+      }
+      .sidebar-title {
+        font-family: "Syne", sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--text3);
+        text-transform: uppercase;
+        padding: 0 16px 10px;
+      }
+      .toc-item {
+        display: block;
+        padding: 7px 16px;
+        font-size: 13px;
+        color: var(--text2);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: all 0.15s;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .toc-item:hover {
+        color: var(--gold);
+        background: var(--gold-dim);
+      }
+      .toc-item.active {
+        color: var(--gold);
+        border-left-color: var(--gold);
+        background: var(--gold-dim);
+        font-weight: 500;
+      }
+      .toc-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        color: var(--text3);
+        margin-right: 6px;
+      }
+
+      /* MAIN */
+      main#content {
+        flex: 1;
+        min-width: 0;
+        padding: 28px 32px 80px;
+        max-width: 860px;
+      }
+      body.focus-mode main#content {
+        max-width: 100%;
+        padding: 28px 48px 80px;
+      }
+
+      /* HERO */
+      .hero {
+        margin-bottom: 36px;
+        padding: 32px 28px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        border-left: 5px solid var(--gold);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        width: 160px;
+        height: 160px;
+        background: radial-gradient(
+          circle,
+          var(--gold-dim) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .hero h1 {
+        font-family: "Syne", sans-serif;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1.1;
+        margin-bottom: 8px;
+      }
+      .hero h1 span {
+        color: var(--gold);
+      }
+      .hero p {
+        color: var(--text2);
+        font-size: 14px;
+        max-width: 520px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .hero-tag {
+        background: var(--gold-dim);
+        color: var(--gold);
+        border: 1px solid rgba(245, 166, 35, 0.3);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* CONCEPT CARD */
+      .concept-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        border-left: 4px solid var(--gold);
+        margin-bottom: 28px;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+      }
+      .concept-card:hover {
+        box-shadow: 0 4px 24px rgba(245, 166, 35, 0.1);
+      }
+
+      .concept-header {
+        padding: 18px 22px 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        flex-wrap: wrap;
+      }
+      .concept-num {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--gold);
+        background: var(--gold-dim);
+        padding: 2px 8px;
+        border-radius: 4px;
+        flex-shrink: 0;
+        margin-top: 3px;
+      }
+      .concept-title-wrap {
+        flex: 1;
+      }
+      .concept-title {
+        font-family: "Syne", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .concept-meta {
+        display: flex;
+        gap: 8px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 9px;
+        border-radius: 20px;
+        text-transform: uppercase;
+      }
+      .badge-easy {
+        background: rgba(34, 197, 94, 0.12);
+        color: var(--easy);
+      }
+      .badge-medium {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--medium);
+      }
+      .badge-hard {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--hard);
+      }
+      .read-time {
+        font-size: 11px;
+        color: var(--text3);
+      }
+
+      .concept-body {
+        padding: 20px 22px;
+      }
+
+      /* ONE-LINE */
+      .one-liner {
+        background: var(--gold-dim);
+        border: 1px solid rgba(245, 166, 35, 0.25);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+      }
+      .one-liner-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 4px;
+      }
+      .one-liner p {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      /* EXPLANATION */
+      .explanation {
+        margin-bottom: 18px;
+      }
+      .explanation p {
+        color: var(--text2);
+        margin-bottom: 10px;
+        font-size: 14.5px;
+        line-height: 1.75;
+      }
+      .explanation p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* KEY POINTS */
+      .key-points {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+      }
+      .key-points-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 10px;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points ul li {
+        padding: 5px 0;
+        padding-left: 18px;
+        position: relative;
+        font-size: 13.5px;
+        color: var(--text2);
+        border-bottom: 1px solid var(--border);
+      }
+      .key-points ul li:last-child {
+        border-bottom: none;
+      }
+      .key-points ul li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 12px;
+      }
+
+      /* INTERVIEW Q's */
+      .interview-qs {
+        margin-bottom: 18px;
+      }
+      .iq-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .iq-item {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        overflow: hidden;
+      }
+      .iq-q {
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--surface2);
+        color: var(--text);
+        user-select: none;
+      }
+      .iq-q::after {
+        content: "＋";
+        font-size: 14px;
+        color: var(--text3);
+      }
+      .iq-item.open .iq-q::after {
+        content: "－";
+        color: var(--gold);
+      }
+      .iq-a {
+        display: none;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--text2);
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        line-height: 1.65;
+      }
+      .iq-item.open .iq-a {
+        display: block;
+      }
+
+      /* GOTCHA */
+      .gotcha {
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        border-left: 4px solid var(--hard);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        background: rgba(239, 68, 68, 0.04);
+      }
+      .gotcha-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--hard);
+        margin-bottom: 8px;
+      }
+      .gotcha ul {
+        list-style: none;
+      }
+      .gotcha ul li {
+        padding: 4px 0 4px 18px;
+        position: relative;
+        font-size: 13px;
+        color: var(--text2);
+      }
+      .gotcha ul li::before {
+        content: "⚠";
+        position: absolute;
+        left: 0;
+        font-size: 11px;
+        color: var(--hard);
+      }
+
+      /* COMPETITIVE EDGE */
+      .edge {
+        border: 1px solid rgba(245, 166, 35, 0.4);
+        border-left: 4px solid var(--gold);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+        background: var(--gold-dim);
+      }
+      .edge-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 6px;
+      }
+      .edge p {
+        font-size: 13.5px;
+        color: var(--text2);
+      }
+
+      /* RESOURCES */
+      .resources {
+        margin-top: 18px;
+      }
+      .resources-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .resource-cards {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .resource-card {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 12px;
+        text-decoration: none;
+        font-size: 12px;
+        color: var(--text2);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        flex: 1;
+        min-width: 160px;
+      }
+      .resource-card:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--gold-dim);
+      }
+      .resource-card .rc-icon {
+        font-size: 16px;
+      }
+      .resource-card .rc-info {
+        flex: 1;
+      }
+      .resource-card .rc-name {
+        font-weight: 600;
+        font-size: 12px;
+        display: block;
+      }
+      .resource-card .rc-sub {
+        font-size: 11px;
+        color: var(--text3);
+        display: block;
+      }
+
+      /* DIAGRAM */
+      .diagram-wrap {
+        margin-bottom: 18px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px;
+        overflow-x: auto;
+      }
+      .diagram-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 12px;
+      }
+      svg text {
+        font-family: "DM Sans", sans-serif;
+      }
+
+      /* CODE */
+      .code-wrap {
+        margin-bottom: 18px;
+        background: var(--code-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .code-lang {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        color: #6e6558;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .copy-btn {
+        background: rgba(245, 166, 35, 0.15);
+        border: 1px solid rgba(245, 166, 35, 0.3);
+        color: var(--gold);
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 11px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+      }
+      pre {
+        padding: 16px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        color: #d4c9a8;
+      }
+      .kw {
+        color: #f5a623;
+      }
+      .cm {
+        color: #5a5248;
+        font-style: italic;
+      }
+      .st {
+        color: #88c57a;
+      }
+      .fn {
+        color: #79b8ff;
+      }
+      .num {
+        color: #d08770;
+      }
+
+      /* SECTION DIVIDER */
+      .section-div {
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold) 0%, transparent 60%);
+        margin: 36px 0;
+        opacity: 0.4;
+      }
+
+      /* BACK TO TOP */
+      #back-top {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: var(--gold);
+        color: #000;
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(245, 166, 35, 0.4);
+        z-index: 999;
+        transition: transform 0.2s;
+      }
+      #back-top:hover {
+        transform: scale(1.1);
+      }
+      #back-top.show {
+        display: flex;
+      }
+
+      /* MOBILE DROPDOWN */
+      #mobile-toc {
+        display: none;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        z-index: 900;
+        max-height: 55vh;
+        overflow-y: auto;
+        padding: 8px 0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+      #mobile-toc.show {
+        display: block;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        aside#sidebar {
+          display: none;
+        }
+        main#content {
+          padding: 16px 16px 80px;
+        }
+        .hero h1 {
+          font-size: 24px;
+        }
+        body.focus-mode main#content {
+          padding: 16px 16px 80px;
+        }
+        .resource-cards {
+          flex-direction: column;
+        }
+      }
+
+      /* SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gold);
+      }
+
+      /* SECTION ANCHOR */
+      .section-anchor {
+        display: block;
+      }
+      .quick-jump { position: fixed; bottom: 2rem; left: 2rem; z-index: 1100; font-family: 'Space Mono', monospace; }
+      .jump-btn { background: var(--surface); border: 1px solid var(--gold); color: var(--gold); padding: 12px 24px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: 0.2s; }
+      .jump-btn:hover { background: var(--gold); color: var(--bg); }
+      .jump-menu { position: absolute; bottom: 120%; left: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; width: 250px; max-height: 400px; overflow-y: auto; display: none; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+      .jump-menu.active { display: flex; }
+      .jump-menu a { color: var(--text); padding: 12px 15px; text-decoration: none; border-bottom: 1px solid var(--border); transition: 0.2s; font-size: 0.9rem; }
+      .jump-menu a:hover { background: rgba(245, 166, 35, 0.08); color: var(--gold); padding-left: 20px; }
+    </style>
+  </head>
+  <body>
+    <nav id="topnav">
+      <div class="nav-brand">⎇ Git</div>
+      <div class="nav-progress-wrap">
+        <div class="nav-progress-bar">
+          <div class="nav-progress-fill" id="progressFill"></div>
+        </div>
+        <span class="nav-progress-label" id="progressLabel">0%</span>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-icon" id="menuToggle" title="Toggle Menu">
+          ☰ TOC
+        </button>
+        <button class="btn-icon" id="focusBtn" title="Focus Mode">Focus</button>
+        <button class="btn-icon" id="themeBtn">◑ Dark</button>
+      </div>
+    </nav>
+
+    <!-- Mobile TOC Dropdown -->
+    <div id="mobile-toc"></div>
+
+    <div class="layout">
+      <aside id="sidebar">
+        <div class="sidebar-title">All Concepts</div>
+        <div id="toc-list"></div>
+      </aside>
+
+      <main id="content">
+        <div class="hero">
+          <h1>Git <span>Interview Prep</span></h1>
+          <p>
+            Practical Git concepts for interviews, daily development, and team
+            workflows.
+          </p>
+          <div class="hero-meta">
+            <span class="hero-tag">20 Concepts</span>
+            <span class="hero-tag">All Levels</span>
+            <span class="hero-tag">Team Workflows</span>
+            <span class="hero-tag">Revision Ready</span>
+          </div>
+        </div>
+
+        <!-- ============ Q1 ============ -->
+        <div class="concept-card section-anchor" id="q1">
+          <div class="concept-header">
+            <span class="concept-num">Q01</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is Git?</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Git is a distributed version control system that tracks changes
+                in your code over time so you can go back, collaborate, and
+                never lose work.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Think of Git like a time machine for your code. Every time you
+                save a "snapshot" (called a commit), Git remembers exactly what
+                every file looked like at that moment. Mess something up? Roll
+                back. Want to try a crazy idea without breaking the main code?
+                Create a branch.
+              </p>
+              <p>
+                The "distributed" part means everyone on your team has the full
+                history on their own machine — not just a connection to one
+                central server. So even if the server dies, nobody loses any
+                work.
+              </p>
+              <p>
+                Git was created by Linus Torvalds in 2005 — the same guy who
+                made Linux — specifically because he was frustrated with how
+                slow and restrictive existing tools were for managing the Linux
+                kernel.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">What Interviewers Test</div>
+              <ul>
+                <li>
+                  Git is a VCS (Version Control System), not a platform —
+                  GitHub/GitLab are platforms built on top of Git
+                </li>
+                <li>
+                  It's distributed — every developer has the full repo copy
+                  locally
+                </li>
+                <li>
+                  Git tracks changes, not full file copies (it's smart about
+                  storage)
+                </li>
+                <li>Core concepts: commits, branches, merges, remotes</li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Most candidates say "version control tool." Go further: "Git
+                uses a DAG (Directed Acyclic Graph) of commit objects
+                internally, which is why branching is so cheap — it's just a
+                pointer to a commit, not a copy of all files."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q2 ============ -->
+        <div class="concept-card section-anchor" id="q2">
+          <div class="concept-header">
+            <span class="concept-num">Q02</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">
+                Difference between Git and GitHub?
+              </div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Git is the tool (runs on your machine). GitHub is a website that
+                hosts Git repositories in the cloud and adds collaboration
+                features on top.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Git is like the engine. GitHub is like the car dashboard — it
+                makes the engine easier to use and shows you everything nicely.
+                You can use Git completely without GitHub (just local repos),
+                but you can't use GitHub without Git under the hood.
+              </p>
+              <p>
+                GitHub adds things Git doesn't have: pull requests, issue
+                tracking, Actions (CI/CD), project boards, a web UI to browse
+                code, and social features like stars and forks. Alternatives to
+                GitHub include GitLab, Bitbucket, and Azure DevOps — they all
+                wrap around Git.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">What Interviewers Test</div>
+              <ul>
+                <li>
+                  Git = CLI tool, local, no internet needed for most operations
+                </li>
+                <li>
+                  GitHub = cloud hosting + collaboration layer (owned by
+                  Microsoft)
+                </li>
+                <li>
+                  Pull Requests, Issues, Actions — all GitHub features, not Git
+                </li>
+                <li>
+                  GitLab / Bitbucket are GitHub alternatives, all use Git
+                  underneath
+                </li>
+              </ul>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Common Mistake</div>
+              <ul>
+                <li>
+                  Saying "I push to Git" when you mean "I push to GitHub."
+                  Sounds minor, but interviewers notice.
+                </li>
+                <li>
+                  Thinking you need internet for git commit, git log, git branch
+                  — you don't. Only push/pull/fetch need internet.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q3 ============ -->
+        <div class="concept-card section-anchor" id="q3">
+          <div class="concept-header">
+            <span class="concept-num">Q03</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is a Repository?</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                A repository (repo) is a folder that Git is tracking — it
+                contains your project files plus the entire history of every
+                change ever made.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                When you run <code>git init</code> in a folder, Git creates a
+                hidden <code>.git</code> directory inside it. That
+                <code>.git</code> folder IS the repository — it stores every
+                commit, branch, tag, and config. The files you see in the folder
+                are just your working copy.
+              </p>
+              <p>
+                There are two kinds: local repos (on your machine) and remote
+                repos (on GitHub/GitLab/server). They sync through push and
+                pull. You can have multiple remote repos — like
+                <code>origin</code> pointing to your GitHub fork and
+                <code>upstream</code> pointing to the original project.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  The <code>.git</code> folder = the actual repo. Delete it and
+                  you lose all Git history
+                </li>
+                <li>Local repo: on your machine. Remote repo: on a server</li>
+                <li>
+                  <code>git init</code> creates a new repo.
+                  <code>git clone</code> copies an existing one
+                </li>
+                <li>
+                  A repo can have multiple remotes (origin, upstream, etc.)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q4 ============ -->
+        <div class="concept-card section-anchor" id="q4">
+          <div class="concept-header">
+            <span class="concept-num">Q04</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">git pull vs git fetch</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">3 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                <code>git fetch</code> downloads changes but doesn't touch your
+                code. <code>git pull</code> downloads AND immediately merges
+                them into your current branch.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Imagine you're working on a Google Doc with a team, but you
+                turned off auto-sync. <code>git fetch</code> is like checking
+                "what did others change?" without applying anything.
+                <code>git pull</code> is like applying all those changes to your
+                own doc right now.
+              </p>
+              <p>
+                <code>git pull</code> is literally just a shortcut for
+                <code>git fetch</code> followed by <code>git merge</code>. In
+                teams, many senior engineers prefer <code>git fetch</code> +
+                manual review before merging, so they know exactly what's coming
+                in before it hits their branch.
+              </p>
+            </div>
+            <div class="diagram-wrap">
+              <div class="diagram-label">Visual — Fetch vs Pull</div>
+              <svg
+                viewBox="0 0 560 200"
+                xmlns="http://www.w3.org/2000/svg"
+                style="width: 100%; max-width: 560px"
+              >
+                <defs>
+                  <marker
+                    id="arr"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="7"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 8 3, 0 6" fill="#F5A623" />
+                  </marker>
+                </defs>
+                <!-- Remote -->
+                <rect
+                  x="20"
+                  y="20"
+                  width="120"
+                  height="44"
+                  rx="8"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="80"
+                  y="38"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="11"
+                  font-weight="700"
+                >
+                  REMOTE
+                </text>
+                <text
+                  x="80"
+                  y="54"
+                  text-anchor="middle"
+                  fill="#b8af9a"
+                  font-size="10"
+                >
+                  (GitHub)
+                </text>
+                <!-- fetch box -->
+                <rect
+                  x="20"
+                  y="100"
+                  width="120"
+                  height="44"
+                  rx="8"
+                  fill="#1e1b14"
+                  stroke="#5a5248"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="80"
+                  y="118"
+                  text-anchor="middle"
+                  fill="#d4c9a8"
+                  font-size="11"
+                  font-weight="600"
+                >
+                  remote/origin
+                </text>
+                <text
+                  x="80"
+                  y="134"
+                  text-anchor="middle"
+                  fill="#6e6558"
+                  font-size="10"
+                >
+                  (local cache)
+                </text>
+                <!-- working -->
+                <rect
+                  x="200"
+                  y="100"
+                  width="120"
+                  height="44"
+                  rx="8"
+                  fill="#1e1b14"
+                  stroke="#5a5248"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="260"
+                  y="118"
+                  text-anchor="middle"
+                  fill="#d4c9a8"
+                  font-size="11"
+                  font-weight="600"
+                >
+                  Local Branch
+                </text>
+                <text
+                  x="260"
+                  y="134"
+                  text-anchor="middle"
+                  fill="#6e6558"
+                  font-size="10"
+                >
+                  (your code)
+                </text>
+                <!-- fetch arrow -->
+                <line
+                  x1="80"
+                  y1="64"
+                  x2="80"
+                  y2="98"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                  marker-end="url(#arr)"
+                />
+                <text
+                  x="88"
+                  y="86"
+                  fill="#F5A623"
+                  font-size="10"
+                  font-weight="600"
+                >
+                  fetch
+                </text>
+                <!-- merge arrow -->
+                <line
+                  x1="142"
+                  y1="122"
+                  x2="198"
+                  y2="122"
+                  stroke="#5a5248"
+                  stroke-width="1.5"
+                  marker-end="url(#arr)"
+                />
+                <text x="158" y="116" fill="#9a9188" font-size="10">merge</text>
+                <!-- pull arrow (big) -->
+                <line x1="80" y1="64" x2="80" y2="82" stroke="transparent" />
+                <path
+                  d="M 80 64 Q 160 30 260 98"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  fill="none"
+                  marker-end="url(#arr)"
+                  stroke-dasharray="5,3"
+                />
+                <text
+                  x="175"
+                  y="60"
+                  fill="#88c57a"
+                  font-size="11"
+                  font-weight="700"
+                >
+                  git pull = fetch + merge
+                </text>
+              </svg>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  <code>git fetch</code>: safe, non-destructive, just updates
+                  remote-tracking branches
+                </li>
+                <li>
+                  <code>git pull</code>: convenient but can cause unexpected
+                  merge commits
+                </li>
+                <li>
+                  <code>git pull --rebase</code>: fetches + rebases instead of
+                  merging (cleaner history)
+                </li>
+                <li>
+                  Use fetch when you want to review before merging — good
+                  practice in teams
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Mention <code>git pull --rebase</code> — it avoids creating a
+                merge commit for every pull, keeping history linear. Many teams
+                set this as default:
+                <code>git config --global pull.rebase true</code>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q5 ============ -->
+        <div class="concept-card section-anchor" id="q5">
+          <div class="concept-header">
+            <span class="concept-num">Q05</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">git merge vs git rebase</div>
+              <div class="concept-meta">
+                <span class="badge badge-hard">Hard</span>
+                <span class="read-time">4 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Merge keeps both histories and creates a merge commit. Rebase
+                moves your branch's commits on top of another branch, giving a
+                clean, linear history — but rewrites commit history.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Imagine you're writing a book with a friend. Merge is like:
+                "Here's my chapters, here's yours, here's a note saying we
+                combined them on Tuesday." Rebase is like: "Let me rewrite my
+                chapters as if I had started writing after you finished yours" —
+                so the final result looks like a single clean story, with no
+                "combination note" in the middle.
+              </p>
+              <p>
+                Merge is safer and more honest — it shows the real history of
+                what happened. Rebase makes history look cleaner and easier to
+                read with <code>git log</code>, but it literally rewrites commit
+                hashes. That's why the golden rule of rebase is:
+                <strong
+                  >never rebase commits that have already been pushed to a
+                  shared branch.</strong
+                >
+              </p>
+              <p>
+                In practice: teams use merge for integrating feature branches
+                into main (preserving history), and rebase for keeping a feature
+                branch up to date with main (before opening a PR).
+              </p>
+            </div>
+            <div class="diagram-wrap">
+              <div class="diagram-label">Merge vs Rebase — History Shape</div>
+              <svg
+                viewBox="0 0 540 230"
+                xmlns="http://www.w3.org/2000/svg"
+                style="width: 100%; max-width: 540px"
+              >
+                <defs>
+                  <marker
+                    id="arr2"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="6"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 7 2.5, 0 5" fill="#b8af9a" />
+                  </marker>
+                </defs>
+                <!-- MERGE side -->
+                <text
+                  x="20"
+                  y="18"
+                  fill="#F5A623"
+                  font-size="11"
+                  font-weight="700"
+                >
+                  MERGE
+                </text>
+                <!-- main commits -->
+                <circle
+                  cx="40"
+                  cy="50"
+                  r="14"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="40"
+                  y="55"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  A
+                </text>
+                <line
+                  x1="54"
+                  y1="50"
+                  x2="74"
+                  y2="50"
+                  stroke="#b8af9a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="88"
+                  cy="50"
+                  r="14"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="88"
+                  y="55"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  B
+                </text>
+                <!-- feature branch -->
+                <circle
+                  cx="88"
+                  cy="110"
+                  r="14"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <text
+                  x="88"
+                  y="115"
+                  text-anchor="middle"
+                  fill="#88c57a"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  X
+                </text>
+                <line
+                  x1="88"
+                  y1="64"
+                  x2="88"
+                  y2="94"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  stroke-dasharray="4,2"
+                  marker-end="url(#arr2)"
+                />
+                <line
+                  x1="102"
+                  y1="110"
+                  x2="122"
+                  y2="110"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="136"
+                  cy="110"
+                  r="14"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <text
+                  x="136"
+                  y="115"
+                  text-anchor="middle"
+                  fill="#88c57a"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  Y
+                </text>
+                <!-- merge commit -->
+                <line
+                  x1="102"
+                  y1="50"
+                  x2="158"
+                  y2="50"
+                  stroke="#b8af9a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <line
+                  x1="150"
+                  y1="105"
+                  x2="168"
+                  y2="65"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="172"
+                  cy="50"
+                  r="14"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="172"
+                  y="46"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="8"
+                  font-weight="700"
+                >
+                  M
+                </text>
+                <text
+                  x="172"
+                  y="57"
+                  text-anchor="middle"
+                  fill="#b8af9a"
+                  font-size="7"
+                >
+                  merge
+                </text>
+
+                <!-- REBASE side -->
+                <text
+                  x="290"
+                  y="18"
+                  fill="#F5A623"
+                  font-size="11"
+                  font-weight="700"
+                >
+                  REBASE
+                </text>
+                <circle
+                  cx="310"
+                  cy="50"
+                  r="14"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="310"
+                  y="55"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  A
+                </text>
+                <line
+                  x1="324"
+                  y1="50"
+                  x2="344"
+                  y2="50"
+                  stroke="#b8af9a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="358"
+                  cy="50"
+                  r="14"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="358"
+                  y="55"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  B
+                </text>
+                <line
+                  x1="372"
+                  y1="50"
+                  x2="392"
+                  y2="50"
+                  stroke="#b8af9a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="406"
+                  cy="50"
+                  r="14"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <text
+                  x="406"
+                  y="46"
+                  text-anchor="middle"
+                  fill="#88c57a"
+                  font-size="8"
+                  font-weight="700"
+                >
+                  X'
+                </text>
+                <text
+                  x="406"
+                  y="57"
+                  text-anchor="middle"
+                  fill="#6e6558"
+                  font-size="7"
+                >
+                  replayed
+                </text>
+                <line
+                  x1="420"
+                  y1="50"
+                  x2="440"
+                  y2="50"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <circle
+                  cx="454"
+                  cy="50"
+                  r="14"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <text
+                  x="454"
+                  y="46"
+                  text-anchor="middle"
+                  fill="#88c57a"
+                  font-size="8"
+                  font-weight="700"
+                >
+                  Y'
+                </text>
+                <text
+                  x="454"
+                  y="57"
+                  text-anchor="middle"
+                  fill="#6e6558"
+                  font-size="7"
+                >
+                  replayed
+                </text>
+                <text x="370" y="130" fill="#9a9188" font-size="11">
+                  Clean linear history ✓
+                </text>
+                <text x="80" y="170" fill="#9a9188" font-size="11">
+                  History preserved, merge commit added
+                </text>
+              </svg>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  Merge: non-destructive, safe for shared branches, creates a
+                  merge commit
+                </li>
+                <li>
+                  Rebase: rewrites history, cleaner log, NEVER do on
+                  shared/public branches
+                </li>
+                <li>
+                  Interactive rebase (<code>git rebase -i</code>) lets you
+                  squash, edit, reorder commits before a PR
+                </li>
+                <li>Golden rule: rebase only local, unpushed commits</li>
+              </ul>
+            </div>
+            <div class="interview-qs">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">When would you choose rebase over merge?</div>
+                <div class="iq-a">
+                  Use rebase to keep a feature branch up-to-date with main while
+                  working, or to clean up messy commit history before opening a
+                  PR. Use merge when integrating completed features into main —
+                  so the history shows exactly when and what was merged.
+                </div>
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">What is interactive rebase?</div>
+                <div class="iq-a">
+                  <code>git rebase -i HEAD~N</code> lets you modify the last N
+                  commits. You can squash multiple commits into one, reorder
+                  them, change commit messages, or drop commits entirely. Very
+                  useful before code review.
+                </div>
+              </div>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Traps</div>
+              <ul>
+                <li>
+                  Rebasing a branch that others are working on will cause them
+                  to have conflicting history — serious team headache.
+                </li>
+                <li>
+                  Rebase changes commit hashes — even if the code is identical,
+                  it's technically a new commit.
+                </li>
+              </ul>
+            </div>
+            <div class="resources">
+              <div class="resources-title">Best Resources</div>
+              <div class="resource-cards">
+                <a
+                  href="https://www.youtube.com/watch?v=CRlGDDprdOQ"
+                  target="_blank"
+                  class="resource-card"
+                >
+                  <span class="rc-icon">▶</span>
+                  <span class="rc-info">
+                    <span class="rc-name">Merge vs Rebase — Fireship</span>
+                    <span class="rc-sub"
+                      >Fast, visual, 5 mins — best quick explanation</span
+                    >
+                  </span>
+                </a>
+                <a
+                  href="https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+                  target="_blank"
+                  class="resource-card"
+                >
+                  <span class="rc-icon">📄</span>
+                  <span class="rc-info">
+                    <span class="rc-name">Official Git Docs — Rebasing</span>
+                    <span class="rc-sub"
+                      >The definitive explanation with diagrams</span
+                    >
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q6 ============ -->
+        <div class="concept-card section-anchor" id="q6">
+          <div class="concept-header">
+            <span class="concept-num">Q06</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is a Branch in Git?</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                A branch is just a lightweight pointer to a specific commit. It
+                lets you work on a separate version of the code without touching
+                the main codebase.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Think of the main branch as the "live" train track. When you
+                create a branch, you're laying a new side track from a specific
+                point. You can work on that side track as long as you want, and
+                when your feature is ready, you merge it back into the main
+                track.
+              </p>
+              <p>
+                Because a branch is literally just a file containing a commit
+                hash (40-character string), creating a branch is basically free
+                and instant. This is very different from SVN (an older VCS)
+                where branching was expensive and slow. In Git, most teams
+                create a new branch for every single feature or bug fix.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  Default branch is usually called <code>main</code> (used to be
+                  <code>master</code>)
+                </li>
+                <li>
+                  <code>git branch feature-xyz</code> creates a branch,
+                  <code>git checkout -b feature-xyz</code> creates AND switches
+                  to it
+                </li>
+                <li>Branches are cheap — just pointers, no file duplication</li>
+                <li>
+                  You can switch between branches instantly using
+                  <code>git checkout</code> or <code>git switch</code>
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                A branch is just a file in
+                <code>.git/refs/heads/</code> containing a 40-char commit SHA.
+                That's why creating or deleting a branch is O(1) in Git — it's
+                essentially creating or deleting a single tiny file.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q7 ============ -->
+        <div class="concept-card section-anchor" id="q7">
+          <div class="concept-header">
+            <span class="concept-num">Q07</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">Why do we use Pull Requests?</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                A Pull Request is a formal request to merge your branch into
+                another. It creates a space for code review, discussion, and
+                automated checks before the code goes live.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Without PRs, developers could push anything directly to main.
+                That's chaos in a team. PR is the "checkpoint" — your code needs
+                a second pair of eyes before it can join the main codebase. It's
+                standard in every real-world team.
+              </p>
+              <p>
+                PRs let reviewers leave comments, suggest changes, approve, or
+                request changes. CI/CD pipelines (like GitHub Actions) run tests
+                automatically on every PR, so bugs get caught before merging. It
+                also creates a documented history of why changes were made.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  PRs are a GitHub/GitLab feature, not a Git feature — Git
+                  itself doesn't have PRs
+                </li>
+                <li>GitLab calls them "Merge Requests (MRs)" — same concept</li>
+                <li>
+                  A PR links a source branch to a target branch. Reviewers
+                  approve, then it gets merged
+                </li>
+                <li>
+                  PRs can trigger CI/CD: automated tests, linting, deployments
+                  to staging
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q8 ============ -->
+        <div class="concept-card section-anchor" id="q8">
+          <div class="concept-header">
+            <span class="concept-num">Q08</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is Git Stash?</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Git stash temporarily saves your uncommitted changes so you can
+                switch branches or pull updates — without making a commit or
+                losing your work.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Imagine you're halfway through a feature, and your manager says
+                "quick, fix this prod bug!" You can't commit half-done work. You
+                can't throw it away. <code>git stash</code> is like a drawer
+                where you shove your half-finished work, switch to fix the bug,
+                then come back and pull your work out of the drawer with
+                <code>git stash pop</code>.
+              </p>
+              <p>
+                You can have multiple stashes. <code>git stash list</code> shows
+                them all. <code>git stash pop</code> applies the latest and
+                removes it from stash. <code>git stash apply</code> applies it
+                but keeps it in the stash (useful when applying the same changes
+                to multiple branches).
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  <code>git stash</code> — stash all tracked modified files
+                </li>
+                <li>
+                  <code>git stash -u</code> — also stash untracked (new) files
+                </li>
+                <li>
+                  <code>git stash pop</code> — apply top stash and remove it
+                </li>
+                <li>
+                  <code>git stash apply stash@{2}</code> — apply a specific
+                  stash entry
+                </li>
+                <li><code>git stash drop</code> — delete a stash entry</li>
+              </ul>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Traps</div>
+              <ul>
+                <li>
+                  By default, stash doesn't include untracked files. Use
+                  <code>git stash -u</code> or
+                  <code>--include-untracked</code> to include them.
+                </li>
+                <li>Stashes are local — they don't get pushed to remote.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q9 ============ -->
+        <div class="concept-card section-anchor" id="q9">
+          <div class="concept-header">
+            <span class="concept-num">Q09</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">git reset vs git revert</div>
+              <div class="concept-meta">
+                <span class="badge badge-hard">Hard</span>
+                <span class="read-time">4 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                <code>git reset</code> moves the branch pointer backward
+                (rewrites history). <code>git revert</code> creates a new commit
+                that undoes a previous commit (safe for shared branches).
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Think of <code>git reset</code> as going back in time and
+                pretending commits never happened. The commits are gone (or
+                detached). It's like erasing pages from a book. Safe for local
+                work — dangerous if you've already pushed.
+              </p>
+              <p>
+                <code>git revert</code> is the opposite: you add a new page to
+                the book that says "undo everything on page 37." The original
+                page 37 is still there. It's transparent, safe for team repos,
+                and doesn't rewrite history.
+              </p>
+              <p>
+                Reset has three modes: <code>--soft</code> (uncommit but keep
+                changes staged), <code>--mixed</code> (default — uncommit,
+                unstage, keep in working directory),
+                <code>--hard</code> (uncommit AND delete changes from working
+                directory — dangerous!).
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  <code>git reset --soft HEAD~1</code> — undo last commit, keep
+                  changes staged
+                </li>
+                <li>
+                  <code>git reset --mixed HEAD~1</code> — undo last commit,
+                  unstage changes (default)
+                </li>
+                <li>
+                  <code>git reset --hard HEAD~1</code> — undo last commit AND
+                  delete changes (dangerous!)
+                </li>
+                <li>
+                  <code>git revert HEAD</code> — create a new undo-commit,
+                  history stays intact
+                </li>
+                <li>
+                  Rule: use revert on shared/public branches, reset only on
+                  local-only branches
+                </li>
+              </ul>
+            </div>
+            <div class="interview-qs">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">Can you undo a git reset --hard?</div>
+                <div class="iq-a">
+                  Yes! Using <code>git reflog</code> you can find the commit
+                  hash before the reset and do
+                  <code>git reset --hard &lt;old-hash&gt;</code>. Reflog keeps a
+                  local history of HEAD movements for about 90 days. This is a
+                  lifesaver.
+                </div>
+              </div>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Traps</div>
+              <ul>
+                <li>
+                  <code>git reset --hard</code> after already pushing — forces
+                  you to <code>git push --force</code>, which can overwrite
+                  teammates' work on the same branch.
+                </li>
+                <li>
+                  Many beginners use reset where they should use revert — and
+                  break the shared branch history.
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Mentioning <code>git reflog</code> as the escape hatch for bad
+                resets immediately separates you from candidates who don't know
+                it. Reflog tracks all HEAD movements locally — even after
+                <code>--hard</code> resets.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q10 ============ -->
+        <div class="concept-card section-anchor" id="q10">
+          <div class="concept-header">
+            <span class="concept-num">Q10</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is a Merge Conflict?</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                A merge conflict happens when two branches modify the same part
+                of the same file in different ways, and Git can't automatically
+                decide which version to keep.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Git is pretty smart about merging. If you changed line 5 and
+                your teammate changed line 50, it handles that automatically.
+                But if you both changed line 5? Git throws up its hands and says
+                "I don't know which one you want — you decide." That's a
+                conflict.
+              </p>
+              <p>
+                Git marks the conflicting section in the file with
+                <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>,
+                and <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> markers. Above the
+                <code>=======</code> is your change. Below is theirs. You have
+                to manually pick one (or combine them) and remove the markers.
+              </p>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">Conflict Markers</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><span class="cm"><<<<<<< HEAD  (your branch)</span>
+<span class="st">const greeting = "Hello World";</span>
+<span class="cm">=======</span>
+<span class="st">const greeting = "Hey there!";</span>
+<span class="cm">>>>>>>> feature/update-greeting  (their branch)</span>
+
+<span class="cm">// You manually choose one and delete the markers:</span>
+<span class="kw">const</span> greeting = <span class="st">"Hello World"</span>; <span class="cm">// keep yours</span>
+<span class="cm">// Then: git add . && git commit</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q11 ============ -->
+        <div class="concept-card section-anchor" id="q11">
+          <div class="concept-header">
+            <span class="concept-num">Q11</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">
+                How do you resolve merge conflicts?
+              </div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">3 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                You open the conflicted file, manually edit it to have the
+                correct final version, remove Git's conflict markers, then stage
+                and commit the resolved file.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Step 1: Git tells you which files have conflicts after
+                <code>git merge</code> or <code>git pull</code>. Run
+                <code>git status</code> to see them listed under "Unmerged
+                paths."
+              </p>
+              <p>
+                Step 2: Open each conflicted file. Look for the
+                <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> markers. Edit the file
+                to look exactly how you want the final version to be — you're
+                not restricted to choosing one side, you can blend both if
+                needed.
+              </p>
+              <p>
+                Step 3: After fixing the file, run
+                <code>git add &lt;filename&gt;</code> to mark it as resolved. Do
+                this for all conflicted files. Then run
+                <code>git commit</code> to finalize the merge.
+              </p>
+              <p>
+                Modern editors like VS Code show conflicts with a nice UI —
+                "Accept Current," "Accept Incoming," "Accept Both." Tools like
+                <code>git mergetool</code> open a three-way diff viewer.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Step-by-Step</div>
+              <ul>
+                <li>1. <code>git status</code> — identify conflicted files</li>
+                <li>
+                  2. Open file, find markers, decide final content, delete
+                  markers
+                </li>
+                <li>3. <code>git add &lt;file&gt;</code> — mark as resolved</li>
+                <li>4. <code>git commit</code> — complete the merge</li>
+                <li>
+                  5. Optionally use <code>git mergetool</code> or VS Code for
+                  visual help
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q12 ============ -->
+        <div class="concept-card section-anchor" id="q12">
+          <div class="concept-header">
+            <span class="concept-num">Q12</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">
+                Local Repository vs Remote Repository
+              </div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Local is the repo on your machine. Remote is the repo on a
+                server (like GitHub). You sync between them using push and pull.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Local repo lives in the <code>.git</code> folder on your laptop.
+                You can commit, branch, and log without any internet. Remote
+                repo is hosted online — it's the shared source of truth for the
+                whole team.
+              </p>
+              <p>
+                When you <code>git push</code>, you send your local commits to
+                remote. When you <code>git pull</code>, you bring remote commits
+                down. A project can have multiple remotes —
+                <code>origin</code> is just the conventional name for the
+                primary one.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  <code>origin</code> = default name for your remote (set when
+                  you clone or add a remote)
+                </li>
+                <li><code>git remote -v</code> — see all configured remotes</li>
+                <li>
+                  <code>git remote add upstream &lt;url&gt;</code> — add a
+                  second remote
+                </li>
+                <li>
+                  You can work offline locally; just push/pull when you have
+                  internet
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q13 ============ -->
+        <div class="concept-card section-anchor" id="q13">
+          <div class="concept-header">
+            <span class="concept-num">Q13</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is .gitignore?</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                .gitignore is a file that tells Git which files and folders to
+                completely ignore — they won't be tracked, staged, or pushed.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Not everything in your project folder belongs in the repo.
+                <code>node_modules/</code> (huge, auto-generated),
+                <code>.env</code> (has secret API keys),
+                <code>__pycache__/</code> (Python compiled files),
+                <code>dist/</code> (build output) — all of these should be
+                ignored.
+              </p>
+              <p>
+                You put patterns in <code>.gitignore</code> and Git pretends
+                those files don't exist. The <code>.gitignore</code> file itself
+                should be committed to the repo so all teammates use the same
+                rules. A good starting point:
+                <a
+                  href="https://gitignore.io"
+                  target="_blank"
+                  style="color: var(--gold)"
+                  >gitignore.io</a
+                >
+                generates <code>.gitignore</code> files for your specific tech
+                stack.
+              </p>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">.gitignore example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><span class="cm"># Dependencies</span>
+node_modules/
+<span class="cm"># Environment secrets</span>
+.env
+.env.local
+<span class="cm"># Build outputs</span>
+dist/
+build/
+<span class="cm"># OS junk</span>
+.DS_Store
+Thumbs.db
+<span class="cm"># Python</span>
+__pycache__/
+*.pyc</pre>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Traps</div>
+              <ul>
+                <li>
+                  Adding a file to <code>.gitignore</code> after it's already
+                  been committed doesn't remove it. You need to run
+                  <code>git rm --cached &lt;file&gt;</code> first.
+                </li>
+                <li>
+                  Never commit <code>.env</code> files with real secrets —
+                  people forget this and push credentials to public GitHub
+                  repos.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q14 ============ -->
+        <div class="concept-card section-anchor" id="q14">
+          <div class="concept-header">
+            <span class="concept-num">Q14</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">git clone vs git fork</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Clone copies a repo to your local machine. Fork copies a repo to
+                your GitHub account (creating your own cloud copy) — then you
+                typically clone your fork.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Fork is a GitHub/GitLab concept, not a Git command. When you
+                fork a public project (like an open-source library), you get
+                your own copy in your GitHub account where you have full push
+                access. Then you clone THAT fork to your machine, make changes,
+                and send a Pull Request to the original project.
+              </p>
+              <p>
+                Clone is a pure Git operation — it just downloads a repo to your
+                machine. The origin remote is set to whatever URL you cloned
+                from.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  Fork = server-side copy (GitHub account → GitHub account)
+                </li>
+                <li>Clone = local copy (remote server → your machine)</li>
+                <li>
+                  Open source workflow: Fork → Clone fork locally → Push to your
+                  fork → PR to original
+                </li>
+                <li>
+                  Direct team members usually just clone the main repo (no fork
+                  needed)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q15 ============ -->
+        <div class="concept-card section-anchor" id="q15">
+          <div class="concept-header">
+            <span class="concept-num">Q15</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">What is HEAD in Git?</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">2 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                HEAD is a pointer to your current position in the repo — usually
+                pointing to the latest commit on your current branch.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                You can think of HEAD as "you are here" on the Git map. It's a
+                file in <code>.git/HEAD</code> that usually contains a reference
+                to a branch name (like <code>ref: refs/heads/main</code>). When
+                you make a new commit, HEAD moves forward to that new commit.
+                When you switch branches, HEAD updates to point to that branch.
+              </p>
+              <p>
+                <code>HEAD~1</code> means "one commit before HEAD."
+                <code>HEAD~3</code> means "three commits back." This syntax is
+                used heavily with reset, log, and rebase commands.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  HEAD normally points to a branch, which points to a commit
+                </li>
+                <li>
+                  <code>HEAD~1</code> = parent commit, <code>HEAD~2</code> =
+                  grandparent
+                </li>
+                <li><code>git log</code> shows HEAD's current position</li>
+                <li>
+                  Detached HEAD = HEAD points directly to a commit, not a branch
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q16 ============ -->
+        <div class="concept-card section-anchor" id="q16">
+          <div class="concept-header">
+            <span class="concept-num">Q16</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">git add . vs git add &lt;file&gt;</div>
+              <div class="concept-meta">
+                <span class="badge badge-easy">Easy</span>
+                <span class="read-time">1 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                <code>git add .</code> stages all changed files in the current
+                directory. <code>git add &lt;file&gt;</code> stages only that
+                specific file.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                <code>git add .</code> is convenient but can accidentally stage
+                files you didn't mean to commit (debug logs, temporary test
+                files). <code>git add &lt;file&gt;</code> gives you precise
+                control. In professional teams, many engineers use
+                <code>git add -p</code> (patch mode) to stage changes chunk by
+                chunk — this lets you make one clean commit even if you changed
+                multiple unrelated things in the same session.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  <code>git add .</code> — all changed files in current and
+                  subdirectories
+                </li>
+                <li>
+                  <code>git add -A</code> — all changes including deleted files
+                  across whole repo
+                </li>
+                <li>
+                  <code>git add -p</code> — interactive mode, stage specific
+                  chunks/hunks
+                </li>
+                <li>
+                  <code>git status</code> before adding — know what you're
+                  staging
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q17 ============ -->
+        <div class="concept-card section-anchor" id="q17">
+          <div class="concept-header">
+            <span class="concept-num">Q17</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">Detached HEAD State</div>
+              <div class="concept-meta">
+                <span class="badge badge-hard">Hard</span>
+                <span class="read-time">3 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Detached HEAD happens when HEAD points directly to a commit
+                instead of a branch. You can browse and even commit, but those
+                commits will be lost if you switch away without creating a
+                branch.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                Normally: HEAD → branch → commit. In detached HEAD: HEAD →
+                commit (no branch in between). It's like stepping off the main
+                track onto a platform — you can look around, even write things
+                down, but if you leave without marking where you are, you'll
+                never find it again.
+              </p>
+              <p>
+                This happens when you
+                <code>git checkout &lt;commit-hash&gt;</code> or
+                <code>git checkout v1.0.0</code> (a tag). It's useful for
+                inspecting old code. But if you make new commits here and then
+                <code>git checkout main</code>, those commits become unreachable
+                — "dangling commits" that Git will eventually garbage-collect.
+              </p>
+              <p>
+                Fix: before switching away, run
+                <code>git branch my-save-branch</code> to create a branch
+                pointing to where you are. Now it's safe.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  Triggered by: <code>git checkout &lt;commit-hash&gt;</code> or
+                  <code>git checkout &lt;tag&gt;</code>
+                </li>
+                <li>
+                  Safe for browsing old code. Risky if you start committing
+                </li>
+                <li>
+                  Fix: <code>git branch rescue-branch</code> to save commits,
+                  then checkout back to main
+                </li>
+                <li>
+                  Git explicitly warns you when you enter detached HEAD state
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Detached HEAD commits aren't immediately deleted —
+                <code>git reflog</code> keeps them accessible for ~90 days. So
+                even if you accidentally left detached HEAD without creating a
+                branch, you can recover those commits via reflog.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q18 ============ -->
+        <div class="concept-card section-anchor" id="q18">
+          <div class="concept-header">
+            <span class="concept-num">Q18</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">Git Workflow in Teams</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">4 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Teams use structured workflows — most commonly Git Flow or
+                Trunk-Based Development — to coordinate how branches are
+                created, reviewed, and merged without chaos.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                <strong>Feature Branch Workflow (most common):</strong> Everyone
+                branches off main for their feature, pushes when done, opens a
+                PR, gets code reviewed, then merges back. Main is always
+                deployable.
+              </p>
+              <p>
+                <strong>Git Flow:</strong> Has separate <code>main</code>,
+                <code>develop</code>, <code>feature/*</code>,
+                <code>release/*</code>, and <code>hotfix/*</code> branches. Used
+                in projects with scheduled release cycles. More structure, more
+                overhead.
+              </p>
+              <p>
+                <strong>Trunk-Based Development:</strong> Everyone pushes small,
+                frequent commits directly to <code>main</code> (or short-lived
+                feature branches that merge daily). Preferred by Google,
+                Facebook, Netflix. Requires good CI/CD and feature flags. Moves
+                fast, less merge pain.
+              </p>
+            </div>
+            <div class="diagram-wrap">
+              <div class="diagram-label">
+                Feature Branch Workflow (Most Common)
+              </div>
+              <svg
+                viewBox="0 0 560 150"
+                xmlns="http://www.w3.org/2000/svg"
+                style="width: 100%; max-width: 560px"
+              >
+                <defs>
+                  <marker
+                    id="arr3"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="6"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 7 2.5, 0 5" fill="#b8af9a" />
+                  </marker>
+                </defs>
+                <!-- main branch line -->
+                <line
+                  x1="20"
+                  y1="40"
+                  x2="540"
+                  y2="40"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="10"
+                  y="36"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="700"
+                >
+                  main
+                </text>
+                <!-- commits on main -->
+                <circle cx="60" cy="40" r="8" fill="#F5A623" />
+                <circle
+                  cx="160"
+                  cy="40"
+                  r="8"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <circle cx="460" cy="40" r="8" fill="#F5A623" />
+                <circle
+                  cx="520"
+                  cy="40"
+                  r="8"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <!-- branch out from 160 -->
+                <path
+                  d="M 160 48 Q 180 90 220 90"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  fill="none"
+                />
+                <!-- feature branch line -->
+                <line
+                  x1="220"
+                  y1="90"
+                  x2="420"
+                  y2="90"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <text x="290" y="82" fill="#88c57a" font-size="9">
+                  feature/my-feature
+                </text>
+                <!-- commits on feature -->
+                <circle
+                  cx="270"
+                  cy="90"
+                  r="7"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="340"
+                  cy="90"
+                  r="7"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="410"
+                  cy="90"
+                  r="7"
+                  fill="#1e1b14"
+                  stroke="#88c57a"
+                  stroke-width="2"
+                />
+                <!-- merge back -->
+                <path
+                  d="M 420 90 Q 440 60 460 40"
+                  stroke="#88c57a"
+                  stroke-width="1.5"
+                  fill="none"
+                  marker-end="url(#arr3)"
+                />
+                <!-- labels -->
+                <text
+                  x="60"
+                  y="25"
+                  text-anchor="middle"
+                  fill="#b8af9a"
+                  font-size="9"
+                >
+                  start
+                </text>
+                <text
+                  x="160"
+                  y="25"
+                  text-anchor="middle"
+                  fill="#b8af9a"
+                  font-size="9"
+                >
+                  branch
+                </text>
+                <text
+                  x="460"
+                  y="25"
+                  text-anchor="middle"
+                  fill="#88c57a"
+                  font-size="9"
+                >
+                  PR merge
+                </text>
+                <!-- PR label -->
+                <rect
+                  x="360"
+                  y="105"
+                  width="60"
+                  height="18"
+                  rx="4"
+                  fill="#2a2218"
+                  stroke="#F5A623"
+                  stroke-width="1"
+                />
+                <text
+                  x="390"
+                  y="117"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                >
+                  PR Review
+                </text>
+              </svg>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Key Facts</div>
+              <ul>
+                <li>
+                  Feature Branch: branch off main → work → PR → review → merge —
+                  simple and universal
+                </li>
+                <li>
+                  Git Flow: structured with develop/release branches — good for
+                  release cycles
+                </li>
+                <li>
+                  Trunk-Based: small frequent commits to main — fast, needs
+                  CI/CD + feature flags
+                </li>
+                <li>
+                  PRs always go through at least one reviewer in real teams
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Knowing the difference between Git Flow and Trunk-Based
+                Development — and being able to say which one you've used and
+                why — shows genuine team experience. Most candidates only know
+                "we used branches and PRs."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q19 ============ -->
+        <div class="concept-card section-anchor" id="q19">
+          <div class="concept-header">
+            <span class="concept-num">Q19</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">How do you undo a commit?</div>
+              <div class="concept-meta">
+                <span class="badge badge-medium">Medium</span>
+                <span class="read-time">3 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Depends on whether the commit is local or already pushed. For
+                local: use git reset. For pushed: use git revert to avoid
+                rewriting shared history.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                If you just committed locally and want to undo it:
+                <code>git reset --soft HEAD~1</code> undoes the commit but keeps
+                your changes staged.
+                <code>git reset --mixed HEAD~1</code> (default) unstages them
+                too but keeps files.
+                <code>git reset --hard HEAD~1</code> deletes the changes
+                entirely.
+              </p>
+              <p>
+                If it's already pushed to a shared branch:
+                <code>git revert HEAD</code> creates a new "undo commit" on top.
+                Everyone on the team can pull this cleanly without history
+                conflicts. Never <code>git push --force</code> on shared
+                branches unless you're absolutely sure and have team agreement.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Decision Map</div>
+              <ul>
+                <li>
+                  Local only, keep changes staged:
+                  <code>git reset --soft HEAD~1</code>
+                </li>
+                <li>
+                  Local only, unstage changes:
+                  <code>git reset --mixed HEAD~1</code>
+                </li>
+                <li>
+                  Local only, delete changes:
+                  <code>git reset --hard HEAD~1</code>
+                </li>
+                <li>
+                  Already pushed, shared branch: <code>git revert HEAD</code>
+                </li>
+                <li>
+                  Already pushed, your own branch:
+                  <code>git reset + git push --force-with-lease</code>
+                </li>
+              </ul>
+            </div>
+            <div class="gotcha">
+              <div class="gotcha-title">Traps</div>
+              <ul>
+                <li>
+                  <code>git push --force</code> on a shared branch can overwrite
+                  teammates' commits. Use
+                  <code>--force-with-lease</code> instead — it fails if someone
+                  else has pushed since your last fetch.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Q20 ============ -->
+        <div class="concept-card section-anchor" id="q20">
+          <div class="concept-header">
+            <span class="concept-num">Q20</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">
+                Code works locally but fails after merge — how to debug?
+              </div>
+              <div class="concept-meta">
+                <span class="badge badge-hard">Hard</span>
+                <span class="read-time">4 min read</span>
+              </div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div class="one-liner">
+              <div class="one-liner-label">Say this first</div>
+              <p>
+                Systematically isolate whether the issue is a merge conflict
+                that wasn't resolved correctly, a dependency difference, an
+                environment difference, or a regression introduced by the merged
+                branch.
+              </p>
+            </div>
+            <div class="explanation">
+              <p>
+                This is a classic real-world scenario. First, look at what was
+                actually merged. Run <code>git log --merge</code> to see commits
+                that caused the conflict, or
+                <code>git diff HEAD~1 HEAD</code> to see what changed in the
+                latest merge commit.
+              </p>
+              <p>
+                Second, check for "resolved" conflicts where someone chose the
+                wrong side. These are the sneakiest bugs — Git shows the
+                conflict as resolved but the logic is now broken. Search the
+                diff for lines around
+                <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> markers that might've
+                been removed but left incorrect code.
+              </p>
+              <p>
+                Third, use <code>git bisect</code> — an incredibly powerful
+                command that does a binary search through your commit history to
+                find the exact commit that introduced the bug. You run
+                <code>git bisect start</code>, mark the current commit as bad
+                (<code>git bisect bad</code>), mark a known-good older commit as
+                good (<code>git bisect good &lt;hash&gt;</code>), and Git checks
+                out commits in between for you to test. Takes O(log n) steps to
+                find the culprit.
+              </p>
+            </div>
+            <div class="key-points">
+              <div class="key-points-title">Debug Checklist</div>
+              <ul>
+                <li>
+                  <code>git diff main..feature-branch</code> — see all changes
+                  that came in
+                </li>
+                <li>
+                  Look for incorrectly resolved conflicts — logic broken
+                  silently
+                </li>
+                <li>
+                  <code>git log --oneline --graph</code> — visualize the merge
+                  structure
+                </li>
+                <li>
+                  <code>git bisect</code> — binary search to find the exact
+                  breaking commit
+                </li>
+                <li>
+                  Check environment: env vars, config files, dependencies
+                  (package-lock.json changes)
+                </li>
+              </ul>
+            </div>
+            <div class="interview-qs">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">What is git bisect?</div>
+                <div class="iq-a">
+                  <code>git bisect</code> automates binary search through git
+                  history to find which commit introduced a bug. You mark a
+                  "bad" commit and a "good" commit, and Git checks out the
+                  midpoint. You test and mark it good or bad. Repeat until you
+                  find the culprit. Much faster than checking each commit
+                  manually.
+                </div>
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">
+                  How do you check what changed in a merge commit?
+                </div>
+                <div class="iq-a">
+                  <code>git show &lt;merge-commit-hash&gt;</code> shows the
+                  diff. Or <code>git diff HEAD~1 HEAD</code> for the latest. For
+                  a merge commit with two parents,
+                  <code>git diff HEAD^1 HEAD^2</code> shows the diff between the
+                  two merged branches.
+                </div>
+              </div>
+            </div>
+            <div class="edge">
+              <div class="edge-title">Competitive Edge</div>
+              <p>
+                Knowing <code>git bisect</code> and being able to explain it
+                clearly — with the analogy of binary search — is something very
+                few junior/mid engineers can do. It genuinely impresses senior
+                interviewers because it shows you debug systematically, not
+                randomly.
+              </p>
+            </div>
+            <div class="resources">
+              <div class="resources-title">Best Resources</div>
+              <div class="resource-cards">
+                <a
+                  href="https://www.youtube.com/watch?v=aolI_Rz0ZGA"
+                  target="_blank"
+                  class="resource-card"
+                >
+                  <span class="rc-icon">▶</span>
+                  <span class="rc-info">
+                    <span class="rc-name"
+                      >Git for Professionals — freeCodeCamp</span
+                    >
+                    <span class="rc-sub"
+                      >Team workflows, real scenarios, 40 mins</span
+                    >
+                  </span>
+                </a>
+                <a
+                  href="https://git-scm.com/docs/git-bisect"
+                  target="_blank"
+                  class="resource-card"
+                >
+                  <span class="rc-icon">📄</span>
+                  <span class="rc-info">
+                    <span class="rc-name">git bisect — Official Docs</span>
+                    <span class="rc-sub"
+                      >The definitive guide to binary search debugging</span
+                    >
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-div"></div>
+
+        <!-- GLOBAL RESOURCES -->
+        <div class="concept-card" style="border-left-color: var(--gold)">
+          <div class="concept-header">
+            <span class="concept-num">★</span>
+            <div class="concept-title-wrap">
+              <div class="concept-title">Top Resources for Git</div>
+            </div>
+          </div>
+          <div class="concept-body">
+            <div
+              class="resource-cards"
+              style="flex-direction: column; gap: 10px"
+            >
+              <a
+                href="https://www.youtube.com/watch?v=RGOj5yH7evk"
+                target="_blank"
+                class="resource-card"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-info">
+                  <span class="rc-name"
+                    >Git and GitHub for Beginners — freeCodeCamp (1hr)</span
+                  >
+                  <span class="rc-sub"
+                    >Best single video for covering all basics end-to-end</span
+                  >
+                </span>
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=hwP7WQkmECE"
+                target="_blank"
+                class="resource-card"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-info">
+                  <span class="rc-name"
+                    >Git Explained in 100 Seconds — Fireship</span
+                  >
+                  <span class="rc-sub"
+                    >Perfect quick revision, super visual</span
+                  >
+                </span>
+              </a>
+              <a
+                href="https://www.atlassian.com/git/tutorials"
+                target="_blank"
+                class="resource-card"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-info">
+                  <span class="rc-name">Atlassian Git Tutorials</span>
+                  <span class="rc-sub"
+                    >Best written resource — covers everything with great
+                    diagrams</span
+                  >
+                </span>
+              </a>
+              <a
+                href="https://learngitbranching.js.org/"
+                target="_blank"
+                class="resource-card"
+              >
+                <span class="rc-icon">🎮</span>
+                <span class="rc-info">
+                  <span class="rc-name">Learn Git Branching (Interactive)</span>
+                  <span class="rc-sub"
+                    >The best way to actually feel how branching/rebase/merge
+                    work visually</span
+                  >
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <button
+      id="back-top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      ↑
+    </button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      // BUILD TOC
+      const concepts = [
+        [1, "What is Git?"],
+        [2, "Git vs GitHub"],
+        [3, "What is a Repository?"],
+        [4, "git pull vs git fetch"],
+        [5, "git merge vs git rebase"],
+        [6, "What is a Branch?"],
+        [7, "Why Pull Requests?"],
+        [8, "What is Git Stash?"],
+        [9, "git reset vs git revert"],
+        [10, "Merge Conflict"],
+        [11, "Resolve Merge Conflicts"],
+        [12, "Local vs Remote Repo"],
+        [13, "What is .gitignore?"],
+        [14, "git clone vs git fork"],
+        [15, "What is HEAD?"],
+        [16, "git add . vs git add file"],
+        [17, "Detached HEAD State"],
+        [18, "Git Workflow in Teams"],
+        [19, "How to Undo a Commit"],
+        [20, "Debug: Works Locally, Fails After Merge"],
+      ];
+
+      const tocList = document.getElementById("toc-list");
+      const mobileToc = document.getElementById("mobile-toc");
+
+      concepts.forEach(([n, name]) => {
+        const a = document.createElement("a");
+        a.className = "toc-item";
+        a.href = `#q${n}`;
+        a.innerHTML = `<span class="toc-num">${String(n).padStart(2, "0")}</span>${name}`;
+        a.onclick = (e) => {
+          e.preventDefault();
+          document
+            .getElementById(`q${n}`)
+            .scrollIntoView({ behavior: "smooth" });
+        };
+        tocList.appendChild(a);
+
+        const m = a.cloneNode(true);
+        m.onclick = (e) => {
+          e.preventDefault();
+          document
+            .getElementById(`q${n}`)
+            .scrollIntoView({ behavior: "smooth" });
+          mobileToc.classList.remove("show");
+        };
+        mobileToc.appendChild(m);
+      });
+
+      // SCROLL PROGRESS + ACTIVE TOC
+      const progressFill = document.getElementById("progressFill");
+      const progressLabel = document.getElementById("progressLabel");
+      const allCards = document.querySelectorAll(".section-anchor");
+      const tocItems = document.querySelectorAll(".toc-item");
+      const backTop = document.getElementById("back-top");
+
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = Math.round((scrollTop / docH) * 100);
+        progressFill.style.width = pct + "%";
+        progressLabel.textContent = pct + "%";
+
+        backTop.classList.toggle("show", scrollTop > 400);
+
+        let current = "";
+        allCards.forEach((card) => {
+          if (window.scrollY >= card.offsetTop - 100) current = card.id;
+        });
+        tocItems.forEach((item) => {
+          item.classList.toggle(
+            "active",
+            item.getAttribute("href") === `#${current}`,
+          );
+        });
+      });
+
+      // THEME
+      const themeBtn = document.getElementById("themeBtn");
+      themeBtn.onclick = () => {
+        const isDark =
+          document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.setAttribute(
+          "data-theme",
+          isDark ? "light" : "dark",
+        );
+        themeBtn.textContent = isDark ? "◑ Dark" : "☀ Light";
+      };
+
+      // FOCUS MODE
+      const focusBtn = document.getElementById("focusBtn");
+      const sidebar = document.getElementById("sidebar");
+      focusBtn.onclick = () => {
+        document.body.classList.toggle("focus-mode");
+        sidebar.classList.toggle("hidden");
+        focusBtn.classList.toggle("active");
+        focusBtn.textContent = document.body.classList.contains("focus-mode")
+          ? "⊞ Show TOC"
+          : "Focus";
+      };
+
+      // MENU TOGGLE (mobile)
+      const menuToggle = document.getElementById("menuToggle");
+      menuToggle.onclick = () => {
+        mobileToc.classList.toggle("show");
+      };
+
+      // ACCORDION for IQ items
+      document.querySelectorAll(".iq-q").forEach((q) => {
+        q.onclick = () => q.closest(".iq-item").classList.toggle("open");
+      });
+
+      // COPY CODE
+      function copyCode(btn) {
+        const pre = btn.closest(".code-wrap").querySelector("pre");
+        const text = pre.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

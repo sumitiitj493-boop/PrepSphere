@@ -1,0 +1,4482 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Operating System — Interview Mastery Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f5f6fa;
+        --surface: #fff;
+        --text: #16161a;
+        --text2: #555;
+        --border: #e2e4e9;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --accent: var(--gold);
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1a1a2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --sidebar-w: 270px;
+      }
+      [data-theme="dark"] {
+        --bg: #0d0d12;
+        --surface: #16161e;
+        --text: #e4e4e7;
+        --text2: #9ca3af;
+        --border: #2a2a3a;
+        --card-bg: #1c1c28;
+        --nav-bg: rgba(13, 13, 18, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.12);
+        --amberBg: rgba(245, 158, 11, 0.12);
+        --redBg: rgba(239, 68, 68, 0.1);
+        --blueBg: rgba(59, 130, 246, 0.12);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      /* NAVBAR */
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1.2rem;
+        transition: all 0.3s;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.15rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s ease-out;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 5px 12px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.84rem;
+        padding: 8px 12px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 3px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 15px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1000px;
+        padding-left: 3rem;
+        padding-right: 3rem;
+      }
+
+      /* TOPIC HEADER */
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .topic-header h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      /* CONCEPT CARD */
+      .concept {
+        margin-bottom: 3.5rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.1);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .badge {
+        font-size: 0.65rem;
+        padding: 3px 12px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-easy {
+        background: var(--greenBg);
+        color: var(--green);
+      }
+      .badge-medium {
+        background: var(--amberBg);
+        color: var(--amber);
+      }
+      .badge-hard {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .read-time {
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      /* ONE-LINER */
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 10px 10px 0;
+        font-weight: 600;
+        font-size: 1.02rem;
+        line-height: 1.6;
+      }
+
+      /* DEEP EXPLANATION */
+      .deep {
+        margin-bottom: 1.5rem;
+      }
+      .deep p {
+        margin-bottom: 1rem;
+        color: var(--text);
+        font-size: 0.94rem;
+      }
+      .deep p:last-child {
+        margin-bottom: 0;
+      }
+      .deep strong {
+        color: var(--gold);
+      }
+
+      /* KEY POINTS */
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      /* GOTCHA BOX */
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p,
+      .gotcha li {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .gotcha ul {
+        list-style: disc;
+        padding-left: 1.2rem;
+        margin-top: 0.5rem;
+      }
+
+      /* COMPETITIVE EDGE */
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 4rem;
+        color: var(--gold);
+        opacity: 0.08;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* INTERVIEW Q */
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--blue);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.65rem;
+        font-weight: 800;
+        background: var(--blueBg);
+        color: var(--blue);
+        padding: 3px 8px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--blueBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        color: var(--text2);
+        line-height: 1.7;
+      }
+
+      /* DIAGRAM */
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .diagram-label {
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      /* RESOURCES */
+      .resources {
+        margin: 1.5rem 0;
+      }
+      .resources h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--purple);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 0.8rem;
+      }
+      .res-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        transition: all 0.2s;
+        background: var(--surface);
+        display: block;
+      }
+      .res-card:hover {
+        border-color: var(--purple);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.15);
+      }
+      .res-card .icon {
+        font-size: 1.3rem;
+        margin-bottom: 0.3rem;
+      }
+      .res-card .title {
+        font-weight: 700;
+        font-size: 0.88rem;
+        margin-bottom: 0.2rem;
+        color: var(--text);
+      }
+      .res-card .why {
+        font-size: 0.78rem;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      /* SECTION DIVIDER */
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+        border: none;
+        margin: 0;
+      }
+
+      /* BACK TO TOP */
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      /* MOBILE */
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+        .main {
+          padding: 1.5rem 1rem 4rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .topic-header h1 {
+          font-size: 1.8rem;
+        }
+        .concept-header h2 {
+          font-size: 1.2rem;
+        }
+        .resources-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* SCROLLBAR */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--gold2);
+      }
+
+      /* COMPARISON TABLE */
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 1px;
+        padding: 12px 15px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 15px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--accent);
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <span class="nav-brand">OS Interview Mastery</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="#proc-thread">Process/Thread</a>
+        <a href="#ctx-switch">Context Switch</a>
+        <a href="#multithreading">Multithreading</a>
+        <a href="#scheduling">Scheduling</a>
+        <a href="#deadlock">Deadlock</a>
+        <a href="#starvation">Starvation</a>
+        <a href="#race">Race Condition</a>
+        <a href="#mutex">Mutex</a>
+        <a href="#semaphore">Semaphore</a>
+        <a href="#paging">Paging</a>
+        <a href="#segmentation">Segmentation</a>
+        <a href="#vmem">Virtual Mem</a>
+        <a href="#heap-stack">Heap/Stack</a>
+        <a href="#mem-alloc">Mem Alloc</a>
+        <a href="#gc">GC</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Process Management</div>
+        <a href="#proc-thread"><span class="num">1</span>Process vs Thread</a>
+        <a href="#ctx-switch"><span class="num">2</span>Context Switching</a>
+        <a href="#multithreading"><span class="num">3</span>Multithreading</a>
+        <a href="#scheduling"
+          ><span class="num">4</span>Scheduling Algorithms</a
+        >
+
+        <div class="sidebar-title">Synchronization</div>
+        <a href="#deadlock"><span class="num">5</span>Deadlock</a>
+        <a href="#starvation"><span class="num">6</span>Starvation</a>
+        <a href="#race"><span class="num">7</span>Race Condition</a>
+        <a href="#mutex"><span class="num">8</span>Mutex</a>
+        <a href="#semaphore"><span class="num">9</span>Semaphore</a>
+
+        <div class="sidebar-title">Memory Management</div>
+        <a href="#paging"><span class="num">10</span>Paging</a>
+        <a href="#segmentation"><span class="num">11</span>Segmentation</a>
+        <a href="#vmem"><span class="num">12</span>Virtual Memory</a>
+        <a href="#heap-stack"><span class="num">13</span>Heap vs Stack</a>
+        <a href="#mem-alloc"><span class="num">14</span>Memory Allocation</a>
+        <a href="#gc"><span class="num">15</span>Garbage Collection</a>
+      </aside>
+
+      <main class="main" id="mainContent">
+        <div class="topic-header">
+          <h1>Operating System</h1>
+          <p>
+            15 Core Concepts — The backbone of every systems interview. Know
+            these, own the room.
+          </p>
+        </div>
+
+        <!-- ============ 1. PROCESS VS THREAD ============ -->
+        <section class="concept" id="proc-thread">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Process vs Thread</h2>
+              <span class="badge badge-easy">Easy</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Process = independent program with own memory. Thread =
+              lightweight worker inside a process sharing the same memory.
+              Process is the house, threads are the people living in it.
+            </div>
+
+            <div class="deep">
+              <p>
+                When you double-click Chrome, the OS creates a
+                <strong>process</strong>. It gets its own memory space, file
+                handles, security context — completely isolated from other
+                processes. If Chrome crashes, your Word document stays safe.
+                That's isolation.
+              </p>
+
+              <p>
+                Now inside Chrome, there are many <strong>threads</strong> — one
+                for UI, one for network, one for each tab's JavaScript. They all
+                share Chrome's memory, so they can easily talk to each other
+                (just read/write shared variables). But they each have their own
+                stack and registers, so they can run independently.
+              </p>
+
+              <p>
+                The key insight:
+                <strong
+                  >OS allocates resources to processes, but schedules
+                  threads</strong
+                >. A process with 4 threads can use 4 CPU cores simultaneously.
+                A single-threaded process wastes 3 cores. That's why
+                multi-threading matters for performance.
+              </p>
+
+              <p>
+                Creating a process is expensive — OS must copy or allocate
+                entire address space, file descriptors, etc. Creating a thread
+                is cheap — just allocate a new stack and register set. Thread
+                switching within the same process is also faster than process
+                switching (no need to change page tables).
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Process A -->
+                <rect
+                  x="10"
+                  y="10"
+                  width="260"
+                  height="180"
+                  rx="12"
+                  fill="none"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="140"
+                  y="35"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-weight="bold"
+                  font-size="13"
+                >
+                  PROCESS A
+                </text>
+                <rect
+                  x="25"
+                  y="50"
+                  width="230"
+                  height="30"
+                  rx="6"
+                  fill="#3b82f6"
+                  opacity=".12"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="140"
+                  y="70"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  Code + Data (Shared by all threads)
+                </text>
+                <rect
+                  x="25"
+                  y="90"
+                  width="230"
+                  height="30"
+                  rx="6"
+                  fill="#10b981"
+                  opacity=".12"
+                  stroke="#10b981"
+                />
+                <text
+                  x="140"
+                  y="110"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  Heap Memory (Shared)
+                </text>
+                <!-- Threads -->
+                <rect
+                  x="30"
+                  y="130"
+                  width="65"
+                  height="50"
+                  rx="6"
+                  fill="#8b5cf6"
+                  opacity=".15"
+                  stroke="#8b5cf6"
+                />
+                <text
+                  x="62"
+                  y="150"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Thread 1
+                </text>
+                <text
+                  x="62"
+                  y="165"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".7"
+                >
+                  Own Stack
+                </text>
+                <rect
+                  x="105"
+                  y="130"
+                  width="65"
+                  height="50"
+                  rx="6"
+                  fill="#8b5cf6"
+                  opacity=".15"
+                  stroke="#8b5cf6"
+                />
+                <text
+                  x="137"
+                  y="150"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Thread 2
+                </text>
+                <text
+                  x="137"
+                  y="165"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".7"
+                >
+                  Own Stack
+                </text>
+                <rect
+                  x="180"
+                  y="130"
+                  width="65"
+                  height="50"
+                  rx="6"
+                  fill="#8b5cf6"
+                  opacity=".15"
+                  stroke="#8b5cf6"
+                />
+                <text
+                  x="212"
+                  y="150"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Thread 3
+                </text>
+                <text
+                  x="212"
+                  y="165"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".7"
+                >
+                  Own Stack
+                </text>
+
+                <!-- Divider -->
+                <line
+                  x1="295"
+                  y1="30"
+                  x2="295"
+                  y2="180"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-dasharray="5"
+                  opacity=".2"
+                />
+                <text
+                  x="295"
+                  y="100"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  opacity=".4"
+                  transform="rotate(-90,295,100)"
+                >
+                  ISOLATED
+                </text>
+
+                <!-- Process B -->
+                <rect
+                  x="320"
+                  y="10"
+                  width="250"
+                  height="180"
+                  rx="12"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                />
+                <text
+                  x="445"
+                  y="35"
+                  text-anchor="middle"
+                  fill="#ef4444"
+                  font-weight="bold"
+                  font-size="13"
+                >
+                  PROCESS B
+                </text>
+                <rect
+                  x="335"
+                  y="50"
+                  width="220"
+                  height="30"
+                  rx="6"
+                  fill="#ef4444"
+                  opacity=".08"
+                  stroke="#ef4444"
+                  stroke-width="1"
+                />
+                <text
+                  x="445"
+                  y="70"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  Completely separate memory
+                </text>
+                <rect
+                  x="335"
+                  y="90"
+                  width="220"
+                  height="90"
+                  rx="6"
+                  fill="#ef4444"
+                  opacity=".05"
+                  stroke="#ef4444"
+                  stroke-dasharray="4"
+                />
+                <text
+                  x="445"
+                  y="140"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  opacity=".6"
+                >
+                  Cannot directly access
+                </text>
+                <text
+                  x="445"
+                  y="158"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  opacity=".6"
+                >
+                  Process A's memory
+                </text>
+              </svg>
+              <p class="diagram-label">
+                Threads share memory within a process. Processes are isolated
+                from each other.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  <strong>Process:</strong> Own address space, heavier,
+                  isolated, crash-safe
+                </li>
+                <li>
+                  <strong>Thread:</strong> Shared address space, lighter, faster
+                  communication, shared fate (one crashes = all die)
+                </li>
+                <li>
+                  Thread creation: ~microseconds. Process creation:
+                  ~milliseconds (10-100x slower)
+                </li>
+                <li>
+                  Each thread has: own stack, own registers, own program
+                  counter. Shares: code, data, heap, files
+                </li>
+                <li>
+                  Inter-process communication (IPC) needs pipes, sockets, shared
+                  memory (slow). Inter-thread = just variables (fast, but needs
+                  sync)
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "Threads share everything" — <strong>Wrong!</strong> Each thread
+                has its own stack and registers. They share heap, code, and data
+                segments. Getting this wrong shows you haven't thought deeply
+                about it.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Mention <strong>PCB (Process Control Block)</strong> vs
+                <strong>TCB (Thread Control Block)</strong>. PCB stores: process
+                state, program counter, registers, memory info, open files,
+                scheduling info. TCB is smaller: just thread state, stack
+                pointer, registers. Also know that modern Linux treats threads
+                as "lightweight processes" (LWP) — uses same task_struct, just
+                with shared memory mappings.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  Why does Chrome use multiple processes instead of threads?
+                </summary>
+                <div class="ans">
+                  Security and stability. Each tab is a separate process. If one
+                  tab crashes (or has a security exploit), it can't affect other
+                  tabs or steal their data. The isolation is worth the overhead
+                  for a browser handling untrusted web content.
+                </div>
+              </details>
+              <details>
+                <summary>Can one thread access another thread's stack?</summary>
+                <div class="ans">
+                  Technically yes (they're in the same address space), but it's
+                  extremely dangerous and undefined behavior. The other thread's
+                  stack might get deallocated when it returns. Never do this in
+                  real code.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  What's the difference between user-level and kernel-level
+                  threads?
+                </summary>
+                <div class="ans">
+                  User-level threads are managed by a user library (green
+                  threads), invisible to OS — fast to create but can't run in
+                  parallel on multiple cores. Kernel-level threads are managed
+                  by OS — can be scheduled on different CPUs but have more
+                  overhead. Most modern systems use kernel threads (pthreads,
+                  std::thread).
+                </div>
+              </details>
+            </div>
+
+            <div class="resources">
+              <h4>Must-Read Resources</h4>
+              <div class="resources-grid">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/watch?v=ITc09gOrqZk"
+                  target="_blank"
+                >
+                  <div class="icon">▶️</div>
+                  <div class="title">Neso Academy — Process vs Thread</div>
+                  <div class="why">
+                    Clean visual explanation with real examples. Best for
+                    building intuition.
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/difference-between-process-and-thread/"
+                  target="_blank"
+                >
+                  <div class="icon">📄</div>
+                  <div class="title">GFG — Process vs Thread</div>
+                  <div class="why">
+                    Comparison table + code examples. Quick revision friendly.
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 2. CONTEXT SWITCHING ============ -->
+        <section class="concept" id="ctx-switch">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Context Switching</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Context switch = OS saves the state of current process/thread and
+              loads the state of the next one. It's the overhead price of
+              multitasking — necessary but expensive.
+            </div>
+
+            <div class="deep">
+              <p>
+                Imagine a chef cooking 5 dishes simultaneously. Each time they
+                switch from biryani to pasta, they must: remember where they
+                left off with biryani, put away those spices, pull out pasta
+                ingredients, recall what step they were on. That mental load is
+                context switching.
+              </p>
+
+              <p>
+                When a context switch happens, the CPU must: save program
+                counter (where were we?), save all registers, save stack
+                pointer, save memory mappings pointer, update PCB. Then load all
+                these values for the next process. This takes
+                <strong>1-10 microseconds</strong> typically — sounds small, but
+                if you're switching thousands of times per second, it adds up.
+              </p>
+
+              <p>
+                Thread context switch is faster than process context switch
+                because threads share the same address space — no need to flush
+                TLB (translation lookaside buffer) or switch page tables. That's
+                why servers often use threads instead of processes.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
+                <!-- Process A -->
+                <rect
+                  x="10"
+                  y="20"
+                  width="100"
+                  height="120"
+                  rx="8"
+                  fill="#10b981"
+                  opacity=".12"
+                  stroke="#10b981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="60"
+                  y="45"
+                  text-anchor="middle"
+                  fill="#10b981"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  Process A
+                </text>
+                <text
+                  x="60"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Running
+                </text>
+                <text
+                  x="60"
+                  y="85"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  PC, Regs,
+                </text>
+                <text
+                  x="60"
+                  y="100"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  Stack, State
+                </text>
+
+                <!-- Arrow 1 -->
+                <path
+                  d="M115 60 L175 40"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                  fill="none"
+                  marker-end="url(#arrowOrange)"
+                />
+                <text
+                  x="145"
+                  y="35"
+                  fill="#F5A623"
+                  font-size="8"
+                  font-weight="bold"
+                >
+                  SAVE
+                </text>
+
+                <!-- PCB A -->
+                <rect
+                  x="180"
+                  y="10"
+                  width="70"
+                  height="50"
+                  rx="6"
+                  fill="#F5A623"
+                  opacity=".12"
+                  stroke="#F5A623"
+                />
+                <text
+                  x="215"
+                  y="32"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  PCB A
+                </text>
+                <text
+                  x="215"
+                  y="48"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Saved State
+                </text>
+
+                <!-- PCB B -->
+                <rect
+                  x="180"
+                  y="100"
+                  width="70"
+                  height="50"
+                  rx="6"
+                  fill="#3b82f6"
+                  opacity=".12"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="215"
+                  y="122"
+                  text-anchor="middle"
+                  fill="#3b82f6"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  PCB B
+                </text>
+                <text
+                  x="215"
+                  y="138"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Saved State
+                </text>
+
+                <!-- Arrow 2 -->
+                <path
+                  d="M250 125 L310 105"
+                  stroke="#3b82f6"
+                  stroke-width="2"
+                  fill="none"
+                  marker-end="url(#arrowBlue)"
+                />
+                <text
+                  x="280"
+                  y="100"
+                  fill="#3b82f6"
+                  font-size="8"
+                  font-weight="bold"
+                >
+                  LOAD
+                </text>
+
+                <!-- Process B -->
+                <rect
+                  x="315"
+                  y="20"
+                  width="100"
+                  height="120"
+                  rx="8"
+                  fill="#3b82f6"
+                  opacity=".12"
+                  stroke="#3b82f6"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="365"
+                  y="45"
+                  text-anchor="middle"
+                  fill="#3b82f6"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  Process B
+                </text>
+                <text
+                  x="365"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Running
+                </text>
+                <text
+                  x="365"
+                  y="85"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  Loaded from
+                </text>
+                <text
+                  x="365"
+                  y="100"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  PCB B
+                </text>
+
+                <!-- Timeline -->
+                <rect
+                  x="430"
+                  y="20"
+                  width="80"
+                  height="120"
+                  rx="8"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-dasharray="4"
+                  opacity=".2"
+                />
+                <text
+                  x="470"
+                  y="45"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  opacity=".6"
+                >
+                  CPU Time
+                </text>
+                <rect
+                  x="445"
+                  y="55"
+                  width="50"
+                  height="15"
+                  rx="3"
+                  fill="#10b981"
+                  opacity=".3"
+                />
+                <rect
+                  x="445"
+                  y="75"
+                  width="50"
+                  height="8"
+                  rx="2"
+                  fill="#F5A623"
+                  opacity=".3"
+                />
+                <text
+                  x="470"
+                  y="82"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="6"
+                >
+                  switch
+                </text>
+                <rect
+                  x="445"
+                  y="88"
+                  width="50"
+                  height="15"
+                  rx="3"
+                  fill="#3b82f6"
+                  opacity=".3"
+                />
+                <rect
+                  x="445"
+                  y="108"
+                  width="50"
+                  height="8"
+                  rx="2"
+                  fill="#F5A623"
+                  opacity=".3"
+                />
+                <rect
+                  x="445"
+                  y="121"
+                  width="50"
+                  height="15"
+                  rx="3"
+                  fill="#10b981"
+                  opacity=".3"
+                />
+
+                <defs>
+                  <marker
+                    id="arrowOrange"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#F5A623" />
+                  </marker>
+                  <marker
+                    id="arrowBlue"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#3b82f6" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Context switch: Save A's state to PCB, load B's state from PCB.
+                The switch time is pure overhead.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Triggers: time slice expired, I/O wait, interrupt,
+                  higher-priority process arrived
+                </li>
+                <li>
+                  Thread switch (same process): ~1μs. Process switch: ~10μs (TLB
+                  flush, page table switch)
+                </li>
+                <li>
+                  Saved to PCB: PC, registers, stack pointer, memory maps,
+                  process state, scheduling info
+                </li>
+                <li>
+                  Context switch is pure overhead — no useful work done. Too
+                  many switches = thrashing
+                </li>
+                <li>
+                  Voluntary switch: process yields (I/O wait). Involuntary:
+                  preempted by scheduler
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                Don't say "context switch is slow because saving registers is
+                slow." Saving a few dozen registers is trivial. The real cost is
+                <strong>cache pollution</strong> — the new process has different
+                working data, so CPU caches are full of useless stuff. Cache
+                misses are the real killer.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>How can we reduce context switch overhead?</summary>
+                <div class="ans">
+                  1) Use threads instead of processes (shared address space = no
+                  TLB flush). 2) Use async I/O instead of blocking (fewer
+                  switches). 3) Pin threads to CPU cores (cache affinity). 4)
+                  Use larger time slices (fewer switches, but worse
+                  responsiveness). 5) Use user-level threading (like goroutines)
+                  — switches happen in user space without kernel involvement.
+                </div>
+              </details>
+              <details>
+                <summary>What triggers an involuntary context switch?</summary>
+                <div class="ans">
+                  Timer interrupt (time slice expired), hardware interrupt (disk
+                  ready, network packet), higher-priority process becomes ready,
+                  current process needs resource held by another.
+                </div>
+              </details>
+            </div>
+
+            <div class="resources">
+              <h4>Must-Read Resources</h4>
+              <div class="resources-grid">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/watch?v=DKmBRl8j3Ak"
+                  target="_blank"
+                >
+                  <div class="icon">▶️</div>
+                  <div class="title">Gate Smashers — Context Switching</div>
+                  <div class="why">
+                    Exam-oriented, covers numerical problems too.
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/context-switch-in-operating-system/"
+                  target="_blank"
+                >
+                  <div class="icon">📄</div>
+                  <div class="title">GFG — Context Switch</div>
+                  <div class="why">
+                    Complete breakdown with what's saved and when.
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3. MULTITHREADING ============ -->
+        <section class="concept" id="multithreading">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Multithreading</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Running multiple threads within one process to achieve
+              concurrency. Threads share memory for fast communication but
+              require synchronization to avoid chaos.
+            </div>
+
+            <div class="deep">
+              <p>
+                Single-threaded program is like a restaurant with one chef.
+                Multithreaded is like having 4 chefs in the same kitchen. They
+                can cook multiple dishes in parallel, share ingredients, but
+                need to coordinate — or they'll grab the same knife at the same
+                time.
+              </p>
+
+              <p>
+                <strong>Why use multithreading?</strong> (1) Utilize multiple
+                CPU cores — a 4-core CPU with single-threaded code wastes 75% of
+                its power. (2) Keep UI responsive — heavy computation in
+                background thread while UI thread stays smooth. (3) Handle I/O
+                efficiently — while one thread waits for disk, another can do
+                CPU work.
+              </p>
+
+              <p>
+                <strong>The catch:</strong> shared memory makes communication
+                easy but creates problems. Two threads modifying the same
+                variable? Race condition. Two threads waiting for each other's
+                locks? Deadlock. Multithreading is powerful but tricky to get
+                right.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  <strong>Concurrency ≠ Parallelism.</strong> Concurrency =
+                  dealing with multiple tasks (can be on 1 core via
+                  time-slicing). Parallelism = truly simultaneous execution
+                  (needs multiple cores).
+                </li>
+                <li>
+                  Benefits: better CPU utilization, responsive UI, efficient I/O
+                  handling
+                </li>
+                <li>
+                  Challenges: race conditions, deadlocks, debugging complexity,
+                  thread safety
+                </li>
+                <li>
+                  Thread-safe code: works correctly when called from multiple
+                  threads simultaneously
+                </li>
+                <li>
+                  Synchronization tools: mutex, semaphore, condition variables,
+                  atomics, lock-free structures
+                </li>
+              </ul>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Threading Model</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+              <tr>
+                <td>Many-to-One</td>
+                <td>
+                  Many user threads → one kernel thread. Can't use multiple
+                  cores.
+                </td>
+                <td>Green threads (old Java)</td>
+              </tr>
+              <tr>
+                <td>One-to-One</td>
+                <td>Each user thread = one kernel thread. True parallelism.</td>
+                <td>Linux pthreads, Windows threads</td>
+              </tr>
+              <tr>
+                <td>Many-to-Many</td>
+                <td>Many user threads → many kernel threads. Best of both.</td>
+                <td>Go goroutines, Windows fiber</td>
+              </tr>
+            </table>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know <strong>Amdahl's Law</strong>: Speedup from parallelization
+                is limited by the sequential portion of code. If 10% of your
+                code must be sequential, max speedup is 10x no matter how many
+                cores you add. This is why pure parallelism doesn't scale
+                infinitely. Mention this and watch the interviewer's eyebrows
+                rise.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  When should you use processes instead of threads?
+                </summary>
+                <div class="ans">
+                  When you need strong isolation (security), crash resistance
+                  (one worker failing shouldn't kill others), or when you're
+                  calling untrusted code. Also when using languages without true
+                  multithreading (Python's GIL limits true parallelism — use
+                  multiprocessing instead).
+                </div>
+              </details>
+              <details>
+                <summary>
+                  What's the difference between I/O-bound and CPU-bound tasks?
+                </summary>
+                <div class="ans">
+                  I/O-bound spends most time waiting (disk, network) — benefits
+                  from many threads even on single core. CPU-bound spends time
+                  computing — only benefits from threads if you have multiple
+                  cores. Adding more threads than cores for CPU-bound work just
+                  increases overhead.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4. SCHEDULING ALGORITHMS ============ -->
+        <section class="concept" id="scheduling">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Scheduling Algorithms</h2>
+              <span class="badge badge-hard">Hard</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              CPU scheduling decides which process runs next. Key algorithms:
+              FCFS (first come), SJF (shortest job), Round Robin (time slices),
+              Priority (importance), MLFQ (adaptive). Each optimizes for
+              different goals.
+            </div>
+
+            <div class="deep">
+              <p>
+                <strong>FCFS (First Come First Serve):</strong> Simple queue —
+                whoever comes first, runs first. Problem:
+                <strong>convoy effect</strong>. One long job makes everyone
+                behind wait. Average waiting time can be terrible.
+              </p>
+
+              <p>
+                <strong>SJF (Shortest Job First):</strong> Pick the process with
+                shortest burst time. Mathematically optimal for average waiting
+                time. Problem: <strong>starvation</strong> of long processes,
+                and how do you even know the burst time in advance? (Answer:
+                predict using exponential averaging of past bursts.)
+              </p>
+
+              <p>
+                <strong>Round Robin:</strong> Each process gets a fixed time
+                slice (quantum), then goes to back of queue.
+                <strong>Fairest algorithm</strong> — everyone gets a turn.
+                Tuning the quantum is key: too small = too many context
+                switches, too large = behaves like FCFS.
+              </p>
+
+              <p>
+                <strong>Priority Scheduling:</strong> Higher priority runs
+                first. Problem: low-priority processes starve. Solution:
+                <strong>aging</strong> — increase priority of waiting processes
+                over time. Can be preemptive or non-preemptive.
+              </p>
+
+              <p>
+                <strong>MLFQ (Multi-Level Feedback Queue):</strong> Multiple
+                queues with different priorities and time quanta. New processes
+                start at top (high priority, small quantum). If they use full
+                quantum, they're CPU-bound → demote to lower queue. Interactive
+                processes (short bursts) stay at top. Adapts to process
+                behavior. <strong>Most real OS use variants of this.</strong>
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- RR Visualization -->
+                <text
+                  x="250"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  Round Robin (Time Quantum = 4)
+                </text>
+
+                <!-- Ready Queue -->
+                <text
+                  x="40"
+                  y="50"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Ready Queue:
+                </text>
+                <rect
+                  x="110"
+                  y="38"
+                  width="35"
+                  height="25"
+                  rx="4"
+                  fill="#ef4444"
+                  opacity=".2"
+                  stroke="#ef4444"
+                />
+                <text
+                  x="127"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P1
+                </text>
+                <rect
+                  x="150"
+                  y="38"
+                  width="35"
+                  height="25"
+                  rx="4"
+                  fill="#3b82f6"
+                  opacity=".2"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="167"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P2
+                </text>
+                <rect
+                  x="190"
+                  y="38"
+                  width="35"
+                  height="25"
+                  rx="4"
+                  fill="#10b981"
+                  opacity=".2"
+                  stroke="#10b981"
+                />
+                <text
+                  x="207"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P3
+                </text>
+                <rect
+                  x="230"
+                  y="38"
+                  width="35"
+                  height="25"
+                  rx="4"
+                  fill="#f59e0b"
+                  opacity=".2"
+                  stroke="#f59e0b"
+                />
+                <text
+                  x="247"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P4
+                </text>
+
+                <!-- CPU -->
+                <path
+                  d="M280 50 L320 50"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+                <rect
+                  x="325"
+                  y="30"
+                  width="70"
+                  height="45"
+                  rx="8"
+                  fill="#F5A623"
+                  opacity=".15"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="360"
+                  y="58"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  CPU
+                </text>
+
+                <!-- Back arrow -->
+                <path
+                  d="M395 75 C 450 75, 450 130, 300 130 C 150 130, 100 75, 100 50"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-dasharray="4"
+                  fill="none"
+                  opacity=".4"
+                />
+                <text
+                  x="380"
+                  y="110"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  back to queue
+                </text>
+
+                <!-- Gantt Chart -->
+                <text
+                  x="20"
+                  y="160"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Gantt:
+                </text>
+                <rect
+                  x="60"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#ef4444"
+                  opacity=".3"
+                  stroke="#ef4444"
+                />
+                <text
+                  x="80"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P1
+                </text>
+                <rect
+                  x="100"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#3b82f6"
+                  opacity=".3"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="120"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P2
+                </text>
+                <rect
+                  x="140"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#10b981"
+                  opacity=".3"
+                  stroke="#10b981"
+                />
+                <text
+                  x="160"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P3
+                </text>
+                <rect
+                  x="180"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#f59e0b"
+                  opacity=".3"
+                  stroke="#f59e0b"
+                />
+                <text
+                  x="200"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P4
+                </text>
+                <rect
+                  x="220"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#ef4444"
+                  opacity=".3"
+                  stroke="#ef4444"
+                />
+                <text
+                  x="240"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P1
+                </text>
+                <rect
+                  x="260"
+                  y="147"
+                  width="40"
+                  height="22"
+                  fill="#3b82f6"
+                  opacity=".3"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="280"
+                  y="162"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  P2
+                </text>
+                <text x="310" y="162" fill="currentColor" font-size="12">
+                  ...
+                </text>
+
+                <text
+                  x="60"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  0
+                </text>
+                <text
+                  x="100"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  4
+                </text>
+                <text
+                  x="140"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  8
+                </text>
+                <text
+                  x="180"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  12
+                </text>
+                <text
+                  x="220"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  16
+                </text>
+                <text
+                  x="260"
+                  y="175"
+                  fill="currentColor"
+                  font-size="7"
+                  opacity=".5"
+                >
+                  20
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowG"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#F5A623" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Round Robin: each process gets 4 time units, then goes to back
+                of queue. Fair but more switches.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  <strong>Preemptive</strong> = OS can interrupt running
+                  process. <strong>Non-preemptive</strong> = process runs until
+                  it yields
+                </li>
+                <li>
+                  SJF is optimal for avg waiting time but impractical (can't
+                  predict burst). SRTF is preemptive SJF.
+                </li>
+                <li>
+                  Round Robin quantum: 10-100ms typical. Trade-off:
+                  responsiveness vs overhead
+                </li>
+                <li>
+                  Starvation in Priority → fix with <strong>Aging</strong>
+                </li>
+                <li>
+                  Linux uses CFS (Completely Fair Scheduler) — red-black tree of
+                  processes by virtual runtime, not queues
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "FCFS is preemptive" — <strong>No!</strong> FCFS is always
+                non-preemptive. Also, "SJF causes starvation" is true, but
+                interviewers sometimes ask "what algorithm causes convoy
+                effect?" That's FCFS, not SJF. Know which problem belongs to
+                which algorithm.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Mention <strong>Belady's Anomaly</strong> in context of page
+                replacement (FIFO can have MORE page faults with MORE frames).
+                Also know that real-time systems use different schedulers:
+                <strong>Rate Monotonic</strong> (static priority based on
+                period) and <strong>EDF</strong> (Earliest Deadline First).
+                Shows you understand scheduling beyond textbook basics.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  How do you choose the right time quantum for Round Robin?
+                </summary>
+                <div class="ans">
+                  If too small: too many context switches, overhead dominates.
+                  If too large: degrades to FCFS, poor response time. Rule of
+                  thumb: quantum should be larger than 80% of CPU bursts but
+                  small enough to feel responsive. Typically 10-100ms. For
+                  interactive systems, smaller (10-20ms). For batch, larger.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  What's the difference between preemptive and non-preemptive
+                  SJF?
+                </summary>
+                <div class="ans">
+                  Non-preemptive SJF: once a process starts, it runs to
+                  completion. Preemptive SJF (called SRTF — Shortest Remaining
+                  Time First): if a new process arrives with shorter remaining
+                  time, current process is preempted. SRTF has lower average
+                  waiting time but more context switches.
+                </div>
+              </details>
+            </div>
+
+            <div class="resources">
+              <h4>Must-Read Resources</h4>
+              <div class="resources-grid">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/watch?v=EWkQl0n0w5M"
+                  target="_blank"
+                >
+                  <div class="icon">▶️</div>
+                  <div class="title">Abdul Bari — CPU Scheduling</div>
+                  <div class="why">
+                    Detailed explanation with Gantt charts and calculations.
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/"
+                  target="_blank"
+                >
+                  <div class="icon">📄</div>
+                  <div class="title">GFG — CPU Scheduling</div>
+                  <div class="why">All algorithms with code and examples.</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5. DEADLOCK ============ -->
+        <section class="concept" id="deadlock">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Deadlock</h2>
+              <span class="badge badge-hard">Hard</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Deadlock = two or more processes stuck forever, each waiting for a
+              resource the other holds. No one can proceed. System freezes.
+            </div>
+
+            <div class="deep">
+              <p>
+                Two cars on a narrow bridge, coming from opposite sides, meeting
+                in the middle. Neither can move forward, neither wants to
+                reverse. They wait for each other... forever. That's deadlock.
+              </p>
+
+              <p>
+                In OS terms: Process A holds Resource 1 and wants Resource 2.
+                Process B holds Resource 2 and wants Resource 1. Neither
+                releases what they have. Both wait indefinitely. Classic
+                example: two threads each trying to acquire two locks in
+                different orders.
+              </p>
+
+              <p>
+                <strong>Four Necessary Conditions (Coffman, 1971):</strong> ALL
+                four must exist simultaneously for deadlock to occur:
+              </p>
+              <ol
+                style="
+                  margin-left: 1.5rem;
+                  margin-top: 0.5rem;
+                  margin-bottom: 1rem;
+                "
+              >
+                <li>
+                  <strong>Mutual Exclusion:</strong> At least one resource is
+                  non-shareable (only one process can use it at a time)
+                </li>
+                <li>
+                  <strong>Hold and Wait:</strong> Process holds some resources
+                  while waiting for others
+                </li>
+                <li>
+                  <strong>No Preemption:</strong> Resources can't be forcibly
+                  taken away
+                </li>
+                <li>
+                  <strong>Circular Wait:</strong> A→B→C→A cycle of waiting
+                </li>
+              </ol>
+              <p>
+                Break ANY one of these conditions and deadlock becomes
+                impossible.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="200"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  Circular Wait = Deadlock
+                </text>
+
+                <!-- Process A -->
+                <circle
+                  cx="100"
+                  cy="90"
+                  r="35"
+                  fill="#ef4444"
+                  opacity=".15"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                />
+                <text
+                  x="100"
+                  y="88"
+                  text-anchor="middle"
+                  fill="#ef4444"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  P₁
+                </text>
+                <text
+                  x="100"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Holds R₁
+                </text>
+
+                <!-- Process B -->
+                <circle
+                  cx="300"
+                  cy="90"
+                  r="35"
+                  fill="#3b82f6"
+                  opacity=".15"
+                  stroke="#3b82f6"
+                  stroke-width="2"
+                />
+                <text
+                  x="300"
+                  y="88"
+                  text-anchor="middle"
+                  fill="#3b82f6"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  P₂
+                </text>
+                <text
+                  x="300"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Holds R₂
+                </text>
+
+                <!-- Resource 1 -->
+                <rect
+                  x="80"
+                  y="145"
+                  width="40"
+                  height="25"
+                  rx="4"
+                  fill="#F5A623"
+                  opacity=".2"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="100"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  R₁
+                </text>
+
+                <!-- Resource 2 -->
+                <rect
+                  x="280"
+                  y="145"
+                  width="40"
+                  height="25"
+                  rx="4"
+                  fill="#F5A623"
+                  opacity=".2"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="300"
+                  y="162"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  R₂
+                </text>
+
+                <!-- Arrows: P1 holds R1 -->
+                <line
+                  x1="100"
+                  y1="125"
+                  x2="100"
+                  y2="142"
+                  stroke="#10b981"
+                  stroke-width="2"
+                  marker-end="url(#arrowGreen)"
+                />
+
+                <!-- P1 wants R2 -->
+                <path
+                  d="M135 90 Q 200 60, 265 90"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-dasharray="5"
+                  fill="none"
+                  marker-end="url(#arrowRed)"
+                />
+                <text
+                  x="200"
+                  y="55"
+                  text-anchor="middle"
+                  fill="#ef4444"
+                  font-size="9"
+                >
+                  wants R₂
+                </text>
+
+                <!-- P2 holds R2 -->
+                <line
+                  x1="300"
+                  y1="125"
+                  x2="300"
+                  y2="142"
+                  stroke="#10b981"
+                  stroke-width="2"
+                  marker-end="url(#arrowGreen)"
+                />
+
+                <!-- P2 wants R1 -->
+                <path
+                  d="M265 90 Q 200 120, 135 90"
+                  stroke="#3b82f6"
+                  stroke-width="2"
+                  stroke-dasharray="5"
+                  fill="none"
+                  marker-end="url(#arrowBlu)"
+                />
+                <text
+                  x="200"
+                  y="135"
+                  text-anchor="middle"
+                  fill="#3b82f6"
+                  font-size="9"
+                >
+                  wants R₁
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowRed"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#ef4444" />
+                  </marker>
+                  <marker
+                    id="arrowBlu"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#3b82f6" />
+                  </marker>
+                  <marker
+                    id="arrowGreen"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#10b981" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                P₁ holds R₁, wants R₂. P₂ holds R₂, wants R₁. Circular wait →
+                Deadlock!
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  <strong>Prevention:</strong> Break one of 4 conditions at
+                  design time (e.g., order all lock acquisitions — breaks
+                  circular wait)
+                </li>
+                <li>
+                  <strong>Avoidance:</strong> Banker's Algorithm — before
+                  granting resource, check if system stays in safe state
+                </li>
+                <li>
+                  <strong>Detection:</strong> Build resource allocation graph.
+                  Cycle detection = deadlock (for single-instance resources)
+                </li>
+                <li>
+                  <strong>Recovery:</strong> Kill a process, preempt resources,
+                  rollback to checkpoint
+                </li>
+                <li>
+                  Most real OS use <strong>Ostrich Algorithm</strong> — ignore
+                  deadlocks, let user reboot. Full prevention is too expensive.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "Deadlock and starvation are the same" — <strong>No!</strong> In
+                deadlock, processes are BLOCKED waiting for each other. In
+                starvation, process is READY but never gets scheduled. Deadlock
+                = stuck. Starvation = unfair scheduling. Don't mix them up.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know the <strong>Banker's Algorithm</strong> in detail — it's a
+                classic interview question. Also mention that
+                <strong>databases actively detect and resolve deadlocks</strong>
+                (by rolling back one transaction) while OS typically doesn't.
+                Why? Database transactions are designed to be rollback-safe;
+                arbitrary processes aren't.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  How does ordering lock acquisition prevent deadlock?
+                </summary>
+                <div class="ans">
+                  Assign a unique number to each resource. Rule: always acquire
+                  locks in increasing order. If P1 wants R1 then R2, and P2
+                  wants R2 then R1, both must acquire R1 first. No circular wait
+                  possible. This is the most practical prevention technique in
+                  real code.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  What's the difference between safe state and deadlock-free?
+                </summary>
+                <div class="ans">
+                  Safe state means there EXISTS some sequence in which all
+                  processes can complete. Unsafe state means deadlock MIGHT
+                  happen (not guaranteed). Banker's algorithm keeps system in
+                  safe state, which is stricter than just avoiding deadlock.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 6. STARVATION ============ -->
+        <section class="concept" id="starvation">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Starvation</h2>
+              <span class="badge badge-easy">Easy</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              Starvation = a process is ready to run but never gets CPU time
+              because higher-priority processes keep jumping ahead. It's not
+              blocked — it's just perpetually ignored.
+            </div>
+
+            <div class="deep">
+              <p>
+                Restaurant analogy: VIP customers always get seated first. A
+                regular customer arrives, but VIPs keep coming. Hours pass. The
+                regular customer is never served — not because the restaurant is
+                closed, but because they're always deprioritized. That's
+                starvation.
+              </p>
+
+              <p>
+                Starvation happens in: (1)
+                <strong>Priority Scheduling</strong> — low-priority process
+                waits forever if high-priority processes keep arriving. (2)
+                <strong>SJF</strong> — long jobs starve because short jobs keep
+                coming. (3) <strong>Reader-Writer Problem</strong> — if readers
+                keep arriving, writer starves.
+              </p>
+
+              <p>
+                <strong>Solution: Aging.</strong> Gradually increase priority of
+                waiting processes. Eventually even the lowest priority becomes
+                high enough to run.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Starvation: process is READY but not scheduled. Deadlock:
+                  process is BLOCKED.
+                </li>
+                <li>
+                  Starvation is a liveness problem (something that should happen
+                  eventually, doesn't)
+                </li>
+                <li>
+                  Algorithms prone to starvation: Priority, SJF, SSTF (disk
+                  scheduling)
+                </li>
+                <li>
+                  Round Robin is inherently starvation-free — everyone gets a
+                  turn
+                </li>
+                <li>
+                  Fix: Aging, fair scheduling, combining priority with round
+                  robin
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>Can FCFS cause starvation?</summary>
+                <div class="ans">
+                  No. FCFS serves processes in arrival order. A process will
+                  definitely run when its turn comes. It may wait a long time
+                  (convoy effect) but it won't starve. Starvation requires
+                  indefinite postponement, which FCFS doesn't have.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 7. RACE CONDITION ============ -->
+        <section class="concept" id="race">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Race Condition</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Race condition = program's output depends on the unpredictable
+              timing of thread execution. Two threads access shared data, at
+              least one writes, no synchronization → incorrect results.
+            </div>
+
+            <div class="deep">
+              <p>
+                Two people editing the same Google Doc cell simultaneously
+                without seeing each other's changes. Person A reads "50", adds
+                10, writes "60". Person B reads "50" (before A's write), adds
+                20, writes "70". Expected: 80. Got: 70. That's a race condition
+                — the outcome depends on who "wins" the race.
+              </p>
+
+              <p>
+                The classic example: incrementing a shared counter.
+                <code>counter++</code> looks atomic but it's actually: (1) load
+                counter value, (2) add 1, (3) store result. If two threads do
+                this simultaneously, they might both load the same value, both
+                add 1, both store — result: only incremented once instead of
+                twice.
+              </p>
+
+              <p>
+                The code region where shared resources are accessed is called
+                the <strong>critical section</strong>. Race conditions are fixed
+                by ensuring <strong>mutual exclusion</strong> in the critical
+                section — only one thread at a time.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Race condition = bug caused by non-deterministic thread
+                  interleaving
+                </li>
+                <li>
+                  Occurs when: shared data + concurrent access + at least one
+                  write + no synchronization
+                </li>
+                <li>Critical section = code that accesses shared resources</li>
+                <li>
+                  Fix: mutex, semaphore, atomic operations, lock-free data
+                  structures
+                </li>
+                <li>
+                  Even simple operations like <code>x++</code> or
+                  <code>x = y</code> may not be atomic!
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "Race conditions only happen with global variables" —
+                <strong>Wrong!</strong> Any shared data causes races: heap
+                objects accessed by multiple threads, static variables, file
+                handles, database connections. Even reading and writing
+                "different" struct fields can race if they share a cache line
+                (false sharing).
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  How do atomic operations prevent race conditions?
+                </summary>
+                <div class="ans">
+                  Atomic operations are guaranteed to complete fully without
+                  interruption. The CPU ensures that no other thread can see the
+                  operation "in progress" — they see either before or after,
+                  never during. Common atomics: compare-and-swap (CAS),
+                  fetch-and-add. Used for lock-free programming.
+                </div>
+              </details>
+              <details>
+                <summary>What's a TOCTOU race?</summary>
+                <div class="ans">
+                  Time Of Check To Time Of Use. You check a condition (e.g.,
+                  file exists), then act on it (open file). Between check and
+                  use, another process might change the state (delete the file).
+                  Security vulnerability in many systems. Fix: use atomic
+                  operations that check-and-act in one step.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8. MUTEX ============ -->
+        <section class="concept" id="mutex">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Mutex</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Mutex (Mutual Exclusion) = a lock that only ONE thread can hold.
+              Lock before critical section, unlock after. Whoever holds the
+              mutex has exclusive access. Simple, effective, but can cause
+              deadlock if misused.
+            </div>
+
+            <div class="deep">
+              <p>
+                A bathroom with a lock. One person enters, locks the door.
+                Others wait outside. When done, unlocks the door. Next person
+                enters. That's a mutex — only the owner can unlock it.
+              </p>
+
+              <p>
+                <strong>How it works:</strong> Thread calls <code>lock()</code>.
+                If mutex is free, thread acquires it and continues. If mutex is
+                held by another thread, calling thread
+                <strong>blocks</strong> (sleeps) until mutex is released. Thread
+                calls <code>unlock()</code> when done — wakes up one waiting
+                thread.
+              </p>
+
+              <p>
+                <strong>Ownership:</strong> Mutex has owner. Only the thread
+                that locked it can unlock it. This is THE key difference from
+                binary semaphore. If thread A locks mutex, thread B cannot
+                unlock it.
+              </p>
+
+              <p>
+                In C++, use <code>std::lock_guard</code> or
+                <code>std::unique_lock</code> — RAII wrappers that automatically
+                unlock when scope ends. Prevents forgetting to unlock on
+                exceptions or early returns.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Mutex = binary lock with ownership. Only owner can unlock.
+                </li>
+                <li>
+                  Blocking: if mutex is held, caller waits (sleeps, doesn't spin
+                  by default)
+                </li>
+                <li>
+                  Recursive mutex: same thread can lock multiple times (must
+                  unlock same number)
+                </li>
+                <li>
+                  Try-lock: attempt to acquire without blocking — returns
+                  immediately if unavailable
+                </li>
+                <li>
+                  Deadlock risk: thread holds mutex A, waits for mutex B;
+                  another holds B, waits for A
+                </li>
+                <li>
+                  Always use RAII (lock_guard) — never raw lock/unlock calls
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "Mutex and binary semaphore are the same" —
+                <strong>No!</strong> Mutex has ownership. Only the locker can
+                unlock. Binary semaphore has no ownership — ANY thread can
+                signal it. Mutex is for protecting critical sections. Semaphore
+                is for signaling between threads. This distinction is asked in
+                almost every OS interview.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know about <strong>spinlocks</strong>: instead of sleeping when
+                lock is unavailable, thread spins (busy-waits) checking
+                repeatedly. Good for very short critical sections where sleeping
+                overhead is worse than spinning. Bad for long waits (wastes
+                CPU). Linux uses spinlocks in kernel code where sleeping isn't
+                allowed.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 9. SEMAPHORE ============ -->
+        <section class="concept" id="semaphore">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Semaphore</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Semaphore = a counter-based signaling mechanism. wait() decrements
+              (blocks if zero). signal() increments (wakes a blocked thread).
+              Used for limiting concurrent access and thread signaling.
+            </div>
+
+            <div class="deep">
+              <p>
+                <strong>Counting Semaphore:</strong> A parking lot with N
+                spaces. Counter shows available spots. Car enters → wait() →
+                counter decrements. Car leaves → signal() → counter increments.
+                When counter is 0, new cars must wait.
+              </p>
+
+              <p>
+                <strong>Binary Semaphore:</strong> Counter is 0 or 1. Works like
+                a lock but without ownership — any thread can signal it, not
+                just the one that waited. Useful for thread-to-thread signaling.
+              </p>
+
+              <p>
+                <strong>Classic operations:</strong> P() or wait() or down() —
+                decrement and block if would go negative. V() or signal() or
+                up() — increment and wake one blocked thread. These operations
+                are atomic.
+              </p>
+
+              <p>
+                <strong>Classic problems solved by semaphores:</strong>
+                Producer-Consumer (bounded buffer), Readers-Writers (shared data
+                access), Dining Philosophers (resource allocation), and
+                synchronizing execution order.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Counting semaphore: value can be any non-negative integer.
+                  Controls N concurrent accesses.
+                </li>
+                <li>
+                  Binary semaphore: value is 0 or 1. Similar to mutex but NO
+                  ownership.
+                </li>
+                <li>wait()/P()/down(): if value > 0, decrement; else block</li>
+                <li>
+                  signal()/V()/up(): increment value, wake one blocked thread if
+                  any
+                </li>
+                <li>No ownership — any thread can signal (unlike mutex)</li>
+                <li>
+                  Use case: resource counting (connection pool), ordering
+                  (ensure A runs before B), producer-consumer
+                </li>
+              </ul>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Mutex</th>
+                <th>Semaphore</th>
+              </tr>
+              <tr>
+                <td>Value</td>
+                <td>Locked or unlocked</td>
+                <td>Non-negative integer</td>
+              </tr>
+              <tr>
+                <td>Ownership</td>
+                <td>Yes — only owner unlocks</td>
+                <td>No — anyone can signal</td>
+              </tr>
+              <tr>
+                <td>Primary Use</td>
+                <td>Protect critical section</td>
+                <td>Signaling, resource counting</td>
+              </tr>
+              <tr>
+                <td>Recursive</td>
+                <td>Can be (recursive mutex)</td>
+                <td>N/A</td>
+              </tr>
+            </table>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>How does semaphore solve producer-consumer?</summary>
+                <div class="ans">
+                  Use 3 semaphores: (1) empty — counts empty slots, init to
+                  buffer size. (2) full — counts filled slots, init to 0. (3)
+                  mutex — protects buffer access. Producer: wait(empty),
+                  wait(mutex), produce, signal(mutex), signal(full). Consumer:
+                  wait(full), wait(mutex), consume, signal(mutex),
+                  signal(empty).
+                </div>
+              </details>
+              <details>
+                <summary>Can semaphore cause deadlock?</summary>
+                <div class="ans">
+                  Yes. If two processes wait on two semaphores in different
+                  order, same circular wait happens as with mutexes. Semaphores
+                  don't magically prevent deadlock — you still need to be
+                  careful about acquisition order.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 10. PAGING ============ -->
+        <section class="concept" id="paging">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Paging</h2>
+              <span class="badge badge-hard">Hard</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Paging divides memory into fixed-size blocks: logical memory →
+              pages, physical memory → frames. A page table maps pages to
+              frames. Eliminates external fragmentation.
+            </div>
+
+            <div class="deep">
+              <p>
+                Imagine a book (your process) with 100 pages. The library (RAM)
+                has shelf slots (frames). Pages can go into ANY available slot —
+                they don't need to be next to each other. A table of contents
+                (page table) tells you which page is in which slot. Page 1 might
+                be in slot 47, page 2 in slot 3, etc.
+              </p>
+
+              <p>
+                <strong>Address translation:</strong> Logical address = page
+                number + offset. CPU generates logical address, MMU (Memory
+                Management Unit) looks up page number in page table to find
+                frame number, combines with offset to get physical address. This
+                happens for every memory access.
+              </p>
+
+              <p>
+                <strong>Page table overhead:</strong> Each process needs its own
+                page table. With 4KB pages and 4GB address space, you need 1
+                million entries. Each entry is ~4 bytes → 4MB just for page
+                table! Solution: multi-level page tables (only allocate what's
+                needed) or inverted page tables.
+              </p>
+
+              <p>
+                <strong>TLB (Translation Lookaside Buffer):</strong> Page table
+                is in main memory. Accessing it for every address is too slow.
+                TLB is a small, fast cache of recent page→frame mappings. TLB
+                hit = fast. TLB miss = slow (access page table, update TLB).
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Logical Address -->
+                <text
+                  x="10"
+                  y="30"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Logical Address
+                </text>
+                <rect
+                  x="10"
+                  y="40"
+                  width="80"
+                  height="30"
+                  fill="#3b82f6"
+                  opacity=".15"
+                  stroke="#3b82f6"
+                />
+                <text
+                  x="50"
+                  y="60"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Page # (p)
+                </text>
+                <rect
+                  x="90"
+                  y="40"
+                  width="60"
+                  height="30"
+                  fill="#10b981"
+                  opacity=".15"
+                  stroke="#10b981"
+                />
+                <text
+                  x="120"
+                  y="60"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Offset (d)
+                </text>
+
+                <!-- Arrow to Page Table -->
+                <path
+                  d="M50 75 L50 100 L120 100"
+                  stroke="#3b82f6"
+                  stroke-width="1.5"
+                  fill="none"
+                  marker-end="url(#arrBlue)"
+                />
+
+                <!-- Page Table -->
+                <rect
+                  x="120"
+                  y="85"
+                  width="100"
+                  height="90"
+                  rx="6"
+                  fill="var(--surface)"
+                  stroke="#F5A623"
+                  stroke-width="2"
+                />
+                <text
+                  x="170"
+                  y="102"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Page Table
+                </text>
+                <line
+                  x1="125"
+                  y1="108"
+                  x2="215"
+                  y2="108"
+                  stroke="#F5A623"
+                  opacity=".3"
+                />
+                <text x="135" y="122" fill="currentColor" font-size="8">
+                  0 → f3
+                </text>
+                <text x="135" y="136" fill="currentColor" font-size="8">
+                  1 → f7
+                </text>
+                <text
+                  x="135"
+                  y="150"
+                  fill="#F5A623"
+                  font-size="8"
+                  font-weight="bold"
+                >
+                  2 → f1
+                </text>
+                <text x="135" y="164" fill="currentColor" font-size="8">
+                  3 → f5
+                </text>
+
+                <!-- Arrow from Page Table -->
+                <path
+                  d="M220 150 L280 150"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                  fill="none"
+                  marker-end="url(#arrGold)"
+                />
+                <text x="250" y="143" fill="#F5A623" font-size="8">
+                  frame #
+                </text>
+
+                <!-- Physical Address -->
+                <text
+                  x="290"
+                  y="30"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Physical Address
+                </text>
+                <rect
+                  x="290"
+                  y="40"
+                  width="80"
+                  height="30"
+                  fill="#F5A623"
+                  opacity=".15"
+                  stroke="#F5A623"
+                />
+                <text
+                  x="330"
+                  y="60"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Frame # (f)
+                </text>
+                <rect
+                  x="370"
+                  y="40"
+                  width="60"
+                  height="30"
+                  fill="#10b981"
+                  opacity=".15"
+                  stroke="#10b981"
+                />
+                <text
+                  x="400"
+                  y="60"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Offset (d)
+                </text>
+
+                <!-- Arrow to Physical -->
+                <path
+                  d="M280 150 L330 75"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                  fill="none"
+                  marker-end="url(#arrGold)"
+                />
+
+                <!-- Offset bypass -->
+                <path
+                  d="M120 75 C 120 90, 250 90, 400 75"
+                  stroke="#10b981"
+                  stroke-width="1.5"
+                  stroke-dasharray="4"
+                  fill="none"
+                  marker-end="url(#arrGreen)"
+                />
+                <text x="260" y="83" fill="#10b981" font-size="7">
+                  offset unchanged
+                </text>
+
+                <!-- Physical Memory -->
+                <rect
+                  x="450"
+                  y="40"
+                  width="60"
+                  height="150"
+                  rx="6"
+                  fill="var(--surface)"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  opacity=".5"
+                />
+                <text
+                  x="480"
+                  y="58"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".6"
+                >
+                  RAM
+                </text>
+                <rect
+                  x="455"
+                  y="65"
+                  width="50"
+                  height="18"
+                  rx="2"
+                  fill="#8b5cf6"
+                  opacity=".1"
+                />
+                <text
+                  x="480"
+                  y="77"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="7"
+                >
+                  f0
+                </text>
+                <rect
+                  x="455"
+                  y="85"
+                  width="50"
+                  height="18"
+                  rx="2"
+                  fill="#F5A623"
+                  opacity=".25"
+                  stroke="#F5A623"
+                />
+                <text
+                  x="480"
+                  y="97"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="7"
+                  font-weight="bold"
+                >
+                  f1 ←
+                </text>
+                <rect
+                  x="455"
+                  y="105"
+                  width="50"
+                  height="18"
+                  rx="2"
+                  fill="#8b5cf6"
+                  opacity=".1"
+                />
+                <text
+                  x="480"
+                  y="117"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="7"
+                >
+                  f2
+                </text>
+                <rect
+                  x="455"
+                  y="125"
+                  width="50"
+                  height="18"
+                  rx="2"
+                  fill="#8b5cf6"
+                  opacity=".1"
+                />
+                <text
+                  x="480"
+                  y="137"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="7"
+                >
+                  f3
+                </text>
+                <text
+                  x="480"
+                  y="160"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".4"
+                >
+                  ...
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrBlue"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#3b82f6" />
+                  </marker>
+                  <marker
+                    id="arrGold"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#F5A623" />
+                  </marker>
+                  <marker
+                    id="arrGreen"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="#10b981" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Page table maps logical page numbers to physical frame numbers.
+                Offset stays the same.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Page size typically 4KB. Page table stored in main memory (PCB
+                  points to it)
+                </li>
+                <li>
+                  No external fragmentation (fixed-size blocks). Internal
+                  fragmentation in last page
+                </li>
+                <li>
+                  TLB = cache for page table. TLB miss → 2 memory accesses (page
+                  table + actual data)
+                </li>
+                <li>
+                  Page fault: page not in RAM → load from disk. Very expensive
+                  (~10ms)
+                </li>
+                <li>
+                  Multi-level page tables reduce memory overhead for sparse
+                  address spaces
+                </li>
+                <li>
+                  Inverted page table: one entry per frame (not per page). Used
+                  by some architectures
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know page replacement algorithms: <strong>FIFO</strong> (simple
+                but Belady's anomaly), <strong>LRU</strong> (optimal
+                approximation, expensive to implement),
+                <strong>Clock/Second-Chance</strong> (practical LRU
+                approximation using reference bit). Also know that Linux uses a
+                variant of LRU with active/inactive lists.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  What's the effective memory access time with TLB?
+                </summary>
+                <div class="ans">
+                  EMAT = hit_rate × (TLB_time + memory_time) + miss_rate ×
+                  (TLB_time + 2×memory_time). If TLB hit rate is 99%, TLB access
+                  is 10ns, memory is 100ns: EMAT = 0.99×(10+100) + 0.01×(10+200)
+                  = 108.9 + 2.1 = 111ns. Without TLB: 200ns (two memory accesses
+                  every time). TLB is crucial!
+                </div>
+              </details>
+              <details>
+                <summary>Why is page fault so expensive?</summary>
+                <div class="ans">
+                  Page fault means the page is on disk (swap space). Disk access
+                  is ~10ms (10 million ns) vs memory ~100ns — that's 100,000x
+                  slower! During page fault, process blocks, context switch
+                  happens, disk I/O is initiated, another process runs. It's the
+                  most expensive operation in memory management.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 11. SEGMENTATION ============ -->
+        <section class="concept" id="segmentation">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Segmentation</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Segmentation divides memory into variable-size logical units: code
+              segment, data segment, stack segment. More human-friendly than
+              paging but causes external fragmentation.
+            </div>
+
+            <div class="deep">
+              <p>
+                While paging blindly chops memory into equal-size pages (like
+                cutting a pizza into identical slices without looking at
+                toppings), segmentation respects the logical structure of your
+                program. Code is one segment, data is another, stack is another.
+                Each has a different size based on need.
+              </p>
+
+              <p>
+                <strong>Segment table:</strong> Each entry has: base (starting
+                physical address) + limit (segment size). Logical address =
+                segment number + offset. If offset > limit →
+                <strong>segmentation fault!</strong> This is protection built
+                into the hardware.
+              </p>
+
+              <p>
+                Modern systems use <strong>segmented paging</strong>: segments
+                are further divided into pages. You get logical grouping of
+                segments + no external fragmentation of paging. x86 supports
+                both, but modern OS (Linux, Windows) use flat segmentation (all
+                segments have base=0, limit=max) and rely entirely on paging.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Paging: fixed-size, invisible to programmer, no external
+                  fragmentation
+                </li>
+                <li>
+                  Segmentation: variable-size, programmer-visible, external
+                  fragmentation
+                </li>
+                <li>Segment table: base + limit for each segment</li>
+                <li>Protection: offset must be < limit, else segfault</li>
+                <li>
+                  Modern x86-64: segmentation mostly disabled (flat model),
+                  paging does all the work
+                </li>
+              </ul>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Paging</th>
+                <th>Segmentation</th>
+              </tr>
+              <tr>
+                <td>Division</td>
+                <td>Fixed-size pages/frames</td>
+                <td>Variable-size segments</td>
+              </tr>
+              <tr>
+                <td>Visibility</td>
+                <td>Transparent to programmer</td>
+                <td>Programmer-visible</td>
+              </tr>
+              <tr>
+                <td>Fragmentation</td>
+                <td>Internal (last page)</td>
+                <td>External (between segments)</td>
+              </tr>
+              <tr>
+                <td>Address</td>
+                <td>Page # + Offset</td>
+                <td>Segment # + Offset</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============ 12. VIRTUAL MEMORY ============ -->
+        <section class="concept" id="vmem">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Virtual Memory</h2>
+              <span class="badge badge-hard">Hard</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Virtual memory gives each process the illusion of having its own
+              large, contiguous address space — even if physical RAM is smaller.
+              Uses disk as extension of RAM via demand paging.
+            </div>
+
+            <div class="deep">
+              <p>
+                Every process believes it owns the entire memory — say, 4GB on
+                32-bit system. But your machine might only have 2GB RAM. How?
+                <strong>Virtual memory</strong>. Each process has a virtual
+                address space. OS maps only the pages actually being used to
+                physical RAM. Rest stays on disk (swap space).
+              </p>
+
+              <p>
+                <strong>Demand paging:</strong> Don't load entire program at
+                startup. Load pages only when accessed. First access to a page →
+                page fault → OS loads it from disk. Subsequent accesses → fast
+                (already in RAM).
+              </p>
+
+              <p>
+                <strong>Key benefits:</strong> (1) Run programs larger than
+                physical memory. (2) Process isolation — process A can't access
+                process B's memory because they have different page tables. (3)
+                Memory protection — pages can be read-only, no-execute, etc. (4)
+                Shared libraries — multiple processes can share the same code
+                pages.
+              </p>
+
+              <p>
+                <strong>Thrashing:</strong> If working set (frequently used
+                pages) exceeds RAM, system spends all time swapping pages in and
+                out. CPU utilization drops, system becomes unusable. Solution:
+                add RAM, reduce multiprogramming degree, or use working set
+                model.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Virtual address → MMU + Page table → Physical address (or page
+                  fault)
+                </li>
+                <li>Swap space on disk holds pages evicted from RAM</li>
+                <li>Demand paging: load pages lazily, only when accessed</li>
+                <li>
+                  Copy-on-write: parent and child share pages until one writes →
+                  then copy
+                </li>
+                <li>
+                  Thrashing: too many page faults, system spends all time
+                  swapping
+                </li>
+                <li>
+                  Working set: set of pages process is actively using. Keep
+                  these in RAM
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "Virtual memory means using disk as RAM" —
+                <strong>Incomplete!</strong> Virtual memory is primarily about
+                giving each process its own address space and providing
+                isolation. Disk-backed swapping is just ONE feature. Even with
+                infinite RAM, you'd still use virtual memory for isolation and
+                protection.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know about <strong>memory-mapped files</strong>: map a file
+                directly into virtual address space. Read/write file as if it's
+                memory. OS handles paging automatically. Used for efficient file
+                I/O and shared memory between processes. Also know
+                <strong>copy-on-write (COW)</strong>: fork() doesn't copy memory
+                — both parent and child share pages (marked read-only). Only
+                when one writes, that page is copied. Huge performance win for
+                fork().
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  How does virtual memory provide process isolation?
+                </summary>
+                <div class="ans">
+                  Each process has its own page table. Virtual address 0x1000 in
+                  process A maps to different physical frame than 0x1000 in
+                  process B. Process A literally cannot express an address that
+                  refers to B's memory — the mapping doesn't exist in A's page
+                  table. Hardware enforces this.
+                </div>
+              </details>
+              <details>
+                <summary>What triggers thrashing and how to detect it?</summary>
+                <div class="ans">
+                  Thrashing happens when working sets of running processes
+                  exceed RAM. Symptom: high page fault rate + high disk I/O +
+                  low CPU utilization (CPU waiting for pages). Detection:
+                  monitor page fault frequency. Solution: suspend some processes
+                  (reduce multiprogramming), add RAM, or use better page
+                  replacement.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 13. HEAP VS STACK ============ -->
+        <section class="concept" id="heap-stack">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Heap vs Stack (Memory Layout)</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              In process memory: Stack grows downward (function calls, local
+              vars), Heap grows upward (dynamic allocation). They grow toward
+              each other. Collision = trouble.
+            </div>
+
+            <div class="deep">
+              <p>
+                Every process has a memory layout (from low to high address):
+                <strong>Text</strong> (code) →
+                <strong>Data</strong> (initialized globals) →
+                <strong>BSS</strong> (uninitialized globals) →
+                <strong>Heap</strong> (grows ↑) → ... free space ... →
+                <strong>Stack</strong> (grows ↓) → Kernel space.
+              </p>
+
+              <p>
+                <strong>Stack:</strong> LIFO structure. Each function call
+                pushes a frame (local vars, return address, params). Function
+                return pops the frame. Super fast allocation (just move stack
+                pointer). Limited size (1-8MB typically). Stack overflow = too
+                deep recursion or huge local arrays.
+              </p>
+
+              <p>
+                <strong>Heap:</strong> Dynamic memory — you request
+                (malloc/new), you release (free/delete). Managed by allocator,
+                can fragment. Slower than stack (must find free block). No size
+                limit (well, virtual memory limit). Memory leak = forgetting to
+                free.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+                <rect
+                  x="50"
+                  y="10"
+                  width="200"
+                  height="300"
+                  rx="10"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  opacity=".3"
+                />
+                <text
+                  x="25"
+                  y="25"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".5"
+                >
+                  High
+                </text>
+                <text
+                  x="25"
+                  y="305"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".5"
+                >
+                  Low
+                </text>
+
+                <!-- Kernel -->
+                <rect
+                  x="55"
+                  y="15"
+                  width="190"
+                  height="30"
+                  rx="6"
+                  fill="#ef4444"
+                  opacity=".12"
+                  stroke="#ef4444"
+                />
+                <text
+                  x="150"
+                  y="35"
+                  text-anchor="middle"
+                  fill="#ef4444"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Kernel Space
+                </text>
+
+                <!-- Stack -->
+                <rect
+                  x="55"
+                  y="50"
+                  width="190"
+                  height="50"
+                  rx="6"
+                  fill="#3b82f6"
+                  opacity=".15"
+                  stroke="#3b82f6"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="150"
+                  y="72"
+                  text-anchor="middle"
+                  fill="#3b82f6"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  Stack ↓
+                </text>
+                <text
+                  x="150"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  opacity=".7"
+                >
+                  Function frames, local vars
+                </text>
+
+                <!-- Free Space -->
+                <rect
+                  x="55"
+                  y="110"
+                  width="190"
+                  height="80"
+                  rx="6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-dasharray="5"
+                  opacity=".2"
+                />
+                <text
+                  x="150"
+                  y="155"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  opacity=".4"
+                >
+                  Free Space
+                </text>
+                <text
+                  x="150"
+                  y="170"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                  opacity=".3"
+                >
+                  (Stack & Heap grow here)
+                </text>
+
+                <!-- Heap -->
+                <rect
+                  x="55"
+                  y="195"
+                  width="190"
+                  height="45"
+                  rx="6"
+                  fill="#10b981"
+                  opacity=".15"
+                  stroke="#10b981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="150"
+                  y="215"
+                  text-anchor="middle"
+                  fill="#10b981"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  Heap ↑
+                </text>
+                <text
+                  x="150"
+                  y="232"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  opacity=".7"
+                >
+                  Dynamic allocation (new/malloc)
+                </text>
+
+                <!-- BSS -->
+                <rect
+                  x="55"
+                  y="245"
+                  width="190"
+                  height="22"
+                  rx="4"
+                  fill="#f59e0b"
+                  opacity=".1"
+                  stroke="#f59e0b"
+                />
+                <text
+                  x="150"
+                  y="260"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  BSS (Uninitialized globals)
+                </text>
+
+                <!-- Data -->
+                <rect
+                  x="55"
+                  y="272"
+                  width="190"
+                  height="22"
+                  rx="4"
+                  fill="#f59e0b"
+                  opacity=".15"
+                  stroke="#f59e0b"
+                />
+                <text
+                  x="150"
+                  y="287"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Data (Initialized globals)
+                </text>
+
+                <!-- Text -->
+                <rect
+                  x="55"
+                  y="299"
+                  width="190"
+                  height="22"
+                  rx="4"
+                  fill="#8b5cf6"
+                  opacity=".15"
+                  stroke="#8b5cf6"
+                />
+                <text
+                  x="150"
+                  y="314"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Text (Code) — Read Only
+                </text>
+              </svg>
+              <p class="diagram-label">
+                Process memory layout. Stack grows down, heap grows up. They
+                must not collide!
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  Stack: auto-managed (LIFO), fast, limited size, stores local
+                  vars and function calls
+                </li>
+                <li>
+                  Heap: manually managed, slower, large, stores dynamic
+                  allocations
+                </li>
+                <li>
+                  Text segment: read-only, contains executable instructions
+                </li>
+                <li>
+                  Data/BSS: global and static variables (initialized vs
+                  uninitialized)
+                </li>
+                <li>Each thread has own stack, all threads share heap</li>
+                <li>
+                  Stack overflow: too deep recursion. Heap exhaustion: too much
+                  allocation without freeing
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>Why is stack allocation faster than heap?</summary>
+                <div class="ans">
+                  Stack allocation is just incrementing/decrementing the stack
+                  pointer (one CPU instruction). Heap allocation involves
+                  searching free lists, potentially coalescing blocks,
+                  maintaining metadata — much more complex. Stack is O(1), heap
+                  is more expensive.
+                </div>
+              </details>
+              <details>
+                <summary>
+                  What happens during a function call (stack frame)?
+                </summary>
+                <div class="ans">
+                  Push: (1) arguments (right to left in C), (2) return address,
+                  (3) old base pointer (frame pointer), (4) local variables. Set
+                  new base pointer. On return: restore old base pointer, pop
+                  return address, jump back. This is the "calling convention."
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 14. MEMORY ALLOCATION ============ -->
+        <section class="concept" id="mem-alloc">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Memory Allocation Strategies</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              OS uses strategies to find free memory blocks: First Fit (first
+              block that fits), Best Fit (smallest sufficient block), Worst Fit
+              (largest block). Each trades speed vs fragmentation.
+            </div>
+
+            <div class="deep">
+              <p>
+                <strong>First Fit:</strong> Scan from beginning, pick first hole
+                big enough. Fast (stops early). Problem: fragments the beginning
+                of memory.
+              </p>
+
+              <p>
+                <strong>Next Fit:</strong> Like First Fit, but start from where
+                last allocation ended. Distributes allocation more evenly.
+                Slightly better than First Fit in practice.
+              </p>
+
+              <p>
+                <strong>Best Fit:</strong> Search entire list, pick smallest
+                hole that fits. Minimizes wasted space per allocation. Problem:
+                leaves tiny unusable fragments, slow (full scan).
+              </p>
+
+              <p>
+                <strong>Worst Fit:</strong> Pick largest hole. Theory: leftover
+                will be big enough to be useful. Practice: quickly fragments
+                large blocks, performs worst overall.
+              </p>
+
+              <p>
+                <strong>Buddy System:</strong> Memory divided into power-of-2
+                blocks. Request for 70KB? Allocate 128KB block. To allocate,
+                split larger block into two "buddies." To free, merge buddies
+                back. Used in Linux kernel. Fast and limits fragmentation.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  First Fit is generally best overall (good balance of speed and
+                  fragmentation)
+                </li>
+                <li>
+                  Best Fit leaves tiny holes (external fragmentation still
+                  happens)
+                </li>
+                <li>
+                  Compaction: move processes to create one large free block
+                  (expensive, needs relocation)
+                </li>
+                <li>
+                  Internal fragmentation: wasted space INSIDE allocated block
+                </li>
+                <li>
+                  External fragmentation: wasted space BETWEEN allocated blocks
+                </li>
+                <li>
+                  Modern allocators (jemalloc, tcmalloc): size classes, thread
+                  caches, much smarter
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know that modern allocators like <strong>jemalloc</strong> (used
+                by Firefox, Redis) and <strong>tcmalloc</strong> (Google) use
+                per-thread caches, size classes (buckets for common sizes), and
+                sophisticated techniques to minimize fragmentation and
+                contention. Mentioning these shows you know real-world systems,
+                not just textbook algorithms.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 15. GARBAGE COLLECTION ============ -->
+        <section class="concept" id="gc">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Garbage Collection</h2>
+              <span class="badge badge-medium">Medium</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Garbage Collection automatically finds and frees memory that's no
+              longer reachable. Used in Java, Python, Go — not in C/C++ (manual
+              or smart pointers). Trade-off: convenience vs control.
+            </div>
+
+            <div class="deep">
+              <p>
+                In C/C++, you allocate memory, you free it. Forget to free →
+                memory leak. Free twice → crash. In garbage-collected languages,
+                you just allocate. The GC periodically finds unreachable objects
+                and frees them. You don't call free/delete.
+              </p>
+
+              <p>
+                <strong>Mark and Sweep:</strong> (1) Start from "roots" (stack,
+                globals, registers). (2) Mark all reachable objects. (3) Sweep:
+                free all unmarked objects. Problem: needs to pause program
+                ("stop the world"). Modern GCs use incremental/concurrent
+                marking to reduce pauses.
+              </p>
+
+              <p>
+                <strong>Reference Counting:</strong> Each object has a counter —
+                how many references point to it. When counter = 0, free
+                immediately. Problem: circular references (A→B→A, both have
+                count 1, neither freed). Solution: combine with mark-sweep or
+                use weak references.
+              </p>
+
+              <p>
+                <strong>Generational GC:</strong> Observation: most objects die
+                young. Divide heap into generations: young (Eden), old
+                (Tenured). Collect young generation frequently (fast, most
+                garbage is here). Collect old generation rarely (slow but
+                infrequent). Objects that survive young collections get promoted
+                to old. Java uses this.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Points for Interview</h4>
+              <ul>
+                <li>
+                  C/C++ has no GC — uses RAII, smart pointers, manual management
+                </li>
+                <li>Mark-and-Sweep: handles cycles, but needs pauses</li>
+                <li>
+                  Reference counting: immediate collection, but can't handle
+                  cycles alone
+                </li>
+                <li>
+                  Generational: exploits "most objects die young" — very
+                  effective
+                </li>
+                <li>
+                  GC overhead: memory (tracking info), CPU (collection work),
+                  pauses (latency spikes)
+                </li>
+                <li>
+                  Real-time systems avoid GC — unpredictable pauses are
+                  unacceptable
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Trap</h4>
+              <p>
+                "GC prevents all memory leaks" — <strong>Wrong!</strong> GC only
+                frees unreachable objects. If you keep a reference to something
+                you don't need (like adding to a list and never removing), it's
+                still reachable → still a leak. These "logical leaks" are common
+                in GC languages. Close resources explicitly!
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know why <strong>C++ doesn't have GC</strong>: C++ values
+                deterministic destruction (RAII) and zero-cost abstractions.
+                With GC, you can't predict when destructor runs — problematic
+                for resource management (files, locks, connections). RAII +
+                smart pointers give you GC-like safety WITH deterministic
+                timing. This is why system software (OS kernels, game engines,
+                trading systems) uses C++, not Java.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>How does Python handle circular references?</summary>
+                <div class="ans">
+                  Python uses reference counting as primary mechanism (immediate
+                  collection for most objects) plus a cycle-detecting garbage
+                  collector that periodically runs to find and break circular
+                  references. The gc module lets you control this. This hybrid
+                  approach gets the best of both worlds.
+                </div>
+              </details>
+              <details>
+                <summary>What's a GC pause and why does it matter?</summary>
+                <div class="ans">
+                  During GC, application threads may be paused while GC does its
+                  work. In a game, this causes frame drops. In a server, this
+                  causes latency spikes. In trading, this costs money. GC tuning
+                  is a major concern in latency-sensitive applications. Modern
+                  GCs (ZGC, Shenandoah) aim for sub-millisecond pauses.
+                </div>
+              </details>
+            </div>
+
+            <div class="resources">
+              <h4>Must-Read Resources</h4>
+              <div class="resources-grid">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/watch?v=c32zXYAK7CI"
+                  target="_blank"
+                >
+                  <div class="icon">▶️</div>
+                  <div class="title">
+                    ByteByteGo — Garbage Collection Explained
+                  </div>
+                  <div class="why">
+                    Visual explanation of GC algorithms and trade-offs.
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/garbage-collection-java/"
+                  target="_blank"
+                >
+                  <div class="icon">📄</div>
+                  <div class="title">GFG — Garbage Collection in Java</div>
+                  <div class="why">
+                    Detailed explanation of generational GC with diagrams.
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      // THEME
+      function toggleTheme() {
+        const d = document.documentElement;
+        const isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      // FOCUS MODE
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle("focus-mode");
+        const btn = document.getElementById("focusBtn");
+        btn.textContent = sb.classList.contains("hidden") ? "Expand" : "Focus";
+      }
+
+      // PROGRESS
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      // BACK TO TOP
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ACTIVE HIGHLIGHT
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          const top = s.getBoundingClientRect().top;
+          if (top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      // SCROLL EVENTS
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      // SMOOTH SCROLL
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            const offset = 70;
+            const top =
+              t.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({ top: top, behavior: "smooth" });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Expand";
+          }
+        });
+      });
+
+      // INITIAL
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

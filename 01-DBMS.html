@@ -1,0 +1,3952 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DBMS — Interview Mastery Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1e1e2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 270px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.08);
+        --amberBg: rgba(245, 158, 11, 0.08);
+        --redBg: rgba(239, 68, 68, 0.06);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.06);
+        --cyanBg: rgba(6, 182, 212, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 5px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+      }
+      .topic-header h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.12);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.63rem;
+        padding: 3px 11px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-core {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-important {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .badge-concept {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-practical {
+        background: var(--greenBg);
+        color: var(--green);
+      }
+      .read-time {
+        font-size: 0.73rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .explanation {
+        margin-bottom: 1.5rem;
+      }
+      .explanation p {
+        margin-bottom: 1rem;
+        font-size: 0.94rem;
+      }
+      .explanation strong {
+        color: var(--gold);
+      }
+
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p,
+      .gotcha li {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        font-size: 4.5rem;
+        color: var(--gold);
+        opacity: 0.07;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        vertical-align: top;
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .compare-table code {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .compare-table .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .compare-table .no {
+        color: var(--red);
+        font-weight: 600;
+      }
+
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.63rem;
+        font-weight: 800;
+        background: var(--cyanBg);
+        color: var(--cyan);
+        padding: 3px 7px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--cyanBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      .code-wrap {
+        position: relative;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .code-header {
+        background: #2d2d3a;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-lang {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #aaa;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+      .code-block {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 1.2rem 1.5rem;
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        line-height: 1.8;
+      }
+      .code-block .kw {
+        color: #c678dd;
+      }
+      .code-block .fn {
+        color: #61afef;
+      }
+      .code-block .str {
+        color: #98c379;
+      }
+      .code-block .cm {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .code-block .num {
+        color: #d19a66;
+      }
+      .code-block .tbl {
+        color: #e5c07b;
+      }
+
+      .analogy {
+        background: var(--purpleBg);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.3rem;
+        margin: 1rem 0;
+      }
+      .analogy-title {
+        font-size: 0.75rem;
+        color: var(--purple);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.4rem;
+      }
+      .analogy p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+        .main {
+          padding: 1.5rem 1rem 4rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .topic-header h1 {
+          font-size: 1.7rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="nav-brand">DBMS Interview Mastery</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#acid">ACID</a>
+        <a href="#normalization">Normalization</a>
+        <a href="#denormalization">Denormalization</a>
+        <a href="#keys">Keys</a>
+        <a href="#indexing">Indexing</a>
+        <a href="#clustered">Clustered Index</a>
+        <a href="#btree">B+ Trees</a>
+        <a href="#joins">Joins</a>
+        <a href="#transactions">Transactions</a>
+        <a href="#locks">Locks</a>
+        <a href="#deadlock">Deadlock</a>
+        <a href="#isolation">Isolation</a>
+        <a href="#cap">CAP Theorem</a>
+        <a href="#sharding">Sharding</a>
+        <a href="#sqlnosql">SQL vs NoSQL</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Core Concepts</div>
+        <a href="#acid"><span class="num">1</span>ACID Properties</a>
+        <a href="#normalization"><span class="num">2</span>Normalization</a>
+        <a href="#denormalization"><span class="num">3</span>Denormalization</a>
+        <a href="#keys"><span class="num">4</span>Primary vs Foreign Key</a>
+
+        <div class="sidebar-title">Indexing</div>
+        <a href="#indexing"><span class="num">5</span>What is Indexing</a>
+        <a href="#clustered"
+          ><span class="num">6</span>Clustered vs Non-Clustered</a
+        >
+        <a href="#btree"><span class="num">7</span>B+ Trees</a>
+
+        <div class="sidebar-title">Query & Joins</div>
+        <a href="#joins"><span class="num">8</span>Joins (All Types)</a>
+
+        <div class="sidebar-title">Transactions</div>
+        <a href="#transactions"><span class="num">9</span>Transactions</a>
+        <a href="#locks"><span class="num">10</span>Locks</a>
+        <a href="#deadlock"><span class="num">11</span>Deadlock</a>
+        <a href="#isolation"><span class="num">12</span>Isolation Levels</a>
+
+        <div class="sidebar-title">Distributed Systems</div>
+        <a href="#cap"><span class="num">13</span>CAP Theorem</a>
+        <a href="#sharding"><span class="num">14</span>Sharding</a>
+        <a href="#sqlnosql"><span class="num">15</span>SQL vs NoSQL</a>
+      </aside>
+
+      <main class="main">
+        <div class="topic-header">
+          <h1>DBMS Concepts</h1>
+          <p>
+            15 Core Database Concepts — The foundation every backend engineer
+            must know. Master these, and database questions become easy points.
+          </p>
+        </div>
+
+        <!-- ============ 1. ACID ============ -->
+        <section class="concept" id="acid">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>ACID Properties</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="badge badge-important">Most Asked</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              ACID guarantees reliable transactions: Atomicity (all or nothing),
+              Consistency (valid state to valid state), Isolation (transactions
+              don't interfere), Durability (committed = permanent).
+            </div>
+
+            <div class="explanation">
+              <p>
+                ACID is the gold standard for relational database transactions.
+                When you transfer money between accounts, you absolutely need
+                ACID — partial transfers or lost data is unacceptable.
+              </p>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Property</th>
+                <th>What It Means</th>
+                <th>Real Example</th>
+                <th>How It's Implemented</th>
+              </tr>
+              <tr>
+                <td><strong>Atomicity</strong></td>
+                <td>Transaction is all-or-nothing</td>
+                <td>
+                  Bank transfer: debit AND credit happen together, or neither
+                  happens
+                </td>
+                <td>Transaction logs, undo logs</td>
+              </tr>
+              <tr>
+                <td><strong>Consistency</strong></td>
+                <td>DB moves from one valid state to another</td>
+                <td>Account balance can't go negative if rules forbid it</td>
+                <td>Constraints, triggers, application logic</td>
+              </tr>
+              <tr>
+                <td><strong>Isolation</strong></td>
+                <td>Concurrent transactions don't affect each other</td>
+                <td>
+                  Two transfers happening simultaneously get correct totals
+                </td>
+                <td>Locks, MVCC (Multi-Version Concurrency Control)</td>
+              </tr>
+              <tr>
+                <td><strong>Durability</strong></td>
+                <td>Committed data survives crashes</td>
+                <td>
+                  After "transfer successful," data persists even if power fails
+                </td>
+                <td>Write-ahead logging (WAL), fsync</td>
+              </tr>
+            </table>
+
+            <div class="analogy">
+              <div class="analogy-title">Real-World Analogy</div>
+              <p>
+                <strong>Think of buying a house:</strong> Atomicity = money
+                transfers AND ownership transfers, or deal is off. Consistency =
+                you can't buy a house for negative money. Isolation = two people
+                can't buy the same house simultaneously. Durability = once deed
+                is signed, it's permanent record.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  <strong>Atomicity</strong> uses undo logs — if transaction
+                  fails midway, all changes are rolled back
+                </li>
+                <li>
+                  <strong>Durability</strong> uses redo logs (WAL) — writes are
+                  logged before applying, so recovery is possible
+                </li>
+                <li>
+                  <strong>Isolation</strong> has different levels — see
+                  Isolation Levels section
+                </li>
+                <li>
+                  NoSQL databases often sacrifice some ACID properties for
+                  performance (see BASE)
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know the difference between <strong>ACID</strong> (SQL) and
+                <strong>BASE</strong> (NoSQL): BASE = Basically Available,
+                Soft-state, Eventually consistent. NoSQL trades strict
+                consistency for availability and partition tolerance. Mention
+                this to show you understand the trade-offs.
+              </p>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  How does a database ensure atomicity after a crash?
+                </summary>
+                <div class="ans">
+                  Using <strong>Write-Ahead Logging (WAL)</strong>. Before any
+                  change is made to the actual data, it's first written to a
+                  log. On crash recovery, the database replays committed
+                  transactions from the log and rolls back uncommitted ones
+                  using the undo log.
+                </div>
+              </details>
+              <details>
+                <summary>Can you have ACID in distributed systems?</summary>
+                <div class="ans">
+                  Yes, but it's expensive. Distributed transactions use
+                  <strong>Two-Phase Commit (2PC)</strong>: Phase 1 — all nodes
+                  vote to commit. Phase 2 — if all voted yes, commit; else
+                  rollback. This is slow and blocking. Modern systems often use
+                  <strong>Saga pattern</strong> or eventual consistency instead.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 2. NORMALIZATION ============ -->
+        <section class="concept" id="normalization">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Normalization (1NF to BCNF)</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="badge badge-important">Theory</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="one-liner">
+              Normalization organizes data to reduce redundancy and improve
+              integrity. Each normal form builds on the previous: 1NF (atomic
+              values) → 2NF (no partial deps) → 3NF (no transitive deps) → BCNF
+              (stricter 3NF).
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>Why normalize?</strong> Without it, you get anomalies:
+              </p>
+              <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+                <li>
+                  <strong>Update anomaly:</strong> Change data in one place,
+                  forget another copy
+                </li>
+                <li>
+                  <strong>Insert anomaly:</strong> Can't add data without
+                  unrelated data
+                </li>
+                <li>
+                  <strong>Delete anomaly:</strong> Deleting one thing
+                  accidentally removes other info
+                </li>
+              </ul>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Normal Form</th>
+                <th>Rule</th>
+                <th>Simple Explanation</th>
+                <th>Example Violation</th>
+              </tr>
+              <tr>
+                <td><strong>1NF</strong></td>
+                <td>Atomic values, no repeating groups</td>
+                <td>Each cell has ONE value. No arrays or lists.</td>
+                <td>Phone column with "123, 456, 789"</td>
+              </tr>
+              <tr>
+                <td><strong>2NF</strong></td>
+                <td>1NF + no partial dependencies</td>
+                <td>Every non-key column depends on the WHOLE primary key</td>
+                <td>
+                  Key: (StudentID, CourseID), but StudentName depends only on
+                  StudentID
+                </td>
+              </tr>
+              <tr>
+                <td><strong>3NF</strong></td>
+                <td>2NF + no transitive dependencies</td>
+                <td>Non-key columns don't depend on other non-key columns</td>
+                <td>
+                  ZipCode → City (City depends on ZipCode, not on primary key)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>BCNF</strong></td>
+                <td>For every X→Y, X must be a superkey</td>
+                <td>Stricter 3NF — every determinant is a candidate key</td>
+                <td>Complex scenarios with overlapping candidate keys</td>
+              </tr>
+            </table>
+
+            <div class="analogy">
+              <div class="analogy-title">The Classic Memory Trick</div>
+              <p>
+                <strong
+                  >"The key, the whole key, and nothing but the key, so help me
+                  Codd."</strong
+                ><br />
+                1NF = "The key" (must have a key, atomic values)<br />
+                2NF = "The whole key" (depend on ALL of composite key)<br />
+                3NF = "Nothing but the key" (no transitive deps through
+                non-keys)
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 550 200" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="275"
+                  y="20"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  Normalization Progression
+                </text>
+
+                <!-- Unnormalized -->
+                <rect
+                  x="20"
+                  y="45"
+                  width="100"
+                  height="50"
+                  rx="8"
+                  fill="var(--redBg)"
+                  stroke="var(--red)"
+                  stroke-width="2"
+                />
+                <text
+                  x="70"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Unnormalized
+                </text>
+                <text
+                  x="70"
+                  y="82"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  Redundant data
+                </text>
+
+                <!-- Arrow -->
+                <line
+                  x1="125"
+                  y1="70"
+                  x2="155"
+                  y2="70"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- 1NF -->
+                <rect
+                  x="160"
+                  y="45"
+                  width="80"
+                  height="50"
+                  rx="8"
+                  fill="var(--amberBg)"
+                  stroke="var(--amber)"
+                  stroke-width="2"
+                />
+                <text
+                  x="200"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  1NF
+                </text>
+                <text
+                  x="200"
+                  y="82"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  Atomic values
+                </text>
+
+                <line
+                  x1="245"
+                  y1="70"
+                  x2="275"
+                  y2="70"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- 2NF -->
+                <rect
+                  x="280"
+                  y="45"
+                  width="80"
+                  height="50"
+                  rx="8"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <text
+                  x="320"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  2NF
+                </text>
+                <text
+                  x="320"
+                  y="82"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  Full dependency
+                </text>
+
+                <line
+                  x1="365"
+                  y1="70"
+                  x2="395"
+                  y2="70"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- 3NF -->
+                <rect
+                  x="400"
+                  y="45"
+                  width="80"
+                  height="50"
+                  rx="8"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <text
+                  x="440"
+                  y="65"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  3NF
+                </text>
+                <text
+                  x="440"
+                  y="82"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  No transitive
+                </text>
+
+                <line
+                  x1="440"
+                  y1="100"
+                  x2="440"
+                  y2="130"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- BCNF -->
+                <rect
+                  x="400"
+                  y="135"
+                  width="80"
+                  height="50"
+                  rx="8"
+                  fill="var(--purpleBg)"
+                  stroke="var(--purple)"
+                  stroke-width="2"
+                />
+                <text
+                  x="440"
+                  y="155"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="11"
+                  font-weight="bold"
+                >
+                  BCNF
+                </text>
+                <text
+                  x="440"
+                  y="172"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  Strictest
+                </text>
+
+                <!-- Info -->
+                <text x="70" y="140" fill="var(--text2)" font-size="9">
+                  Each step:
+                </text>
+                <text x="70" y="155" fill="var(--text2)" font-size="9">
+                  • Less redundancy
+                </text>
+                <text x="70" y="170" fill="var(--text2)" font-size="9">
+                  • More tables
+                </text>
+                <text x="70" y="185" fill="var(--text2)" font-size="9">
+                  • More joins needed
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowG"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="var(--gold)" />
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  Most real-world databases aim for <strong>3NF</strong> — good
+                  balance of normalization vs complexity
+                </li>
+                <li>
+                  BCNF is rarely needed — only when 3NF has specific edge cases
+                  with overlapping keys
+                </li>
+                <li>
+                  Higher normalization = more tables = more JOINs = potentially
+                  slower reads
+                </li>
+                <li>
+                  Know how to identify violations: "This column depends on X,
+                  not on the primary key"
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                Don't say "higher normal form is always better." In practice,
+                3NF is usually sufficient. Over-normalizing creates too many
+                joins and hurts read performance. Know when to stop.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3. DENORMALIZATION ============ -->
+        <section class="concept" id="denormalization">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Denormalization</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-practical">Practical</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Denormalization intentionally adds redundancy to improve read
+              performance. It trades storage space and write complexity for
+              faster queries by reducing JOINs.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Normalization optimizes for writes (no redundancy, easy
+                updates). But in <strong>read-heavy systems</strong> like
+                analytics dashboards or e-commerce product pages, JOINs across
+                many tables are slow. Denormalization pre-computes and stores
+                data together.
+              </p>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Normalized</th>
+                <th>Denormalized</th>
+              </tr>
+              <tr>
+                <td><strong>Redundancy</strong></td>
+                <td>Minimal</td>
+                <td>Intentional duplication</td>
+              </tr>
+              <tr>
+                <td><strong>Read Performance</strong></td>
+                <td>Slower (needs JOINs)</td>
+                <td>Faster (data together)</td>
+              </tr>
+              <tr>
+                <td><strong>Write Performance</strong></td>
+                <td>Faster (single update)</td>
+                <td>Slower (update multiple places)</td>
+              </tr>
+              <tr>
+                <td><strong>Storage</strong></td>
+                <td>Less</td>
+                <td>More</td>
+              </tr>
+              <tr>
+                <td><strong>Data Consistency</strong></td>
+                <td>Easier to maintain</td>
+                <td>Risk of inconsistency</td>
+              </tr>
+              <tr>
+                <td><strong>Use Case</strong></td>
+                <td>OLTP (transactions)</td>
+                <td>OLAP (analytics), caching</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <h4>When to Denormalize</h4>
+              <ul>
+                <li>
+                  <strong>Read-heavy workloads:</strong> Analytics, reporting,
+                  dashboards
+                </li>
+                <li>
+                  <strong>Frequently accessed computed values:</strong> Store
+                  total instead of calculating
+                </li>
+                <li>
+                  <strong>Avoid expensive JOINs:</strong> Embed related data in
+                  same table
+                </li>
+                <li>
+                  <strong>Caching layer:</strong> Store pre-computed results
+                </li>
+                <li>
+                  <strong>Data warehouses:</strong> Star schema, fact tables
+                  with denormalized dimensions
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Mention <strong>materialized views</strong> as a middle ground —
+                they store query results but can be refreshed automatically.
+                Also mention that NoSQL databases like MongoDB are often
+                denormalized by design (embedding documents instead of
+                referencing).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4. PRIMARY VS FOREIGN KEY ============ -->
+        <section class="concept" id="keys">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Primary Key vs Foreign Key</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Primary Key uniquely identifies each row (unique + not null).
+              Foreign Key references a primary key in another table, creating
+              relationships and enforcing referential integrity.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Primary Key</th>
+                <th>Foreign Key</th>
+              </tr>
+              <tr>
+                <td><strong>Purpose</strong></td>
+                <td>Uniquely identify rows</td>
+                <td>Create relationship between tables</td>
+              </tr>
+              <tr>
+                <td><strong>Uniqueness</strong></td>
+                <td class="yes">Must be unique</td>
+                <td>Can have duplicates</td>
+              </tr>
+              <tr>
+                <td><strong>NULL allowed</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes (optional relationship)</td>
+              </tr>
+              <tr>
+                <td><strong>Count per table</strong></td>
+                <td>Only 1</td>
+                <td>Multiple allowed</td>
+              </tr>
+              <tr>
+                <td><strong>Auto-creates index</strong></td>
+                <td class="yes">Yes (clustered)</td>
+                <td class="no">No (but recommended)</td>
+              </tr>
+              <tr>
+                <td><strong>References</strong></td>
+                <td>None</td>
+                <td>Must reference a primary/unique key</td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL Example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">CREATE TABLE</span>
+                <span class="tbl">Department</span> ( id
+                <span class="kw">INT PRIMARY KEY</span>,
+                <span class="cm">-- Unique identifier</span> name
+                <span class="kw">VARCHAR</span>(<span class="num">100</span>) );
+
+                <span class="kw">CREATE TABLE</span>
+                <span class="tbl">Employee</span> ( id
+                <span class="kw">INT PRIMARY KEY</span>, name
+                <span class="kw">VARCHAR</span>(<span class="num">100</span>),
+                dept_id <span class="kw">INT</span>,
+                <span class="cm">-- Foreign key column</span>
+                <span class="kw">FOREIGN KEY</span> (dept_id)
+                <span class="kw">REFERENCES</span>
+                <span class="tbl">Department</span>(id)
+                <span class="kw">ON DELETE CASCADE</span>
+                <span class="cm">-- If dept deleted, delete employees</span>
+                <span class="kw">ON UPDATE CASCADE</span>
+                <span class="cm">-- If dept id changes, update here too</span>
+                );
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Referential Integrity Actions</h4>
+              <ul>
+                <li>
+                  <strong>CASCADE:</strong> Delete/update child rows when parent
+                  changes
+                </li>
+                <li>
+                  <strong>SET NULL:</strong> Set foreign key to NULL when parent
+                  deleted
+                </li>
+                <li>
+                  <strong>RESTRICT:</strong> Prevent delete if children exist
+                  (default)
+                </li>
+                <li>
+                  <strong>NO ACTION:</strong> Similar to RESTRICT, checked at
+                  end of transaction
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5. INDEXING ============ -->
+        <section class="concept" id="indexing">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Indexing</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="badge badge-important">Performance</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              An index is a data structure (usually B+ tree) that speeds up data
+              retrieval. Like a book's index — instead of scanning every page,
+              jump directly to the right location. Trades write speed and
+              storage for read speed.
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>Without index:</strong> Full table scan — read EVERY row
+                to find matches. O(n).<br />
+                <strong>With index:</strong> B+ tree lookup — jump directly to
+                relevant rows. O(log n).
+              </p>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Creating Indexes</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Single column index</span>
+                <span class="kw">CREATE INDEX</span> idx_email
+                <span class="kw">ON</span>
+                <span class="tbl">Users</span>(email);
+
+                <span class="cm">-- Composite index (order matters!)</span>
+                <span class="kw">CREATE INDEX</span> idx_name_date
+                <span class="kw">ON</span>
+                <span class="tbl">Orders</span>(customer_name, order_date);
+
+                <span class="cm">-- Unique index</span>
+                <span class="kw">CREATE UNIQUE INDEX</span> idx_username
+                <span class="kw">ON</span>
+                <span class="tbl">Users</span>(username);
+
+                <span class="cm">-- Check if index is used</span>
+                <span class="kw">EXPLAIN ANALYZE SELECT</span> *
+                <span class="kw">FROM</span> <span class="tbl">Users</span>
+                <span class="kw">WHERE</span> email =
+                <span class="str">'test@example.com'</span>;
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>When to Create Indexes</h4>
+              <ul>
+                <li>
+                  <strong>Columns in WHERE clauses</strong> — frequently
+                  filtered columns
+                </li>
+                <li>
+                  <strong>JOIN columns</strong> — foreign keys used in joins
+                </li>
+                <li>
+                  <strong>ORDER BY columns</strong> — avoid sorting full result
+                  set
+                </li>
+                <li>
+                  <strong>High cardinality columns</strong> — many unique values
+                  (email, ID)
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>When NOT to Index</h4>
+              <ul>
+                <li>
+                  <strong>Small tables</strong> — full scan is fast enough
+                </li>
+                <li>
+                  <strong>Frequently updated columns</strong> — index
+                  maintenance overhead
+                </li>
+                <li>
+                  <strong>Low cardinality</strong> — boolean columns (only 2
+                  values) won't benefit much
+                </li>
+                <li>
+                  <strong>Columns rarely in queries</strong> — index unused but
+                  still maintained
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                <strong>Composite index order matters!</strong> Index on (A, B)
+                helps queries on A, or (A AND B). But NOT queries on just B.
+                This is the <strong>leftmost prefix rule</strong>. Also mention
+                <strong>covering indexes</strong> — if all columns needed are in
+                the index, the database doesn't need to read the actual table
+                (index-only scan).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 6. CLUSTERED VS NON-CLUSTERED ============ -->
+        <section class="concept" id="clustered">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Clustered vs Non-Clustered Index</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Deep Dive</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Clustered index determines physical row order (table IS the index)
+              — only one per table. Non-clustered index is a separate structure
+              with pointers to rows — multiple allowed.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Clustered Index</th>
+                <th>Non-Clustered Index</th>
+              </tr>
+              <tr>
+                <td><strong>Physical order</strong></td>
+                <td>Data rows sorted by index key</td>
+                <td>Separate structure, data unordered</td>
+              </tr>
+              <tr>
+                <td><strong>Count per table</strong></td>
+                <td>Only 1</td>
+                <td>Multiple (up to 999 in SQL Server)</td>
+              </tr>
+              <tr>
+                <td><strong>Leaf nodes contain</strong></td>
+                <td>Actual data rows</td>
+                <td>Pointers to data rows</td>
+              </tr>
+              <tr>
+                <td><strong>Range queries</strong></td>
+                <td>Faster (data is contiguous)</td>
+                <td>Slower (need to follow pointers)</td>
+              </tr>
+              <tr>
+                <td><strong>Insert performance</strong></td>
+                <td>Slower (may need to reorder)</td>
+                <td>Faster</td>
+              </tr>
+              <tr>
+                <td><strong>Default on</strong></td>
+                <td>PRIMARY KEY</td>
+                <td>Other indexes</td>
+              </tr>
+            </table>
+
+            <div class="analogy">
+              <div class="analogy-title">Real-World Analogy</div>
+              <p>
+                <strong>Clustered index:</strong> A phone book sorted by last
+                name. The data IS sorted — finding "Smith" is fast because all
+                Smiths are together.<br />
+                <strong>Non-clustered index:</strong> A book's index at the
+                back. It tells you page numbers, but you still need to flip to
+                those pages. The pages themselves aren't sorted by the index.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Clustered Index -->
+                <text
+                  x="130"
+                  y="20"
+                  text-anchor="middle"
+                  fill="var(--gold)"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  CLUSTERED INDEX
+                </text>
+
+                <rect
+                  x="80"
+                  y="35"
+                  width="100"
+                  height="30"
+                  rx="6"
+                  fill="var(--goldLight)"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="130"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Root Node
+                </text>
+
+                <line
+                  x1="100"
+                  y1="65"
+                  x2="70"
+                  y2="80"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="160"
+                  y1="65"
+                  x2="190"
+                  y2="80"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+
+                <rect
+                  x="30"
+                  y="85"
+                  width="80"
+                  height="25"
+                  rx="4"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                />
+                <text
+                  x="70"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Leaf = Data
+                </text>
+
+                <rect
+                  x="150"
+                  y="85"
+                  width="80"
+                  height="25"
+                  rx="4"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                />
+                <text
+                  x="190"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Leaf = Data
+                </text>
+
+                <text
+                  x="130"
+                  y="140"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  Leaf nodes ARE the table rows
+                </text>
+                <text
+                  x="130"
+                  y="155"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  (physically sorted)
+                </text>
+
+                <!-- Non-Clustered Index -->
+                <text
+                  x="390"
+                  y="20"
+                  text-anchor="middle"
+                  fill="var(--purple)"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  NON-CLUSTERED INDEX
+                </text>
+
+                <rect
+                  x="340"
+                  y="35"
+                  width="100"
+                  height="30"
+                  rx="6"
+                  fill="var(--purpleBg)"
+                  stroke="var(--purple)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="390"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Root Node
+                </text>
+
+                <line
+                  x1="360"
+                  y1="65"
+                  x2="330"
+                  y2="80"
+                  stroke="var(--purple)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="420"
+                  y1="65"
+                  x2="450"
+                  y2="80"
+                  stroke="var(--purple)"
+                  stroke-width="1"
+                />
+
+                <rect
+                  x="290"
+                  y="85"
+                  width="80"
+                  height="25"
+                  rx="4"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="330"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Leaf = Pointers
+                </text>
+
+                <rect
+                  x="410"
+                  y="85"
+                  width="80"
+                  height="25"
+                  rx="4"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="450"
+                  y="102"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Leaf = Pointers
+                </text>
+
+                <!-- Arrows to table -->
+                <line
+                  x1="330"
+                  y1="115"
+                  x2="330"
+                  y2="135"
+                  stroke="var(--green)"
+                  stroke-width="1"
+                  stroke-dasharray="3"
+                  marker-end="url(#arrowGr)"
+                />
+                <line
+                  x1="450"
+                  y1="115"
+                  x2="450"
+                  y2="135"
+                  stroke="var(--green)"
+                  stroke-width="1"
+                  stroke-dasharray="3"
+                  marker-end="url(#arrowGr)"
+                />
+
+                <rect
+                  x="290"
+                  y="140"
+                  width="200"
+                  height="25"
+                  rx="4"
+                  fill="var(--surface)"
+                  stroke="var(--border)"
+                />
+                <text
+                  x="390"
+                  y="157"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  Actual Table (Heap or Clustered)
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowGr"
+                    markerWidth="6"
+                    markerHeight="5"
+                    refX="6"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L6,2.5 L0,5" fill="var(--green)" />
+                  </marker>
+                </defs>
+              </svg>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                In <strong>MySQL InnoDB</strong>, the primary key IS the
+                clustered index. Non-clustered indexes store the primary key
+                value (not row pointer). So if your primary key is a large UUID,
+                ALL your indexes become larger. This is why
+                <strong>auto-increment INT</strong> is often preferred for
+                primary keys — smaller indexes, better performance.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 7. B+ TREES ============ -->
+        <section class="concept" id="btree">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>B+ Trees</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Internals</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              B+ tree is a self-balancing tree structure used for database
+              indexes. All data is in leaf nodes (connected as linked list),
+              internal nodes only hold keys for navigation. Provides O(log n)
+              search, insert, delete.
+            </div>
+
+            <div class="explanation">
+              <p><strong>Why B+ trees for databases?</strong></p>
+              <ul style="margin-left: 1.5rem; margin-top: 0.5rem">
+                <li>
+                  <strong>Disk-optimized:</strong> High fanout (many children) =
+                  fewer disk reads
+                </li>
+                <li>
+                  <strong>Range queries:</strong> Leaf nodes linked = easy
+                  sequential scan
+                </li>
+                <li>
+                  <strong>Balanced:</strong> All leaves at same depth =
+                  predictable performance
+                </li>
+                <li>
+                  <strong>Full nodes:</strong> Typically 70%+ full = space
+                  efficient
+                </li>
+              </ul>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="260"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  B+ Tree Structure
+                </text>
+
+                <!-- Root -->
+                <rect
+                  x="200"
+                  y="30"
+                  width="120"
+                  height="35"
+                  rx="6"
+                  fill="var(--goldLight)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                />
+                <text
+                  x="260"
+                  y="45"
+                  text-anchor="middle"
+                  fill="var(--gold)"
+                  font-size="8"
+                  font-weight="bold"
+                >
+                  ROOT (Internal)
+                </text>
+                <text
+                  x="230"
+                  y="58"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  30
+                </text>
+                <line
+                  x1="250"
+                  y1="42"
+                  x2="250"
+                  y2="62"
+                  stroke="var(--border)"
+                />
+                <text
+                  x="280"
+                  y="58"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  60
+                </text>
+
+                <!-- Lines to internal -->
+                <line
+                  x1="220"
+                  y1="65"
+                  x2="100"
+                  y2="85"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="260"
+                  y1="65"
+                  x2="260"
+                  y2="85"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="300"
+                  y1="65"
+                  x2="420"
+                  y2="85"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+
+                <!-- Internal nodes -->
+                <rect
+                  x="50"
+                  y="88"
+                  width="100"
+                  height="30"
+                  rx="5"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="75"
+                  y="107"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  10 | 20
+                </text>
+
+                <rect
+                  x="210"
+                  y="88"
+                  width="100"
+                  height="30"
+                  rx="5"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="245"
+                  y="107"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  40 | 50
+                </text>
+
+                <rect
+                  x="370"
+                  y="88"
+                  width="100"
+                  height="30"
+                  rx="5"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="405"
+                  y="107"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  70 | 80
+                </text>
+
+                <!-- Lines to leaves -->
+                <line
+                  x1="70"
+                  y1="118"
+                  x2="40"
+                  y2="135"
+                  stroke="var(--blue)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="100"
+                  y1="118"
+                  x2="100"
+                  y2="135"
+                  stroke="var(--blue)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="130"
+                  y1="118"
+                  x2="160"
+                  y2="135"
+                  stroke="var(--blue)"
+                  stroke-width="1"
+                />
+
+                <!-- Leaf nodes with linked list -->
+                <rect
+                  x="15"
+                  y="138"
+                  width="50"
+                  height="28"
+                  rx="4"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="40"
+                  y="156"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  1,5,9
+                </text>
+
+                <rect
+                  x="75"
+                  y="138"
+                  width="50"
+                  height="28"
+                  rx="4"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="100"
+                  y="156"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  10,15
+                </text>
+
+                <rect
+                  x="135"
+                  y="138"
+                  width="50"
+                  height="28"
+                  rx="4"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="160"
+                  y="156"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  20,25
+                </text>
+
+                <!-- Linked list arrows -->
+                <line
+                  x1="65"
+                  y1="152"
+                  x2="73"
+                  y2="152"
+                  stroke="var(--green)"
+                  stroke-width="1"
+                  marker-end="url(#arrowSm)"
+                />
+                <line
+                  x1="125"
+                  y1="152"
+                  x2="133"
+                  y2="152"
+                  stroke="var(--green)"
+                  stroke-width="1"
+                  marker-end="url(#arrowSm)"
+                />
+                <text x="190" y="152" fill="var(--green)" font-size="10">
+                  → ...
+                </text>
+
+                <!-- Labels -->
+                <text x="400" y="155" fill="var(--text2)" font-size="8">
+                  Leaf nodes linked
+                </text>
+                <text x="400" y="168" fill="var(--text2)" font-size="8">
+                  for range scans
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowSm"
+                    markerWidth="5"
+                    markerHeight="4"
+                    refX="5"
+                    refY="2"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L5,2 L0,4" fill="var(--green)" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Internal nodes hold keys for navigation. Leaf nodes hold all
+                data and are linked for sequential access.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>B+ Tree vs B Tree</h4>
+              <ul>
+                <li>
+                  <strong>B+ tree:</strong> Data ONLY in leaves, leaves linked.
+                  Better for range queries and disk I/O.
+                </li>
+                <li>
+                  <strong>B tree:</strong> Data in all nodes. Slightly faster
+                  single-key lookup, but worse for ranges.
+                </li>
+                <li>
+                  Databases use <strong>B+ trees</strong> because disk reads are
+                  expensive, and range queries are common.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                B+ tree node size is typically
+                <strong>one disk page (4KB-16KB)</strong>. This means each node
+                read = one disk I/O. A B+ tree with 1000 keys per node can index
+                billions of rows with just 3-4 levels. Mentioning page size and
+                fanout shows deep understanding.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8. JOINS ============ -->
+        <section class="concept" id="joins">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Joins (All Types)</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="badge badge-important">Most Asked</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="one-liner">
+              JOIN combines rows from multiple tables based on a related column.
+              Types: INNER (only matches), LEFT (all from left + matches), RIGHT
+              (all from right + matches), FULL (all from both), CROSS (cartesian
+              product), SELF (table with itself).
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- INNER JOIN -->
+                <text
+                  x="75"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  INNER JOIN
+                </text>
+                <circle
+                  cx="55"
+                  cy="70"
+                  r="35"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                  opacity=".5"
+                />
+                <circle
+                  cx="95"
+                  cy="70"
+                  r="35"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                  opacity=".5"
+                />
+                <ellipse
+                  cx="75"
+                  cy="70"
+                  rx="15"
+                  ry="28"
+                  fill="var(--gold)"
+                  opacity=".7"
+                />
+                <text
+                  x="35"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  A
+                </text>
+                <text
+                  x="115"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  B
+                </text>
+                <text
+                  x="75"
+                  y="120"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  Only matching
+                </text>
+
+                <!-- LEFT JOIN -->
+                <text
+                  x="195"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  LEFT JOIN
+                </text>
+                <circle
+                  cx="175"
+                  cy="70"
+                  r="35"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  opacity=".5"
+                />
+                <circle
+                  cx="215"
+                  cy="70"
+                  r="35"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                  opacity=".3"
+                />
+                <text
+                  x="155"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  A
+                </text>
+                <text
+                  x="235"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  B
+                </text>
+                <text
+                  x="195"
+                  y="120"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  All A + matches B
+                </text>
+
+                <!-- RIGHT JOIN -->
+                <text
+                  x="315"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  RIGHT JOIN
+                </text>
+                <circle
+                  cx="295"
+                  cy="70"
+                  r="35"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                  opacity=".3"
+                />
+                <circle
+                  cx="335"
+                  cy="70"
+                  r="35"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  opacity=".5"
+                />
+                <text
+                  x="275"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  A
+                </text>
+                <text
+                  x="355"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  B
+                </text>
+                <text
+                  x="315"
+                  y="120"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  All B + matches A
+                </text>
+
+                <!-- FULL OUTER JOIN -->
+                <text
+                  x="445"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  FULL OUTER
+                </text>
+                <circle
+                  cx="425"
+                  cy="70"
+                  r="35"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  opacity=".4"
+                />
+                <circle
+                  cx="465"
+                  cy="70"
+                  r="35"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  opacity=".4"
+                />
+                <text
+                  x="405"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  A
+                </text>
+                <text
+                  x="485"
+                  y="73"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  B
+                </text>
+                <text
+                  x="445"
+                  y="120"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  All from both
+                </text>
+
+                <!-- CROSS JOIN -->
+                <text
+                  x="555"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="10"
+                >
+                  CROSS
+                </text>
+                <rect
+                  x="525"
+                  y="40"
+                  width="30"
+                  height="60"
+                  rx="4"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                />
+                <rect
+                  x="560"
+                  y="40"
+                  width="10"
+                  height="60"
+                  rx="2"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="555"
+                  y="120"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  m × n rows
+                </text>
+
+                <!-- Self Join note -->
+                <text
+                  x="75"
+                  y="150"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  SELF JOIN:
+                </text>
+                <text x="75" y="165" fill="var(--text2)" font-size="8">
+                  Table joined with itself
+                </text>
+                <text x="75" y="178" fill="var(--text2)" font-size="8">
+                  (e.g., employee-manager)
+                </text>
+              </svg>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — All Join Types</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- INNER JOIN: Only matching rows</span>
+                <span class="kw">SELECT</span> e.name, d.name
+                <span class="kw">FROM</span> <span class="tbl">Employee</span> e
+                <span class="kw">INNER JOIN</span>
+                <span class="tbl">Department</span> d
+                <span class="kw">ON</span> e.dept_id = d.id;
+
+                <span class="cm"
+                  >-- LEFT JOIN: All employees, even without department</span
+                >
+                <span class="kw">SELECT</span> e.name, d.name
+                <span class="kw">FROM</span> <span class="tbl">Employee</span> e
+                <span class="kw">LEFT JOIN</span>
+                <span class="tbl">Department</span> d
+                <span class="kw">ON</span> e.dept_id = d.id;
+
+                <span class="cm"
+                  >-- SELF JOIN: Employee with their manager</span
+                >
+                <span class="kw">SELECT</span> e.name
+                <span class="kw">AS</span> employee, m.name
+                <span class="kw">AS</span> manager <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e
+                <span class="kw">LEFT JOIN</span>
+                <span class="tbl">Employee</span> m
+                <span class="kw">ON</span> e.manager_id = m.id;
+
+                <span class="cm"
+                  >-- CROSS JOIN: Every combination (careful — big
+                  result!)</span
+                >
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span>
+                <span class="tbl">Colors</span>
+                <span class="kw">CROSS JOIN</span>
+                <span class="tbl">Sizes</span>;
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  <strong>INNER JOIN</strong> is default when you just write
+                  JOIN
+                </li>
+                <li>
+                  <strong>LEFT JOIN</strong> is used to find "missing" records
+                  (customers with no orders)
+                </li>
+                <li>
+                  <strong>FULL OUTER JOIN</strong> not supported in MySQL — use
+                  UNION of LEFT and RIGHT
+                </li>
+                <li>
+                  <strong>CROSS JOIN</strong> is dangerous — 1000 × 1000 rows =
+                  1 million result rows
+                </li>
+                <li>
+                  <strong>SELF JOIN</strong> needs aliases to distinguish the
+                  two "copies" of the table
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 9. TRANSACTIONS ============ -->
+        <section class="concept" id="transactions">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Transactions</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              A transaction is a sequence of operations treated as a single
+              logical unit. Either ALL operations succeed (COMMIT) or ALL are
+              undone (ROLLBACK). Ensures ACID properties.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Transaction Example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">BEGIN TRANSACTION</span>;
+
+                <span class="cm">-- Debit from account A</span>
+                <span class="kw">UPDATE</span> <span class="tbl">Accounts</span>
+                <span class="kw">SET</span> balance = balance -
+                <span class="num">100</span> <span class="kw">WHERE</span> id =
+                <span class="num">1</span>;
+
+                <span class="cm">-- Credit to account B</span>
+                <span class="kw">UPDATE</span> <span class="tbl">Accounts</span>
+                <span class="kw">SET</span> balance = balance +
+                <span class="num">100</span> <span class="kw">WHERE</span> id =
+                <span class="num">2</span>;
+
+                <span class="cm">-- If both succeeded</span>
+                <span class="kw">COMMIT</span>;
+
+                <span class="cm">-- If something went wrong</span>
+                <span class="cm">-- ROLLBACK;</span>
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Transaction States</h4>
+              <ul>
+                <li>
+                  <strong>Active:</strong> Transaction is executing operations
+                </li>
+                <li>
+                  <strong>Partially Committed:</strong> All operations done,
+                  waiting for final commit
+                </li>
+                <li><strong>Committed:</strong> All changes are permanent</li>
+                <li><strong>Failed:</strong> Error occurred, cannot proceed</li>
+                <li><strong>Aborted:</strong> Rolled back, changes undone</li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know about <strong>savepoints</strong> — you can partially
+                rollback within a transaction. Also mention
+                <strong>implicit vs explicit transactions</strong>: in
+                autocommit mode (default in many DBs), each statement is its own
+                transaction. For multi-statement operations, you need explicit
+                BEGIN/COMMIT.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 10. LOCKS ============ -->
+        <section class="concept" id="locks">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Locks (Shared/Exclusive)</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Concurrency</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Locks control concurrent access to data. Shared lock (S) allows
+              multiple readers. Exclusive lock (X) allows only one writer.
+              Prevents dirty reads, lost updates, and other concurrency issues.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Lock Type</th>
+                <th>Also Called</th>
+                <th>Who Can Access</th>
+                <th>Used For</th>
+              </tr>
+              <tr>
+                <td><strong>Shared (S)</strong></td>
+                <td>Read Lock</td>
+                <td>Multiple readers, no writers</td>
+                <td>SELECT queries</td>
+              </tr>
+              <tr>
+                <td><strong>Exclusive (X)</strong></td>
+                <td>Write Lock</td>
+                <td>Only one holder, no other access</td>
+                <td>INSERT, UPDATE, DELETE</td>
+              </tr>
+            </table>
+
+            <table class="compare-table" style="margin-top: 1rem">
+              <tr>
+                <th>Lock Compatibility</th>
+                <th>Shared (S)</th>
+                <th>Exclusive (X)</th>
+              </tr>
+              <tr>
+                <td><strong>Shared (S)</strong></td>
+                <td class="yes">✓ Compatible</td>
+                <td class="no">✗ Conflict</td>
+              </tr>
+              <tr>
+                <td><strong>Exclusive (X)</strong></td>
+                <td class="no">✗ Conflict</td>
+                <td class="no">✗ Conflict</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <h4>Lock Granularity</h4>
+              <ul>
+                <li>
+                  <strong>Row-level:</strong> Lock specific rows. Most
+                  concurrent, most overhead. (InnoDB default)
+                </li>
+                <li>
+                  <strong>Page-level:</strong> Lock a page (group of rows).
+                  Middle ground.
+                </li>
+                <li>
+                  <strong>Table-level:</strong> Lock entire table. Least
+                  concurrent, least overhead. (MyISAM)
+                </li>
+                <li>
+                  <strong>Database-level:</strong> Lock entire database. Rare,
+                  used for maintenance.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know about
+                <strong>MVCC (Multi-Version Concurrency Control)</strong> — used
+                by PostgreSQL and MySQL InnoDB. Instead of locking, readers see
+                a snapshot of data at a point in time. Writers create new
+                versions. Readers never block writers, writers never block
+                readers. Much better concurrency than pure locking.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 11. DEADLOCK ============ -->
+        <section class="concept" id="deadlock">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Deadlock</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Critical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Deadlock occurs when two or more transactions are waiting for each
+              other's locks, forming a cycle. No one can proceed. Database must
+              detect and kill one transaction to break the cycle.
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="200"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  Deadlock: Circular Wait
+                </text>
+
+                <!-- Transaction A -->
+                <circle
+                  cx="100"
+                  cy="80"
+                  r="35"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <text
+                  x="100"
+                  y="75"
+                  text-anchor="middle"
+                  fill="var(--blue)"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Txn A
+                </text>
+                <text
+                  x="100"
+                  y="90"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Holds R1
+                </text>
+
+                <!-- Transaction B -->
+                <circle
+                  cx="300"
+                  cy="80"
+                  r="35"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <text
+                  x="300"
+                  y="75"
+                  text-anchor="middle"
+                  fill="var(--green)"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Txn B
+                </text>
+                <text
+                  x="300"
+                  y="90"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Holds R2
+                </text>
+
+                <!-- Wants arrows -->
+                <path
+                  d="M135 65 Q200 30, 265 65"
+                  stroke="var(--red)"
+                  stroke-width="2"
+                  fill="none"
+                  marker-end="url(#arrowRed)"
+                />
+                <text
+                  x="200"
+                  y="45"
+                  text-anchor="middle"
+                  fill="var(--red)"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Wants R2
+                </text>
+
+                <path
+                  d="M265 95 Q200 130, 135 95"
+                  stroke="var(--red)"
+                  stroke-width="2"
+                  fill="none"
+                  marker-end="url(#arrowRed)"
+                />
+                <text
+                  x="200"
+                  y="125"
+                  text-anchor="middle"
+                  fill="var(--red)"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Wants R1
+                </text>
+
+                <defs>
+                  <marker
+                    id="arrowRed"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="var(--red)" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Both transactions are stuck waiting for each other — neither can
+                proceed.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <h4>Deadlock Handling</h4>
+              <ul>
+                <li>
+                  <strong>Detection:</strong> Database periodically checks for
+                  cycles in wait-for graph. Kills one transaction (victim
+                  selection based on work done, priority, etc.)
+                </li>
+                <li>
+                  <strong>Prevention:</strong> Acquire all locks upfront, or
+                  always acquire in same order
+                </li>
+                <li>
+                  <strong>Timeout:</strong> If lock not acquired in X seconds,
+                  abort transaction
+                </li>
+                <li>
+                  <strong>Application handling:</strong> Catch deadlock error,
+                  retry transaction
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Preventing Deadlocks in Your Code</h4>
+              <ul>
+                <li>
+                  <strong>Lock ordering:</strong> Always acquire locks in the
+                  same order (e.g., by ID ascending)
+                </li>
+                <li>
+                  <strong>Keep transactions short:</strong> Less time holding
+                  locks = less chance of deadlock
+                </li>
+                <li>
+                  <strong>Avoid user input mid-transaction:</strong> Don't wait
+                  for user while holding locks
+                </li>
+                <li>
+                  <strong>Use lower isolation levels if possible:</strong> Fewer
+                  locks needed
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 12. ISOLATION LEVELS ============ -->
+        <section class="concept" id="isolation">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Isolation Levels</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Tricky</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="one-liner">
+              Isolation levels define how much transactions can see each other's
+              changes. Higher isolation = more correct, but slower. From weakest
+              to strongest: Read Uncommitted → Read Committed → Repeatable Read
+              → Serializable.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Isolation Level</th>
+                <th>Dirty Read</th>
+                <th>Non-Repeatable Read</th>
+                <th>Phantom Read</th>
+                <th>Performance</th>
+              </tr>
+              <tr>
+                <td><strong>Read Uncommitted</strong></td>
+                <td class="no">Possible</td>
+                <td class="no">Possible</td>
+                <td class="no">Possible</td>
+                <td class="yes">Fastest</td>
+              </tr>
+              <tr>
+                <td><strong>Read Committed</strong></td>
+                <td class="yes">Prevented</td>
+                <td class="no">Possible</td>
+                <td class="no">Possible</td>
+                <td>Fast</td>
+              </tr>
+              <tr>
+                <td><strong>Repeatable Read</strong></td>
+                <td class="yes">Prevented</td>
+                <td class="yes">Prevented</td>
+                <td class="no">Possible*</td>
+                <td>Moderate</td>
+              </tr>
+              <tr>
+                <td><strong>Serializable</strong></td>
+                <td class="yes">Prevented</td>
+                <td class="yes">Prevented</td>
+                <td class="yes">Prevented</td>
+                <td class="no">Slowest</td>
+              </tr>
+            </table>
+            <p
+              style="font-size: 0.8rem; color: var(--text2); margin-top: 0.5rem"
+            >
+              *MySQL InnoDB prevents phantom reads in Repeatable Read using gap
+              locks.
+            </p>
+
+            <div class="key-points">
+              <h4>Understanding the Anomalies</h4>
+              <ul>
+                <li>
+                  <strong>Dirty Read:</strong> Reading uncommitted data from
+                  another transaction. If that transaction rolls back, you read
+                  garbage.
+                </li>
+                <li>
+                  <strong>Non-Repeatable Read:</strong> Read same row twice, get
+                  different values (another transaction committed an update).
+                </li>
+                <li>
+                  <strong>Phantom Read:</strong> Re-run a query, get new rows
+                  (another transaction inserted rows that match your WHERE
+                  clause).
+                </li>
+              </ul>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Setting Isolation Level</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Check current level</span>
+                <span class="kw">SHOW VARIABLES LIKE</span>
+                <span class="str">'transaction_isolation'</span>;
+
+                <span class="cm">-- Set for session</span>
+                <span class="kw">SET SESSION TRANSACTION ISOLATION LEVEL</span>
+                READ COMMITTED;
+
+                <span class="cm">-- Set for next transaction only</span>
+                <span class="kw">SET TRANSACTION ISOLATION LEVEL</span>
+                SERIALIZABLE;
+              </div>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                <strong>Defaults:</strong> MySQL InnoDB = Repeatable Read.
+                PostgreSQL = Read Committed. Know why PostgreSQL chose Read
+                Committed: their MVCC implementation handles most anomalies
+                efficiently at that level. Also mention
+                <strong>Snapshot Isolation</strong> — used by PostgreSQL and
+                Oracle, where each transaction sees a consistent snapshot of the
+                database.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 13. CAP THEOREM ============ -->
+        <section class="concept" id="cap">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>CAP Theorem</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Distributed Systems</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              CAP theorem: A distributed system can provide only 2 of 3
+              guarantees: Consistency (all nodes see same data), Availability
+              (system always responds), Partition Tolerance (works despite
+              network failures). Pick 2.
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="200"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  CAP Theorem
+                </text>
+
+                <!-- Triangle -->
+                <polygon
+                  points="200,40 50,200 350,200"
+                  fill="none"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                />
+
+                <!-- C -->
+                <circle
+                  cx="200"
+                  cy="50"
+                  r="30"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <text
+                  x="200"
+                  y="45"
+                  text-anchor="middle"
+                  fill="var(--blue)"
+                  font-size="14"
+                  font-weight="bold"
+                >
+                  C
+                </text>
+                <text
+                  x="200"
+                  y="60"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Consistency
+                </text>
+
+                <!-- A -->
+                <circle
+                  cx="50"
+                  cy="190"
+                  r="30"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <text
+                  x="50"
+                  y="185"
+                  text-anchor="middle"
+                  fill="var(--green)"
+                  font-size="14"
+                  font-weight="bold"
+                >
+                  A
+                </text>
+                <text
+                  x="50"
+                  y="200"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Availability
+                </text>
+
+                <!-- P -->
+                <circle
+                  cx="350"
+                  cy="190"
+                  r="30"
+                  fill="var(--amberBg)"
+                  stroke="var(--amber)"
+                  stroke-width="2"
+                />
+                <text
+                  x="350"
+                  y="185"
+                  text-anchor="middle"
+                  fill="var(--amber)"
+                  font-size="14"
+                  font-weight="bold"
+                >
+                  P
+                </text>
+                <text
+                  x="350"
+                  y="200"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Partition
+                </text>
+
+                <!-- Labels on edges -->
+                <text
+                  x="110"
+                  y="110"
+                  fill="var(--text2)"
+                  font-size="9"
+                  transform="rotate(-55,110,110)"
+                >
+                  CA: Traditional RDBMS
+                </text>
+                <text
+                  x="275"
+                  y="110"
+                  fill="var(--text2)"
+                  font-size="9"
+                  transform="rotate(55,275,110)"
+                >
+                  CP: MongoDB, HBase
+                </text>
+                <text x="200" y="215" fill="var(--text2)" font-size="9">
+                  AP: Cassandra, DynamoDB
+                </text>
+              </svg>
+            </div>
+
+            <div class="key-points">
+              <h4>Understanding the Trade-offs</h4>
+              <ul>
+                <li>
+                  <strong>CA (Consistency + Availability):</strong> Traditional
+                  single-node databases. No network partitions to worry about.
+                  (MySQL, PostgreSQL single node)
+                </li>
+                <li>
+                  <strong>CP (Consistency + Partition Tolerance):</strong>
+                  During partition, reject requests to maintain consistency.
+                  (MongoDB, HBase, Redis cluster)
+                </li>
+                <li>
+                  <strong>AP (Availability + Partition Tolerance):</strong>
+                  During partition, respond with possibly stale data.
+                  (Cassandra, DynamoDB, CouchDB)
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Misconception</h4>
+              <p>
+                "You pick 2 and never get the third" —
+                <strong>Not quite true.</strong> When there's no partition, you
+                can have all three. The trade-off only matters DURING a network
+                partition. Since partitions are rare but inevitable in
+                distributed systems, P is usually non-negotiable, so the real
+                choice is between C and A during failures.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know about <strong>PACELC</strong> — an extension of CAP. If
+                there's a Partition, choose A or C. Else (normal operation),
+                choose Latency or Consistency. This better captures that systems
+                make trade-offs even when running normally. Example: DynamoDB is
+                PA/EL (chooses availability during partition, chooses low
+                latency normally).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 14. SHARDING ============ -->
+        <section class="concept" id="sharding">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Sharding</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-practical">Scale</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Sharding horizontally partitions data across multiple database
+              servers (shards). Each shard holds a subset of data. Enables
+              scaling beyond single-machine limits, but adds complexity for
+              cross-shard queries and transactions.
+            </div>
+
+            <div class="key-points">
+              <h4>Sharding Strategies</h4>
+              <ul>
+                <li>
+                  <strong>Range-based:</strong> Shard by value range (e.g.,
+                  users A-M on shard 1, N-Z on shard 2). Easy range queries, but
+                  can cause hotspots.
+                </li>
+                <li>
+                  <strong>Hash-based:</strong> Hash the shard key (e.g.,
+                  hash(user_id) mod N). Even distribution, but range queries hit
+                  all shards.
+                </li>
+                <li>
+                  <strong>Directory-based:</strong> Lookup table maps keys to
+                  shards. Flexible, but lookup table is a single point of
+                  failure.
+                </li>
+                <li>
+                  <strong>Geographic:</strong> Shard by location (e.g., US data
+                  on US shard). Good for latency, compliance.
+                </li>
+              </ul>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="260"
+                  y="18"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  Hash-Based Sharding
+                </text>
+
+                <!-- Application -->
+                <rect
+                  x="200"
+                  y="35"
+                  width="120"
+                  height="35"
+                  rx="8"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="260"
+                  y="57"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  Application
+                </text>
+
+                <!-- Router -->
+                <line
+                  x1="260"
+                  y1="70"
+                  x2="260"
+                  y2="90"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="210"
+                  y="90"
+                  width="100"
+                  height="25"
+                  rx="5"
+                  fill="var(--goldLight)"
+                  stroke="var(--gold)"
+                />
+                <text
+                  x="260"
+                  y="107"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  hash(key) % 4
+                </text>
+
+                <!-- Lines to shards -->
+                <line
+                  x1="220"
+                  y1="115"
+                  x2="80"
+                  y2="135"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="245"
+                  y1="115"
+                  x2="190"
+                  y2="135"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="275"
+                  y1="115"
+                  x2="330"
+                  y2="135"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+                <line
+                  x1="300"
+                  y1="115"
+                  x2="440"
+                  y2="135"
+                  stroke="var(--gold)"
+                  stroke-width="1"
+                />
+
+                <!-- Shards -->
+                <rect
+                  x="30"
+                  y="135"
+                  width="100"
+                  height="25"
+                  rx="5"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="80"
+                  y="152"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Shard 0
+                </text>
+
+                <rect
+                  x="140"
+                  y="135"
+                  width="100"
+                  height="25"
+                  rx="5"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="190"
+                  y="152"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Shard 1
+                </text>
+
+                <rect
+                  x="280"
+                  y="135"
+                  width="100"
+                  height="25"
+                  rx="5"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="330"
+                  y="152"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Shard 2
+                </text>
+
+                <rect
+                  x="390"
+                  y="135"
+                  width="100"
+                  height="25"
+                  rx="5"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                />
+                <text
+                  x="440"
+                  y="152"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                >
+                  Shard 3
+                </text>
+              </svg>
+            </div>
+
+            <div class="gotcha">
+              <h4>Sharding Challenges</h4>
+              <ul>
+                <li>
+                  <strong>Cross-shard queries:</strong> JOINs across shards are
+                  expensive (need to query all shards)
+                </li>
+                <li>
+                  <strong>Transactions:</strong> ACID across shards requires 2PC
+                  (slow) or eventual consistency
+                </li>
+                <li>
+                  <strong>Resharding:</strong> Adding/removing shards requires
+                  data migration
+                </li>
+                <li>
+                  <strong>Hotspots:</strong> Poor shard key choice leads to
+                  uneven load
+                </li>
+                <li>
+                  <strong>Complexity:</strong> Application must be shard-aware,
+                  or use middleware
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know <strong>Consistent Hashing</strong> — used by DynamoDB,
+                Cassandra. When adding/removing nodes, only K/n keys need to
+                move (K = total keys, n = nodes), not all of them. Also mention
+                <strong>virtual nodes</strong> — each physical node owns
+                multiple positions on the hash ring for better load
+                distribution.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 15. SQL VS NOSQL ============ -->
+        <section class="concept" id="sqlnosql">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>SQL vs NoSQL</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Decision Making</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="one-liner">
+              SQL databases are relational, schema-based, ACID-compliant, good
+              for complex queries. NoSQL databases are non-relational, flexible
+              schema, often eventually consistent, good for scale and specific
+              access patterns.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>SQL (Relational)</th>
+                <th>NoSQL</th>
+              </tr>
+              <tr>
+                <td><strong>Data Model</strong></td>
+                <td>Tables with rows and columns</td>
+                <td>Document, Key-Value, Column-family, Graph</td>
+              </tr>
+              <tr>
+                <td><strong>Schema</strong></td>
+                <td>Fixed schema, enforced</td>
+                <td>Flexible, schema-on-read</td>
+              </tr>
+              <tr>
+                <td><strong>Query Language</strong></td>
+                <td>SQL (standardized)</td>
+                <td>Varies by database</td>
+              </tr>
+              <tr>
+                <td><strong>ACID</strong></td>
+                <td class="yes">Full ACID support</td>
+                <td>Often BASE (eventual consistency)</td>
+              </tr>
+              <tr>
+                <td><strong>Scaling</strong></td>
+                <td>Vertical (scale up)</td>
+                <td>Horizontal (scale out)</td>
+              </tr>
+              <tr>
+                <td><strong>JOINs</strong></td>
+                <td class="yes">Powerful JOINs</td>
+                <td class="no">Limited/no JOINs</td>
+              </tr>
+              <tr>
+                <td><strong>Best For</strong></td>
+                <td>Complex queries, transactions, relationships</td>
+                <td>High volume, simple access patterns, flexible data</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <h4>NoSQL Types</h4>
+              <ul>
+                <li>
+                  <strong>Document:</strong> MongoDB, CouchDB. Store JSON-like
+                  documents. Good for content management, catalogs.
+                </li>
+                <li>
+                  <strong>Key-Value:</strong> Redis, DynamoDB. Simple get/set by
+                  key. Good for caching, sessions.
+                </li>
+                <li>
+                  <strong>Column-family:</strong> Cassandra, HBase. Columns
+                  grouped into families. Good for time-series, analytics.
+                </li>
+                <li>
+                  <strong>Graph:</strong> Neo4j, Amazon Neptune. Nodes and
+                  edges. Good for social networks, recommendations.
+                </li>
+              </ul>
+            </div>
+
+            <div
+              class="key-points"
+              style="
+                background: var(--greenBg);
+                border-color: rgba(16, 185, 129, 0.2);
+              "
+            >
+              <h4 style="color: var(--green)">When to Choose What</h4>
+              <ul>
+                <li>
+                  <strong>Choose SQL when:</strong> Complex relationships, need
+                  transactions, data integrity critical, complex
+                  queries/reporting
+                </li>
+                <li>
+                  <strong>Choose NoSQL when:</strong> Massive scale needed,
+                  flexible schema required, simple access patterns (key
+                  lookups), high write throughput
+                </li>
+                <li>
+                  <strong>Many systems use both:</strong> SQL for transactions,
+                  NoSQL for caching/analytics (polyglot persistence)
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-q">
+              <h4>Common Interview Questions</h4>
+              <details>
+                <summary>Can NoSQL databases do transactions?</summary>
+                <div class="ans">
+                  Yes, many modern NoSQL databases support transactions. MongoDB
+                  has multi-document transactions since 4.0. DynamoDB has
+                  TransactWriteItems. But they're often limited to single
+                  partition/shard for performance. Cross-partition transactions
+                  are expensive.
+                </div>
+              </details>
+              <details>
+                <summary>Is NoSQL always faster than SQL?</summary>
+                <div class="ans">
+                  <strong>No!</strong> It depends on the use case. For complex
+                  queries with JOINs, SQL with proper indexing is often faster.
+                  NoSQL shines for simple key-value lookups at massive scale.
+                  The "NoSQL is faster" myth comes from comparing denormalized
+                  NoSQL queries to badly designed SQL schemas.
+                </div>
+              </details>
+              <details>
+                <summary>When would you migrate from SQL to NoSQL?</summary>
+                <div class="ans">
+                  When: (1) Vertical scaling hits limits and you need horizontal
+                  scale, (2) Schema changes are too frequent, (3) Your access
+                  pattern is simple (key lookups), (4) You need to handle
+                  massive write throughput. Don't migrate just because NoSQL is
+                  "trendy."
+                </div>
+              </details>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                The line is blurring. PostgreSQL has JSONB for document storage.
+                MySQL has JSON columns. MongoDB has JOINs ($lookup). CockroachDB
+                is a distributed SQL database. Know that modern systems often
+                combine approaches — use SQL for transactional data, Redis for
+                caching, Elasticsearch for search, all in the same application.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle("focus-mode");
+        document.getElementById("focusBtn").textContent = sb.classList.contains(
+          "hidden",
+        )
+          ? "Expand"
+          : "Focus";
+      }
+
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      function copyCode(btn) {
+        const code = btn
+          .closest(".code-wrap")
+          .querySelector(".code-block").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Expand";
+          }
+        });
+      });
+
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

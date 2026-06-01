@@ -1,0 +1,2566 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>OOPs — Interview Mastery Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1e1e2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 270px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.08);
+        --amberBg: rgba(245, 158, 11, 0.08);
+        --redBg: rgba(239, 68, 68, 0.06);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.06);
+        --cyanBg: rgba(6, 182, 212, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 5px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.78rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.63rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+      }
+      .topic-header h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.12);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .ci {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.63rem;
+        padding: 3px 11px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-core {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-important {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .badge-concept {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-practical {
+        background: var(--greenBg);
+        color: var(--green);
+      }
+      .read-time {
+        font-size: 0.73rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .explanation p {
+        margin-bottom: 1rem;
+        font-size: 0.94rem;
+      }
+      .explanation strong {
+        color: var(--gold);
+      }
+
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        font-size: 4.5rem;
+        color: var(--gold);
+        opacity: 0.07;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        vertical-align: top;
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .compare-table .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .compare-table .no {
+        color: var(--red);
+        font-weight: 600;
+      }
+
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.63rem;
+        font-weight: 800;
+        background: var(--cyanBg);
+        color: var(--cyan);
+        padding: 3px 7px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--cyanBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      /* CODE BLOCK — FIXED */
+      .code-wrap {
+        position: relative;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .code-header {
+        background: #2a2a3a;
+        padding: 0.6rem 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .code-lang {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #999;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.72rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+      pre.code-block {
+        background: #1a1a2e;
+        color: #d4d4d8;
+        margin: 0;
+        padding: 1.5rem 1.8rem;
+        font-family:
+          "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+        font-size: 0.88rem;
+        line-height: 2.15;
+        overflow-x: auto;
+        white-space: pre;
+        tab-size: 4;
+        letter-spacing: 0.3px;
+        border: none;
+      }
+      pre.code-block .kw {
+        color: #c678dd;
+        font-weight: 500;
+      }
+      pre.code-block .fn {
+        color: #61afef;
+      }
+      pre.code-block .str {
+        color: #98c379;
+      }
+      pre.code-block .cm {
+        color: #6a737d;
+        font-style: italic;
+      }
+      pre.code-block .num {
+        color: #d19a66;
+      }
+      pre.code-block .type {
+        color: #e5c07b;
+      }
+      pre.code-block .pp {
+        color: #e06c75;
+      }
+      pre.code-block .op {
+        color: #56b6c2;
+      }
+
+      .pillar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .pillar-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.2rem;
+        transition: all 0.2s;
+      }
+      .pillar-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 4px 12px rgba(245, 166, 35, 0.1);
+      }
+      .pillar-card h5 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--gold);
+      }
+      .pillar-card p {
+        font-size: 0.85rem;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      .solid-grid {
+        margin: 1.5rem 0;
+      }
+      .solid-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 0.8rem;
+        transition: all 0.2s;
+      }
+      .solid-item:hover {
+        border-color: var(--gold);
+      }
+      .solid-letter {
+        min-width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--goldLight);
+        color: var(--gold);
+        font-size: 1.2rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .solid-content h5 {
+        font-size: 0.92rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+      }
+      .solid-content p {
+        font-size: 0.85rem;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+        .main {
+          padding: 1.5rem 1rem 4rem;
+        }
+        .ci {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .topic-header h1 {
+          font-size: 1.7rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+        .pillar-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+
+    </style>
+    <style>
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        display: flex;
+        align-items: flex-end;
+        gap: 0.6rem;
+      }
+      .quick-jump .jump-btn {
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 999px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .quick-jump .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+      .quick-jump .jump-menu.active {
+        display: flex;
+      }
+      .quick-jump .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .quick-jump .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="nav-brand">OOPs Interview Mastery</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#pillars">4 Pillars</a><a href="#polymorphism">Polymorphism</a
+        ><a href="#overload-override">Overload/Override</a
+        ><a href="#interface-abstract">Interface/Abstract</a
+        ><a href="#relationships">Relationships</a><a href="#solid">SOLID</a
+        ><a href="#constructor">Constructor</a><a href="#cloning">Cloning</a
+        ><a href="#static">Static</a><a href="#access">Access</a
+        ><a href="#diamond">Diamond</a><a href="#di">DI</a
+        ><a href="#cohesion">Cohesion</a><a href="#immutable">Immutable</a
+        ><a href="#patterns">Patterns</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Core Concepts</div>
+        <a href="#pillars"><span class="num">1</span>Four Pillars of OOP</a>
+        <a href="#polymorphism"
+          ><span class="num">2</span>Runtime vs Compile Poly</a
+        >
+        <a href="#overload-override"
+          ><span class="num">3</span>Overloading vs Overriding</a
+        >
+        <a href="#interface-abstract"
+          ><span class="num">4</span>Interface vs Abstract</a
+        >
+        <a href="#relationships"
+          ><span class="num">5</span>Association, Aggregation...</a
+        >
+        <div class="sidebar-title">Principles & Design</div>
+        <a href="#solid"><span class="num">6</span>SOLID Principles</a>
+        <a href="#constructor"
+          ><span class="num">7</span>Constructor Chaining</a
+        >
+        <a href="#cloning"><span class="num">8</span>Deep vs Shallow Copy</a>
+        <a href="#static"><span class="num">9</span>Static vs Instance</a>
+        <a href="#access"><span class="num">10</span>Access Modifiers</a>
+        <div class="sidebar-title">Advanced Topics</div>
+        <a href="#diamond"><span class="num">11</span>Diamond Problem</a>
+        <a href="#di"><span class="num">12</span>Dependency Injection</a>
+        <a href="#cohesion"><span class="num">13</span>Cohesion vs Coupling</a>
+        <a href="#immutable"><span class="num">14</span>Immutable Objects</a>
+        <a href="#patterns"><span class="num">15</span>Design Patterns</a>
+      </aside>
+
+      <main class="main">
+        <div class="topic-header">
+          <h1>Object-Oriented Programming</h1>
+          <p>
+            15 Core OOP Concepts — The foundation of software design. Master
+            these, and you'll think like an architect, not just a coder.
+          </p>
+        </div>
+
+        <!-- ============ 1. FOUR PILLARS ============ -->
+        <section class="concept" id="pillars">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Four Pillars of OOP</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="badge badge-important">Most Asked</span
+              ><span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">
+              The four pillars are: Encapsulation (bundling data + methods,
+              hiding internals), Abstraction (showing only essential features),
+              Inheritance (acquiring properties from parent), Polymorphism (one
+              interface, many forms).
+            </div>
+            <div class="pillar-grid">
+              <div class="pillar-card">
+                <h5>Encapsulation</h5>
+                <p>
+                  Bundling data (variables) and methods into a single unit
+                  (class). Hiding internal state using private/protected. Access
+                  through public getters/setters.
+                </p>
+              </div>
+              <div class="pillar-card">
+                <h5>Abstraction</h5>
+                <p>
+                  Hiding complex implementation, showing only essential
+                  features. Like driving a car — you use the steering wheel, not
+                  engine internals. Achieved via abstract classes.
+                </p>
+              </div>
+              <div class="pillar-card">
+                <h5>Inheritance</h5>
+                <p>
+                  Child class acquires properties and behaviors of parent class.
+                  Promotes code reuse. "IS-A" relationship: Dog IS-A Animal.
+                  Types: single, multi-level, hierarchical.
+                </p>
+              </div>
+              <div class="pillar-card">
+                <h5>Polymorphism</h5>
+                <p>
+                  One name, many forms. Same function behaves differently based
+                  on object type. Types: compile-time (overloading) and runtime
+                  (overriding via virtual functions).
+                </p>
+              </div>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — All Four Pillars</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// ─── ENCAPSULATION: private data + public methods ───</span>
+<span class="kw">class</span> <span class="type">BankAccount</span> {
+<span class="kw">private</span>:
+    <span class="type">double</span> balance;          <span class="cm">// hidden from outside</span>
+
+<span class="kw">public</span>:
+    <span class="type">BankAccount</span>() : balance(<span class="num">0</span>) {}
+
+    <span class="kw">void</span> <span class="fn">deposit</span>(<span class="type">double</span> amount) {
+        <span class="kw">if</span> (amount > <span class="num">0</span>) balance += amount;
+    }
+
+    <span class="type">double</span> <span class="fn">getBalance</span>() { <span class="kw">return</span> balance; }
+};
+
+<span class="cm">// ─── ABSTRACTION: hide complexity ───</span>
+<span class="kw">class</span> <span class="type">Shape</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">double</span> <span class="fn">area</span>() = <span class="num">0</span>;   <span class="cm">// pure virtual = what, not how</span>
+    <span class="kw">virtual</span> ~<span class="type">Shape</span>() {}
+};
+
+<span class="cm">// ─── INHERITANCE + POLYMORPHISM ───</span>
+<span class="kw">class</span> <span class="type">Circle</span> : <span class="kw">public</span> <span class="type">Shape</span> {
+    <span class="type">double</span> radius;
+<span class="kw">public</span>:
+    <span class="type">Circle</span>(<span class="type">double</span> r) : radius(r) {}
+
+    <span class="cm">// Overriding — same method, different behavior</span>
+    <span class="type">double</span> <span class="fn">area</span>() <span class="kw">override</span> {
+        <span class="kw">return</span> <span class="num">3.14159</span> * radius * radius;
+    }
+};
+
+<span class="kw">class</span> <span class="type">Rectangle</span> : <span class="kw">public</span> <span class="type">Shape</span> {
+    <span class="type">double</span> w, h;
+<span class="kw">public</span>:
+    <span class="type">Rectangle</span>(<span class="type">double</span> w, <span class="type">double</span> h) : w(w), h(h) {}
+
+    <span class="type">double</span> <span class="fn">area</span>() <span class="kw">override</span> { <span class="kw">return</span> w * h; }
+};
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  <strong>Encapsulation</strong> provides data hiding and
+                  security. Can validate data before setting.
+                </li>
+                <li>
+                  <strong>Abstraction</strong> reduces complexity for the user.
+                  Shows WHAT, hides HOW.
+                </li>
+                <li>
+                  <strong>Inheritance</strong> enables code reuse but can lead
+                  to tight coupling. Prefer composition over inheritance.
+                </li>
+                <li>
+                  <strong>Polymorphism</strong> enables loose coupling. New
+                  shapes can be added without changing existing code.
+                </li>
+              </ul>
+            </div>
+            <div class="gotcha">
+              <h4>Common Confusion</h4>
+              <p>
+                <strong>Encapsulation vs Abstraction:</strong> Encapsulation is
+                about BUNDLING and HIDING data. Abstraction is about showing
+                only RELEVANT details. Encapsulation = implementation technique,
+                Abstraction = design concept.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 2. RUNTIME VS COMPILE-TIME POLYMORPHISM ============ -->
+        <section class="concept" id="polymorphism">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Runtime vs Compile-Time Polymorphism</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="badge badge-important">Must Know</span
+              ><span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">
+              Compile-time (static) = resolved during compilation — function
+              overloading, operator overloading. Runtime (dynamic) = resolved
+              during execution — virtual functions + overriding via vtable.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Compile-Time (Static)</th>
+                <th>Runtime (Dynamic)</th>
+              </tr>
+              <tr>
+                <td><strong>When Resolved</strong></td>
+                <td>During compilation</td>
+                <td>During execution</td>
+              </tr>
+              <tr>
+                <td><strong>Achieved By</strong></td>
+                <td>Function overloading, templates</td>
+                <td>Virtual functions + overriding</td>
+              </tr>
+              <tr>
+                <td><strong>Binding</strong></td>
+                <td>Early binding</td>
+                <td>Late binding (vtable)</td>
+              </tr>
+              <tr>
+                <td><strong>Performance</strong></td>
+                <td>Faster (no lookup)</td>
+                <td>Slightly slower (vtable indirection)</td>
+              </tr>
+              <tr>
+                <td><strong>Keyword</strong></td>
+                <td>None needed</td>
+                <td><code>virtual</code>, <code>override</code></td>
+              </tr>
+            </table>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Compile-Time (Overloading)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Calculator</span> {
+<span class="kw">public</span>:
+    <span class="cm">// Same name, different parameters → resolved at compile time</span>
+    <span class="type">int</span>    <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b)           { <span class="kw">return</span> a + b; }
+    <span class="type">double</span> <span class="fn">add</span>(<span class="type">double</span> a, <span class="type">double</span> b)    { <span class="kw">return</span> a + b; }
+    <span class="type">int</span>    <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c)  { <span class="kw">return</span> a + b + c; }
+};
+
+<span class="cm">// Compiler picks which add() to call based on argument types</span>
+</pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >C++ — Runtime (Overriding + Virtual)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Animal</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">speak</span>() {
+        cout &lt;&lt; <span class="str">"Some sound"</span> &lt;&lt; endl;
+    }
+    <span class="kw">virtual</span> ~<span class="type">Animal</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">Dog</span> : <span class="kw">public</span> <span class="type">Animal</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">speak</span>() <span class="kw">override</span> {
+        cout &lt;&lt; <span class="str">"Bark!"</span> &lt;&lt; endl;
+    }
+};
+
+<span class="kw">class</span> <span class="type">Cat</span> : <span class="kw">public</span> <span class="type">Animal</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">speak</span>() <span class="kw">override</span> {
+        cout &lt;&lt; <span class="str">"Meow!"</span> &lt;&lt; endl;
+    }
+};
+
+<span class="cm">// Decided at RUNTIME based on actual object type</span>
+<span class="type">Animal</span>* animal = <span class="kw">new</span> <span class="type">Dog</span>();
+animal-&gt;<span class="fn">speak</span>();   <span class="cm">// Output: "Bark!" (not "Some sound")</span>
+<span class="kw">delete</span> animal;
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  Runtime polymorphism needs:
+                  <strong
+                    >inheritance + virtual function + base class
+                    pointer/reference</strong
+                  >
+                </li>
+                <li>
+                  Without <code>virtual</code> keyword, base class function is
+                  called — no polymorphism
+                </li>
+                <li>
+                  Runtime polymorphism uses <strong>vtable</strong> internally —
+                  array of function pointers per class
+                </li>
+                <li>
+                  Each object gets a hidden <strong>vptr</strong> that points to
+                  its class's vtable
+                </li>
+              </ul>
+            </div>
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Mention
+                <strong>CRTP (Curiously Recurring Template Pattern)</strong> —
+                achieves polymorphism at compile-time without virtual overhead.
+                Used in high-performance systems where vtable cost matters.
+                <code>class Derived : public Base&lt;Derived&gt; {}</code>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3. OVERLOADING VS OVERRIDING ============ -->
+        <section class="concept" id="overload-override">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Method Overloading vs Overriding</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              Overloading: Same name, different parameters, SAME class.
+              Overriding: Same name, same parameters, DIFFERENT classes
+              (parent-child). Overloading = compile time. Overriding = runtime.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Overloading</th>
+                <th>Overriding</th>
+              </tr>
+              <tr>
+                <td><strong>Scope</strong></td>
+                <td>Within same class</td>
+                <td>Parent and child classes</td>
+              </tr>
+              <tr>
+                <td><strong>Parameters</strong></td>
+                <td>Must be different</td>
+                <td>Must be exactly same</td>
+              </tr>
+              <tr>
+                <td><strong>Return Type</strong></td>
+                <td>Can differ</td>
+                <td>Must be same (or covariant)</td>
+              </tr>
+              <tr>
+                <td><strong>Binding</strong></td>
+                <td>Compile-time</td>
+                <td>Runtime</td>
+              </tr>
+              <tr>
+                <td><strong>virtual needed</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes (in C++)</td>
+              </tr>
+              <tr>
+                <td><strong>Inheritance needed</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes</td>
+              </tr>
+            </table>
+            <div class="gotcha">
+              <h4>Common Mistakes</h4>
+              <p>
+                ✗ "Changing only return type is overloading" — causes
+                compilation error.<br />✗ "Overriding works in same class" —
+                needs inheritance.<br />✗ "Static methods can be overridden" —
+                static methods are hidden, not overridden. No polymorphism.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4. INTERFACE VS ABSTRACT CLASS ============ -->
+        <section class="concept" id="interface-abstract">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Interface vs Abstract Class</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="badge badge-important">Very Common</span
+              ><span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">
+              Abstract class: partial implementation, IS-A relationship, can
+              have data members. Pure abstract class (all pure virtual) = C++
+              equivalent of interface. Multiple inheritance of pure abstract
+              classes achieves "interfaces" in C++.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Abstract Class</th>
+                <th>Interface (Pure Abstract)</th>
+              </tr>
+              <tr>
+                <td><strong>Methods</strong></td>
+                <td>Mix of virtual + concrete</td>
+                <td>ALL pure virtual (= 0)</td>
+              </tr>
+              <tr>
+                <td><strong>Data Members</strong></td>
+                <td class="yes">Can have data</td>
+                <td class="no">Typically no data</td>
+              </tr>
+              <tr>
+                <td><strong>Multiple Inheritance</strong></td>
+                <td>Diamond problem risk</td>
+                <td>Safe (no data to duplicate)</td>
+              </tr>
+              <tr>
+                <td><strong>Constructor</strong></td>
+                <td class="yes">Can have</td>
+                <td class="no">Typically no</td>
+              </tr>
+              <tr>
+                <td><strong>When to Use</strong></td>
+                <td>Related classes, shared code</td>
+                <td>Unrelated classes, shared behavior</td>
+              </tr>
+            </table>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Abstract Class vs Interface</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="cm">// ─── ABSTRACT CLASS (has some implementation) ───</span>
+<span class="kw">class</span> <span class="type">Animal</span> {
+<span class="kw">protected</span>:
+    <span class="type">string</span> name;
+<span class="kw">public</span>:
+    <span class="type">Animal</span>(<span class="type">string</span> n) : name(n) {}
+
+    <span class="type">void</span> <span class="fn">sleep</span>() { cout &lt;&lt; name &lt;&lt; <span class="str">" is sleeping"</span> &lt;&lt; endl; }
+
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">makeSound</span>() = <span class="num">0</span>;   <span class="cm">// pure virtual</span>
+    <span class="kw">virtual</span> ~<span class="type">Animal</span>() {}
+};
+
+<span class="cm">// ─── INTERFACE (all pure virtual, no data) ───</span>
+<span class="kw">class</span> <span class="type">Flyable</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">fly</span>() = <span class="num">0</span>;
+    <span class="kw">virtual</span> ~<span class="type">Flyable</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">Swimmable</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">swim</span>() = <span class="num">0</span>;
+    <span class="kw">virtual</span> ~<span class="type">Swimmable</span>() {}
+};
+
+<span class="cm">// Duck: IS-A Animal, CAN fly, CAN swim</span>
+<span class="kw">class</span> <span class="type">Duck</span> : <span class="kw">public</span> <span class="type">Animal</span>, <span class="kw">public</span> <span class="type">Flyable</span>, <span class="kw">public</span> <span class="type">Swimmable</span> {
+<span class="kw">public</span>:
+    <span class="type">Duck</span>() : <span class="type">Animal</span>(<span class="str">"Duck"</span>) {}
+
+    <span class="type">void</span> <span class="fn">makeSound</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="str">"Quack!"</span> &lt;&lt; endl; }
+    <span class="type">void</span> <span class="fn">fly</span>()       <span class="kw">override</span> { cout &lt;&lt; <span class="str">"Flying..."</span> &lt;&lt; endl; }
+    <span class="type">void</span> <span class="fn">swim</span>()      <span class="kw">override</span> { cout &lt;&lt; <span class="str">"Swimming..."</span> &lt;&lt; endl; }
+};
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>When to Use Which</h4>
+              <ul>
+                <li>
+                  <strong>Abstract class:</strong> Related classes with shared
+                  code (Animal → Dog, Cat)
+                </li>
+                <li>
+                  <strong>Interface (pure abstract):</strong> Unrelated classes
+                  sharing behavior (Car, Bird → Movable)
+                </li>
+                <li>
+                  <strong>Interface:</strong> When you need multiple inheritance
+                  of type
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5. RELATIONSHIPS ============ -->
+        <section class="concept" id="relationships">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Association, Aggregation, Composition</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">
+              Association: objects are related (Teacher-Student). Aggregation:
+              "HAS-A" with independent lifetime (Department-Employee).
+              Composition: "HAS-A" with dependent lifetime (House-Room, child
+              dies with parent).
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Association</th>
+                <th>Aggregation</th>
+                <th>Composition</th>
+              </tr>
+              <tr>
+                <td><strong>Relationship</strong></td>
+                <td>Uses / Knows</td>
+                <td>HAS-A (weak)</td>
+                <td>HAS-A (strong)</td>
+              </tr>
+              <tr>
+                <td><strong>Ownership</strong></td>
+                <td>No ownership</td>
+                <td>Partial</td>
+                <td>Full ownership</td>
+              </tr>
+              <tr>
+                <td><strong>Child Lifetime</strong></td>
+                <td>Independent</td>
+                <td>Independent</td>
+                <td>Dependent</td>
+              </tr>
+              <tr>
+                <td><strong>Example</strong></td>
+                <td>Teacher ↔ Student</td>
+                <td>Dept → Employee</td>
+                <td>House → Room</td>
+              </tr>
+              <tr>
+                <td><strong>UML</strong></td>
+                <td>Plain line</td>
+                <td>Empty diamond ◇</td>
+                <td>Filled diamond ◆</td>
+              </tr>
+            </table>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Aggregation vs Composition</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="cm">// ─── AGGREGATION: Employee exists independently ───</span>
+<span class="kw">class</span> <span class="type">Employee</span> { <span class="cm">/* ... */</span> };
+
+<span class="kw">class</span> <span class="type">Department</span> {
+    vector&lt;<span class="type">Employee</span>*&gt; employees;   <span class="cm">// pointers → don't own</span>
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">addEmployee</span>(<span class="type">Employee</span>* e) {
+        employees.push_back(e);    <span class="cm">// passed from outside</span>
+    }
+    <span class="cm">// ~Department does NOT delete employees</span>
+};
+
+<span class="cm">// ─── COMPOSITION: Room dies with House ───</span>
+<span class="kw">class</span> <span class="type">Room</span> {
+<span class="kw">public</span>:
+    <span class="type">string</span> name;
+    <span class="type">Room</span>(<span class="type">string</span> n) : name(n) {}
+};
+
+<span class="kw">class</span> <span class="type">House</span> {
+    vector&lt;<span class="type">Room</span>&gt; rooms;             <span class="cm">// owns by value</span>
+<span class="kw">public</span>:
+    <span class="type">House</span>() {
+        rooms.push_back(<span class="type">Room</span>(<span class="str">"Bedroom"</span>));   <span class="cm">// created inside</span>
+        rooms.push_back(<span class="type">Room</span>(<span class="str">"Kitchen"</span>));
+    }
+    <span class="cm">// ~House destroys all Rooms automatically</span>
+};
+</pre>
+            </div>
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                The key distinction:
+                <strong>who creates and destroys the child?</strong> Aggregation
+                = child passed in (pointer), parent doesn't delete. Composition
+                = child created inside (by value or unique_ptr), automatically
+                destroyed with parent.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 6. SOLID ============ -->
+        <section class="concept" id="solid">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>SOLID Principles</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-important">Design Principles</span
+              ><span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">
+              SOLID = 5 principles for maintainable OOP: Single Responsibility,
+              Open-Closed, Liskov Substitution, Interface Segregation,
+              Dependency Inversion. Asked in almost every senior interview.
+            </div>
+            <div class="solid-grid">
+              <div class="solid-item">
+                <div class="solid-letter">S</div>
+                <div class="solid-content">
+                  <h5>Single Responsibility</h5>
+                  <p>
+                    A class should have only ONE reason to change. Bad:
+                    UserService handles auth + email + DB. Good: separate
+                    classes.
+                  </p>
+                </div>
+              </div>
+              <div class="solid-item">
+                <div class="solid-letter">O</div>
+                <div class="solid-content">
+                  <h5>Open-Closed</h5>
+                  <p>
+                    Open for extension, closed for modification. Add new
+                    features via new classes/inheritance, not by editing
+                    existing code.
+                  </p>
+                </div>
+              </div>
+              <div class="solid-item">
+                <div class="solid-letter">L</div>
+                <div class="solid-content">
+                  <h5>Liskov Substitution</h5>
+                  <p>
+                    Subclasses should be substitutable for parent. If code works
+                    with Animal, it must work with Dog without surprises.
+                  </p>
+                </div>
+              </div>
+              <div class="solid-item">
+                <div class="solid-letter">I</div>
+                <div class="solid-content">
+                  <h5>Interface Segregation</h5>
+                  <p>
+                    Many specific interfaces > one fat interface. Don't force
+                    classes to implement methods they don't use.
+                  </p>
+                </div>
+              </div>
+              <div class="solid-item">
+                <div class="solid-letter">D</div>
+                <div class="solid-content">
+                  <h5>Dependency Inversion</h5>
+                  <p>
+                    Depend on abstractions, not concretions. OrderService
+                    depends on Database interface, not MySQLDatabase directly.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="key-points">
+              <h4>Memory Aid</h4>
+              <ul>
+                <li><strong>S</strong>: One class = One job</li>
+                <li><strong>O</strong>: Extend, don't modify</li>
+                <li><strong>L</strong>: Children behave like parents</li>
+                <li><strong>I</strong>: Thin interfaces > fat interfaces</li>
+                <li><strong>D</strong>: Depend on abstractions</li>
+              </ul>
+            </div>
+            <div class="gotcha">
+              <h4>Classic LSP Violation</h4>
+              <p>
+                Square extends Rectangle. But setWidth() in Square must also set
+                height. This breaks code expecting Rectangle:
+                <code
+                  >r.setWidth(5); r.setHeight(10); assert(r.area()==50);</code
+                >
+                fails. They're different shapes — don't use inheritance here.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 7. CONSTRUCTOR CHAINING ============ -->
+        <section class="concept" id="constructor">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Constructor Chaining</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              Calling one constructor from another. In C++: use member
+              initializer lists and delegating constructors (C++11). Child calls
+              parent constructor in initializer list. Reduces code duplication.
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Constructor Chaining</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Employee</span> {
+    <span class="type">string</span> name;
+    <span class="type">int</span> age;
+    <span class="type">string</span> department;
+
+<span class="kw">public</span>:
+    <span class="cm">// Full constructor</span>
+    <span class="type">Employee</span>(<span class="type">string</span> n, <span class="type">int</span> a, <span class="type">string</span> d)
+        : name(n), age(a), department(d) {}
+
+    <span class="cm">// Delegating constructor → calls full constructor</span>
+    <span class="type">Employee</span>(<span class="type">string</span> n, <span class="type">int</span> a)
+        : <span class="type">Employee</span>(n, a, <span class="str">"General"</span>) {}    <span class="cm">// C++11</span>
+
+    <span class="cm">// Another delegation</span>
+    <span class="type">Employee</span>(<span class="type">string</span> n)
+        : <span class="type">Employee</span>(n, <span class="num">0</span>, <span class="str">"General"</span>) {}
+};
+
+<span class="cm">// Child → Parent via initializer list</span>
+<span class="kw">class</span> <span class="type">Manager</span> : <span class="kw">public</span> <span class="type">Employee</span> {
+    <span class="type">int</span> teamSize;
+<span class="kw">public</span>:
+    <span class="type">Manager</span>(<span class="type">string</span> n, <span class="type">int</span> a, <span class="type">int</span> ts)
+        : <span class="type">Employee</span>(n, a, <span class="str">"Management"</span>),  <span class="cm">// call parent</span>
+          teamSize(ts) {}
+};
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  C++11 introduced <strong>delegating constructors</strong> —
+                  one constructor calls another of same class
+                </li>
+                <li>
+                  Parent constructor called in
+                  <strong>initializer list</strong>, not inside body
+                </li>
+                <li>
+                  If parent has no default constructor, child MUST explicitly
+                  call it
+                </li>
+                <li>
+                  Member variables initialized in
+                  <strong>declaration order</strong>, not initializer list order
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8. DEEP VS SHALLOW COPY ============ -->
+        <section class="concept" id="cloning">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Deep vs Shallow Copy</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-important">Tricky</span
+              ><span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">
+              Shallow: copies pointer values — both objects point to same heap
+              memory. Deep: allocates new memory and copies actual data — fully
+              independent clones. Shallow = fast, dangerous. Deep = safe,
+              slower.
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Shallow vs Deep Copy</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Person</span> {
+    <span class="type">char</span>* name;
+    <span class="type">int</span> age;
+
+<span class="kw">public</span>:
+    <span class="type">Person</span>(<span class="kw">const</span> <span class="type">char</span>* n, <span class="type">int</span> a) : age(a) {
+        name = <span class="kw">new</span> <span class="type">char</span>[strlen(n) + <span class="num">1</span>];
+        strcpy(name, n);
+    }
+
+    <span class="cm">// ─── SHALLOW COPY (default) — DANGEROUS ───</span>
+    <span class="cm">// Default copy constructor just copies pointer value</span>
+    <span class="cm">// Both objects point to SAME memory → double free crash!</span>
+
+    <span class="cm">// ─── DEEP COPY — SAFE ───</span>
+    <span class="type">Person</span>(<span class="kw">const</span> <span class="type">Person</span>&amp; other) : age(other.age) {
+        name = <span class="kw">new</span> <span class="type">char</span>[strlen(other.name) + <span class="num">1</span>];
+        strcpy(name, other.name);   <span class="cm">// allocate + copy</span>
+    }
+
+    ~<span class="type">Person</span>() { <span class="kw">delete</span>[] name; }
+};
+
+<span class="type">Person</span> a(<span class="str">"John"</span>, <span class="num">25</span>);
+<span class="type">Person</span> b = a;   <span class="cm">// calls deep copy constructor</span>
+<span class="cm">// a and b have independent memory — safe!</span>
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  Default copy constructor does
+                  <strong>shallow copy</strong> (memberwise copy)
+                </li>
+                <li>
+                  If class has raw pointers → MUST write deep copy constructor
+                </li>
+                <li>
+                  <strong>Rule of Three:</strong> If you write destructor, copy
+                  constructor, or copy assignment — write ALL three
+                </li>
+                <li>
+                  <strong>Rule of Five (C++11):</strong> Add move constructor +
+                  move assignment
+                </li>
+                <li>
+                  Use <strong>smart pointers</strong> (unique_ptr) to avoid
+                  manual memory management entirely
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 9. STATIC VS INSTANCE ============ -->
+        <section class="concept" id="static">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Static vs Instance Members</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              Static members belong to the CLASS — shared by all objects, no
+              need to create instance. Instance members belong to OBJECTS — each
+              has its own copy. Static = one per class. Instance = one per
+              object.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Static</th>
+                <th>Instance</th>
+              </tr>
+              <tr>
+                <td><strong>Belongs to</strong></td>
+                <td>Class</td>
+                <td>Object</td>
+              </tr>
+              <tr>
+                <td><strong>Memory</strong></td>
+                <td>One copy shared</td>
+                <td>Separate per object</td>
+              </tr>
+              <tr>
+                <td><strong>Access</strong></td>
+                <td><code>ClassName::member</code></td>
+                <td><code>obj.member</code></td>
+              </tr>
+              <tr>
+                <td><strong>Can access instance?</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes (both)</td>
+              </tr>
+              <tr>
+                <td><strong>this pointer</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Virtual possible?</strong></td>
+                <td class="no">No</td>
+                <td class="yes">Yes</td>
+              </tr>
+            </table>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Static vs Instance</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Employee</span> {
+    <span class="type">string</span> name;                      <span class="cm">// instance — per object</span>
+    <span class="kw">static</span> <span class="type">int</span> totalCount;            <span class="cm">// static — shared by all</span>
+
+<span class="kw">public</span>:
+    <span class="type">Employee</span>(<span class="type">string</span> n) : name(n) {
+        totalCount++;                 <span class="cm">// increment shared counter</span>
+    }
+
+    <span class="kw">static</span> <span class="type">int</span> <span class="fn">getTotal</span>() {
+        <span class="cm">// can't use 'name' here — no 'this' pointer</span>
+        <span class="kw">return</span> totalCount;
+    }
+};
+
+<span class="type">int</span> <span class="type">Employee</span>::totalCount = <span class="num">0</span>;  <span class="cm">// define outside class</span>
+
+<span class="type">Employee</span> e1(<span class="str">"John"</span>);
+<span class="type">Employee</span> e2(<span class="str">"Jane"</span>);
+cout &lt;&lt; <span class="type">Employee</span>::<span class="fn">getTotal</span>();   <span class="cm">// 2</span>
+</pre>
+            </div>
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                "Static methods can be overridden" —
+                <strong>Wrong!</strong> Static methods are resolved by reference
+                type at compile time. No vtable involved, no polymorphism. They
+                are <strong>hidden</strong>, not overridden.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 10. ACCESS MODIFIERS ============ -->
+        <section class="concept" id="access">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Access Modifiers</h2>
+              <span class="badge badge-core">Core</span
+              ><span class="read-time">2 min</span>
+            </div>
+            <div class="one-liner">
+              Control visibility: private (same class only), protected (same
+              class + derived classes), public (everywhere). In C++, class
+              members are private by default, struct members are public by
+              default.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Modifier</th>
+                <th>Same Class</th>
+                <th>Derived Class</th>
+                <th>Outside</th>
+              </tr>
+              <tr>
+                <td><code>private</code></td>
+                <td class="yes">✓</td>
+                <td class="no">✗</td>
+                <td class="no">✗</td>
+              </tr>
+              <tr>
+                <td><code>protected</code></td>
+                <td class="yes">✓</td>
+                <td class="yes">✓</td>
+                <td class="no">✗</td>
+              </tr>
+              <tr>
+                <td><code>public</code></td>
+                <td class="yes">✓</td>
+                <td class="yes">✓</td>
+                <td class="yes">✓</td>
+              </tr>
+            </table>
+            <div class="key-points">
+              <h4>Key Interview Points</h4>
+              <ul>
+                <li>
+                  C++ has <strong>friend</strong> keyword — grants private
+                  access to specific classes/functions
+                </li>
+                <li>
+                  Inheritance access: <code>class Dog : public Animal</code> —
+                  public keeps access levels. <code>private</code> inheritance
+                  makes everything private in child.
+                </li>
+                <li>
+                  Default access: <code>class</code> = private,
+                  <code>struct</code> = public
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 11. DIAMOND PROBLEM ============ -->
+        <section class="concept" id="diamond">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Diamond Problem</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-important">Classic</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              D inherits from B and C, both inherit from A. D gets TWO copies of
+              A — ambiguity. C++ solves with virtual inheritance — ensures
+              single copy of base class.
+            </div>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+                <rect
+                  x="110"
+                  y="30"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--goldLight)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                />
+                <text
+                  x="150"
+                  y="52"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  A
+                </text>
+                <line
+                  x1="130"
+                  y1="65"
+                  x2="70"
+                  y2="95"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="170"
+                  y1="65"
+                  x2="230"
+                  y2="95"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="30"
+                  y="95"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <text
+                  x="70"
+                  y="117"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  B
+                </text>
+                <rect
+                  x="190"
+                  y="95"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <text
+                  x="230"
+                  y="117"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  C
+                </text>
+                <line
+                  x1="70"
+                  y1="130"
+                  x2="130"
+                  y2="155"
+                  stroke="var(--blue)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="230"
+                  y1="130"
+                  x2="170"
+                  y2="155"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                />
+                <rect
+                  x="110"
+                  y="150"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--redBg)"
+                  stroke="var(--red)"
+                  stroke-width="2"
+                />
+                <text
+                  x="150"
+                  y="167"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  D
+                </text>
+                <text
+                  x="150"
+                  y="182"
+                  text-anchor="middle"
+                  fill="var(--red)"
+                  font-size="7"
+                >
+                  Which A?
+                </text>
+              </svg>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Virtual Inheritance Fix</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">A</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">show</span>() { cout &lt;&lt; <span class="str">"A"</span>; }
+};
+
+<span class="cm">// virtual inheritance → only ONE copy of A in D</span>
+<span class="kw">class</span> <span class="type">B</span> : <span class="kw">virtual public</span> <span class="type">A</span> { };
+<span class="kw">class</span> <span class="type">C</span> : <span class="kw">virtual public</span> <span class="type">A</span> { };
+<span class="kw">class</span> <span class="type">D</span> : <span class="kw">public</span> <span class="type">B</span>, <span class="kw">public</span> <span class="type">C</span> { };
+
+<span class="type">D</span> d;
+d.<span class="fn">show</span>();     <span class="cm">// No ambiguity! Only one A::show()</span>
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>How Other Languages Handle It</h4>
+              <ul>
+                <li>
+                  <strong>Java:</strong> No multiple class inheritance. Uses
+                  interfaces instead.
+                </li>
+                <li>
+                  <strong>C++:</strong> Virtual inheritance — single copy of
+                  shared base
+                </li>
+                <li>
+                  <strong>Python:</strong> MRO (Method Resolution Order) with C3
+                  linearization
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 12. DEPENDENCY INJECTION ============ -->
+        <section class="concept" id="di">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Dependency Injection</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-practical">Practical</span
+              ><span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">
+              Providing objects a class needs (dependencies) from outside,
+              rather than creating them inside. Makes code testable, flexible,
+              loosely coupled. The "D" in SOLID.
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Without DI (Bad)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">OrderService</span> {
+    <span class="type">MySQLDatabase</span> db;   <span class="cm">// hardcoded dependency!</span>
+<span class="kw">public</span>:
+    <span class="type">OrderService</span>() : db() {}
+    <span class="cm">// Can't test without real MySQL.</span>
+    <span class="cm">// Can't switch to PostgreSQL.</span>
+};
+</pre>
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — With DI (Good)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="cm">// Abstraction (interface)</span>
+<span class="kw">class</span> <span class="type">IDatabase</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">save</span>(<span class="kw">const</span> <span class="type">Order</span>&amp; order) = <span class="num">0</span>;
+    <span class="kw">virtual</span> ~<span class="type">IDatabase</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">OrderService</span> {
+    <span class="type">IDatabase</span>&amp; db;   <span class="cm">// depends on abstraction</span>
+<span class="kw">public</span>:
+    <span class="cm">// CONSTRUCTOR INJECTION</span>
+    <span class="type">OrderService</span>(<span class="type">IDatabase</span>&amp; database) : db(database) {}
+
+    <span class="type">void</span> <span class="fn">placeOrder</span>(<span class="kw">const</span> <span class="type">Order</span>&amp; order) {
+        db.<span class="fn">save</span>(order);
+    }
+};
+
+<span class="cm">// Usage — inject any implementation</span>
+<span class="type">MySQLDatabase</span> mysql;
+<span class="type">OrderService</span> service(mysql);
+
+<span class="cm">// For testing — inject mock</span>
+<span class="type">MockDatabase</span> mock;
+<span class="type">OrderService</span> testService(mock);
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>Types of DI</h4>
+              <ul>
+                <li>
+                  <strong>Constructor Injection:</strong> Dependencies via
+                  constructor. Most common, makes deps explicit.
+                </li>
+                <li>
+                  <strong>Setter Injection:</strong> Via setter methods. For
+                  optional dependencies.
+                </li>
+                <li>
+                  <strong>Interface Injection:</strong> Class implements
+                  injector interface. Rare.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 13. COHESION VS COUPLING ============ -->
+        <section class="concept" id="cohesion">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Cohesion vs Coupling</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              Cohesion = how related are responsibilities within a module (HIGH
+              = good). Coupling = how dependent modules are on each other (LOW =
+              good). Goal: High cohesion, low coupling.
+            </div>
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Cohesion</th>
+                <th>Coupling</th>
+              </tr>
+              <tr>
+                <td><strong>Definition</strong></td>
+                <td>Relatedness within a module</td>
+                <td>Dependence between modules</td>
+              </tr>
+              <tr>
+                <td><strong>Goal</strong></td>
+                <td class="yes">HIGH is good</td>
+                <td class="yes">LOW is good</td>
+              </tr>
+              <tr>
+                <td><strong>Bad Example</strong></td>
+                <td>One class: auth + email + payments</td>
+                <td>OrderService creates MySQLDatabase</td>
+              </tr>
+              <tr>
+                <td><strong>Good Example</strong></td>
+                <td>AuthService only handles auth</td>
+                <td>OrderService depends on IDatabase</td>
+              </tr>
+            </table>
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                <strong>Law of Demeter:</strong> Only talk to your immediate
+                friends. Avoid <code>a.getB().getC().doSomething()</code> — this
+                creates high coupling. Each dot is a dependency you're leaking.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 14. IMMUTABLE OBJECTS ============ -->
+        <section class="concept" id="immutable">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Immutable Objects</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-practical">Practical</span
+              ><span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">
+              State cannot change after creation. Any "modification" creates a
+              new object. Thread-safe by default, safe for hash keys, easier to
+              reason about. Example: std::string in many cases.
+            </div>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Immutable Class</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">ImmutablePoint</span> {
+    <span class="kw">const</span> <span class="type">int</span> x;
+    <span class="kw">const</span> <span class="type">int</span> y;
+
+<span class="kw">public</span>:
+    <span class="type">ImmutablePoint</span>(<span class="type">int</span> x, <span class="type">int</span> y) : x(x), y(y) {}
+
+    <span class="cm">// Only getters, no setters</span>
+    <span class="type">int</span> <span class="fn">getX</span>() <span class="kw">const</span> { <span class="kw">return</span> x; }
+    <span class="type">int</span> <span class="fn">getY</span>() <span class="kw">const</span> { <span class="kw">return</span> y; }
+
+    <span class="cm">// "Modification" returns new object</span>
+    <span class="type">ImmutablePoint</span> <span class="fn">move</span>(<span class="type">int</span> dx, <span class="type">int</span> dy) <span class="kw">const</span> {
+        <span class="kw">return</span> <span class="type">ImmutablePoint</span>(x + dx, y + dy);
+    }
+};
+
+<span class="type">ImmutablePoint</span> p1(<span class="num">3</span>, <span class="num">4</span>);
+<span class="type">ImmutablePoint</span> p2 = p1.<span class="fn">move</span>(<span class="num">1</span>, <span class="num">2</span>);   <span class="cm">// p1 unchanged, p2 is (4,6)</span>
+</pre>
+            </div>
+            <div class="key-points">
+              <h4>How to Make a Class Immutable in C++</h4>
+              <ul>
+                <li>Make all member variables <code>const</code></li>
+                <li>
+                  No setter methods — only getters marked <code>const</code>
+                </li>
+                <li>Initialize everything in constructor initializer list</li>
+                <li>Return new objects instead of modifying state</li>
+                <li>
+                  For mutable members (like pointers), return copies not
+                  references
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 15. DESIGN PATTERNS ============ -->
+        <section class="concept" id="patterns">
+          <div class="concept-accent"></div>
+          <div class="ci">
+            <div class="concept-header">
+              <h2>Design Patterns: Singleton, Factory, Strategy</h2>
+              <span class="badge badge-concept">Concept</span
+              ><span class="badge badge-important">Very Common</span
+              ><span class="read-time">6 min</span>
+            </div>
+            <div class="one-liner">
+              Reusable solutions to common problems. Singleton: ensure one
+              instance. Factory: create objects without exposing logic.
+              Strategy: swap algorithms at runtime.
+            </div>
+
+            <h3
+              style="
+                margin-top: 1.5rem;
+                margin-bottom: 0.8rem;
+                font-size: 1.1rem;
+                color: var(--gold);
+              "
+            >
+              1. Singleton Pattern
+            </h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1rem">
+              Only ONE instance ever. Use for: config manager, logger,
+              connection pool.
+            </p>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Thread-Safe Singleton</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Logger</span> {
+<span class="kw">private</span>:
+    <span class="type">Logger</span>() {}                            <span class="cm">// private constructor</span>
+    <span class="type">Logger</span>(<span class="kw">const</span> <span class="type">Logger</span>&amp;) = <span class="kw">delete</span>;        <span class="cm">// no copy</span>
+    <span class="type">Logger</span>&amp; <span class="kw">operator</span>=(<span class="kw">const</span> <span class="type">Logger</span>&amp;) = <span class="kw">delete</span>;
+
+<span class="kw">public</span>:
+    <span class="kw">static</span> <span class="type">Logger</span>&amp; <span class="fn">getInstance</span>() {
+        <span class="kw">static</span> <span class="type">Logger</span> instance;  <span class="cm">// thread-safe in C++11</span>
+        <span class="kw">return</span> instance;
+    }
+
+    <span class="type">void</span> <span class="fn">log</span>(<span class="kw">const</span> <span class="type">string</span>&amp; msg) {
+        cout &lt;&lt; <span class="str">"[LOG] "</span> &lt;&lt; msg &lt;&lt; endl;
+    }
+};
+
+<span class="cm">// Usage</span>
+<span class="type">Logger</span>::<span class="fn">getInstance</span>().<span class="fn">log</span>(<span class="str">"Server started"</span>);
+</pre>
+            </div>
+
+            <h3
+              style="
+                margin-top: 1.5rem;
+                margin-bottom: 0.8rem;
+                font-size: 1.1rem;
+                color: var(--gold);
+              "
+            >
+              2. Factory Pattern
+            </h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1rem">
+              Create objects without exposing instantiation logic. Client uses
+              factory, not <code>new</code>.
+            </p>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Factory Pattern</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="kw">class</span> <span class="type">Shape</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">draw</span>() = <span class="num">0</span>;
+    <span class="kw">virtual</span> ~<span class="type">Shape</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">Circle</span> : <span class="kw">public</span> <span class="type">Shape</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">draw</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="str">"Drawing Circle"</span> &lt;&lt; endl; }
+};
+
+<span class="kw">class</span> <span class="type">Rectangle</span> : <span class="kw">public</span> <span class="type">Shape</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">draw</span>() <span class="kw">override</span> { cout &lt;&lt; <span class="str">"Drawing Rect"</span> &lt;&lt; endl; }
+};
+
+<span class="cm">// Factory</span>
+<span class="kw">class</span> <span class="type">ShapeFactory</span> {
+<span class="kw">public</span>:
+    <span class="kw">static</span> unique_ptr&lt;<span class="type">Shape</span>&gt; <span class="fn">create</span>(<span class="kw">const</span> <span class="type">string</span>&amp; type) {
+        <span class="kw">if</span> (type == <span class="str">"circle"</span>)    <span class="kw">return</span> make_unique&lt;<span class="type">Circle</span>&gt;();
+        <span class="kw">if</span> (type == <span class="str">"rectangle"</span>) <span class="kw">return</span> make_unique&lt;<span class="type">Rectangle</span>&gt;();
+        <span class="kw">return nullptr</span>;
+    }
+};
+
+<span class="cm">// Client doesn't know about Circle/Rectangle</span>
+<span class="kw">auto</span> shape = <span class="type">ShapeFactory</span>::<span class="fn">create</span>(<span class="str">"circle"</span>);
+shape-&gt;<span class="fn">draw</span>();
+</pre>
+            </div>
+
+            <h3
+              style="
+                margin-top: 1.5rem;
+                margin-bottom: 0.8rem;
+                font-size: 1.1rem;
+                color: var(--gold);
+              "
+            >
+              3. Strategy Pattern
+            </h3>
+            <p style="font-size: 0.9rem; margin-bottom: 1rem">
+              Define a family of algorithms, make them interchangeable at
+              runtime.
+            </p>
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">C++ — Strategy Pattern</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre class="code-block">
+<span class="cm">// Strategy interface</span>
+<span class="kw">class</span> <span class="type">PaymentStrategy</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">pay</span>(<span class="type">int</span> amount) = <span class="num">0</span>;
+    <span class="kw">virtual</span> ~<span class="type">PaymentStrategy</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">CreditCard</span> : <span class="kw">public</span> <span class="type">PaymentStrategy</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">pay</span>(<span class="type">int</span> amount) <span class="kw">override</span> {
+        cout &lt;&lt; <span class="str">"Paid $"</span> &lt;&lt; amount &lt;&lt; <span class="str">" via Credit Card"</span> &lt;&lt; endl;
+    }
+};
+
+<span class="kw">class</span> <span class="type">PayPal</span> : <span class="kw">public</span> <span class="type">PaymentStrategy</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">pay</span>(<span class="type">int</span> amount) <span class="kw">override</span> {
+        cout &lt;&lt; <span class="str">"Paid $"</span> &lt;&lt; amount &lt;&lt; <span class="str">" via PayPal"</span> &lt;&lt; endl;
+    }
+};
+
+<span class="cm">// Context</span>
+<span class="kw">class</span> <span class="type">ShoppingCart</span> {
+    unique_ptr&lt;<span class="type">PaymentStrategy</span>&gt; strategy;
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">setStrategy</span>(unique_ptr&lt;<span class="type">PaymentStrategy</span>&gt; s) {
+        strategy = move(s);
+    }
+    <span class="type">void</span> <span class="fn">checkout</span>(<span class="type">int</span> amount) {
+        strategy-&gt;<span class="fn">pay</span>(amount);   <span class="cm">// delegates to strategy</span>
+    }
+};
+
+<span class="cm">// Switch strategies at runtime</span>
+<span class="type">ShoppingCart</span> cart;
+cart.<span class="fn">setStrategy</span>(make_unique&lt;<span class="type">CreditCard</span>&gt;());
+cart.<span class="fn">checkout</span>(<span class="num">100</span>);
+cart.<span class="fn">setStrategy</span>(make_unique&lt;<span class="type">PayPal</span>&gt;());
+cart.<span class="fn">checkout</span>(<span class="num">50</span>);
+</pre>
+            </div>
+
+            <div class="key-points">
+              <h4>When to Use Each</h4>
+              <ul>
+                <li>
+                  <strong>Singleton:</strong> One instance needed (config,
+                  logging, thread pool)
+                </li>
+                <li>
+                  <strong>Factory:</strong> Object creation complex or should be
+                  decoupled
+                </li>
+                <li>
+                  <strong>Strategy:</strong> Multiple algorithms, want to swap
+                  at runtime
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-q">
+              <h4>Common Follow-ups</h4>
+              <details>
+                <summary>What are the problems with Singleton?</summary>
+                <div class="ans">
+                  Global state makes testing hard. Hidden dependencies. Violates
+                  Single Responsibility. Thread-safety complexity. Many consider
+                  it an anti-pattern. Prefer dependency injection.
+                </div>
+              </details>
+              <details>
+                <summary>Factory vs Abstract Factory?</summary>
+                <div class="ans">
+                  <strong>Factory:</strong> Creates one product type.
+                  <strong>Abstract Factory:</strong> Creates families of related
+                  products (e.g., WindowsButton + WindowsCheckbox vs MacButton +
+                  MacCheckbox).
+                </div>
+              </details>
+              <details>
+                <summary>Strategy vs State pattern?</summary>
+                <div class="ans">
+                  Both swap behavior via composition.
+                  <strong>Strategy:</strong> Client chooses algorithm.
+                  <strong>State:</strong> Object changes behavior based on
+                  internal state. State transitions happen internally;
+                  strategies are swapped externally.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="quick-jump" id="quickJump">
+      <button class="jump-btn" id="jumpBtn" aria-expanded="false">
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">DBMS</a>
+        <a href="02-OOPs.html">OOPs</a>
+        <a href="03-Computer-Networks.html">Computer Networks</a>
+        <a href="04-Operating-System.html">Operating System</a>
+        <a href="05-Language-Core-CPP.html">C++</a>
+        <a href="05-Language-Core-Java.html">Java</a>
+        <a href="05-Language-Core-Python.html">Python</a>
+        <a href="06-Puzzles.html">Puzzles</a>
+        <a href="07-Linux.html">Linux</a>
+        <a href="08-Git.html">Git</a>
+        <a href="09-SQL.html">SQL</a>
+        <a href="10-Projects-Behavioral.html">Projects & Behavioral</a>
+      </div>
+    </div>
+
+    <button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+    <script>
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle("focus-mode");
+        document.getElementById("focusBtn").textContent = sb.classList.contains(
+          "hidden",
+        )
+          ? "Expand"
+          : "Focus";
+      }
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+      function copyCode(btn) {
+        const code = btn
+          .closest(".code-wrap")
+          .querySelector(".code-block").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Expand";
+          }
+        });
+      });
+      updateProgress();
+      highlightActive();
+
+      // Quick Jump: toggle menu and close on outside click
+      (function () {
+        const qBtn = document.getElementById("jumpBtn");
+        const qMenu = document.getElementById("qm");
+        if (!qBtn || !qMenu) return;
+        qBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          qMenu.classList.toggle("active");
+          qBtn.setAttribute(
+            "aria-expanded",
+            qMenu.classList.contains("active"),
+          );
+        });
+        document.addEventListener("click", function (e) {
+          if (
+            !qMenu.contains(e.target) &&
+            !qBtn.contains(e.target) &&
+            qMenu.classList.contains("active")
+          ) {
+            qMenu.classList.remove("active");
+            qBtn.setAttribute("aria-expanded", "false");
+          }
+        });
+        qMenu.querySelectorAll("a").forEach((a) =>
+          a.addEventListener("click", () => {
+            qMenu.classList.remove("active");
+            qBtn.setAttribute("aria-expanded", "false");
+          }),
+        );
+      })();
+    </script>
+  </body>
+</html>

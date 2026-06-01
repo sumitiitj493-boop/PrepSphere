@@ -1,0 +1,3621 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Java Core — Interview Prep Notes</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Fira+Code:wght@400;500&family=Lato:wght@300;400;700&display=swap");
+
+      :root {
+        --gold: #f5a623;
+        --gold-glow: rgba(245, 166, 35, 0.18);
+        --accent: var(--gold);
+        --gold-dim: rgba(245, 166, 35, 0.07);
+        --blue: #3b82f6;
+        --blue-dim: rgba(59, 130, 246, 0.1);
+        --bg: #f7f8fc;
+        --surface: #ffffff;
+        --surface2: #eef0f7;
+        --text: #181a2a;
+        --text-muted: #6e7191;
+        --border: #dde1f0;
+        --easy: #10b981;
+        --medium: #f59e0b;
+        --hard: #ef4444;
+        --code-bg: #0d1117;
+        --code-text: #e6edf3;
+        --java-orange: #f89820;
+        --sidebar-w: 270px;
+        --nav-h: 62px;
+        --radius: 16px;
+        --shadow:
+          0 2px 20px rgba(59, 130, 246, 0.07), 0 1px 4px rgba(0, 0, 0, 0.06);
+        --shadow-hover: 0 8px 32px rgba(59, 130, 246, 0.13);
+      }
+      [data-theme="dark"] {
+        --bg: #0c0e1a;
+        --surface: #131628;
+        --surface2: #1a1d32;
+        --text: #e2e5f5;
+        --text-muted: #7b82a8;
+        --border: #252844;
+        --shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+        --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Lato", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+        overflow-x: hidden;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--nav-h);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 22px;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--java-orange);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .java-badge {
+        background: var(--java-orange);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 5px;
+        letter-spacing: 0.5px;
+      }
+      .nav-progress {
+        flex: 1;
+        height: 3px;
+        background: var(--border);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .nav-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--java-orange), var(--gold));
+        border-radius: 2px;
+        transition: width 0.2s;
+      }
+      .nav-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .btn {
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        padding: 6px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-family: "Lato", sans-serif;
+        font-weight: 700;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .btn.active {
+        background: var(--java-orange);
+        color: #fff;
+        border-color: var(--java-orange);
+      }
+      .menu-btn {
+        display: none;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        padding: 6px 11px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        align-items: center;
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        display: flex;
+        padding-top: var(--nav-h);
+        min-height: 100vh;
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        bottom: 0;
+        overflow-y: auto;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 18px 0 24px;
+        transition: transform 0.3s;
+        z-index: 900;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 3px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+      body.focus-mode .sidebar {
+        transform: translateX(-100%);
+      }
+      body.sidebar-open .sidebar {
+        transform: translateX(0) !important;
+      }
+
+      .sb-header {
+        padding: 0 18px 14px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 10px;
+      }
+      .sb-title {
+        font-family: "Syne", sans-serif;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+      .sb-count {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 18px;
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+        position: relative;
+      }
+      .sidebar a:hover {
+        color: var(--java-orange);
+        background: var(--surface2);
+      }
+      .sidebar a.active {
+        color: var(--java-orange);
+        border-left-color: var(--java-orange);
+        background: rgba(248, 152, 32, 0.06);
+        font-weight: 700;
+      }
+      .sb-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        background: var(--surface2);
+        font-size: 10px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      .sidebar a.active .sb-num {
+        background: var(--java-orange);
+        color: #fff;
+      }
+      .sb-badge {
+        margin-left: auto;
+        font-size: 9px;
+        padding: 2px 7px;
+        border-radius: 8px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+      .be {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--easy);
+      }
+      .bm {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--medium);
+      }
+      .bh {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--hard);
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        padding: 36px 44px;
+        transition: margin-left 0.3s;
+        min-width: 0;
+      }
+      body.focus-mode .main {
+        margin-left: 0;
+        padding: 36px 80px;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          var(--surface) 0%,
+          var(--surface2) 100%
+        );
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 44px 44px 36px;
+        margin-bottom: 36px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::after {
+        content: "☕";
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 140px;
+        opacity: 0.06;
+        pointer-events: none;
+        line-height: 1;
+      }
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(248, 152, 32, 0.12);
+        color: var(--java-orange);
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 14px;
+      }
+      .hero h1 {
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 2.3rem;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .hero h1 span {
+        color: var(--java-orange);
+      }
+      .hero p {
+        color: var(--text-muted);
+        font-size: 14.5px;
+        max-width: 520px;
+        line-height: 1.6;
+      }
+      .hero-pills {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+      }
+      .pill {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .pill-n {
+        font-size: 1.4rem;
+        color: var(--java-orange);
+        line-height: 1.1;
+      }
+      .pill-l {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* ── CONCEPT CARD ── */
+      .concept {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 28px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        scroll-margin-top: calc(var(--nav-h) + 16px);
+        transition: box-shadow 0.2s;
+      }
+      .concept:hover {
+        box-shadow: var(--shadow-hover);
+      }
+      .concept-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+        background: linear-gradient(to right, var(--surface2), var(--surface));
+        border-left: 4px solid var(--java-orange);
+      }
+      .c-num {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, var(--java-orange), var(--gold));
+        color: #fff;
+        font-weight: 800;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-family: "Syne", sans-serif;
+        box-shadow: 0 2px 8px rgba(248, 152, 32, 0.35);
+      }
+      .c-title {
+        font-family: "Syne", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 800;
+        flex: 1;
+      }
+      .diff {
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        flex-shrink: 0;
+      }
+      .easy {
+        background: rgba(16, 185, 129, 0.12);
+        color: var(--easy);
+      }
+      .medium {
+        background: rgba(245, 158, 11, 0.12);
+        color: var(--medium);
+      }
+      .hard {
+        background: rgba(239, 68, 68, 0.12);
+        color: var(--hard);
+      }
+      .rtime {
+        font-size: 11px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .cbody {
+        padding: 24px;
+      }
+
+      /* ONE-LINER */
+      .one-liner {
+        background: linear-gradient(
+          135deg,
+          rgba(248, 152, 32, 0.1),
+          rgba(248, 152, 32, 0.03)
+        );
+        border-left: 4px solid var(--java-orange);
+        padding: 14px 18px;
+        border-radius: 0 10px 10px 0;
+        margin-bottom: 20px;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--text);
+        font-style: italic;
+        line-height: 1.5;
+      }
+
+      /* EXPLANATION */
+      .expl {
+        margin-bottom: 20px;
+      }
+      .expl p {
+        margin-bottom: 12px;
+        color: var(--text);
+        line-height: 1.8;
+      }
+      .expl strong {
+        color: var(--java-orange);
+        font-weight: 700;
+      }
+      .inline-code {
+        background: var(--surface2);
+        padding: 2px 7px;
+        border-radius: 5px;
+        font-family: "Fira Code", monospace;
+        font-size: 13px;
+        color: var(--java-orange);
+        border: 1px solid var(--border);
+      }
+
+      /* DIAGRAM */
+      .diagram {
+        margin: 14px 0 20px;
+        text-align: center;
+      }
+      .diagram svg {
+        max-width: 100%;
+      }
+      .diagram-cap {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        font-style: italic;
+      }
+
+      /* KEY POINTS */
+      .kp {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+      }
+      .kp-title {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--java-orange);
+        margin-bottom: 10px;
+        font-weight: 800;
+        font-family: "Syne", sans-serif;
+      }
+      .kp ul {
+        list-style: none;
+      }
+      .kp li {
+        padding: 4px 0 4px 22px;
+        position: relative;
+        font-size: 13.5px;
+        color: var(--text);
+      }
+      .kp li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--java-orange);
+        font-size: 11px;
+        top: 5px;
+        font-weight: 700;
+      }
+
+      /* INTERVIEW Q */
+      .iqs {
+        margin-bottom: 20px;
+      }
+      .iqs-title {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+        font-weight: 800;
+        font-family: "Syne", sans-serif;
+      }
+      .iq {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border: 1px solid var(--border);
+      }
+      .iq-q {
+        font-weight: 700;
+        font-size: 13.5px;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+      .iq-a {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* GOTCHA */
+      .gotcha {
+        background: rgba(239, 68, 68, 0.05);
+        border: 1.5px solid rgba(239, 68, 68, 0.25);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+      }
+      .gotcha h4 {
+        color: var(--hard);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-family: "Syne", sans-serif;
+      }
+      .gotcha ul {
+        list-style: none;
+      }
+      .gotcha li {
+        padding: 3px 0 3px 20px;
+        position: relative;
+        font-size: 13.5px;
+        color: var(--text);
+      }
+      .gotcha li::before {
+        content: "⚠";
+        position: absolute;
+        left: 0;
+        font-size: 11px;
+        top: 4px;
+      }
+
+      /* EDGE */
+      .edge {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 166, 35, 0.1),
+          rgba(245, 166, 35, 0.03)
+        );
+        border: 1.5px solid rgba(245, 166, 35, 0.35);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 20px;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-family: "Syne", sans-serif;
+      }
+      .edge p {
+        font-size: 13.5px;
+        color: var(--text);
+      }
+
+      /* CODE */
+      .code-block {
+        background: var(--code-bg);
+        border-radius: 12px;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .code-hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .code-lang {
+        font-size: 10px;
+        color: #888;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-family: "Fira Code", monospace;
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: none;
+        border: 1px solid #444;
+        color: #aaa;
+        padding: 3px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 10px;
+        font-family: "Lato", sans-serif;
+        transition: all 0.2s;
+        font-weight: 700;
+      }
+      .copy-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      pre {
+        padding: 18px;
+        overflow-x: auto;
+        font-family: "Fira Code", monospace;
+        font-size: 13px;
+        line-height: 1.65;
+        color: var(--code-text);
+      }
+      .cm {
+        color: #6c7086;
+        font-style: italic;
+      }
+      .ck {
+        color: #cba6f7;
+      }
+      .cs {
+        color: #a6e3a1;
+      }
+      .cn {
+        color: #fab387;
+      }
+      .cf {
+        color: #89dceb;
+      }
+      .cc {
+        color: #f38ba8;
+      }
+      .ca {
+        color: #f9e2af;
+      }
+
+      /* COMPARISON TABLE */
+      .ctable {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        font-size: 13px;
+      }
+      .ctable th {
+        background: var(--java-orange);
+        color: #fff;
+        padding: 10px 14px;
+        text-align: left;
+        font-family: "Syne", sans-serif;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .ctable td {
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      .ctable tr:last-child td {
+        border-bottom: none;
+      }
+      .ctable tr:nth-child(even) td {
+        background: var(--surface2);
+      }
+      .ctable tr:hover td {
+        background: var(--gold-dim);
+      }
+
+      /* RESOURCES */
+      .resources {
+        border-top: 1px solid var(--border);
+        padding: 18px 24px;
+        background: var(--surface2);
+      }
+      .res-title {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        font-weight: 800;
+        font-family: "Syne", sans-serif;
+      }
+      .res-cards {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .res-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 11px 15px;
+        text-decoration: none;
+        color: var(--text);
+        font-size: 12.5px;
+        flex: 1;
+        min-width: 175px;
+        transition: all 0.2s;
+        display: block;
+      }
+      .res-card:hover {
+        border-color: var(--java-orange);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+      }
+      .rc-icon {
+        font-size: 15px;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .rc-title {
+        font-weight: 700;
+        display: block;
+        margin-bottom: 3px;
+        font-size: 13px;
+      }
+      .rc-why {
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+
+      /* BACK TO TOP */
+      #btt {
+        position: fixed;
+        bottom: 28px;
+        right: 24px;
+        width: 44px;
+        height: 44px;
+        background: var(--java-orange);
+        border: none;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 18px rgba(248, 152, 32, 0.45);
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s;
+        z-index: 999;
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+      }
+      #btt.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #btt:hover {
+        transform: translateY(-2px) scale(1.05);
+      }
+
+      /* DIVIDER */
+      .divider {
+        height: 1px;
+        background: linear-gradient(90deg, var(--java-orange), transparent);
+        margin: 28px 0;
+        opacity: 0.35;
+        border-radius: 1px;
+      }
+
+      /* MOBILE */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          transform: translateX(-100%);
+        }
+        .main {
+          margin-left: 0;
+          padding: 20px 16px;
+        }
+        .hero {
+          padding: 24px 20px;
+        }
+        .hero h1 {
+          font-size: 1.7rem;
+        }
+        .menu-btn {
+          display: flex !important;
+        }
+        .cbody {
+          padding: 16px;
+        }
+        .res-cards {
+          flex-direction: column;
+        }
+        .concept-top {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .hero::after {
+          display: none;
+        }
+      }
+      @media (min-width: 769px) {
+        .main {
+          max-width: calc(100vw - var(--sidebar-w));
+        }
+        body.focus-mode .main {
+          max-width: 100vw;
+          margin-left: 0;
+        }
+      }
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.1);
+        color: var(--accent);
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="nav-logo">
+        <span class="java-badge">JAVA</span>
+        Core Interview Prep
+      </div>
+      <div class="nav-progress">
+        <div class="nav-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn" id="focusBtn" onclick="toggleFocus()">
+          Focus Mode
+        </button>
+        <button class="btn" onclick="toggleTheme()" id="themeBtn">
+          🌙 Dark
+        </button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sb-header">
+          <div class="sb-title">Java Core</div>
+          <div class="sb-count">10 Must-Know Concepts</div>
+        </div>
+        <a href="#c1" class="sidebar-link"
+          ><span class="sb-num">1</span><span>JDK, JRE, JVM</span
+          ><span class="sb-badge be">Easy</span></a
+        >
+        <a href="#c2" class="sidebar-link"
+          ><span class="sb-num">2</span><span>Platform Independence</span
+          ><span class="sb-badge be">Easy</span></a
+        >
+        <a href="#c3" class="sidebar-link"
+          ><span class="sb-num">3</span><span>Heap vs Stack (JVM)</span
+          ><span class="sb-badge bm">Med</span></a
+        >
+        <a href="#c4" class="sidebar-link"
+          ><span class="sb-num">4</span><span>Garbage Collection</span
+          ><span class="sb-badge bm">Med</span></a
+        >
+        <a href="#c5" class="sidebar-link"
+          ><span class="sb-num">5</span><span>== vs equals()</span
+          ><span class="sb-badge be">Easy</span></a
+        >
+        <a href="#c6" class="sidebar-link"
+          ><span class="sb-num">6</span><span>HashMap vs ConcurrentHashMap</span
+          ><span class="sb-badge bh">Hard</span></a
+        >
+        <a href="#c7" class="sidebar-link"
+          ><span class="sb-num">7</span><span>Process vs Thread (Java)</span
+          ><span class="sb-badge bm">Med</span></a
+        >
+        <a href="#c8" class="sidebar-link"
+          ><span class="sb-num">8</span><span>Synchronization & Deadlock</span
+          ><span class="sb-badge bh">Hard</span></a
+        >
+        <a href="#c9" class="sidebar-link"
+          ><span class="sb-num">9</span><span>Java Program Execution</span
+          ><span class="sb-badge bm">Med</span></a
+        >
+        <a href="#c10" class="sidebar-link"
+          ><span class="sb-num">10</span
+          ><span>String vs StringBuilder vs StringBuffer</span
+          ><span class="sb-badge bm">Med</span></a
+        >
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- HERO -->
+        <div class="hero">
+          <div class="hero-tag">☕ Language Core</div>
+          <h1>Java <span>Interview</span> Master Notes</h1>
+          <p>
+            The 10 questions every interviewer asks about Java core — Google,
+            Amazon, Flipkart. Understand these and you'll outclass 90% of
+            candidates in the first 15 minutes.
+          </p>
+          <div class="hero-pills">
+            <div class="pill">
+              <span class="pill-n">10</span><span class="pill-l">Concepts</span>
+            </div>
+            <div class="pill">
+              <span class="pill-n">3</span
+              ><span class="pill-l">Difficulty Levels</span>
+            </div>
+            <div class="pill">
+              <span class="pill-n">~40m</span
+              ><span class="pill-l">Full Read</span>
+            </div>
+            <div class="pill">
+              <span class="pill-n">100%</span
+              ><span class="pill-l">Interview Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== C1: JDK, JRE, JVM ===== -->
+        <section class="concept" id="c1">
+          <div class="concept-top">
+            <div class="c-num">1</div>
+            <div class="c-title">JDK, JRE, JVM — The Holy Trinity</div>
+            <span class="diff easy">Easy</span>
+            <span class="rtime">~3 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              JVM runs bytecode. JRE = JVM + libraries to run Java apps. JDK =
+              JRE + compiler + tools to build Java apps. It's nested: JVM ⊂ JRE
+              ⊂ JDK.
+            </div>
+            <div class="expl">
+              <p>
+                Think of it like a restaurant. <strong>JVM</strong> is the chef
+                — the actual engine that executes Java code.
+                <strong>JRE</strong> is the full kitchen — chef plus all the
+                utensils and ingredients (class libraries, runtime support)
+                needed to actually serve food (run Java programs).
+                <strong>JDK</strong> is the entire restaurant building — kitchen
+                plus the architecture room where you design new recipes (javac
+                compiler, debugger, javadoc, jar tool, etc.).
+              </p>
+              <p>
+                As a <strong>user</strong> who just wants to run a Java app? You
+                install JRE. As a <strong>developer</strong> building Java apps?
+                You install JDK. The JDK includes a JRE inside it, so you don't
+                need both separately.
+              </p>
+              <p>
+                The JVM itself is a specification — not a single product.
+                Oracle's HotSpot, OpenJ9, GraalVM are all JVM implementations.
+                They all run the same bytecode (.class files) but differ in
+                performance, GC strategies, startup time etc.
+              </p>
+            </div>
+
+            <!-- DIAGRAM: nested boxes -->
+            <div class="diagram">
+              <svg
+                viewBox="0 0 520 200"
+                xmlns="http://www.w3.org/2000/svg"
+                font-family="Lato, sans-serif"
+              >
+                <!-- JDK outer -->
+                <rect
+                  x="10"
+                  y="10"
+                  width="500"
+                  height="180"
+                  rx="12"
+                  fill="none"
+                  stroke="#F8981C"
+                  stroke-width="2.5"
+                />
+                <text
+                  x="30"
+                  y="34"
+                  font-size="13"
+                  font-weight="800"
+                  fill="#F8981C"
+                  font-family="Syne, sans-serif"
+                >
+                  JDK
+                </text>
+                <text x="30" y="50" font-size="10" fill="#7B82A8">
+                  javac · javadoc · jar · jdb · jshell · keytool
+                </text>
+                <!-- JRE middle -->
+                <rect
+                  x="200"
+                  y="22"
+                  width="300"
+                  height="155"
+                  rx="10"
+                  fill="none"
+                  stroke="#3B82F6"
+                  stroke-width="2"
+                />
+                <text
+                  x="216"
+                  y="44"
+                  font-size="12"
+                  font-weight="700"
+                  fill="#3B82F6"
+                  font-family="Syne, sans-serif"
+                >
+                  JRE
+                </text>
+                <text x="216" y="60" font-size="10" fill="#7B82A8">
+                  Java Class Libraries (java.lang, java.util, java.io…)
+                </text>
+                <!-- JVM inner -->
+                <rect
+                  x="300"
+                  y="70"
+                  width="186"
+                  height="95"
+                  rx="8"
+                  fill="rgba(248,152,32,.1)"
+                  stroke="#F8981C"
+                  stroke-width="2"
+                />
+                <text
+                  x="393"
+                  y="94"
+                  text-anchor="middle"
+                  font-size="12"
+                  font-weight="800"
+                  fill="#F8981C"
+                  font-family="Syne, sans-serif"
+                >
+                  JVM
+                </text>
+                <text
+                  x="393"
+                  y="112"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  Class Loader
+                </text>
+                <text
+                  x="393"
+                  y="127"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  Bytecode Verifier
+                </text>
+                <text
+                  x="393"
+                  y="142"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  Interpreter / JIT
+                </text>
+                <text
+                  x="393"
+                  y="157"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  GC + Runtime
+                </text>
+
+                <!-- Arrow: User -->
+                <text
+                  x="70"
+                  y="130"
+                  font-size="11"
+                  fill="#10B981"
+                  font-weight="700"
+                >
+                  👤 User
+                </text>
+                <text x="55" y="145" font-size="10" fill="#7B82A8">
+                  needs JRE →
+                </text>
+                <!-- Developer -->
+                <text
+                  x="55"
+                  y="170"
+                  font-size="11"
+                  fill="#F8981C"
+                  font-weight="700"
+                >
+                  👨‍💻 Developer
+                </text>
+                <text x="55" y="185" font-size="10" fill="#7B82A8">
+                  needs JDK →
+                </text>
+              </svg>
+              <div class="diagram-cap">
+                JVM ⊂ JRE ⊂ JDK — every outer layer contains everything inside
+                it
+              </div>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  JVM is platform-specific (different JVM for Windows/Linux/Mac)
+                  but bytecode is platform-neutral
+                </li>
+                <li>
+                  JRE includes: JVM + Java SE API (rt.jar) + supporting files
+                </li>
+                <li>
+                  JDK includes: JRE + javac (compiler) + javadoc + jar + jdb
+                  (debugger) + jshell (REPL)
+                </li>
+                <li>
+                  From Java 9+, JRE as a standalone download was discontinued —
+                  JDK only
+                </li>
+                <li>
+                  HotSpot JVM uses JIT (Just-In-Time) compilation to convert hot
+                  bytecode to native machine code
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  Saying "JVM is platform independent" is WRONG — JVM itself is
+                  platform-dependent. The bytecode it runs is platform
+                  independent.
+                </li>
+                <li>
+                  Don't confuse JIT compiler (inside JVM, converts bytecode to
+                  native code at runtime) with javac (converts .java to .class
+                  bytecode at compile time)
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=G1ubVOl9IBw"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">JDK vs JRE vs JVM — Telusko</span>
+                <span class="rc-why"
+                  >Clearest 8-min explanation with visual nesting</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/differences-jdk-jre-jvm/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: JDK vs JRE vs JVM</span>
+                <span class="rc-why"
+                  >Component breakdown + architecture diagram</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C2: PLATFORM INDEPENDENCE ===== -->
+        <section class="concept" id="c2">
+          <div class="concept-top">
+            <div class="c-num">2</div>
+            <div class="c-title">How Java Achieves Platform Independence</div>
+            <span class="diff easy">Easy</span>
+            <span class="rtime">~2 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              "Write Once, Run Anywhere" — Java compiles to bytecode (not
+              machine code), and every platform has its own JVM that translates
+              that bytecode to native instructions.
+            </div>
+            <div class="expl">
+              <p>
+                In C/C++, your code compiles directly to machine code — the
+                binary is specific to Windows x86 or Linux ARM. You want to run
+                on another OS? Recompile. Java took a different route.
+              </p>
+              <p>
+                When you write Java and compile with
+                <span class="inline-code">javac</span>, you get
+                <span class="inline-code">.class</span> files containing
+                <strong>bytecode</strong> — an intermediate representation
+                that's not native to any CPU. It's like a universal language
+                that any JVM understands.
+              </p>
+              <p>
+                Each OS has its own JVM implementation that knows how to
+                translate that bytecode to the native machine code of that
+                specific platform. So the same
+                <span class="inline-code">HelloWorld.class</span> runs on
+                Windows, Linux, Mac — unchanged. The JVM absorbs the platform
+                difference.
+              </p>
+            </div>
+
+            <div class="diagram">
+              <svg
+                viewBox="0 0 560 155"
+                xmlns="http://www.w3.org/2000/svg"
+                font-family="Lato, sans-serif"
+              >
+                <!-- Source -->
+                <rect
+                  x="10"
+                  y="40"
+                  width="100"
+                  height="55"
+                  rx="8"
+                  fill="rgba(248,152,32,.12)"
+                  stroke="#F8981C"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="60"
+                  y="63"
+                  text-anchor="middle"
+                  font-size="12"
+                  font-weight="700"
+                  fill="#F8981C"
+                >
+                  HelloWorld
+                </text>
+                <text
+                  x="60"
+                  y="79"
+                  text-anchor="middle"
+                  font-size="11"
+                  fill="#7B82A8"
+                >
+                  .java
+                </text>
+                <text
+                  x="60"
+                  y="93"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  Source Code
+                </text>
+                <!-- Arrow + javac -->
+                <line
+                  x1="112"
+                  y1="67"
+                  x2="148"
+                  y2="67"
+                  stroke="#F8981C"
+                  stroke-width="1.8"
+                  marker-end="url(#ao)"
+                />
+                <text
+                  x="130"
+                  y="58"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#F8981C"
+                  font-weight="700"
+                >
+                  javac
+                </text>
+                <!-- Bytecode -->
+                <rect
+                  x="150"
+                  y="40"
+                  width="100"
+                  height="55"
+                  rx="8"
+                  fill="rgba(59,130,246,.12)"
+                  stroke="#3B82F6"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="200"
+                  y="63"
+                  text-anchor="middle"
+                  font-size="12"
+                  font-weight="700"
+                  fill="#3B82F6"
+                >
+                  HelloWorld
+                </text>
+                <text
+                  x="200"
+                  y="79"
+                  text-anchor="middle"
+                  font-size="11"
+                  fill="#7B82A8"
+                >
+                  .class
+                </text>
+                <text
+                  x="200"
+                  y="93"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  Bytecode
+                </text>
+
+                <!-- Three JVMs -->
+                <line
+                  x1="252"
+                  y1="55"
+                  x2="318"
+                  y2="35"
+                  stroke="#3B82F6"
+                  stroke-width="1.3"
+                  stroke-dasharray="4,2"
+                  marker-end="url(#ab2)"
+                />
+                <line
+                  x1="252"
+                  y1="67"
+                  x2="318"
+                  y2="67"
+                  stroke="#3B82F6"
+                  stroke-width="1.3"
+                  stroke-dasharray="4,2"
+                  marker-end="url(#ab2)"
+                />
+                <line
+                  x1="252"
+                  y1="80"
+                  x2="318"
+                  y2="98"
+                  stroke="#3B82F6"
+                  stroke-width="1.3"
+                  stroke-dasharray="4,2"
+                  marker-end="url(#ab2)"
+                />
+
+                <rect
+                  x="320"
+                  y="12"
+                  width="110"
+                  height="34"
+                  rx="6"
+                  fill="rgba(16,185,129,.1)"
+                  stroke="#10B981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="375"
+                  y="33"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#10B981"
+                >
+                  JVM (Windows)
+                </text>
+                <rect
+                  x="320"
+                  y="52"
+                  width="110"
+                  height="34"
+                  rx="6"
+                  fill="rgba(16,185,129,.1)"
+                  stroke="#10B981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="375"
+                  y="73"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#10B981"
+                >
+                  JVM (Linux)
+                </text>
+                <rect
+                  x="320"
+                  y="92"
+                  width="110"
+                  height="34"
+                  rx="6"
+                  fill="rgba(16,185,129,.1)"
+                  stroke="#10B981"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="375"
+                  y="113"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#10B981"
+                >
+                  JVM (macOS)
+                </text>
+
+                <!-- Arrow to native -->
+                <line
+                  x1="432"
+                  y1="29"
+                  x2="468"
+                  y2="29"
+                  stroke="#10B981"
+                  stroke-width="1.3"
+                  marker-end="url(#ag2)"
+                />
+                <line
+                  x1="432"
+                  y1="69"
+                  x2="468"
+                  y2="69"
+                  stroke="#10B981"
+                  stroke-width="1.3"
+                  marker-end="url(#ag2)"
+                />
+                <line
+                  x1="432"
+                  y1="109"
+                  x2="468"
+                  y2="109"
+                  stroke="#10B981"
+                  stroke-width="1.3"
+                  marker-end="url(#ag2)"
+                />
+                <text x="490" y="33" font-size="10" fill="#7B82A8">x86</text>
+                <text x="490" y="73" font-size="10" fill="#7B82A8">x64</text>
+                <text x="490" y="113" font-size="10" fill="#7B82A8">ARM</text>
+
+                <text
+                  x="200"
+                  y="140"
+                  text-anchor="middle"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#F8981C"
+                >
+                  Same .class file runs on ALL platforms — JVM handles the
+                  difference
+                </text>
+
+                <defs>
+                  <marker
+                    id="ao"
+                    markerWidth="7"
+                    markerHeight="7"
+                    refX="5"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0L0,6L7,3z" fill="#F8981C" />
+                  </marker>
+                  <marker
+                    id="ab2"
+                    markerWidth="7"
+                    markerHeight="7"
+                    refX="5"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0L0,6L7,3z" fill="#3B82F6" />
+                  </marker>
+                  <marker
+                    id="ag2"
+                    markerWidth="7"
+                    markerHeight="7"
+                    refX="5"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0L0,6L7,3z" fill="#10B981" />
+                  </marker>
+                </defs>
+              </svg>
+              <div class="diagram-cap">
+                Same bytecode, different JVMs, same result — that's platform
+                independence
+              </div>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  Bytecode is intermediate — not machine code, not source code
+                </li>
+                <li>
+                  Each JVM is platform-dependent; bytecode is
+                  platform-independent
+                </li>
+                <li>
+                  JIT compiler inside JVM converts hot bytecode to native code
+                  at runtime for performance
+                </li>
+                <li>
+                  WORA: "Write Once, Run Anywhere" — Java's core marketing
+                  promise since 1995
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  "Java is 100% platform independent" — not entirely true. File
+                  paths, native libraries (JNI), GUI rendering can still be
+                  platform-specific.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                GraalVM takes this further — it can AOT (Ahead-Of-Time) compile
+                Java to native binary (no JVM needed at runtime), giving fast
+                startup and lower memory. Used in production by Twitter/now X,
+                Netflix. Mention this if asked about Java performance
+                improvements.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/java-platform-independent/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: Java Platform Independence</span>
+                <span class="rc-why">WORA explanation + bytecode flow</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C3: HEAP vs STACK in JVM ===== -->
+        <section class="concept" id="c3">
+          <div class="concept-top">
+            <div class="c-num">3</div>
+            <div class="c-title">Heap vs Stack Memory in JVM</div>
+            <span class="diff medium">Medium</span>
+            <span class="rtime">~3 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              Stack stores method call frames and local primitives — one per
+              thread, fast, auto-cleaned. Heap stores all objects — shared,
+              GC-managed, slower.
+            </div>
+            <div class="expl">
+              <p>
+                Every thread in Java gets its own <strong>Stack</strong>. When a
+                method is called, a new frame is pushed with local variables,
+                return address, operand stack. Method returns? Frame popped.
+                Clean, automatic, no GC needed.
+              </p>
+              <p>
+                The <strong>Heap</strong> is where every object you create with
+                <span class="inline-code">new</span> lives. It's shared across
+                all threads (which is why you need synchronization). The GC
+                watches the heap and collects objects with no remaining
+                references.
+              </p>
+              <p>
+                The JVM Heap is itself divided:
+                <strong>Young Generation</strong> (new objects — Eden + Survivor
+                S0/S1), <strong>Old Generation / Tenured</strong> (long-lived
+                objects), and before Java 8, <strong>PermGen</strong> (class
+                metadata — now replaced by <strong>Metaspace</strong> in the
+                native memory).
+              </p>
+            </div>
+
+            <div class="diagram">
+              <svg
+                viewBox="0 0 580 220"
+                xmlns="http://www.w3.org/2000/svg"
+                font-family="Lato, sans-serif"
+              >
+                <!-- JVM Memory areas -->
+                <!-- Stack (Thread 1) -->
+                <rect
+                  x="10"
+                  y="10"
+                  width="110"
+                  height="180"
+                  rx="8"
+                  fill="rgba(16,185,129,.08)"
+                  stroke="#10B981"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="65"
+                  y="30"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#10B981"
+                >
+                  Thread 1 Stack
+                </text>
+                <rect
+                  x="20"
+                  y="38"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="rgba(16,185,129,.15)"
+                  stroke="#10B981"
+                  stroke-width="1"
+                />
+                <text
+                  x="65"
+                  y="58"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#10B981"
+                >
+                  main() frame
+                </text>
+                <rect
+                  x="20"
+                  y="73"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="rgba(16,185,129,.1)"
+                  stroke="#10B981"
+                  stroke-width="1"
+                />
+                <text
+                  x="65"
+                  y="93"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#10B981"
+                >
+                  foo() frame
+                </text>
+                <rect
+                  x="20"
+                  y="108"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="rgba(16,185,129,.07)"
+                  stroke="#10B981"
+                  stroke-width="1"
+                />
+                <text
+                  x="65"
+                  y="128"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  bar() frame
+                </text>
+
+                <!-- Stack (Thread 2) -->
+                <rect
+                  x="130"
+                  y="10"
+                  width="110"
+                  height="180"
+                  rx="8"
+                  fill="rgba(203,166,247,.08)"
+                  stroke="#CBA6F7"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="185"
+                  y="30"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#CBA6F7"
+                >
+                  Thread 2 Stack
+                </text>
+                <rect
+                  x="140"
+                  y="38"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="rgba(203,166,247,.15)"
+                  stroke="#CBA6F7"
+                  stroke-width="1"
+                />
+                <text
+                  x="185"
+                  y="58"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#CBA6F7"
+                >
+                  run() frame
+                </text>
+
+                <!-- Heap -->
+                <rect
+                  x="260"
+                  y="10"
+                  width="310"
+                  height="180"
+                  rx="8"
+                  fill="rgba(248,152,32,.06)"
+                  stroke="#F8981C"
+                  stroke-width="2"
+                />
+                <text
+                  x="415"
+                  y="32"
+                  text-anchor="middle"
+                  font-size="12"
+                  font-weight="800"
+                  fill="#F8981C"
+                  font-family="Syne,sans-serif"
+                >
+                  HEAP (Shared)
+                </text>
+
+                <!-- Young gen -->
+                <rect
+                  x="272"
+                  y="40"
+                  width="285"
+                  height="65"
+                  rx="6"
+                  fill="rgba(59,130,246,.1)"
+                  stroke="#3B82F6"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="285"
+                  y="58"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#3B82F6"
+                >
+                  Young Generation
+                </text>
+                <rect
+                  x="282"
+                  y="63"
+                  width="75"
+                  height="30"
+                  rx="4"
+                  fill="rgba(59,130,246,.2)"
+                  stroke="#3B82F6"
+                  stroke-width="1"
+                />
+                <text
+                  x="319"
+                  y="82"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#3B82F6"
+                >
+                  Eden
+                </text>
+                <rect
+                  x="363"
+                  y="63"
+                  width="55"
+                  height="30"
+                  rx="4"
+                  fill="rgba(59,130,246,.12)"
+                  stroke="#3B82F6"
+                  stroke-width="1"
+                />
+                <text
+                  x="390"
+                  y="82"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#3B82F6"
+                >
+                  S0
+                </text>
+                <rect
+                  x="424"
+                  y="63"
+                  width="55"
+                  height="30"
+                  rx="4"
+                  fill="rgba(59,130,246,.12)"
+                  stroke="#3B82F6"
+                  stroke-width="1"
+                />
+                <text
+                  x="451"
+                  y="82"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#3B82F6"
+                >
+                  S1
+                </text>
+
+                <!-- Old gen -->
+                <rect
+                  x="272"
+                  y="112"
+                  width="185"
+                  height="50"
+                  rx="6"
+                  fill="rgba(239,68,68,.08)"
+                  stroke="#EF4444"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="285"
+                  y="130"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#EF4444"
+                >
+                  Old Generation (Tenured)
+                </text>
+                <text x="285" y="150" font-size="9" fill="#7B82A8">
+                  Long-lived objects
+                </text>
+
+                <!-- Metaspace -->
+                <rect
+                  x="464"
+                  y="112"
+                  width="93"
+                  height="50"
+                  rx="6"
+                  fill="rgba(245,158,11,.1)"
+                  stroke="#F59E0B"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="510"
+                  y="130"
+                  text-anchor="middle"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#F59E0B"
+                >
+                  Metaspace
+                </text>
+                <text
+                  x="510"
+                  y="147"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  Class meta
+                </text>
+                <text
+                  x="510"
+                  y="158"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  (native mem)
+                </text>
+
+                <text
+                  x="415"
+                  y="195"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  GC manages entire heap — all threads share it
+                </text>
+              </svg>
+              <div class="diagram-cap">
+                Each thread has its own Stack. All threads share one Heap. Heap
+                has Young + Old Generation + Metaspace.
+              </div>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  Stack: thread-local, LIFO, stores primitives + references +
+                  method frames. Cleared automatically on method return.
+                </li>
+                <li>
+                  Heap: shared across threads, all objects go here, GC managed
+                </li>
+                <li>
+                  Young Gen: new objects start here. Minor GC is frequent and
+                  fast.
+                </li>
+                <li>
+                  Old Gen: survivors promoted here. Major/Full GC is rare and
+                  slow.
+                </li>
+                <li>
+                  Metaspace (Java 8+): replaced PermGen. Stores class metadata
+                  in native memory — no fixed size, grows dynamically
+                </li>
+                <li>
+                  StackOverflowError: stack too deep (deep recursion).
+                  OutOfMemoryError: heap exhausted.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  "Objects always go on heap" — mostly true, but JVM escape
+                  analysis can stack-allocate objects that don't escape the
+                  method. JIT optimization.
+                </li>
+                <li>
+                  PermGen was removed in Java 8, replaced by Metaspace. Saying
+                  PermGen in an interview without clarifying Java version is a
+                  yellow flag.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=450maTzSIvA"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">JVM Memory — Java Brains</span>
+                <span class="rc-why"
+                  >Best visual walkthrough of all JVM memory areas</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/java-memory-management/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: Java Memory Management</span>
+                <span class="rc-why">Stack vs Heap + all JVM memory areas</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C4: GARBAGE COLLECTION IN JAVA ===== -->
+        <section class="concept" id="c4">
+          <div class="concept-top">
+            <div class="c-num">4</div>
+            <div class="c-title">How Garbage Collection Works in Java</div>
+            <span class="diff medium">Medium</span>
+            <span class="rtime">~4 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              GC automatically finds objects on the heap with no live references
+              and frees their memory — using generational collection to be
+              efficient about it.
+            </div>
+            <div class="expl">
+              <p>
+                Java's GC is based on one key insight:
+                <strong>most objects die young</strong>. You create a String to
+                format a log line, use it, and it's garbage. These short-lived
+                objects are the vast majority. So GC focuses most effort on the
+                Young Generation where new objects land.
+              </p>
+              <p>
+                <strong>How it works step by step:</strong> New objects go to
+                Eden (Young Gen). When Eden fills up, a Minor GC runs — it marks
+                all reachable objects starting from GC roots (stack variables,
+                static fields, JNI refs). Live objects are copied to Survivor
+                space S0. On next Minor GC, S0 survivors go to S1, S1 goes to S0
+                (they alternate). After surviving a certain number of GC cycles
+                (default 15, the "tenuring threshold"), objects are promoted to
+                Old Gen.
+              </p>
+              <p>
+                When Old Gen fills up, a <strong>Major GC</strong> (or Full GC)
+                runs — more expensive, longer pause. The goal of modern GC
+                tuning is to keep Full GCs rare.
+              </p>
+              <p>
+                <strong>GC algorithms in Java:</strong> Serial GC
+                (single-threaded, small apps), Parallel GC (multi-threaded,
+                throughput focus — Java 8 default), G1GC (Garbage First — splits
+                heap into regions, targets low pause time — Java 9+ default),
+                ZGC (sub-millisecond pauses, Java 15+), Shenandoah (low pause,
+                concurrent).
+              </p>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  GC Roots: thread stacks, static variables, JNI references —
+                  starting points for reachability
+                </li>
+                <li>
+                  Minor GC: young gen only, fast (milliseconds). Major/Full GC:
+                  entire heap, slow (can be seconds)
+                </li>
+                <li>
+                  Stop-The-World (STW) pause: all application threads paused
+                  while GC runs (in some phases)
+                </li>
+                <li>
+                  G1GC: divides heap into equal-size regions, collects
+                  garbage-first (highest garbage regions), predictable pause
+                  times. Default since Java 9.
+                </li>
+                <li>
+                  ZGC/Shenandoah: concurrent GC — almost all work done while app
+                  runs. Sub-millisecond pauses.
+                </li>
+                <li>
+                  You can request GC with
+                  <span class="inline-code">System.gc()</span> but JVM may
+                  ignore it — it's just a hint
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-qs">
+              <div class="iqs-title">Common Follow-ups</div>
+              <div class="iq">
+                <div class="iq-q">
+                  Can objects be garbage collected while they're still
+                  referenced?
+                </div>
+                <div class="iq-a">
+                  No. GC only collects unreachable objects. But WeakReference
+                  and SoftReference allow GC to collect objects even with
+                  references — used for caches.
+                </div>
+              </div>
+              <div class="iq">
+                <div class="iq-q">
+                  What causes a memory leak in Java if GC is automatic?
+                </div>
+                <div class="iq-a">
+                  Holding references to objects you no longer need. Classic
+                  examples: static collections that grow forever, unclosed
+                  streams, event listeners never removed, ThreadLocal not
+                  cleaned up.
+                </div>
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  "GC prevents all memory leaks" — FALSE. If you hold
+                  references, GC won't collect. Logical memory leaks happen all
+                  the time in Java.
+                </li>
+                <li>
+                  finalize() is deprecated in Java 9 and removed later. Don't
+                  mention it as a GC hook — interviewers know it's unreliable.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                The "generational hypothesis" is the theoretical foundation of
+                all modern GCs — objects either die very quickly (most) or live
+                very long (few). By segregating young and old objects and
+                collecting them independently, GC avoids scanning the entire
+                heap every time. This is why minor GC is 100x faster than full
+                GC.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=UnaNQgzw4zY"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">Java GC Explained — Java Brains</span>
+                <span class="rc-why"
+                  >Generational GC + G1GC visualized clearly</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/garbage-collection-java/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: Garbage Collection in Java</span>
+                <span class="rc-why">All GC algorithms + phases explained</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C5: == vs equals() ===== -->
+        <section class="concept" id="c5">
+          <div class="concept-top">
+            <div class="c-num">5</div>
+            <div class="c-title">Difference between == and equals()</div>
+            <span class="diff easy">Easy</span>
+            <span class="rtime">~2 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              == checks if two references point to the exact same object in
+              memory. equals() checks if two objects are logically equal (same
+              content) — and you can override it.
+            </div>
+            <div class="expl">
+              <p>
+                Think of <span class="inline-code">==</span> like asking "are
+                these two people the same physical person?" — comparing ID cards
+                (memory addresses). <span class="inline-code">equals()</span> is
+                asking "do these two people have the same name?" — comparing
+                content.
+              </p>
+              <p>
+                For primitives (<span class="inline-code"
+                  >int, char, boolean</span
+                >), <span class="inline-code">==</span> compares values directly
+                (no objects involved). For objects,
+                <span class="inline-code">==</span> compares references — same
+                object? For Strings, <span class="inline-code">==</span> is
+                almost always wrong because two different String objects with
+                the same content are NOT the same reference.
+              </p>
+              <p>
+                The String Pool is the classic gotcha. String literals (not
+                <span class="inline-code">new String()</span>) are interned —
+                stored in the pool. Two literals with same content share the
+                same reference, so
+                <span class="inline-code">==</span> accidentally works. But
+                <span class="inline-code"
+                  >new String("hello") == new String("hello")</span
+                >
+                is false — two objects on heap.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-hdr">
+                <span class="code-lang">Java</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm">// == vs equals() — the classic interview demo</span>
+<span class="ck">String</span> a = <span class="cs">"hello"</span>;           <span class="cm">// goes to String Pool</span>
+<span class="ck">String</span> b = <span class="cs">"hello"</span>;           <span class="cm">// same pool reference</span>
+<span class="ck">String</span> c = <span class="ck">new</span> <span class="cf">String</span>(<span class="cs">"hello"</span>); <span class="cm">// new heap object</span>
+
+System.out.<span class="cf">println</span>(a == b);         <span class="cm">// true  (same pool ref)</span>
+System.out.<span class="cf">println</span>(a == c);         <span class="cm">// false (different objects)</span>
+System.out.<span class="cf">println</span>(a.<span class="cf">equals</span>(c));   <span class="cm">// true  (same content)</span>
+
+<span class="cm">// For your own classes — override equals() AND hashCode()</span>
+<span class="ck">class</span> <span class="cn">Person</span> {
+    <span class="ck">String</span> name;
+    <span class="ck">public boolean</span> <span class="cf">equals</span>(Object o) {
+        <span class="ck">if</span>(!(o <span class="ck">instanceof</span> Person)) <span class="ck">return false</span>;
+        <span class="ck">return</span> <span class="ck">this</span>.name.<span class="cf">equals</span>(((Person) o).name);
+    }
+}</pre>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>== on objects: reference equality (same memory address)</li>
+                <li>
+                  equals() on objects: logical equality (defined by the class) —
+                  overridable
+                </li>
+                <li>
+                  String Pool: literals are interned, new String() bypasses the
+                  pool
+                </li>
+                <li>
+                  Always override hashCode() when you override equals() —
+                  contract: equal objects must have equal hash codes
+                </li>
+                <li>
+                  Integer cache: Java caches Integer values -128 to 127.
+                  <span class="inline-code"
+                    >Integer.valueOf(100) == Integer.valueOf(100)</span
+                  >
+                  is true. Above 127? false.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  The Integer cache trap:
+                  <span class="inline-code"
+                    >Integer a = 127; Integer b = 127; a == b</span
+                  >
+                  → true.
+                  <span class="inline-code"
+                    >Integer a = 128; Integer b = 128; a == b</span
+                  >
+                  → false. Interviewers love this.
+                </li>
+                <li>
+                  If you override equals() but not hashCode(), your objects will
+                  break in HashMaps and HashSets — equal objects may end up in
+                  different buckets.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                The equals-hashCode contract is the most important Java
+                contract. If <span class="inline-code">a.equals(b)</span> is
+                true, then
+                <span class="inline-code">a.hashCode() == b.hashCode()</span>
+                MUST be true. The reverse doesn't need to hold (hash collision
+                is okay). Violating this silently breaks HashMap, HashSet, and
+                any hash-based collection.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/difference-between-and-equals-method-in-java/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: == vs equals()</span>
+                <span class="rc-why"
+                  >String pool, Integer cache, contract — all covered</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C6: HashMap vs ConcurrentHashMap ===== -->
+        <section class="concept" id="c6">
+          <div class="concept-top">
+            <div class="c-num">6</div>
+            <div class="c-title">HashMap vs ConcurrentHashMap</div>
+            <span class="diff hard">Hard</span>
+            <span class="rtime">~5 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              HashMap is fast but not thread-safe — concurrent access corrupts
+              it. ConcurrentHashMap is thread-safe with segment-level (Java 7)
+              or node-level (Java 8+) locking for high concurrency.
+            </div>
+            <div class="expl">
+              <p>
+                HashMap uses an array of buckets. Each bucket is a linked list
+                (or tree for 8+ entries).
+                <span class="inline-code">put(key, value)</span>: compute hash →
+                find bucket → add node.
+                <span class="inline-code">get(key)</span>: compute hash → find
+                bucket → traverse list. All fast — O(1) average.
+              </p>
+              <p>
+                But two threads calling
+                <span class="inline-code">put()</span> simultaneously can
+                corrupt the structure. In Java 7, resizing could cause infinite
+                loops in multi-threaded use (now fixed but still unsafe). Never
+                use HashMap in multi-threaded code without external
+                synchronization.
+              </p>
+              <p>
+                <strong>Hashtable</strong> was the old solution — synchronized
+                every method. Safe, but terrible performance — one lock for
+                everything, one thread at a time. Essentially serialized access.
+              </p>
+              <p>
+                <strong>ConcurrentHashMap (Java 7)</strong>: splits the map into
+                16 segments, each with its own lock. 16 threads can write
+                simultaneously (to different segments). Much better than
+                Hashtable.
+              </p>
+              <p>
+                <strong>ConcurrentHashMap (Java 8+)</strong>: Even better — no
+                segments anymore. Uses CAS (Compare-And-Swap) operations and
+                synchronized only on individual bucket nodes. Lock granularity
+                is now per-bucket. In practice, reads are lock-free (volatile
+                reads). Writes lock only the specific bucket being modified.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Feature</th>
+                <th>HashMap</th>
+                <th>Hashtable</th>
+                <th>ConcurrentHashMap</th>
+              </tr>
+              <tr>
+                <td>Thread-safe?</td>
+                <td>❌ No</td>
+                <td>✅ Yes (method-level)</td>
+                <td>✅ Yes (fine-grained)</td>
+              </tr>
+              <tr>
+                <td>Null keys/values</td>
+                <td>1 null key, null values</td>
+                <td>❌ No nulls</td>
+                <td>❌ No nulls</td>
+              </tr>
+              <tr>
+                <td>Locking</td>
+                <td>None</td>
+                <td>Entire map</td>
+                <td>Per bucket (Java 8+)</td>
+              </tr>
+              <tr>
+                <td>Performance</td>
+                <td>Fastest</td>
+                <td>Slowest</td>
+                <td>High-concurrency best</td>
+              </tr>
+              <tr>
+                <td>Iteration</td>
+                <td>Fail-fast (ConcurrentModificationException)</td>
+                <td>Enumerator</td>
+                <td>Weakly consistent (no exception)</td>
+              </tr>
+            </table>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  HashMap: O(1) average get/put, O(n) worst case. Java 8+ uses
+                  TreeNode (red-black tree) when bucket size &gt; 8, making
+                  worst case O(log n)
+                </li>
+                <li>
+                  HashMap load factor default 0.75 — resizes when 75% full
+                  (doubles capacity)
+                </li>
+                <li>
+                  ConcurrentHashMap allows concurrent reads without locking
+                  (reads are weakly consistent)
+                </li>
+                <li>
+                  ConcurrentHashMap's iterator is weakly consistent — doesn't
+                  throw ConcurrentModificationException, but may or may not
+                  reflect concurrent modifications
+                </li>
+                <li>
+                  Use Collections.synchronizedMap(HashMap) for a quick
+                  thread-safe wrapper — but it's coarse-grained like Hashtable
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-qs">
+              <div class="iqs-title">Common Follow-ups</div>
+              <div class="iq">
+                <div class="iq-q">
+                  Why is HashMap fail-fast and ConcurrentHashMap fail-safe?
+                </div>
+                <div class="iq-a">
+                  HashMap's iterator tracks a modCount. If the map changes
+                  during iteration, counts don't match →
+                  ConcurrentModificationException. ConcurrentHashMap's iterator
+                  snapshots the state or works on weakly consistent view — never
+                  throws, but may miss new entries.
+                </div>
+              </div>
+              <div class="iq">
+                <div class="iq-q">
+                  What changed between Java 7 and Java 8 in HashMap internals?
+                </div>
+                <div class="iq-a">
+                  Java 8 introduced treeification — buckets with 8+ nodes
+                  convert from linked list to red-black tree, reducing
+                  worst-case from O(n) to O(log n). Also improves hash
+                  computation to better distribute keys.
+                </div>
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  HashMap allows ONE null key and multiple null values.
+                  ConcurrentHashMap allows NEITHER — calling put(null, ...)
+                  throws NullPointerException. Hashtable also rejects nulls.
+                </li>
+                <li>
+                  ConcurrentHashMap's size() is only approximate in Java 8 — it
+                  sums segment counts which may not be perfectly synchronized.
+                  Use mappingCount() for large maps.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                In Java 8, ConcurrentHashMap added computeIfAbsent(), merge(),
+                and forEach() — atomic compound operations. Instead of
+                check-then-put (race condition), use
+                <span class="inline-code"
+                  >map.computeIfAbsent(key, k -> new
+                  ArrayList()).add(value)</span
+                >
+                — atomically. This is the correct way to implement concurrent
+                multi-maps.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=APL28XxS-4s"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">HashMap Internals — Java Brains</span>
+                <span class="rc-why"
+                  >Internal structure + Java 8 treeification explained</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/difference-hashmap-concurrenthashmap/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: HashMap vs ConcurrentHashMap</span>
+                <span class="rc-why"
+                  >Segment locking + all differences with code examples</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C7: PROCESS vs THREAD IN JAVA ===== -->
+        <section class="concept" id="c7">
+          <div class="concept-top">
+            <div class="c-num">7</div>
+            <div class="c-title">Process vs Thread in Java</div>
+            <span class="diff medium">Medium</span>
+            <span class="rtime">~3 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              In Java, a Process is a running JVM instance with its own heap.
+              Threads live inside the JVM, share heap memory, and are created
+              via Thread class or Runnable/Callable interface.
+            </div>
+            <div class="expl">
+              <p>
+                When you run a Java program, you start a JVM process. That
+                process has one thread at the start — the main thread. From
+                there you spawn more threads using
+                <span class="inline-code">new Thread(runnable).start()</span> or
+                <span class="inline-code">ExecutorService</span>.
+              </p>
+              <p>
+                Java threads are kernel-level threads (1:1 with OS threads, via
+                JNI) since the early days. This means true parallelism on
+                multi-core CPUs. Java 19+ introduced
+                <strong>Virtual Threads</strong> (Project Loom) — lightweight
+                threads managed by the JVM, not the OS. You can have millions of
+                virtual threads (vs thousands of OS threads). Virtual threads
+                are the answer to "how do you handle 1 million concurrent
+                connections in Java?"
+              </p>
+              <p>
+                Two ways to create threads: extend
+                <span class="inline-code">Thread</span> class (bad — you waste
+                your one inheritance slot), implement
+                <span class="inline-code">Runnable</span> (better), or implement
+                <span class="inline-code">Callable</span> (returns a value + can
+                throw checked exceptions). Always prefer
+                <span class="inline-code">ExecutorService</span> over raw
+                threads in production.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-hdr">
+                <span class="code-lang">Java</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm">// 3 ways to create threads — know all three</span>
+
+<span class="cm">// 1. Extend Thread (avoid — wastes inheritance)</span>
+<span class="ck">class</span> <span class="cn">MyThread</span> <span class="ck">extends</span> <span class="cn">Thread</span> {
+    <span class="ck">public void</span> <span class="cf">run</span>() { System.out.<span class="cf">println</span>(<span class="cs">"Thread"</span>); }
+}
+
+<span class="cm">// 2. Implement Runnable (preferred for simple tasks)</span>
+<span class="cn">Runnable</span> r = () -> System.out.<span class="cf">println</span>(<span class="cs">"Runnable"</span>);
+<span class="ck">new</span> <span class="cf">Thread</span>(r).<span class="cf">start</span>();
+
+<span class="cm">// 3. Callable — returns value, can throw checked exception</span>
+<span class="cn">Callable</span>&lt;Integer&gt; c = () -> <span class="cn">42</span>;
+<span class="cn">ExecutorService</span> ex = Executors.<span class="cf">newFixedThreadPool</span>(<span class="cn">4</span>);
+<span class="cn">Future</span>&lt;Integer&gt; f = ex.<span class="cf">submit</span>(c);
+System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <span class="cm">// blocks until done</span>
+
+<span class="cm">// Java 19+: Virtual Threads — lightweight, millions possible</span>
+<span class="cn">Thread</span>.<span class="cf">ofVirtual</span>().<span class="cf">start</span>(() -> System.out.<span class="cf">println</span>(<span class="cs">"Virtual!"</span>));</pre>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  Thread states: NEW → RUNNABLE → BLOCKED/WAITING/TIMED_WAITING
+                  → TERMINATED
+                </li>
+                <li>
+                  start() creates a new thread. run() just executes on current
+                  thread — common beginner mistake.
+                </li>
+                <li>
+                  ExecutorService (thread pool) is the production way — avoids
+                  thread creation overhead
+                </li>
+                <li>
+                  Daemon threads: background threads that JVM kills when all
+                  non-daemon threads finish (e.g., GC thread)
+                </li>
+                <li>
+                  Virtual threads (Java 21 LTS): platform threads are expensive
+                  OS threads. Virtual threads are JVM-managed, cheap. Ideal for
+                  I/O-bound workloads.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  Calling run() directly instead of start() — this runs the code
+                  on the current thread, no new thread created. Very common
+                  mistake.
+                </li>
+                <li>
+                  Thread.sleep() doesn't release any locks it holds.
+                  Object.wait() DOES release the lock. Crucial difference for
+                  synchronization.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=TCd8QIS-2KI"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">Java Threads — Telusko</span>
+                <span class="rc-why"
+                  >All thread creation methods + lifecycle states</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/multithreading-in-java/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: Multithreading in Java</span>
+                <span class="rc-why"
+                  >Complete Java thread guide with all lifecycle states</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C8: SYNCHRONIZATION & DEADLOCK ===== -->
+        <section class="concept" id="c8">
+          <div class="concept-top">
+            <div class="c-num">8</div>
+            <div class="c-title">Synchronization and Deadlock in Java</div>
+            <span class="diff hard">Hard</span>
+            <span class="rtime">~4 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              Synchronization prevents race conditions by ensuring only one
+              thread accesses a critical section at a time. Deadlock is when two
+              threads each hold a lock the other needs — eternal standoff.
+            </div>
+            <div class="expl">
+              <p>
+                Every Java object has an intrinsic lock (monitor). The
+                <span class="inline-code">synchronized</span> keyword grabs that
+                lock. Only one thread can hold a given object's lock at a time —
+                others block.
+              </p>
+              <p>
+                You can synchronize a method (lock = the object) or a block
+                (lock = any specified object). Synchronized methods are simpler;
+                synchronized blocks are more flexible and allow finer
+                granularity (lock only the specific object you're protecting,
+                not the whole this).
+              </p>
+              <p>
+                <strong>Deadlock example in Java:</strong> Thread 1 locks Object
+                A then tries to lock Object B. Thread 2 locks Object B then
+                tries to lock Object A. Both block forever. Standard fix: always
+                acquire locks in the same fixed order.
+              </p>
+              <p>
+                Beyond <span class="inline-code">synchronized</span>, Java's
+                <span class="inline-code">java.util.concurrent.locks</span>
+                package offers <span class="inline-code">ReentrantLock</span> —
+                same mutual exclusion but with tryLock() (avoid deadlock by not
+                waiting forever), lockInterruptibly() (respond to interrupts),
+                and separate read/write locks (ReentrantReadWriteLock).
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-hdr">
+                <span class="code-lang">Java</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm">// synchronized method — lock is 'this'</span>
+<span class="ck">class</span> <span class="cn">Counter</span> {
+    <span class="ck">private int</span> count = <span class="cn">0</span>;
+    <span class="ck">public synchronized void</span> <span class="cf">increment</span>() { count++; }
+    <span class="ck">public synchronized int</span> <span class="cf">getCount</span>() { <span class="ck">return</span> count; }
+}
+
+<span class="cm">// ReentrantLock — more control, avoid deadlock with tryLock</span>
+<span class="cn">ReentrantLock</span> lock = <span class="ck">new</span> <span class="cn">ReentrantLock</span>();
+<span class="ck">try</span> {
+    <span class="ck">if</span> (lock.<span class="cf">tryLock</span>(<span class="cn">1</span>, TimeUnit.SECONDS)) {
+        <span class="cm">// got the lock, do critical work</span>
+        lock.<span class="cf">unlock</span>();
+    }
+} <span class="ck">catch</span> (InterruptedException e) { <span class="cm">/* handle */</span> }
+
+<span class="cm">// volatile — visibility guarantee, NOT atomicity</span>
+<span class="ck">volatile boolean</span> running = <span class="ck">true</span>; <span class="cm">// other threads see this change immediately</span></pre>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  synchronized guarantees mutual exclusion + memory visibility
+                  (happens-before relationship)
+                </li>
+                <li>
+                  volatile: ensures all threads see the latest value of a
+                  variable — no caching in CPU registers. Does NOT make compound
+                  ops atomic.
+                </li>
+                <li>
+                  atomic package: AtomicInteger, AtomicLong — lock-free
+                  thread-safe operations using CAS
+                </li>
+                <li>
+                  ReentrantLock: reentrant (same thread can lock multiple
+                  times), interruptible, timed, with fairness option
+                </li>
+                <li>
+                  Deadlock prevention in Java: lock ordering, tryLock() with
+                  timeout, avoid nested locks
+                </li>
+                <li>
+                  wait()/notify()/notifyAll() must be called inside synchronized
+                  block — on the same lock object
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  volatile doesn't make count++ atomic. It's 3 ops: read,
+                  increment, write. Use AtomicInteger instead.
+                </li>
+                <li>
+                  synchronized on a static method uses the Class object as lock.
+                  On an instance method, it's the instance. Different locks —
+                  they don't block each other.
+                </li>
+                <li>
+                  Calling wait() without checking condition in a loop leads to
+                  spurious wakeup bugs. Always: while(!condition) wait();
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Java's synchronized uses biased locking, thin locks, and
+                inflated monitors internally — it starts cheap and escalates. In
+                Java 15+, biased locking was disabled as it slows modern
+                workloads with high contention. This is why moving to
+                ReentrantLock or concurrent collections is generally better for
+                high-throughput systems.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=WGECn9BXEF0"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">Java Synchronization — Java Brains</span>
+                <span class="rc-why"
+                  >synchronized, volatile, deadlock example all covered</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/synchronization-in-java/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: Synchronization in Java</span>
+                <span class="rc-why"
+                  >wait/notify, ReentrantLock, deadlock examples</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C9: WHAT HAPPENS WHEN JAVA PROGRAM RUNS ===== -->
+        <section class="concept" id="c9">
+          <div class="concept-top">
+            <div class="c-num">9</div>
+            <div class="c-title">
+              What Happens Internally When a Java Program Runs
+            </div>
+            <span class="diff medium">Medium</span>
+            <span class="rtime">~4 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              Source → javac compiles to bytecode → JVM loads classes → bytecode
+              verifier checks → interpreter/JIT executes → GC manages memory —
+              all in a pipeline you should be able to describe step by step.
+            </div>
+            <div class="expl">
+              <p>
+                This is the question that separates people who just use Java
+                from people who understand Java. Let's walk through it
+                precisely.
+              </p>
+              <p>
+                <strong>Step 1 — Compilation:</strong>
+                <span class="inline-code">javac HelloWorld.java</span> →
+                produces <span class="inline-code">HelloWorld.class</span> with
+                bytecode. Bytecode is not native code. It's compact,
+                platform-neutral instructions for the JVM.
+              </p>
+              <p>
+                <strong>Step 2 — Class Loading:</strong> When JVM starts, the
+                Class Loader subsystem kicks in. Three built-in loaders:
+                Bootstrap ClassLoader (loads core Java classes from rt.jar —
+                java.lang, java.util), Extension ClassLoader (loads from ext
+                directories), Application ClassLoader (loads your .class files
+                and classpath). Delegation model: child always asks parent first
+                before loading itself.
+              </p>
+              <p>
+                <strong>Step 3 — Bytecode Verification:</strong> The Bytecode
+                Verifier checks that the .class file is valid, hasn't been
+                tampered with, and doesn't violate access rules. This is Java's
+                security gate — ensures bytecode won't crash the JVM.
+              </p>
+              <p>
+                <strong>Step 4 — Execution:</strong> The Execution Engine runs
+                the bytecode. Initially via <strong>Interpreter</strong> — reads
+                and executes one bytecode instruction at a time (slow). The JVM
+                tracks which methods are called frequently (hot methods). Those
+                get compiled by the
+                <strong>JIT (Just-In-Time) Compiler</strong> to native machine
+                code — stored in code cache — and subsequent calls run at native
+                speed. This is why Java warms up over time and gets faster.
+              </p>
+              <p>
+                <strong>Step 5 — Memory Management:</strong> GC runs in the
+                background, cleaning the heap. Main thread starts with
+                <span class="inline-code">main()</span>. Program exits when all
+                non-daemon threads finish.
+              </p>
+            </div>
+
+            <div class="diagram">
+              <svg
+                viewBox="0 0 600 100"
+                xmlns="http://www.w3.org/2000/svg"
+                font-family="Lato, sans-serif"
+              >
+                <defs>
+                  <marker
+                    id="fa"
+                    markerWidth="7"
+                    markerHeight="7"
+                    refX="5"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0L0,6L7,3z" fill="#F8981C" />
+                  </marker>
+                </defs>
+                <!-- Steps -->
+                <rect
+                  x="5"
+                  y="25"
+                  width="85"
+                  height="45"
+                  rx="7"
+                  fill="rgba(248,152,32,.12)"
+                  stroke="#F8981C"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="47"
+                  y="47"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#F8981C"
+                >
+                  .java
+                </text>
+                <text
+                  x="47"
+                  y="62"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  Source
+                </text>
+
+                <line
+                  x1="92"
+                  y1="47"
+                  x2="108"
+                  y2="47"
+                  stroke="#F8981C"
+                  stroke-width="1.5"
+                  marker-end="url(#fa)"
+                />
+                <text
+                  x="100"
+                  y="40"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  javac
+                </text>
+
+                <rect
+                  x="110"
+                  y="25"
+                  width="85"
+                  height="45"
+                  rx="7"
+                  fill="rgba(59,130,246,.12)"
+                  stroke="#3B82F6"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="152"
+                  y="47"
+                  text-anchor="middle"
+                  font-size="11"
+                  font-weight="700"
+                  fill="#3B82F6"
+                >
+                  .class
+                </text>
+                <text
+                  x="152"
+                  y="62"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  Bytecode
+                </text>
+
+                <line
+                  x1="197"
+                  y1="47"
+                  x2="213"
+                  y2="47"
+                  stroke="#F8981C"
+                  stroke-width="1.5"
+                  marker-end="url(#fa)"
+                />
+                <text
+                  x="205"
+                  y="40"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  load
+                </text>
+
+                <rect
+                  x="215"
+                  y="25"
+                  width="90"
+                  height="45"
+                  rx="7"
+                  fill="rgba(203,166,247,.12)"
+                  stroke="#CBA6F7"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="260"
+                  y="44"
+                  text-anchor="middle"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#CBA6F7"
+                >
+                  ClassLoader
+                </text>
+                <text
+                  x="260"
+                  y="62"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  + Verifier
+                </text>
+
+                <line
+                  x1="307"
+                  y1="47"
+                  x2="323"
+                  y2="47"
+                  stroke="#F8981C"
+                  stroke-width="1.5"
+                  marker-end="url(#fa)"
+                />
+                <text
+                  x="315"
+                  y="40"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  exec
+                </text>
+
+                <rect
+                  x="325"
+                  y="25"
+                  width="100"
+                  height="45"
+                  rx="7"
+                  fill="rgba(16,185,129,.12)"
+                  stroke="#10B981"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="375"
+                  y="44"
+                  text-anchor="middle"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#10B981"
+                >
+                  Interpreter
+                </text>
+                <text
+                  x="375"
+                  y="58"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  + JIT Compiler
+                </text>
+
+                <line
+                  x1="427"
+                  y1="47"
+                  x2="443"
+                  y2="47"
+                  stroke="#F8981C"
+                  stroke-width="1.5"
+                  marker-end="url(#fa)"
+                />
+                <text
+                  x="435"
+                  y="40"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  native
+                </text>
+
+                <rect
+                  x="445"
+                  y="25"
+                  width="85"
+                  height="45"
+                  rx="7"
+                  fill="rgba(245,158,11,.12)"
+                  stroke="#F59E0B"
+                  stroke-width="1.8"
+                />
+                <text
+                  x="487"
+                  y="44"
+                  text-anchor="middle"
+                  font-size="10"
+                  font-weight="700"
+                  fill="#F59E0B"
+                >
+                  Native
+                </text>
+                <text
+                  x="487"
+                  y="58"
+                  text-anchor="middle"
+                  font-size="9"
+                  fill="#7B82A8"
+                >
+                  Machine Code
+                </text>
+
+                <text
+                  x="300"
+                  y="95"
+                  text-anchor="middle"
+                  font-size="10"
+                  fill="#7B82A8"
+                >
+                  GC runs alongside execution, managing heap memory continuously
+                </text>
+              </svg>
+              <div class="diagram-cap">
+                Java's complete execution pipeline — from your .java file to
+                native machine code
+              </div>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  ClassLoader delegation: Application → Extension → Bootstrap
+                  (parent-first)
+                </li>
+                <li>
+                  Bytecode Verifier: security check before execution — ensures
+                  type safety, no illegal stack ops
+                </li>
+                <li>
+                  Interpreter runs code immediately (no warm-up). JIT kicks in
+                  for hot methods after profiling.
+                </li>
+                <li>
+                  JIT compiles to native code, stored in Code Cache — default
+                  240MB, tunable with -XX:ReservedCodeCacheSize
+                </li>
+                <li>
+                  JVM startup has 3 phases: class loading, JIT compilation,
+                  steady-state execution
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  JIT doesn't compile everything — only hot spots (called
+                  often). Cold code runs interpreted forever.
+                </li>
+                <li>
+                  Class loading is lazy by default — a class is loaded only when
+                  first referenced, not at JVM startup.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                HotSpot JIT has two compilers: C1 (fast compilation, basic
+                optimization — for methods called thousands of times) and C2
+                (slow compilation, aggressive optimization — for methods called
+                millions of times, the "hot" hot methods). Java 10+ uses Graal
+                as an optional JIT (replacing C2) — written in Java itself,
+                proving that Java can compile Java.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=G1ubVOl9IBw"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">Java Execution Flow — Telusko</span>
+                <span class="rc-why"
+                  >ClassLoader + JIT + execution pipeline step by step</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/jvm-works-jvm-architecture/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title">GFG: JVM Architecture</span>
+                <span class="rc-why"
+                  >Complete JVM internals — class loader, runtime data areas,
+                  execution engine</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== C10: String vs StringBuilder vs StringBuffer ===== -->
+        <section class="concept" id="c10">
+          <div class="concept-top">
+            <div class="c-num">10</div>
+            <div class="c-title">String vs StringBuilder vs StringBuffer</div>
+            <span class="diff medium">Medium</span>
+            <span class="rtime">~3 min</span>
+          </div>
+          <div class="cbody">
+            <div class="one-liner">
+              String is immutable — every modification creates a new object.
+              StringBuilder is mutable and fast (not thread-safe). StringBuffer
+              is mutable and thread-safe (but slower due to synchronization).
+            </div>
+            <div class="expl">
+              <p>
+                String in Java is <strong>immutable</strong>. When you do
+                <span class="inline-code">str = str + "world"</span>, Java
+                doesn't modify the existing String. It creates a NEW String
+                object and points str to it. The old object becomes garbage.
+                This is why concatenating Strings in a loop with
+                <span class="inline-code">+</span> is O(n²) — you're creating n
+                objects and copying more each time.
+              </p>
+              <p>
+                Immutability makes Strings safe to share across threads (no sync
+                needed), safe to use as HashMap keys (hash never changes), and
+                allows String pooling (interning). These are features, not
+                accidents.
+              </p>
+              <p>
+                <strong>StringBuilder</strong> is a mutable buffer.
+                <span class="inline-code">append()</span> adds to the internal
+                char array without creating new objects. Use it for building
+                strings in loops or when concatenating many pieces. Not
+                thread-safe.
+              </p>
+              <p>
+                <strong>StringBuffer</strong> is exactly like StringBuilder but
+                every method is synchronized. Thread-safe, but the
+                synchronization overhead makes it slower. In the real world, you
+                rarely need StringBuffer — if you're building a string in a
+                multi-threaded context, you usually build it locally
+                (StringBuilder) and then share the immutable String result.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Feature</th>
+                <th>String</th>
+                <th>StringBuilder</th>
+                <th>StringBuffer</th>
+              </tr>
+              <tr>
+                <td>Mutable?</td>
+                <td>❌ Immutable</td>
+                <td>✅ Mutable</td>
+                <td>✅ Mutable</td>
+              </tr>
+              <tr>
+                <td>Thread-safe?</td>
+                <td>✅ Yes (immutable)</td>
+                <td>❌ No</td>
+                <td>✅ Yes (synchronized)</td>
+              </tr>
+              <tr>
+                <td>Performance</td>
+                <td>Slow for concat loops</td>
+                <td>⚡ Fastest</td>
+                <td>Slower (sync overhead)</td>
+              </tr>
+              <tr>
+                <td>String Pool</td>
+                <td>✅ Literals interned</td>
+                <td>N/A</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td>When to use</td>
+                <td>Fixed strings, keys</td>
+                <td>Build strings in loops</td>
+                <td>Multi-threaded concat</td>
+              </tr>
+            </table>
+
+            <div class="code-block">
+              <div class="code-hdr">
+                <span class="code-lang">Java</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm">// BAD — O(n²), creates n new String objects in loop</span>
+<span class="ck">String</span> result = <span class="cs">""</span>;
+<span class="ck">for</span>(<span class="ck">int</span> i = <span class="cn">0</span>; i < <span class="cn">1000</span>; i++) result += i; <span class="cm">// terrible!</span>
+
+<span class="cm">// GOOD — O(n), single object, internal array grows as needed</span>
+<span class="cn">StringBuilder</span> sb = <span class="ck">new</span> <span class="cn">StringBuilder</span>();
+<span class="ck">for</span>(<span class="ck">int</span> i = <span class="cn">0</span>; i < <span class="cn">1000</span>; i++) sb.<span class="cf">append</span>(i);
+<span class="ck">String</span> result = sb.<span class="cf">toString</span>(); <span class="cm">// convert once at the end</span>
+
+<span class="cm">// Fun fact: javac optimizes simple + concatenations to StringBuilder
+// BUT not in loops — hence you still need to do it manually</span>
+<span class="ck">String</span> s = <span class="cs">"Hello"</span> + <span class="cs">" World"</span>; <span class="cm">// javac makes this StringBuilder internally</span></pre>
+            </div>
+
+            <div class="kp">
+              <div class="kp-title">Key Points</div>
+              <ul>
+                <li>
+                  String immutability enables: thread safety, String pooling,
+                  safe HashMap keys, caching hashCode
+                </li>
+                <li>
+                  String stores char[] internally (Java 8) or byte[] with
+                  encoding flag (Java 9+ — Compact Strings)
+                </li>
+                <li>
+                  StringBuilder initial capacity: 16 chars. Doubles when full.
+                  Amortized O(1) append.
+                </li>
+                <li>
+                  Java compiler optimizes
+                  <span class="inline-code">"a" + "b" + "c"</span> to use
+                  StringBuilder. But NOT in loops.
+                </li>
+                <li>
+                  Java 11+:
+                  <span class="inline-code"
+                    >String.repeat(), isBlank(), strip()</span
+                  >
+                  added. Java 15+: Text Blocks
+                  <span class="inline-code">"""..."""</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Gotchas</h4>
+              <ul>
+                <li>
+                  String comparison with == in switch statements is fine in Java
+                  7+ (compiler uses hashCode + equals internally). But in your
+                  own code, always use equals() for String comparison.
+                </li>
+                <li>
+                  String.intern() forces a string into the pool — useful for
+                  memory optimization when you have millions of repeated
+                  strings, but be careful — the pool lives in heap (Java 7+) and
+                  is GC'd, but intern() abuse can slow things down.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Java 9 introduced Compact Strings — if a String contains only
+                Latin-1 characters (most strings do), it's stored as byte[]
+                instead of char[]. This halves memory for typical strings. Java
+                11 added String.repeat() and isBlank(). Java 13+ added Text
+                Blocks for multiline strings. Knowing these recent additions
+                signals you keep up with the language evolution.
+              </p>
+            </div>
+          </div>
+          <div class="resources">
+            <div class="res-title">Best Resources</div>
+            <div class="res-cards">
+              <a
+                class="res-card"
+                href="https://www.youtube.com/watch?v=PyO4XvZJuoI"
+                target="_blank"
+              >
+                <span class="rc-icon">▶</span>
+                <span class="rc-title">String vs StringBuilder — Telusko</span>
+                <span class="rc-why"
+                  >String pool, immutability, performance comparison clearly
+                  shown</span
+                >
+              </a>
+              <a
+                class="res-card"
+                href="https://www.geeksforgeeks.org/string-vs-stringbuilder-vs-stringbuffer-in-java/"
+                target="_blank"
+              >
+                <span class="rc-icon">📄</span>
+                <span class="rc-title"
+                  >GFG: String vs StringBuilder vs StringBuffer</span
+                >
+                <span class="rc-why"
+                  >Performance benchmark + all differences in one place</span
+                >
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div
+          style="
+            text-align: center;
+            padding: 40px 0 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-family: &quot;Syne&quot;, sans-serif;
+            font-weight: 600;
+          "
+        >
+          ☕ You now know Java Core better than 90% of candidates. Go get it.
+        </div>
+      </main>
+    </div>
+
+    <button
+      id="btt"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      title="Back to top"
+    >
+      ↑
+    </button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      function toggleTheme() {
+        const h = document.documentElement;
+        const btn = document.getElementById("themeBtn");
+        if (h.dataset.theme === "light") {
+          h.dataset.theme = "dark";
+          btn.textContent = "☀ Light";
+        } else {
+          h.dataset.theme = "light";
+          btn.textContent = "🌙 Dark";
+        }
+      }
+      function toggleFocus() {
+        document.body.classList.toggle("focus-mode");
+        document.getElementById("focusBtn").classList.toggle("active");
+      }
+      function toggleSidebar() {
+        document.body.classList.toggle("sidebar-open");
+      }
+      window.addEventListener("scroll", () => {
+        const total = document.body.scrollHeight - window.innerHeight;
+        document.getElementById("progressBar").style.width =
+          (window.scrollY / total) * 100 + "%";
+        document
+          .getElementById("btt")
+          .classList.toggle("show", window.scrollY > 400);
+      });
+      const concepts = document.querySelectorAll(".concept");
+      const links = document.querySelectorAll(".sidebar-link");
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((l) => l.classList.remove("active"));
+              const a = document.querySelector(
+                `.sidebar a[href="#${e.target.id}"]`,
+              );
+              if (a) {
+                a.classList.add("active");
+                a.scrollIntoView({ block: "nearest" });
+              }
+            }
+          });
+        },
+        { rootMargin: "-15% 0px -75% 0px" },
+      );
+      concepts.forEach((c) => obs.observe(c));
+      document.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = btn
+            .closest(".code-block")
+            .querySelector("pre").textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            btn.textContent = "Copied!";
+            setTimeout(() => (btn.textContent = "Copy"), 1600);
+          });
+        });
+      });
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

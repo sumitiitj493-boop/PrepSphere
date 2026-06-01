@@ -1,0 +1,2981 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SQL — Interview Mastery Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1e1e2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 280px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.08);
+        --cyanBg: rgba(6, 182, 212, 0.08);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      /* NAVBAR */
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.15rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      /* TOPIC HEADER */
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+      }
+      .topic-header h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 580px;
+        margin: 0 auto;
+      }
+
+      /* CONCEPT CARD */
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.1);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.35rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.65rem;
+        padding: 3px 12px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-query {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-concept {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-diff {
+        background: var(--amberBg);
+        color: var(--amber);
+      }
+      .badge-important {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .read-time {
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      /* ONE LINER */
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      /* EXPLANATION */
+      .explanation {
+        margin-bottom: 1.5rem;
+      }
+      .explanation p {
+        margin-bottom: 1rem;
+        font-size: 0.94rem;
+      }
+      .explanation strong {
+        color: var(--gold);
+      }
+
+      /* CODE BLOCK */
+      .code-wrap {
+        position: relative;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .code-header {
+        background: #2d2d3a;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-lang {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #aaa;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+      .code-block {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 1.2rem 1.5rem;
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+        line-height: 1.8;
+      }
+      .code-block .kw {
+        color: #c678dd;
+      }
+      .code-block .fn {
+        color: #61afef;
+      }
+      .code-block .str {
+        color: #98c379;
+      }
+      .code-block .cm {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .code-block .num {
+        color: #d19a66;
+      }
+      .code-block .op {
+        color: #56b6c2;
+      }
+      .code-block .tbl {
+        color: #e5c07b;
+      }
+
+      /* KEY INSIGHT */
+      .key-insight {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-insight h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .key-insight p,
+      .key-insight li {
+        font-size: 0.9rem;
+        line-height: 1.7;
+      }
+      .key-insight ul {
+        list-style: none;
+        margin-top: 0.5rem;
+      }
+      .key-insight li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.4rem;
+      }
+      .key-insight li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      /* GOTCHA */
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* EDGE */
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        font-size: 4rem;
+        color: var(--gold);
+        opacity: 0.08;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* COMPARISON TABLE */
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        vertical-align: top;
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .compare-table code {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .compare-table .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .compare-table .no {
+        color: var(--red);
+        font-weight: 600;
+      }
+
+      /* DIAGRAM */
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      /* INTERVIEW Q */
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.65rem;
+        font-weight: 800;
+        background: var(--cyanBg);
+        color: var(--cyan);
+        padding: 3px 8px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--cyanBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      /* SAMPLE DATA */
+      .sample-data {
+        margin: 1rem 0;
+      }
+      .sample-data h5 {
+        font-size: 0.75rem;
+        color: var(--text2);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+      .sample-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .sample-table th {
+        background: var(--purpleBg);
+        color: var(--purple);
+        font-weight: 700;
+        padding: 8px 12px;
+        text-align: left;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .sample-table td {
+        padding: 8px 12px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .sample-table .highlight {
+        background: var(--goldLight);
+        font-weight: 600;
+      }
+
+      /* BACK TO TOP */
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      /* MOBILE */
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+        .main {
+          padding: 1.5rem 1rem 4rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .topic-header h1 {
+          font-size: 1.8rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+    </style>
+  </head>
+  <body>
+    <style>
+      /* Quick Jump styles */
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+    </style>
+
+    <nav class="navbar">
+      <span class="nav-brand">SQL Interview Mastery</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#nth-salary">Nth Salary</a>
+        <a href="#2nd-salary">2nd Highest</a>
+        <a href="#find-dup">Find Duplicates</a>
+        <a href="#del-dup">Delete Duplicates</a>
+        <a href="#dept-salary">Dept-wise Salary</a>
+        <a href="#above-avg">Above Avg</a>
+        <a href="#same-salary">Same Salary</a>
+        <a href="#self-join">Self Join</a>
+        <a href="#having-count">HAVING Count</a>
+        <a href="#no-orders">No Orders</a>
+        <a href="#del-drop-trunc">DEL/DROP/TRUNC</a>
+        <a href="#where-having">WHERE/HAVING</a>
+        <a href="#joins">JOINs</a>
+        <a href="#normalization">Normalization</a>
+        <a href="#keys">Keys</a>
+        <a href="#indexing">Indexing</a>
+        <a href="#union">UNION</a>
+        <a href="#acid">ACID</a>
+        <a href="#clustered">Clustered Index</a>
+        <a href="#subquery">Subqueries</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Query Problems</div>
+        <a href="#nth-salary"><span class="num">1</span>Nth Highest Salary</a>
+        <a href="#2nd-salary"><span class="num">2</span>2nd Highest Salary</a>
+        <a href="#find-dup"><span class="num">3</span>Find Duplicates</a>
+        <a href="#del-dup"><span class="num">4</span>Delete Duplicates</a>
+        <a href="#dept-salary"
+          ><span class="num">5</span>Highest Salary by Dept</a
+        >
+        <a href="#above-avg"><span class="num">6</span>Above Dept Average</a>
+        <a href="#same-salary"
+          ><span class="num">7</span>Same Salary Employees</a
+        >
+        <a href="#self-join"><span class="num">8</span>Self Join (Manager)</a>
+        <a href="#having-count"
+          ><span class="num">9</span>Dept with 5+ Employees</a
+        >
+        <a href="#no-orders"><span class="num">10</span>Customers No Orders</a>
+
+        <div class="sidebar-title">Key Differences</div>
+        <a href="#del-drop-trunc"
+          ><span class="num">11</span>DELETE vs DROP vs TRUNCATE</a
+        >
+        <a href="#where-having"><span class="num">12</span>WHERE vs HAVING</a>
+        <a href="#joins"><span class="num">13</span>INNER vs LEFT JOIN</a>
+        <a href="#union"><span class="num">17</span>UNION vs UNION ALL</a>
+        <a href="#subquery"
+          ><span class="num">20</span>Subquery vs Correlated</a
+        >
+
+        <div class="sidebar-title">Core Concepts</div>
+        <a href="#normalization"><span class="num">14</span>Normalization</a>
+        <a href="#keys"><span class="num">15</span>PRIMARY vs FOREIGN Key</a>
+        <a href="#indexing"><span class="num">16</span>Indexing</a>
+        <a href="#acid"><span class="num">18</span>ACID Properties</a>
+        <a href="#clustered"
+          ><span class="num">19</span>Clustered vs Non-Clustered</a
+        >
+      </aside>
+
+      <main class="main">
+        <div class="topic-header">
+          <h1>SQL Interview Mastery</h1>
+          <p>
+            20 Must-Know SQL Questions — From queries to concepts. Write clean
+            SQL, explain clearly, nail the interview.
+          </p>
+        </div>
+
+        <!-- ============ 1. NTH HIGHEST SALARY ============ -->
+        <section class="concept" id="nth-salary">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Find Nth Highest Salary</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="badge badge-important">Most Asked</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Use LIMIT with OFFSET, or DENSE_RANK() window function. Handle
+              duplicates carefully — DISTINCT or DENSE_RANK is key.
+            </div>
+
+            <div class="explanation">
+              <p>
+                This is THE most asked SQL interview question. There are
+                multiple approaches, and interviewers want to see you understand
+                the trade-offs. The trick is handling
+                <strong>duplicate salaries</strong> — if 3 people have the
+                highest salary, what's the "2nd highest"?
+              </p>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Method 1: LIMIT OFFSET</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Find 3rd highest salary (N=3)</span>
+                <span class="kw">SELECT DISTINCT</span> salary
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">ORDER BY</span> salary
+                <span class="kw">DESC</span> <span class="kw">LIMIT</span>
+                <span class="num">1</span> <span class="kw">OFFSET</span>
+                <span class="num">2</span>;
+                <span class="cm">-- OFFSET = N-1</span>
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >SQL — Method 2: DENSE_RANK() (Best)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Find Nth highest using window function</span
+                >
+                <span class="kw">SELECT</span> salary
+                <span class="kw">FROM</span> (
+                <span class="kw">SELECT</span> salary,
+                <span class="fn">DENSE_RANK</span>()
+                <span class="kw">OVER</span> (<span class="kw">ORDER BY</span>
+                salary <span class="kw">DESC</span>)
+                <span class="kw">AS</span> rnk <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                ) ranked
+                <span class="kw">WHERE</span> rnk = <span class="num">3</span>;
+                <span class="cm">-- N = 3</span>
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Method 3: Subquery (Classic)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Find Nth highest using correlated subquery</span
+                >
+                <span class="kw">SELECT DISTINCT</span> salary
+                <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e1
+                <span class="kw">WHERE</span> <span class="num">3</span> = (
+                <span class="cm">-- N = 3</span>
+                <span class="kw">SELECT COUNT</span>(<span class="kw"
+                  >DISTINCT</span
+                >
+                salary) <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e2
+                <span class="kw">WHERE</span> e2.salary >= e1.salary );
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  <strong>DENSE_RANK vs RANK vs ROW_NUMBER:</strong> DENSE_RANK
+                  handles ties without gaps (100, 100, 90 → ranks 1, 1, 2). RANK
+                  creates gaps (1, 1, 3). ROW_NUMBER gives unique numbers (1, 2,
+                  3).
+                </li>
+                <li>
+                  Use DISTINCT with LIMIT/OFFSET approach to handle duplicate
+                  salaries
+                </li>
+                <li>
+                  DENSE_RANK is the most interview-friendly — shows you know
+                  window functions
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                Using RANK() instead of DENSE_RANK(). If two people share the
+                highest salary, RANK() makes the next salary rank 3, not 2.
+                Also, forgetting DISTINCT with LIMIT/OFFSET returns wrong
+                results when salaries repeat.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 2. 2ND HIGHEST SALARY ============ -->
+        <section class="concept" id="2nd-salary">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Find 2nd Highest Salary</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              Special case of Nth highest. Use MAX with subquery or LIMIT 1
+              OFFSET 1. Handle NULL if table has less than 2 distinct salaries.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Cleanest Approach</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Using MAX with exclusion</span>
+                <span class="kw">SELECT MAX</span>(salary)
+                <span class="kw">AS</span> SecondHighest
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> salary < (<span class="kw"
+                  >SELECT MAX</span
+                >(salary) <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>);
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Handle NULL Case</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Returns NULL if no 2nd highest exists</span>
+                <span class="kw">SELECT</span> (
+                <span class="kw">SELECT DISTINCT</span> salary
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">ORDER BY</span> salary
+                <span class="kw">DESC</span> <span class="kw">LIMIT</span>
+                <span class="num">1</span> <span class="kw">OFFSET</span>
+                <span class="num">1</span> )
+                <span class="kw">AS</span> SecondHighestSalary;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                The subquery wrapper
+                <code>SELECT (SELECT ...) AS alias</code> ensures NULL is
+                returned if no result exists. Without it, you'd get an empty
+                result set — which might not be what the interviewer wants.
+                LeetCode specifically tests this edge case!
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3. FIND DUPLICATES ============ -->
+        <section class="concept" id="find-dup">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Find Duplicate Records</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              GROUP BY the columns that define duplicates, use HAVING COUNT(*) >
+              1 to filter groups with more than one occurrence.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Find Duplicate Emails</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Find all duplicate emails</span>
+                <span class="kw">SELECT</span> email,
+                <span class="kw">COUNT</span>(*)
+                <span class="kw">AS</span> count <span class="kw">FROM</span>
+                <span class="tbl">Users</span>
+                <span class="kw">GROUP BY</span> email
+                <span class="kw">HAVING COUNT</span>(*) >
+                <span class="num">1</span>;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Find All Duplicate Rows</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Find duplicates based on multiple columns</span
+                >
+                <span class="kw">SELECT</span> first_name, last_name, email,
+                <span class="kw">COUNT</span>(*)
+                <span class="kw">AS</span> count <span class="kw">FROM</span>
+                <span class="tbl">Employees</span>
+                <span class="kw">GROUP BY</span> first_name, last_name, email
+                <span class="kw">HAVING COUNT</span>(*) >
+                <span class="num">1</span>;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Show Actual Duplicate Rows</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Get all rows that are duplicates (including
+                  original)</span
+                >
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span>
+                <span class="tbl">Users</span>
+                <span class="kw">WHERE</span> email <span class="kw">IN</span> (
+                <span class="kw">SELECT</span> email
+                <span class="kw">FROM</span> <span class="tbl">Users</span>
+                <span class="kw">GROUP BY</span> email
+                <span class="kw">HAVING COUNT</span>(*) >
+                <span class="num">1</span> );
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                The first query shows WHICH values are duplicated and HOW MANY
+                times. The third query shows ALL the actual rows that are
+                duplicates. Know both — interviewers may ask for either.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4. DELETE DUPLICATES ============ -->
+        <section class="concept" id="del-dup">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Delete Duplicate Rows</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="badge badge-important">Tricky</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Keep one copy (usually the one with minimum ID), delete the rest.
+              Use self-join, subquery with ROW_NUMBER, or CTE depending on
+              what's supported.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Method 1: Self-Join (MySQL)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Keep row with smallest id, delete others</span
+                >
+                <span class="kw">DELETE</span> e1 <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e1
+                <span class="kw">INNER JOIN</span>
+                <span class="tbl">Employee</span> e2
+                <span class="kw">WHERE</span> e1.email = e2.email
+                <span class="kw">AND</span> e1.id > e2.id;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >SQL — Method 2: ROW_NUMBER (SQL Server/PostgreSQL)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Using CTE with ROW_NUMBER</span>
+                <span class="kw">WITH</span> CTE <span class="kw">AS</span> (
+                <span class="kw">SELECT</span> *,
+                <span class="fn">ROW_NUMBER</span>()
+                <span class="kw">OVER</span> (
+                <span class="kw">PARTITION BY</span> email
+                <span class="kw">ORDER BY</span> id )
+                <span class="kw">AS</span> rn <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                )
+                <span class="kw">DELETE FROM</span> CTE
+                <span class="kw">WHERE</span> rn > <span class="num">1</span>;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Method 3: Subquery</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Delete duplicates keeping min id</span>
+                <span class="kw">DELETE FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> id
+                <span class="kw">NOT IN</span> (
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span> (
+                <span class="kw">SELECT MIN</span>(id)
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">GROUP BY</span> email )
+                <span class="kw">AS</span> temp );
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                In MySQL, you can't directly reference the same table in a
+                subquery of a DELETE. That's why Method 3 wraps the subquery in
+                another SELECT — it's a workaround. Also, always test DELETE
+                queries with SELECT first!
+              </p>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                <strong>ROW_NUMBER approach is most versatile</strong> — works
+                for complex duplicates (multiple columns), lets you control
+                which duplicate to keep (first inserted, latest, etc.).
+                Self-join is faster but only works for simple cases.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5. DEPT-WISE HIGHEST SALARY ============ -->
+        <section class="concept" id="dept-salary">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Highest Salary by Department</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              Use GROUP BY with MAX(), or window function with
+              RANK()/DENSE_RANK() to get employees earning max in each
+              department.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Just the Max Salary per Dept</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> department_id,
+                <span class="kw">MAX</span>(salary)
+                <span class="kw">AS</span> max_salary
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">GROUP BY</span> department_id;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >SQL — Employee Details with Max Salary</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Get employee name, salary, department for top
+                  earners</span
+                >
+                <span class="kw">SELECT</span> e.name, e.salary, e.department_id
+                <span class="kw">FROM</span> <span class="tbl">Employee</span> e
+                <span class="kw">WHERE</span> (e.department_id, e.salary)
+                <span class="kw">IN</span> (
+                <span class="kw">SELECT</span> department_id,
+                <span class="kw">MAX</span>(salary) <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">GROUP BY</span> department_id );
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >SQL — Using Window Function (Elegant)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span> (
+                <span class="kw">SELECT</span> name, salary, department_id,
+                <span class="fn">RANK</span>() <span class="kw">OVER</span> (
+                <span class="kw">PARTITION BY</span> department_id
+                <span class="kw">ORDER BY</span> salary
+                <span class="kw">DESC</span> ) <span class="kw">AS</span> rnk
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                ) ranked
+                <span class="kw">WHERE</span> rnk = <span class="num">1</span>;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                The window function approach handles ties naturally — if two
+                people share the max salary, both are returned with rank 1. The
+                subquery approach with tuple comparison
+                <code>(dept, salary) IN (...)</code> also handles this. Simple
+                MAX() only gives you the value, not who has it.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 6. ABOVE DEPARTMENT AVERAGE ============ -->
+        <section class="concept" id="above-avg">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Employees Above Department Average</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              Use correlated subquery or window function to compare each
+              employee's salary against their department's average.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Correlated Subquery</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> name, salary, department_id
+                <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e1
+                <span class="kw">WHERE</span> salary > (
+                <span class="kw">SELECT AVG</span>(salary)
+                <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e2
+                <span class="kw">WHERE</span> e2.department_id =
+                e1.department_id );
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang"
+                  >SQL — Window Function (Better Performance)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span> (
+                <span class="kw">SELECT</span> name, salary, department_id,
+                <span class="fn">AVG</span>(salary)
+                <span class="kw">OVER</span> (<span class="kw"
+                  >PARTITION BY</span
+                >
+                department_id) <span class="kw">AS</span> dept_avg
+                <span class="kw">FROM</span> <span class="tbl">Employee</span> )
+                <span class="kw">AS</span> t
+                <span class="kw">WHERE</span> salary > dept_avg;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                Window function is more efficient — it calculates the average
+                once per partition and adds it to every row. Correlated subquery
+                recalculates for each row (O(n²) vs O(n)). Show the window
+                function approach to impress.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 7. SAME SALARY EMPLOYEES ============ -->
+        <section class="concept" id="same-salary">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Employees with Same Salary</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              Self-join employees table on salary, exclude matching the same row
+              (e1.id != e2.id).
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Self Join</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Find pairs of employees with same salary</span
+                >
+                <span class="kw">SELECT DISTINCT</span> e1.name, e1.salary
+                <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e1
+                <span class="kw">INNER JOIN</span>
+                <span class="tbl">Employee</span> e2
+                <span class="kw">ON</span> e1.salary = e2.salary
+                <span class="kw">AND</span> e1.id != e2.id;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Using Subquery</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Alternative: find salaries that appear more than
+                  once</span
+                >
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> salary
+                <span class="kw">IN</span> (
+                <span class="kw">SELECT</span> salary
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">GROUP BY</span> salary
+                <span class="kw">HAVING COUNT</span>(*) >
+                <span class="num">1</span> );
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8. SELF JOIN - MANAGER ============ -->
+        <section class="concept" id="self-join">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Employee & Manager (Self Join)</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="badge badge-important">Classic</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Self-join the Employee table to itself — join employee's
+              manager_id to manager's id. This is the textbook self-join use
+              case.
+            </div>
+
+            <div class="sample-data">
+              <h5>Sample Employee Table</h5>
+              <table class="sample-table">
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>manager_id</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>John (CEO)</td>
+                  <td>NULL</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Jane</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Bob</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Alice</td>
+                  <td>2</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Employee with Manager Name</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> e.name
+                <span class="kw">AS</span> employee_name, m.name
+                <span class="kw">AS</span> manager_name
+                <span class="kw">FROM</span> <span class="tbl">Employee</span> e
+                <span class="kw">LEFT JOIN</span>
+                <span class="tbl">Employee</span> m
+                <span class="kw">ON</span> e.manager_id = m.id;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  Use <strong>LEFT JOIN</strong> to include employees without
+                  managers (like CEO)
+                </li>
+                <li>
+                  Use <strong>INNER JOIN</strong> if you only want employees WHO
+                  HAVE managers
+                </li>
+                <li>
+                  The same table is used twice with different aliases (e for
+                  employee, m for manager)
+                </li>
+              </ul>
+            </div>
+
+            <div class="interview-q">
+              <h4>Follow-up Questions</h4>
+              <details>
+                <summary>
+                  Find employees who earn more than their manager?
+                </summary>
+                <div class="ans">
+                  <pre
+                    style="
+                      background: var(--code-bg);
+                      color: #e4e4e7;
+                      padding: 0.8rem;
+                      border-radius: 6px;
+                      font-size: 0.82rem;
+                      overflow-x: auto;
+                    "
+                  >
+SELECT e.name AS employee, e.salary AS emp_salary,
+       m.name AS manager, m.salary AS mgr_salary
+FROM Employee e
+INNER JOIN Employee m ON e.manager_id = m.id
+WHERE e.salary > m.salary;</pre
+                  >
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 9. HAVING COUNT ============ -->
+        <section class="concept" id="having-count">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Departments with 5+ Employees</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              GROUP BY department, filter with HAVING COUNT(*) >= 5. Remember:
+              WHERE filters rows BEFORE grouping, HAVING filters groups AFTER.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> department_id,
+                <span class="kw">COUNT</span>(*)
+                <span class="kw">AS</span> emp_count
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="kw">GROUP BY</span> department_id
+                <span class="kw">HAVING COUNT</span>(*) >=
+                <span class="num">5</span>;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — With Department Name</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> d.name,
+                <span class="kw">COUNT</span>(e.id)
+                <span class="kw">AS</span> emp_count
+                <span class="kw">FROM</span>
+                <span class="tbl">Department</span> d
+                <span class="kw">INNER JOIN</span>
+                <span class="tbl">Employee</span> e
+                <span class="kw">ON</span> d.id = e.department_id
+                <span class="kw">GROUP BY</span> d.id, d.name
+                <span class="kw">HAVING COUNT</span>(e.id) >=
+                <span class="num">5</span>;
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 10. CUSTOMERS NO ORDERS ============ -->
+        <section class="concept" id="no-orders">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Customers Who Never Ordered</h2>
+              <span class="badge badge-query">Query</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              LEFT JOIN customers to orders, filter WHERE order_id IS NULL. Or
+              use NOT EXISTS / NOT IN with subquery.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — LEFT JOIN + IS NULL (Best)</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> c.name
+                <span class="kw">AS</span> Customers
+                <span class="kw">FROM</span>
+                <span class="tbl">Customers</span> c
+                <span class="kw">LEFT JOIN</span>
+                <span class="tbl">Orders</span> o
+                <span class="kw">ON</span> c.id = o.customer_id
+                <span class="kw">WHERE</span> o.id
+                <span class="kw">IS NULL</span>;
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — NOT EXISTS</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> name
+                <span class="kw">AS</span> Customers
+                <span class="kw">FROM</span>
+                <span class="tbl">Customers</span> c
+                <span class="kw">WHERE NOT EXISTS</span> (
+                <span class="kw">SELECT</span> <span class="num">1</span>
+                <span class="kw">FROM</span> <span class="tbl">Orders</span> o
+                <span class="kw">WHERE</span> o.customer_id = c.id );
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — NOT IN</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">SELECT</span> name
+                <span class="kw">AS</span> Customers
+                <span class="kw">FROM</span> <span class="tbl">Customers</span>
+                <span class="kw">WHERE</span> id
+                <span class="kw">NOT IN</span> (
+                <span class="kw">SELECT</span> customer_id
+                <span class="kw">FROM</span> <span class="tbl">Orders</span>
+                <span class="kw">WHERE</span> customer_id
+                <span class="kw">IS NOT NULL</span> );
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                <strong>NOT IN with NULLs:</strong> If the subquery returns any
+                NULL values, NOT IN returns no rows! Always add
+                <code>WHERE column IS NOT NULL</code> inside the subquery, or
+                use NOT EXISTS which handles NULLs correctly.
+              </p>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                LEFT JOIN + IS NULL is typically fastest and most readable. NOT
+                EXISTS is also efficient and NULL-safe. NOT IN is trickiest due
+                to NULL behavior. Know all three — interviewers may ask why you
+                chose one over another.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 11. DELETE vs DROP vs TRUNCATE ============ -->
+        <section class="concept" id="del-drop-trunc">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>DELETE vs DROP vs TRUNCATE</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="badge badge-important">Most Asked</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              DELETE removes rows (can use WHERE, logged, slow). TRUNCATE
+              removes all rows (fast, minimal logging). DROP removes the entire
+              table structure.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>DELETE</th>
+                <th>TRUNCATE</th>
+                <th>DROP</th>
+              </tr>
+              <tr>
+                <td><strong>What it removes</strong></td>
+                <td>Specific rows (or all)</td>
+                <td>All rows only</td>
+                <td>Entire table + structure</td>
+              </tr>
+              <tr>
+                <td><strong>WHERE clause</strong></td>
+                <td class="yes">✓ Yes</td>
+                <td class="no">✗ No</td>
+                <td class="no">✗ No</td>
+              </tr>
+              <tr>
+                <td><strong>Rollback</strong></td>
+                <td class="yes">✓ Yes (logged)</td>
+                <td class="no">✗ No (most DBs)</td>
+                <td class="no">✗ No</td>
+              </tr>
+              <tr>
+                <td><strong>Speed</strong></td>
+                <td>Slow (row by row)</td>
+                <td>Fast (deallocate pages)</td>
+                <td>Fast</td>
+              </tr>
+              <tr>
+                <td><strong>Identity/Auto-increment</strong></td>
+                <td>Keeps counter</td>
+                <td>Resets to seed</td>
+                <td>N/A</td>
+              </tr>
+              <tr>
+                <td><strong>Triggers fire</strong></td>
+                <td class="yes">✓ Yes</td>
+                <td class="no">✗ No</td>
+                <td class="no">✗ No</td>
+              </tr>
+              <tr>
+                <td><strong>Type</strong></td>
+                <td>DML</td>
+                <td>DDL</td>
+                <td>DDL</td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Examples</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- DELETE: Remove specific rows</span>
+                <span class="kw">DELETE FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> salary <
+                <span class="num">30000</span>;
+
+                <span class="cm"
+                  >-- TRUNCATE: Remove all rows, keep structure</span
+                >
+                <span class="kw">TRUNCATE TABLE</span>
+                <span class="tbl">Employee</span>;
+
+                <span class="cm">-- DROP: Remove entire table</span>
+                <span class="kw">DROP TABLE</span>
+                <span class="tbl">Employee</span>;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  <strong>DELETE</strong> is like erasing text — slow but
+                  recoverable
+                </li>
+                <li>
+                  <strong>TRUNCATE</strong> is like getting a new blank sheet —
+                  fast, keeps the paper
+                </li>
+                <li>
+                  <strong>DROP</strong> is like throwing away the entire
+                  notebook
+                </li>
+                <li>TRUNCATE resets auto-increment; DELETE doesn't</li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Mention that <strong>TRUNCATE is DDL</strong> (Data Definition
+                Language) despite looking like DML. This means it causes an
+                implicit COMMIT in most databases. Also, TRUNCATE requires ALTER
+                permission on the table, not just DELETE permission. These
+                details show deep understanding.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 12. WHERE vs HAVING ============ -->
+        <section class="concept" id="where-having">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>WHERE vs HAVING</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              WHERE filters rows BEFORE grouping. HAVING filters groups AFTER
+              aggregation. You can't use aggregate functions in WHERE.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>WHERE</th>
+                <th>HAVING</th>
+              </tr>
+              <tr>
+                <td><strong>When applied</strong></td>
+                <td>Before GROUP BY</td>
+                <td>After GROUP BY</td>
+              </tr>
+              <tr>
+                <td><strong>Aggregate functions</strong></td>
+                <td class="no">✗ Cannot use</td>
+                <td class="yes">✓ Can use</td>
+              </tr>
+              <tr>
+                <td><strong>Works without GROUP BY</strong></td>
+                <td class="yes">✓ Yes</td>
+                <td>Technically yes, but rarely useful</td>
+              </tr>
+              <tr>
+                <td><strong>Purpose</strong></td>
+                <td>Filter individual rows</td>
+                <td>Filter grouped results</td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Both Used Together</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- WHERE filters rows first, then GROUP BY, then HAVING
+                  filters groups</span
+                >
+                <span class="kw">SELECT</span> department_id,
+                <span class="kw">AVG</span>(salary)
+                <span class="kw">AS</span> avg_sal <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> status =
+                <span class="str">'active'</span>
+                <span class="cm">-- Filter rows FIRST</span>
+                <span class="kw">GROUP BY</span> department_id
+                <span class="kw">HAVING AVG</span>(salary) >
+                <span class="num">50000</span>;
+                <span class="cm">-- Filter groups AFTER</span>
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                SQL Execution Order:
+                <strong
+                  >FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</strong
+                >. This is why WHERE can't use aliases defined in SELECT, and
+                why HAVING can use aggregate functions (it runs after GROUP BY).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 13. INNER vs LEFT JOIN ============ -->
+        <section class="concept" id="joins">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>INNER JOIN vs LEFT JOIN</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="badge badge-important">Visual</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              INNER JOIN returns only matching rows from both tables. LEFT JOIN
+              returns all rows from left table + matching rows from right (NULLs
+              if no match).
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 550 160" xmlns="http://www.w3.org/2000/svg">
+                <!-- INNER JOIN -->
+                <text
+                  x="90"
+                  y="20"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  INNER JOIN
+                </text>
+                <circle
+                  cx="65"
+                  cy="85"
+                  r="45"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="115"
+                  cy="85"
+                  r="45"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <ellipse
+                  cx="90"
+                  cy="85"
+                  rx="20"
+                  ry="35"
+                  fill="var(--gold)"
+                  opacity=".6"
+                />
+                <text
+                  x="40"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  A
+                </text>
+                <text
+                  x="140"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  B
+                </text>
+                <text
+                  x="90"
+                  y="145"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  Only matching rows
+                </text>
+
+                <!-- LEFT JOIN -->
+                <text
+                  x="280"
+                  y="20"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  LEFT JOIN
+                </text>
+                <circle
+                  cx="255"
+                  cy="85"
+                  r="45"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  opacity=".4"
+                />
+                <circle
+                  cx="305"
+                  cy="85"
+                  r="45"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="2"
+                />
+                <text
+                  x="230"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  A
+                </text>
+                <text
+                  x="330"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  B
+                </text>
+                <text
+                  x="280"
+                  y="145"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  All from A + matches from B
+                </text>
+
+                <!-- RIGHT JOIN -->
+                <text
+                  x="470"
+                  y="20"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="11"
+                >
+                  RIGHT JOIN
+                </text>
+                <circle
+                  cx="445"
+                  cy="85"
+                  r="45"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="495"
+                  cy="85"
+                  r="45"
+                  fill="var(--gold)"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  opacity=".4"
+                />
+                <text
+                  x="420"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  A
+                </text>
+                <text
+                  x="520"
+                  y="88"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                >
+                  B
+                </text>
+                <text
+                  x="470"
+                  y="145"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="9"
+                >
+                  All from B + matches from A
+                </text>
+              </svg>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Examples</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- INNER JOIN: Only employees with departments</span
+                >
+                <span class="kw">SELECT</span> e.name, d.name
+                <span class="kw">AS</span> dept <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e
+                <span class="kw">INNER JOIN</span>
+                <span class="tbl">Department</span> d
+                <span class="kw">ON</span> e.dept_id = d.id;
+
+                <span class="cm"
+                  >-- LEFT JOIN: All employees, even without department</span
+                >
+                <span class="kw">SELECT</span> e.name, d.name
+                <span class="kw">AS</span> dept <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e
+                <span class="kw">LEFT JOIN</span>
+                <span class="tbl">Department</span> d
+                <span class="kw">ON</span> e.dept_id = d.id;
+              </div>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Join Type</th>
+                <th>Returns</th>
+                <th>NULLs</th>
+              </tr>
+              <tr>
+                <td><code>INNER JOIN</code></td>
+                <td>Only matching rows from both</td>
+                <td>No NULLs from join</td>
+              </tr>
+              <tr>
+                <td><code>LEFT JOIN</code></td>
+                <td>All from left + matching from right</td>
+                <td>NULLs for non-matching right</td>
+              </tr>
+              <tr>
+                <td><code>RIGHT JOIN</code></td>
+                <td>All from right + matching from left</td>
+                <td>NULLs for non-matching left</td>
+              </tr>
+              <tr>
+                <td><code>FULL OUTER JOIN</code></td>
+                <td>All from both tables</td>
+                <td>NULLs on both sides where no match</td>
+              </tr>
+              <tr>
+                <td><code>CROSS JOIN</code></td>
+                <td>Cartesian product (m × n rows)</td>
+                <td>No condition, every combination</td>
+              </tr>
+            </table>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  LEFT JOIN is used to find "missing" records (customers with no
+                  orders)
+                </li>
+                <li>INNER JOIN is default when you just write JOIN</li>
+                <li>
+                  You can convert any RIGHT JOIN to LEFT JOIN by swapping table
+                  order
+                </li>
+                <li>
+                  FULL OUTER JOIN is not supported in MySQL — use UNION of LEFT
+                  and RIGHT
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 14. NORMALIZATION ============ -->
+        <section class="concept" id="normalization">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Normalization & Normal Forms</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Theory</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="one-liner">
+              Normalization is organizing data to reduce redundancy and improve
+              integrity. Main forms: 1NF (atomic values), 2NF (no partial
+              dependencies), 3NF (no transitive dependencies), BCNF (stricter
+              3NF).
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>Why normalize?</strong> Without normalization, you get:
+                (1) Update anomalies — change one place, forget another. (2)
+                Insert anomalies — can't add data without unrelated data. (3)
+                Delete anomalies — deleting one thing loses other info.
+              </p>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Normal Form</th>
+                <th>Rule</th>
+                <th>Simple Explanation</th>
+              </tr>
+              <tr>
+                <td><strong>1NF</strong></td>
+                <td>Atomic values, no repeating groups</td>
+                <td>Each cell has ONE value. No arrays/lists in a column.</td>
+              </tr>
+              <tr>
+                <td><strong>2NF</strong></td>
+                <td>1NF + No partial dependencies</td>
+                <td>
+                  Every non-key column depends on the WHOLE primary key (matters
+                  for composite keys).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>3NF</strong></td>
+                <td>2NF + No transitive dependencies</td>
+                <td>
+                  Non-key columns don't depend on other non-key columns. A→B→C
+                  is bad.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>BCNF</strong></td>
+                <td>For every X→Y, X is a superkey</td>
+                <td>
+                  Stricter 3NF. Every determinant must be a candidate key.
+                </td>
+              </tr>
+            </table>
+
+            <div class="key-insight">
+              <h4>Quick Memory Trick</h4>
+              <p>
+                "The key, the whole key, and nothing but the key, so help me
+                Codd."
+              </p>
+              <ul>
+                <li>
+                  <strong>1NF:</strong> "The key" — must have a key, atomic
+                  values
+                </li>
+                <li>
+                  <strong>2NF:</strong> "The whole key" — depend on ALL of
+                  composite key
+                </li>
+                <li>
+                  <strong>3NF:</strong> "Nothing but the key" — no transitive
+                  deps through non-keys
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know when to <strong>denormalize</strong>: in read-heavy systems
+                (analytics, reporting), joins are expensive. Duplicating data
+                trades storage for speed. Data warehouses often use denormalized
+                star schemas. Real-world systems balance normalization
+                (integrity) with denormalization (performance).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 15. PRIMARY vs FOREIGN KEY ============ -->
+        <section class="concept" id="keys">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>PRIMARY KEY vs FOREIGN KEY</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              PRIMARY KEY uniquely identifies each row in its table (unique +
+              not null). FOREIGN KEY references a primary key in another table
+              to establish relationships.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>PRIMARY KEY</th>
+                <th>FOREIGN KEY</th>
+              </tr>
+              <tr>
+                <td><strong>Purpose</strong></td>
+                <td>Uniquely identify rows</td>
+                <td>Create relationship between tables</td>
+              </tr>
+              <tr>
+                <td><strong>Uniqueness</strong></td>
+                <td class="yes">Must be unique</td>
+                <td>Can have duplicates</td>
+              </tr>
+              <tr>
+                <td><strong>NULL values</strong></td>
+                <td class="no">Not allowed</td>
+                <td class="yes">Allowed (optional relationship)</td>
+              </tr>
+              <tr>
+                <td><strong>Count per table</strong></td>
+                <td>Only 1</td>
+                <td>Multiple allowed</td>
+              </tr>
+              <tr>
+                <td><strong>Auto-creates index</strong></td>
+                <td class="yes">Yes (clustered in most DBs)</td>
+                <td class="no">No (but recommended)</td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">CREATE TABLE</span>
+                <span class="tbl">Department</span> ( id
+                <span class="kw">INT PRIMARY KEY</span>, name
+                <span class="kw">VARCHAR</span>(<span class="num">100</span>) );
+
+                <span class="kw">CREATE TABLE</span>
+                <span class="tbl">Employee</span> ( id
+                <span class="kw">INT PRIMARY KEY</span>, name
+                <span class="kw">VARCHAR</span>(<span class="num">100</span>),
+                dept_id <span class="kw">INT</span>,
+                <span class="kw">FOREIGN KEY</span> (dept_id)
+                <span class="kw">REFERENCES</span>
+                <span class="tbl">Department</span>(id) );
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                Foreign keys enforce <strong>referential integrity</strong>: you
+                can't insert an employee with a dept_id that doesn't exist in
+                Department. You can't delete a department that has employees (or
+                use ON DELETE CASCADE to auto-delete them).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 16. INDEXING ============ -->
+        <section class="concept" id="indexing">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Indexing & Why It's Used</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Performance</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Index is a data structure (usually B-tree) that speeds up data
+              retrieval. Like a book's index — instead of reading every page,
+              jump directly to the right one.
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>Without index:</strong> Database does full table scan —
+                reads EVERY row to find matches. O(n).<br />
+                <strong>With index:</strong> Database uses the index structure
+                to jump directly to relevant rows. O(log n).
+              </p>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Creating Indexes</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Single column index</span>
+                <span class="kw">CREATE INDEX</span> idx_salary
+                <span class="kw">ON</span>
+                <span class="tbl">Employee</span>(salary);
+
+                <span class="cm">-- Composite index (multiple columns)</span>
+                <span class="kw">CREATE INDEX</span> idx_dept_sal
+                <span class="kw">ON</span>
+                <span class="tbl">Employee</span>(department_id, salary);
+
+                <span class="cm">-- Unique index</span>
+                <span class="kw">CREATE UNIQUE INDEX</span> idx_email
+                <span class="kw">ON</span>
+                <span class="tbl">Employee</span>(email);
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  <strong>Index speeds up:</strong> SELECT, WHERE, JOIN, ORDER
+                  BY on indexed columns
+                </li>
+                <li>
+                  <strong>Index slows down:</strong> INSERT, UPDATE, DELETE
+                  (must update index too)
+                </li>
+                <li>
+                  <strong>When to index:</strong> Frequently queried columns,
+                  JOIN columns, WHERE conditions
+                </li>
+                <li>
+                  <strong>When NOT to:</strong> Small tables, frequently updated
+                  columns, low-cardinality columns
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <h4>Common Mistake</h4>
+              <p>
+                "More indexes = better" is wrong. Each index consumes storage
+                and slows down writes. Also, composite index order matters:
+                <code>INDEX(A, B)</code> helps queries on A or (A and B), but
+                NOT queries on just B. Leftmost prefix rule!
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 17. UNION vs UNION ALL ============ -->
+        <section class="concept" id="union">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>UNION vs UNION ALL</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="read-time">2 min</span>
+            </div>
+
+            <div class="one-liner">
+              UNION combines results and removes duplicates (slower). UNION ALL
+              keeps all rows including duplicates (faster). Use UNION ALL unless
+              you specifically need deduplication.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>UNION</th>
+                <th>UNION ALL</th>
+              </tr>
+              <tr>
+                <td><strong>Duplicates</strong></td>
+                <td>Removes duplicates</td>
+                <td>Keeps all rows</td>
+              </tr>
+              <tr>
+                <td><strong>Performance</strong></td>
+                <td>Slower (must sort/compare)</td>
+                <td>Faster (just appends)</td>
+              </tr>
+              <tr>
+                <td><strong>Use when</strong></td>
+                <td>You need distinct results</td>
+                <td>Duplicates are OK or impossible</td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- UNION: Removes duplicate names</span>
+                <span class="kw">SELECT</span> name <span class="kw">FROM</span>
+                <span class="tbl">Employees</span>
+                <span class="kw">UNION</span>
+                <span class="kw">SELECT</span> name <span class="kw">FROM</span>
+                <span class="tbl">Customers</span>;
+
+                <span class="cm">-- UNION ALL: Keeps all rows (faster)</span>
+                <span class="kw">SELECT</span> name <span class="kw">FROM</span>
+                <span class="tbl">Employees</span>
+                <span class="kw">UNION ALL</span>
+                <span class="kw">SELECT</span> name <span class="kw">FROM</span>
+                <span class="tbl">Customers</span>;
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                Both UNION types require: same number of columns, compatible
+                data types in corresponding columns. Column names come from the
+                FIRST query. ORDER BY applies to the final combined result (put
+                at the end).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 18. ACID PROPERTIES ============ -->
+        <section class="concept" id="acid">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>ACID Properties</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="badge badge-important">Core Theory</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              ACID guarantees reliable database transactions: Atomicity (all or
+              nothing), Consistency (valid state), Isolation (concurrent
+              transactions don't interfere), Durability (committed = permanent).
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Property</th>
+                <th>Meaning</th>
+                <th>Example</th>
+              </tr>
+              <tr>
+                <td><strong>Atomicity</strong></td>
+                <td>Transaction is all-or-nothing</td>
+                <td>
+                  Bank transfer: debit AND credit both happen, or neither does
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Consistency</strong></td>
+                <td>DB moves from one valid state to another</td>
+                <td>Account balance can't go negative if rules forbid it</td>
+              </tr>
+              <tr>
+                <td><strong>Isolation</strong></td>
+                <td>Concurrent transactions don't affect each other</td>
+                <td>
+                  Two transfers happening simultaneously get correct results
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Durability</strong></td>
+                <td>Committed data survives crashes</td>
+                <td>
+                  After "transfer successful," data persists even if power fails
+                </td>
+              </tr>
+            </table>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Transaction Example</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="kw">BEGIN TRANSACTION</span>;
+                <span class="kw">UPDATE</span> <span class="tbl">Account</span>
+                <span class="kw">SET</span> balance = balance -
+                <span class="num">100</span> <span class="kw">WHERE</span> id =
+                <span class="num">1</span>; <span class="kw">UPDATE</span>
+                <span class="tbl">Account</span>
+                <span class="kw">SET</span> balance = balance +
+                <span class="num">100</span> <span class="kw">WHERE</span> id =
+                <span class="num">2</span>; <span class="kw">COMMIT</span>;
+                <span class="cm"
+                  >-- Both happen, or if error, both rollback</span
+                >
+              </div>
+            </div>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  <strong>Atomicity:</strong> Implemented via transaction logs
+                  (undo logs)
+                </li>
+                <li>
+                  <strong>Consistency:</strong> Enforced by constraints,
+                  triggers, application logic
+                </li>
+                <li>
+                  <strong>Isolation:</strong> Implemented via locks or MVCC
+                  (multi-version concurrency control)
+                </li>
+                <li>
+                  <strong>Durability:</strong> Implemented via write-ahead
+                  logging (WAL)
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Know <strong>isolation levels</strong>: Read Uncommitted (dirty
+                reads possible) → Read Committed → Repeatable Read →
+                Serializable (strongest). Higher isolation = fewer anomalies but
+                worse performance. MySQL InnoDB default is Repeatable Read.
+                PostgreSQL default is Read Committed.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 19. CLUSTERED vs NON-CLUSTERED INDEX ============ -->
+        <section class="concept" id="clustered">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Clustered vs Non-Clustered Index</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Clustered index determines physical row order (table IS the index)
+              — only one per table. Non-clustered index is a separate structure
+              with pointers to rows — multiple allowed.
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Clustered Index</th>
+                <th>Non-Clustered Index</th>
+              </tr>
+              <tr>
+                <td><strong>Physical order</strong></td>
+                <td>Data rows sorted by index</td>
+                <td>Separate structure, data unsorted</td>
+              </tr>
+              <tr>
+                <td><strong>Count per table</strong></td>
+                <td>Only 1</td>
+                <td>Multiple (up to 999 in SQL Server)</td>
+              </tr>
+              <tr>
+                <td><strong>Speed for range queries</strong></td>
+                <td>Faster (data is contiguous)</td>
+                <td>Slower (must follow pointers)</td>
+              </tr>
+              <tr>
+                <td><strong>Storage</strong></td>
+                <td>No extra storage</td>
+                <td>Extra storage for index structure</td>
+              </tr>
+              <tr>
+                <td><strong>Default on</strong></td>
+                <td>PRIMARY KEY</td>
+                <td>Other indexes</td>
+              </tr>
+            </table>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <p>
+                Think of clustered index like a phone book sorted by last name —
+                the data IS sorted. Non-clustered is like a book's index at the
+                back — it tells you page numbers, but you still need to flip to
+                those pages. In MySQL InnoDB, the primary key is always the
+                clustered index. In PostgreSQL, there's no automatic clustered
+                index.
+              </p>
+            </div>
+
+            <div class="edge">
+              <h4>Competitive Edge</h4>
+              <p>
+                Non-clustered indexes in InnoDB store the primary key value (not
+                row pointer). So if your primary key is large (like UUID), ALL
+                your indexes become larger. This is why auto-increment INT is
+                often preferred for primary keys — smaller indexes, better
+                performance.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 20. SUBQUERY vs CORRELATED SUBQUERY ============ -->
+        <section class="concept" id="subquery">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Subquery vs Correlated Subquery</h2>
+              <span class="badge badge-diff">Difference</span>
+              <span class="badge badge-important">Performance</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="one-liner">
+              Regular subquery runs once, independently. Correlated subquery
+              references outer query, runs once PER ROW of outer query —
+              potentially much slower.
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Regular Subquery</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm">-- Subquery runs ONCE, returns a value</span>
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span>
+                <span class="tbl">Employee</span>
+                <span class="kw">WHERE</span> salary > (
+                <span class="kw">SELECT AVG</span>(salary)
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                <span class="cm">-- Independent, runs once</span> );
+              </div>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Correlated Subquery</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Subquery references outer query, runs for EACH row</span
+                >
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e1
+                <span class="kw">WHERE</span> salary > (
+                <span class="kw">SELECT AVG</span>(salary)
+                <span class="kw">FROM</span>
+                <span class="tbl">Employee</span> e2
+                <span class="kw">WHERE</span> e2.department_id =
+                e1.department_id <span class="cm">-- References e1!</span> );
+              </div>
+            </div>
+
+            <table class="compare-table">
+              <tr>
+                <th>Aspect</th>
+                <th>Regular Subquery</th>
+                <th>Correlated Subquery</th>
+              </tr>
+              <tr>
+                <td><strong>References outer query</strong></td>
+                <td class="no">✗ No</td>
+                <td class="yes">✓ Yes</td>
+              </tr>
+              <tr>
+                <td><strong>Execution</strong></td>
+                <td>Once</td>
+                <td>Once per outer row</td>
+              </tr>
+              <tr>
+                <td><strong>Performance</strong></td>
+                <td>Usually better</td>
+                <td>Can be slow (O(n²))</td>
+              </tr>
+              <tr>
+                <td><strong>Rewrite as</strong></td>
+                <td>JOIN (sometimes)</td>
+                <td>Window function (often better)</td>
+              </tr>
+            </table>
+
+            <div class="key-insight">
+              <h4>Key Insight</h4>
+              <ul>
+                <li>
+                  Correlated subquery can often be rewritten as JOIN or window
+                  function — usually faster
+                </li>
+                <li>
+                  EXISTS with correlated subquery is an exception — can be very
+                  efficient (stops at first match)
+                </li>
+                <li>
+                  If you see table alias from outer query used in subquery, it's
+                  correlated
+                </li>
+              </ul>
+            </div>
+
+            <div class="code-wrap">
+              <div class="code-header">
+                <span class="code-lang">SQL — Better: Window Function</span
+                ><button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <div class="code-block">
+                <span class="cm"
+                  >-- Same result as correlated subquery, but faster</span
+                >
+                <span class="kw">SELECT</span> * <span class="kw">FROM</span> (
+                <span class="kw">SELECT</span> *,
+                <span class="fn">AVG</span>(salary)
+                <span class="kw">OVER</span> (<span class="kw"
+                  >PARTITION BY</span
+                >
+                department_id) <span class="kw">AS</span> dept_avg
+                <span class="kw">FROM</span> <span class="tbl">Employee</span>
+                ) t
+                <span class="kw">WHERE</span> salary > dept_avg;
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle("focus-mode");
+        document.getElementById("focusBtn").textContent = sb.classList.contains(
+          "hidden",
+        )
+          ? "Expand"
+          : "Focus";
+      }
+
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      function copyCode(btn) {
+        const code = btn
+          .closest(".code-wrap")
+          .querySelector(".code-block").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Expand";
+          }
+        });
+      });
+
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

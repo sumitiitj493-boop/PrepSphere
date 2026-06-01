@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C++ Language Core — Interview Mastery Notes</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f8fc;--surface:#fff;--text:#1a1a2e;--text2:#5a5a7a;--border:#e4e6ef;
+  --gold:#F5A623;--gold2:#d4890a;--goldLight:rgba(245,166,35,.1);
+  --code-bg:#1e1e2e;--card-bg:#fff;--nav-bg:rgba(255,255,255,.92);
+  --shadow:0 4px 24px rgba(0,0,0,.06);
+  --green:#10b981;--greenBg:rgba(16,185,129,.1);
+  --amber:#f59e0b;--amberBg:rgba(245,158,11,.1);
+  --red:#ef4444;--redBg:rgba(239,68,68,.08);
+  --blue:#3b82f6;--blueBg:rgba(59,130,246,.1);
+  --purple:#8b5cf6;--purpleBg:rgba(139,92,246,.1);
+  --cyan:#06b6d4;--cyanBg:rgba(6,182,212,.1);
+  --sidebar-w:270px
+}
+[data-theme="dark"]{
+  --bg:#0a0a0f;--surface:#12121a;--text:#e8e8ed;--text2:#9ca3af;--border:#252530;
+  --card-bg:#16161f;--nav-bg:rgba(10,10,15,.95);--shadow:0 4px 24px rgba(0,0,0,.5);
+  --goldLight:rgba(245,166,35,.08);--greenBg:rgba(16,185,129,.08);
+  --amberBg:rgba(245,158,11,.08);--redBg:rgba(239,68,68,.06);
+  --blueBg:rgba(59,130,246,.08);--purpleBg:rgba(139,92,246,.06);--cyanBg:rgba(6,182,212,.06)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;transition:background .3s,color .3s}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:var(--gold2)}
+
+.navbar{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;height:60px;gap:1rem}
+.nav-brand{font-weight:900;font-size:1.1rem;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.nav-progress{flex:1;max-width:180px;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+.nav-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .25s}
+.nav-links{display:flex;gap:.35rem;overflow-x:auto;flex:1;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{font-size:.68rem;font-weight:600;padding:5px 9px;border-radius:99px;white-space:nowrap;color:var(--text2);background:var(--surface);border:1px solid var(--border);transition:all .2s}
+.nav-links a:hover,.nav-links a.active{background:var(--goldLight);color:var(--gold);border-color:var(--gold)}
+.nav-btns{display:flex;gap:.5rem}
+.nav-btns button{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text);transition:all .2s}
+.nav-btns button:hover{border-color:var(--gold);color:var(--gold);background:var(--goldLight)}
+
+.layout{display:flex;min-height:calc(100vh - 60px)}
+.sidebar{width:var(--sidebar-w);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);background:var(--surface);padding:1.5rem 1rem;transition:all .3s;scrollbar-width:thin}
+.sidebar.hidden{margin-left:calc(-1 * var(--sidebar-w));opacity:0;pointer-events:none}
+.sidebar-title{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin:1.2rem 0 .6rem;font-weight:800;display:flex;align-items:center;gap:.5rem}
+.sidebar-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.sidebar a{display:flex;align-items:center;gap:.6rem;font-size:.78rem;padding:7px 10px;border-radius:8px;color:var(--text2);margin-bottom:2px;transition:all .15s;border-left:3px solid transparent}
+.sidebar a:hover{background:var(--goldLight);color:var(--text);padding-left:13px}
+.sidebar a.active{background:var(--goldLight);color:var(--gold);border-left-color:var(--gold);font-weight:600}
+.sidebar .num{font-size:.63rem;font-weight:700;color:var(--gold);background:var(--goldLight);min-width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.main{flex:1;max-width:950px;margin:0 auto;padding:2.5rem 2rem 5rem}
+body.focus-mode .main{max-width:1050px}
+
+.topic-header{text-align:center;padding:1rem 0 2.5rem}
+.topic-header h1{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.topic-header p{color:var(--text2);font-size:1rem;max-width:600px;margin:0 auto}
+
+.concept{margin-bottom:3rem;border-radius:16px;background:var(--card-bg);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;transition:all .3s}
+.concept:hover{box-shadow:0 8px 32px rgba(245,166,35,.12);border-color:rgba(245,166,35,.3)}
+.concept-accent{height:4px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.ci{padding:2rem 2.2rem}
+.concept-header{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem}
+.concept-header h2{font-size:1.3rem;font-weight:800}
+.badge{font-size:.63rem;padding:3px 11px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-core{background:var(--blueBg);color:var(--blue)}
+.badge-important{background:var(--redBg);color:var(--red)}
+.badge-concept{background:var(--purpleBg);color:var(--purple)}
+.read-time{font-size:.73rem;color:var(--text2);margin-left:auto;background:var(--surface);padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
+
+.one-liner{background:linear-gradient(135deg,var(--goldLight),transparent);border-left:4px solid var(--gold);padding:1rem 1.3rem;margin-bottom:1.5rem;border-radius:0 12px 12px 0;font-weight:600;font-size:1rem;line-height:1.6}
+
+.explanation p{margin-bottom:1rem;font-size:.94rem}
+.explanation strong{color:var(--gold)}
+
+.key-points{background:var(--goldLight);border:1px solid rgba(245,166,35,.2);border-radius:12px;padding:1.2rem 1.5rem;margin:1.5rem 0}
+.key-points h4{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.6rem;font-weight:800}
+.key-points ul{list-style:none}
+.key-points li{position:relative;padding-left:1.4rem;margin-bottom:.5rem;font-size:.9rem;line-height:1.6}
+.key-points li::before{content:"✦";position:absolute;left:0;color:var(--gold);font-size:.7rem}
+
+.gotcha{border:1px solid var(--red);border-left:4px solid var(--red);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--redBg)}
+.gotcha h4{color:var(--red);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:800}
+.gotcha p{font-size:.9rem;line-height:1.6}
+
+.edge{border:1px solid var(--gold);border-radius:12px;padding:1.2rem 1.5rem;margin:1.5rem 0;background:linear-gradient(135deg,var(--goldLight),transparent);position:relative;overflow:hidden}
+.edge::before{content:"★";position:absolute;top:-12px;right:-12px;font-size:4.5rem;color:var(--gold);opacity:.07}
+.edge h4{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:800}
+.edge p{font-size:.9rem;line-height:1.6}
+
+.compare-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.85rem;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.compare-table th{background:var(--goldLight);color:var(--gold);font-weight:700;text-transform:uppercase;font-size:.7rem;letter-spacing:1px;padding:12px 14px;text-align:left}
+.compare-table td{padding:10px 14px;border-top:1px solid var(--border);background:var(--surface);vertical-align:top}
+.compare-table tr:hover td{background:var(--goldLight)}
+.compare-table .yes{color:var(--green);font-weight:600}
+.compare-table .no{color:var(--red);font-weight:600}
+
+.diagram-wrap{margin:1.5rem 0;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;text-align:center}
+.diagram-wrap svg text{fill:var(--text)}
+[data-theme="dark"] .diagram-wrap svg text{fill:#e8e8ed}
+.diagram-wrap svg{max-width:100%;height:auto}
+.diagram-label{font-size:.78rem;color:var(--text2);margin-top:.8rem;font-style:italic}
+
+.interview-q{margin:1.5rem 0}
+.interview-q h4{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin-bottom:.7rem;font-weight:800}
+.interview-q details{margin-bottom:.6rem;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.interview-q summary{padding:.8rem 1.2rem;cursor:pointer;font-weight:600;font-size:.88rem;transition:all .2s;list-style:none;display:flex;align-items:center;gap:.6rem}
+.interview-q summary::-webkit-details-marker{display:none}
+.interview-q summary::before{content:"Q";font-size:.63rem;font-weight:800;background:var(--cyanBg);color:var(--cyan);padding:3px 7px;border-radius:5px}
+.interview-q summary:hover{background:var(--cyanBg)}
+.interview-q .ans{padding:1rem 1.2rem;font-size:.88rem;border-top:1px solid var(--border);line-height:1.7}
+
+.code-wrap{position:relative;margin:1.2rem 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.05)}
+.code-header{background:#2a2a3a;padding:.6rem 1.2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.06)}
+.code-lang{font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--gold);letter-spacing:1px}
+.copy-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#999;padding:4px 12px;border-radius:6px;font-size:.72rem;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:var(--gold);color:#000;border-color:var(--gold)}
+pre.code-block{
+  background:#1a1a2e;color:#d4d4d8;margin:0;
+  padding:1.5rem 1.8rem;
+  font-family:'Cascadia Code','Fira Code','JetBrains Mono',Consolas,monospace;
+  font-size:.88rem;line-height:2.15;overflow-x:auto;
+  white-space:pre;tab-size:4;letter-spacing:.3px;border:none
+}
+pre.code-block .kw{color:#c678dd;font-weight:500}
+pre.code-block .fn{color:#61afef}
+pre.code-block .str{color:#98c379}
+pre.code-block .cm{color:#6a737d;font-style:italic}
+pre.code-block .num{color:#d19a66}
+pre.code-block .type{color:#e5c07b}
+pre.code-block .pp{color:#e06c75}
+pre.code-block .op{color:#56b6c2}
+
+.btt{position:fixed;bottom:2rem;right:2rem;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 6px 20px rgba(245,166,35,.4);display:none;z-index:99;transition:all .2s}
+.btt:hover{transform:scale(1.1) translateY(-2px)}
+.quick-jump{position:fixed;bottom:2rem;left:2rem;z-index:1100}
+.jump-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;border:none;padding:10px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.15);cursor:pointer;font-weight:700}
+.jump-menu{position:absolute;bottom:56px;left:0;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:8px;padding:6px;display:none;min-width:220px;max-height:420px;overflow-y:auto}
+.jump-menu.active{display:block}
+.jump-menu a{display:block;padding:8px 10px;color:var(--text);text-decoration:none;border-radius:6px;font-size:.9rem}
+.jump-menu a:hover{background:var(--goldLight);color:var(--gold)}
+
+@media(max-width:900px){
+  .sidebar{position:fixed;left:0;top:60px;z-index:90;box-shadow:4px 0 30px rgba(0,0,0,.15)}
+  .sidebar.hidden{margin-left:calc(-1 * var(--sidebar-w))}
+  .main{padding:1.5rem 1rem 4rem}
+  .ci{padding:1.5rem 1.2rem}
+  .nav-links{display:none}
+  .topic-header h1{font-size:1.7rem}
+  .concept-header h2{font-size:1.15rem}
+}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:99px}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="nav-brand">C++ Core — Interview Prep</span>
+  <div class="nav-progress"><div class="nav-progress-bar" id="progressBar"></div></div>
+  <div class="nav-links">
+    <a href="#stack-heap">Stack/Heap</a><a href="#polymorphism">Polymorphism</a><a href="#compilation">Compilation</a><a href="#vtable">VTable</a><a href="#copy-depth">Copy Depth</a><a href="#copy-move">Copy/Move</a><a href="#smart-ptr">Smart Ptr</a><a href="#proc-thread">Process/Thread</a><a href="#mem-issues">Mem Issues</a><a href="#malloc-new">malloc vs new</a>
+  </div>
+  <div class="nav-btns">
+    <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+    <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </div>
+</nav>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-title">Memory</div>
+  <a href="#stack-heap"><span class="num">1</span>Stack vs Heap Memory</a>
+  <div class="sidebar-title">Polymorphism & Internals</div>
+  <a href="#polymorphism"><span class="num">2</span>Compile vs Runtime Poly</a>
+  <a href="#compilation"><span class="num">3</span>C++ Compilation Process</a>
+  <a href="#vtable"><span class="num">4</span>Virtual Functions & VTable</a>
+  <div class="sidebar-title">Object Lifecycle</div>
+  <a href="#copy-depth"><span class="num">5</span>Shallow vs Deep Copy</a>
+  <a href="#copy-move"><span class="num">6</span>Copy vs Move Constructor</a>
+  <a href="#smart-ptr"><span class="num">7</span>Smart Pointers</a>
+  <div class="sidebar-title">System Concepts</div>
+  <a href="#proc-thread"><span class="num">8</span>Process vs Thread</a>
+  <a href="#mem-issues"><span class="num">9</span>Memory Leak & Segfault</a>
+  <a href="#malloc-new"><span class="num">10</span>malloc/free vs new/delete</a>
+</aside>
+
+<main class="main">
+
+<div class="topic-header">
+  <h1>C++ Language Core</h1>
+  <p>Top 10 Must-Asked Questions — Master these, and C++ interviews become your comfort zone.</p>
+</div>
+
+<!-- ============ 1. STACK VS HEAP ============ -->
+<section class="concept" id="stack-heap"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Stack vs Heap Memory</h2><span class="badge badge-core">Core</span><span class="badge badge-important">Most Asked</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Stack is fast, auto-managed, limited memory for local variables (LIFO). Heap is large, manually managed, slower memory you control with new/malloc. Stack = plate stack, Heap = warehouse.</div>
+
+  <div class="explanation">
+    <p>Think of <strong>stack</strong> like a stack of plates at a restaurant. You put one plate on top, take from top. Super fast, super organized. Every time a function is called, a "stack frame" is pushed — local variables, return address, params. When function returns, frame is popped. Memory cleaned automatically.</p>
+    <p><strong>Heap</strong> is like a warehouse. Tons of space, but you manage it yourself. You request memory (<code>new</code>), you use it, and you MUST return it (<code>delete</code>). If you forget, that's a memory leak. Heap allocation is slower because the OS has to search for a free block big enough.</p>
+    <p>The critical thing interviewers want: stack has limited size (1-8 MB), grows downward, LIFO. Heap is much larger, grows upward, fragments over time. Stack is thread-local (each thread gets its own), heap is shared across threads.</p>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stack Side -->
+      <rect x="20" y="15" width="220" height="230" rx="10" fill="none" stroke="#3b82f6" stroke-width="2" opacity=".6"/>
+      <text x="130" y="38" text-anchor="middle" font-weight="bold" font-size="14" fill="#3b82f6">STACK</text>
+
+      <rect x="40" y="50" width="180" height="38" rx="6" fill="rgba(59,130,246,.12)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="130" y="74" text-anchor="middle" font-size="12" font-weight="600">main() frame</text>
+
+      <rect x="40" y="95" width="180" height="38" rx="6" fill="rgba(59,130,246,.09)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="130" y="119" text-anchor="middle" font-size="12" font-weight="600">func1() frame</text>
+
+      <rect x="40" y="140" width="180" height="38" rx="6" fill="rgba(59,130,246,.06)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="130" y="164" text-anchor="middle" font-size="12" font-weight="600">func2() frame</text>
+
+      <text x="130" y="202" text-anchor="middle" font-size="18" fill="#3b82f6">↓</text>
+      <text x="130" y="222" text-anchor="middle" font-size="10" opacity=".6">Grows Downward</text>
+      <text x="130" y="237" text-anchor="middle" font-size="9" opacity=".5">LIFO · Auto-managed · Fast</text>
+
+      <!-- Heap Side -->
+      <rect x="300" y="15" width="240" height="230" rx="10" fill="none" stroke="#10b981" stroke-width="2" opacity=".6"/>
+      <text x="420" y="38" text-anchor="middle" font-weight="bold" font-size="14" fill="#10b981">HEAP</text>
+
+      <rect x="320" y="55" width="75" height="32" rx="5" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="357" y="76" text-anchor="middle" font-size="10">obj A</text>
+
+      <rect x="420" y="55" width="100" height="32" rx="5" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="470" y="76" text-anchor="middle" font-size="10">array B</text>
+
+      <rect x="320" y="100" width="60" height="32" rx="5" fill="rgba(239,68,68,.1)" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4"/>
+      <text x="350" y="121" text-anchor="middle" font-size="9" fill="#ef4444">freed</text>
+
+      <rect x="400" y="100" width="50" height="32" rx="5" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="425" y="121" text-anchor="middle" font-size="10">obj C</text>
+
+      <rect x="470" y="100" width="50" height="32" rx="5" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="495" y="121" text-anchor="middle" font-size="10">obj D</text>
+
+      <rect x="340" y="150" width="120" height="32" rx="5" fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="400" y="171" text-anchor="middle" font-size="10">big_buffer</text>
+
+      <text x="420" y="210" text-anchor="middle" font-size="18" fill="#10b981">↑</text>
+      <text x="420" y="227" text-anchor="middle" font-size="10" opacity=".6">Grows Upward</text>
+      <text x="420" y="242" text-anchor="middle" font-size="9" opacity=".5">Fragmented · Manual · Large</text>
+    </svg>
+    <p class="diagram-label">Stack grows down, heap grows up. Stack is contiguous; heap fragments over time.</p>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li>Stack allocation = just moving stack pointer (one CPU instruction). O(1), insanely fast.</li>
+    <li>Heap allocation = OS must search free list or buddy system. Much costlier.</li>
+    <li>Stack overflow = too deep recursion or huge local arrays.</li>
+    <li>Each thread has its own stack, but ALL threads share the same heap.</li>
+    <li>Local variables → Stack. <code>new</code>/<code>malloc</code> → Heap.</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p>Returning a pointer to a local stack variable is <strong>undefined behavior</strong> — the frame is already popped! Always return heap-allocated memory or use smart pointers.</p></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>Stack allocation literally just increments/decrements the ESP/RSP register. Mention this register-level detail and interviewers will know you truly understand the machine.</p></div>
+
+  <div class="interview-q"><h4>Follow-ups</h4>
+    <details><summary>Can we increase stack size?</summary><div class="ans">Yes, via compiler flags or OS settings (e.g., <code>ulimit -s</code> on Linux). But it's fixed at thread creation time, not dynamically growable like heap.</div></details>
+    <details><summary>What happens if heap runs out?</summary><div class="ans"><code>malloc</code> returns NULL, <code>new</code> throws <code>std::bad_alloc</code>. Always check allocation results in production code.</div></details>
+  </div>
+</div></section>
+
+<!-- ============ 2. POLYMORPHISM ============ -->
+<section class="concept" id="polymorphism"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Compile-Time vs Runtime Polymorphism</h2><span class="badge badge-core">Core</span><span class="badge badge-important">Must Know</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Compile-time = decision during compilation (function overloading, templates). Runtime = decision while running (virtual functions, overriding via vtable). Compile-time is faster, runtime is more flexible.</div>
+
+  <div class="explanation">
+    <p>Polymorphism means "many forms." Same function name, different behavior. The real question is: <strong>WHEN</strong> does the compiler decide which function to call?</p>
+    <p><strong>Compile-time (Static binding):</strong> Function overloading — compiler sees argument types and picks the right function at compile time. Also templates — compiler generates code for each type. Zero runtime cost.</p>
+    <p><strong>Runtime (Dynamic binding):</strong> You have a base class pointer pointing to a derived object. Which function to call? Can't decide at compile time because actual type is known only at runtime. This uses <code>virtual</code> functions + vtable. There IS a small overhead — one pointer indirection through vtable.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Compile-Time (Overloading)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="cm">// Compiler picks which add() to call by argument types</span>
+<span class="kw">class</span> <span class="type">Calculator</span> {
+<span class="kw">public</span>:
+    <span class="type">int</span>    <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b)            { <span class="kw">return</span> a + b; }
+    <span class="type">double</span> <span class="fn">add</span>(<span class="type">double</span> a, <span class="type">double</span> b)     { <span class="kw">return</span> a + b; }
+    <span class="type">int</span>    <span class="fn">add</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c)   { <span class="kw">return</span> a + b + c; }
+};
+</pre>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Runtime (Virtual + Override)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="kw">class</span> <span class="type">Animal</span> {
+<span class="kw">public</span>:
+    <span class="kw">virtual</span> <span class="type">void</span> <span class="fn">speak</span>() {
+        cout &lt;&lt; <span class="str">"Some sound"</span> &lt;&lt; endl;
+    }
+    <span class="kw">virtual</span> ~<span class="type">Animal</span>() {}
+};
+
+<span class="kw">class</span> <span class="type">Dog</span> : <span class="kw">public</span> <span class="type">Animal</span> {
+<span class="kw">public</span>:
+    <span class="type">void</span> <span class="fn">speak</span>() <span class="kw">override</span> {
+        cout &lt;&lt; <span class="str">"Bark!"</span> &lt;&lt; endl;
+    }
+};
+
+<span class="cm">// Decided at RUNTIME — which speak()?</span>
+<span class="type">Animal</span>* a = <span class="kw">new</span> <span class="type">Dog</span>();
+a-&gt;<span class="fn">speak</span>();    <span class="cm">// Output: "Bark!" — Dog::speak() called</span>
+<span class="kw">delete</span> a;
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li>Compile-time: function overloading, operator overloading, templates (early binding)</li>
+    <li>Runtime: virtual functions, function overriding (late binding via vtable)</li>
+    <li>Without <code>virtual</code>, base pointer calls base function — no polymorphism</li>
+    <li>Compile-time = faster (no vtable lookup). Runtime = flexible, extensible</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p><strong>Overloading is NOT overriding.</strong> Overloading = same name, different params, same class. Overriding = same name, same params, parent-child classes. Mixing these up is an instant red flag.</p></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>Mention <strong>CRTP</strong> (Curiously Recurring Template Pattern) — achieves polymorphism at compile-time without virtual function overhead. Used in performance-critical systems: <code>class Dog : public Animal&lt;Dog&gt; {}</code>.</p></div>
+</div></section>
+
+<!-- ============ 3. COMPILATION ============ -->
+<section class="concept" id="compilation"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>What Happens During C++ Compilation?</h2><span class="badge badge-concept">Concept</span><span class="badge badge-important">Deep</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Source code goes through 4 stages: Preprocessing (#include, #define) → Compilation (syntax check, generate assembly) → Assembly (.s → .o machine code) → Linking (combine .o files, resolve symbols → executable).</div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 580 110" xmlns="http://www.w3.org/2000/svg">
+      <!-- Stage 1 -->
+      <rect x="8" y="25" width="115" height="60" rx="8" fill="rgba(245,166,35,.12)" stroke="#F5A623" stroke-width="1.5"/>
+      <text x="65" y="48" text-anchor="middle" font-weight="bold" font-size="11" fill="#F5A623">Preprocessor</text>
+      <text x="65" y="65" text-anchor="middle" font-size="9" opacity=".7">#include, #define</text>
+      <text x="65" y="78" text-anchor="middle" font-size="8" opacity=".5">.cpp → .i</text>
+
+      <text x="135" y="58" fill="#F5A623" font-size="20" font-weight="bold">→</text>
+
+      <!-- Stage 2 -->
+      <rect x="150" y="25" width="115" height="60" rx="8" fill="rgba(59,130,246,.12)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="207" y="48" text-anchor="middle" font-weight="bold" font-size="11" fill="#3b82f6">Compiler</text>
+      <text x="207" y="65" text-anchor="middle" font-size="9" opacity=".7">Syntax, types, AST</text>
+      <text x="207" y="78" text-anchor="middle" font-size="8" opacity=".5">.i → .s (assembly)</text>
+
+      <text x="277" y="58" fill="#F5A623" font-size="20" font-weight="bold">→</text>
+
+      <!-- Stage 3 -->
+      <rect x="292" y="25" width="115" height="60" rx="8" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="349" y="48" text-anchor="middle" font-weight="bold" font-size="11" fill="#10b981">Assembler</text>
+      <text x="349" y="65" text-anchor="middle" font-size="9" opacity=".7">Machine code</text>
+      <text x="349" y="78" text-anchor="middle" font-size="8" opacity=".5">.s → .o (object)</text>
+
+      <text x="419" y="58" fill="#F5A623" font-size="20" font-weight="bold">→</text>
+
+      <!-- Stage 4 -->
+      <rect x="434" y="25" width="115" height="60" rx="8" fill="rgba(139,92,246,.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="491" y="48" text-anchor="middle" font-weight="bold" font-size="11" fill="#8b5cf6">Linker</text>
+      <text x="491" y="65" text-anchor="middle" font-size="9" opacity=".7">Resolve symbols</text>
+      <text x="491" y="78" text-anchor="middle" font-size="8" opacity=".5">.o → executable</text>
+    </svg>
+    <p class="diagram-label">Each .cpp is compiled independently. The linker combines all object files into the final binary.</p>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li><strong>Preprocessor errors:</strong> wrong #include path. <strong>Compiler errors:</strong> syntax/type errors. <strong>Linker errors:</strong> undefined reference.</li>
+    <li>Each .cpp file is compiled independently — that's why headers exist (share declarations).</li>
+    <li><strong>Static linking:</strong> library code copied into executable. <strong>Dynamic linking:</strong> .dll/.so loaded at runtime.</li>
+    <li>"Undefined reference to..." is a LINKER error — declaration found, definition missing.</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p>"Undefined reference" is a <strong>LINKER</strong> error, NOT a compiler error. It means the declaration was found (header included) but the definition is missing (source file not linked). Don't confuse the two stages.</p></div>
+</div></section>
+
+<!-- ============ 4. VIRTUAL FUNCTION & VTABLE ============ -->
+<section class="concept" id="vtable"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Virtual Functions & VTable</h2><span class="badge badge-core">Core</span><span class="badge badge-important">Deep Internals</span><span class="read-time">5 min</span></div>
+  <div class="one-liner">Virtual function enables runtime polymorphism. Compiler creates a VTable (array of function pointers) per class and a hidden vptr per object. Call flow: object → vptr → vtable → actual function.</div>
+
+  <div class="explanation">
+    <p>When you mark a function <code>virtual</code>, you tell the compiler: "Don't bind this call at compile time. Figure it out at runtime." But how? Enter the <strong>vtable</strong>.</p>
+    <p>For every class with at least one virtual function, the compiler creates a hidden table — the <strong>VTable</strong>. It's just an array of function pointers. Each entry points to the most derived version of that function. Every object gets a hidden pointer (<strong>vptr</strong>) to its class's vtable.</p>
+    <p>When you call <code>basePtr->someVirtualFunc()</code>, the CPU: follows vptr → goes to vtable → picks the function pointer at correct index → calls it. That's one extra indirection.</p>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg">
+      <!-- Base Object -->
+      <rect x="20" y="20" width="140" height="70" rx="8" fill="rgba(245,166,35,.1)" stroke="#F5A623" stroke-width="2"/>
+      <text x="90" y="42" text-anchor="middle" font-weight="bold" font-size="12" fill="#F5A623">Base Object</text>
+      <text x="90" y="62" text-anchor="middle" font-size="10">vptr ─────→</text>
+      <text x="90" y="80" text-anchor="middle" font-size="9" opacity=".5">+ data members</text>
+
+      <!-- Arrow to Base VTable -->
+      <line x1="160" y1="55" x2="240" y2="55" stroke="#F5A623" stroke-width="2" marker-end="url(#aG)"/>
+
+      <!-- Base VTable -->
+      <rect x="245" y="20" width="180" height="70" rx="8" fill="rgba(59,130,246,.08)" stroke="#3b82f6" stroke-width="2"/>
+      <text x="335" y="40" text-anchor="middle" font-weight="bold" font-size="11" fill="#3b82f6">Base VTable</text>
+      <text x="335" y="58" text-anchor="middle" font-size="10">[0] → Base::<span class="fn">speak</span>()</text>
+      <text x="335" y="76" text-anchor="middle" font-size="10">[1] → Base::<span class="fn">move</span>()</text>
+
+      <!-- Derived Object -->
+      <rect x="20" y="130" width="140" height="70" rx="8" fill="rgba(16,185,129,.1)" stroke="#10b981" stroke-width="2"/>
+      <text x="90" y="152" text-anchor="middle" font-weight="bold" font-size="12" fill="#10b981">Derived Object</text>
+      <text x="90" y="172" text-anchor="middle" font-size="10">vptr ─────→</text>
+      <text x="90" y="190" text-anchor="middle" font-size="9" opacity=".5">+ extra members</text>
+
+      <!-- Arrow to Derived VTable -->
+      <line x1="160" y1="165" x2="240" y2="165" stroke="#10b981" stroke-width="2" marker-end="url(#aGr)"/>
+
+      <!-- Derived VTable -->
+      <rect x="245" y="130" width="180" height="70" rx="8" fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="2"/>
+      <text x="335" y="150" text-anchor="middle" font-weight="bold" font-size="11" fill="#10b981">Derived VTable</text>
+      <text x="335" y="168" text-anchor="middle" font-size="10">[0] → <strong>Derived</strong>::speak()</text>
+      <text x="335" y="186" text-anchor="middle" font-size="10">[1] → Base::move()</text>
+
+      <!-- Labels -->
+      <text x="480" y="170" font-size="9" fill="#10b981" font-weight="bold">← overridden</text>
+      <text x="480" y="188" font-size="9" opacity=".5">← inherited</text>
+
+      <defs>
+        <marker id="aG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#F5A623"/></marker>
+        <marker id="aGr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#10b981"/></marker>
+      </defs>
+    </svg>
+    <p class="diagram-label">Each class has its own vtable. Derived class overrides speak() but inherits move().</p>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li><strong>VTable</strong> is per-class (shared by all objects). <strong>vptr</strong> is per-object (hidden member).</li>
+    <li>Pure virtual (<code>= 0</code>) makes class abstract — can't instantiate it.</li>
+    <li>Always make base class destructor virtual — else derived destructor won't be called through base pointer → memory leak.</li>
+    <li>vptr adds <code>sizeof(pointer)</code> to each object (usually 8 bytes on 64-bit).</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p>Virtual functions don't work with <strong>objects</strong> — only with pointers or references. If you do <code>Base obj = derivedObj;</code> (object slicing), the derived part is chopped off. No polymorphism.</p></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>vtable is created at <strong>compile time</strong> but resolved at <strong>runtime</strong>. Virtual function calls can't be inlined (compiler doesn't know which function will run). This is why game engines and HFT systems avoid virtuals in hot paths.</p></div>
+</div></section>
+
+<!-- ============ 5. SHALLOW VS DEEP COPY ============ -->
+<section class="concept" id="copy-depth"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Shallow Copy vs Deep Copy</h2><span class="badge badge-core">Core</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Shallow copy copies pointer values (both objects point to same memory). Deep copy allocates new memory and copies actual data. Shallow = sharing a Google Doc link. Deep = downloading your own copy.</div>
+
+  <div class="explanation">
+    <p>In C++, the <strong>default copy constructor</strong> does shallow copy — copies member values as-is. If a member is a raw pointer, it copies the address, not the data. Two objects now share the same heap memory. When one is destroyed, it frees the memory — the other has a <strong>dangling pointer</strong>. Crash.</p>
+    <p><strong>Deep copy:</strong> You write a custom copy constructor that allocates new memory and copies actual content. Both objects are fully independent.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Shallow vs Deep Copy</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="kw">class</span> <span class="type">MyString</span> {
+    <span class="type">char</span>* data;
+    <span class="type">int</span> len;
+
+<span class="kw">public</span>:
+    <span class="type">MyString</span>(<span class="kw">const</span> <span class="type">char</span>* s) {
+        len = strlen(s);
+        data = <span class="kw">new</span> <span class="type">char</span>[len + <span class="num">1</span>];
+        strcpy(data, s);
+    }
+
+    <span class="cm">// DEFAULT = SHALLOW COPY (compiler-generated)</span>
+    <span class="cm">// Just copies the pointer → both point to same memory</span>
+    <span class="cm">// → double-free crash when both destructors run!</span>
+
+    <span class="cm">// DEEP COPY — allocate + copy</span>
+    <span class="type">MyString</span>(<span class="kw">const</span> <span class="type">MyString</span>&amp; other) {
+        len = other.len;
+        data = <span class="kw">new</span> <span class="type">char</span>[len + <span class="num">1</span>];     <span class="cm">// new memory!</span>
+        strcpy(data, other.data);      <span class="cm">// copy content</span>
+    }
+
+    ~<span class="type">MyString</span>() { <span class="kw">delete</span>[] data; }
+};
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li>Default copy constructor = shallow (memberwise copy).</li>
+    <li>If class has raw pointers → MUST write deep copy constructor.</li>
+    <li>Shallow copy causes <strong>double-free</strong> and <strong>dangling pointer</strong> bugs.</li>
+    <li><strong>Rule of Three:</strong> If you write destructor, copy ctor, or copy assignment — write ALL three.</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p><code>std::vector</code>, <code>std::string</code> already do deep copy internally. The problem only arises with <strong>raw pointers</strong>. If your class manages a resource, you need a custom copy constructor.</p></div>
+</div></section>
+
+<!-- ============ 6. COPY VS MOVE CONSTRUCTOR ============ -->
+<section class="concept" id="copy-move"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Copy Constructor vs Move Constructor</h2><span class="badge badge-core">Core</span><span class="badge badge-important">C++11</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Copy duplicates data (expensive). Move steals resources from a dying object (cheap) — transfers ownership instead of copying. Copy = photocopying a 500-page book. Move = just taking the book from someone about to throw it away.</div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Copy vs Move</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="kw">class</span> <span class="type">Buffer</span> {
+    <span class="type">int</span>* data;
+    <span class="type">size_t</span> size;
+
+<span class="kw">public</span>:
+    <span class="type">Buffer</span>(<span class="type">size_t</span> n) : size(n), data(<span class="kw">new</span> <span class="type">int</span>[n]) {}
+
+    <span class="cm">// ─── COPY CONSTRUCTOR (expensive) ───</span>
+    <span class="type">Buffer</span>(<span class="kw">const</span> <span class="type">Buffer</span>&amp; other) : size(other.size) {
+        data = <span class="kw">new</span> <span class="type">int</span>[size];               <span class="cm">// allocate</span>
+        memcpy(data, other.data, size * <span class="kw">sizeof</span>(<span class="type">int</span>));  <span class="cm">// copy</span>
+    }
+
+    <span class="cm">// ─── MOVE CONSTRUCTOR (cheap) ───</span>
+    <span class="type">Buffer</span>(<span class="type">Buffer</span>&amp;&amp; other) <span class="kw">noexcept</span>
+        : data(other.data), size(other.size) {
+        other.data = <span class="kw">nullptr</span>;              <span class="cm">// steal + nullify</span>
+        other.size = <span class="num">0</span>;
+    }
+
+    ~<span class="type">Buffer</span>() { <span class="kw">delete</span>[] data; }
+};
+
+<span class="type">Buffer</span> a(<span class="num">1000000</span>);
+<span class="type">Buffer</span> b = a;                <span class="cm">// COPY — allocates + copies 1M ints</span>
+<span class="type">Buffer</span> c = std::<span class="fn">move</span>(a);    <span class="cm">// MOVE — just steals pointer. O(1)</span>
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li>Move is invoked for temporaries (rvalues) or with <code>std::move()</code>.</li>
+    <li>After move, source is in "valid but unspecified state" — don't use it.</li>
+    <li><strong>Rule of Five:</strong> destructor + copy ctor + copy assignment + move ctor + move assignment.</li>
+    <li><code>std::move()</code> doesn't move — it just casts to rvalue reference. Actual move happens in the move constructor.</li>
+    <li>Mark move constructor <code>noexcept</code> — STL containers won't use move otherwise.</li>
+  </ul></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>Mention <strong>RVO/NRVO</strong> (Return Value Optimization). Modern compilers often eliminate copies entirely by constructing the return value at the caller's location. Since C++17, copy elision is mandatory in certain cases. Sometimes neither copy nor move happens.</p></div>
+</div></section>
+
+<!-- ============ 7. SMART POINTERS ============ -->
+<section class="concept" id="smart-ptr"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Smart Pointers & Why Needed</h2><span class="badge badge-core">Core</span><span class="badge badge-important">Modern C++</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Smart pointers are RAII wrappers that automatically manage heap memory lifetime — no manual delete needed. Three types: unique_ptr (sole owner), shared_ptr (shared ownership via ref count), weak_ptr (observer, breaks cycles).</div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Smart Pointers</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="pp">#include</span> <span class="str">&lt;memory&gt;</span>
+
+<span class="cm">// ─── unique_ptr: SOLE owner, zero overhead ───</span>
+{
+    <span class="kw">auto</span> ptr = std::<span class="fn">make_unique</span>&lt;<span class="type">int</span>&gt;(<span class="num">42</span>);
+    <span class="cm">// Can't copy: auto ptr2 = ptr;  ← ERROR</span>
+    <span class="kw">auto</span> ptr2 = std::<span class="fn">move</span>(ptr);     <span class="cm">// transfer ownership</span>
+}   <span class="cm">// auto-deleted here</span>
+
+<span class="cm">// ─── shared_ptr: SHARED ownership, ref counted ───</span>
+{
+    <span class="kw">auto</span> sp1 = std::<span class="fn">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="num">100</span>);   <span class="cm">// refcount = 1</span>
+    {
+        <span class="kw">auto</span> sp2 = sp1;                       <span class="cm">// refcount = 2</span>
+    }                                          <span class="cm">// refcount = 1</span>
+}   <span class="cm">// refcount = 0 → deleted</span>
+
+<span class="cm">// ─── weak_ptr: observer, breaks circular references ───</span>
+<span class="kw">auto</span> shared = std::<span class="fn">make_shared</span>&lt;<span class="type">int</span>&gt;(<span class="num">99</span>);
+std::<span class="type">weak_ptr</span>&lt;<span class="type">int</span>&gt; weak = shared;    <span class="cm">// doesn't increase refcount</span>
+
+<span class="kw">if</span> (<span class="kw">auto</span> locked = weak.<span class="fn">lock</span>()) {
+    <span class="cm">// safe to use — object still alive</span>
+}
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li>Use <code>make_unique</code> / <code>make_shared</code> instead of <code>new</code> — exception-safe + potentially faster.</li>
+    <li><code>unique_ptr</code> has <strong>zero overhead</strong> vs raw pointer. Use by default.</li>
+    <li><code>shared_ptr</code> has overhead: atomic ref count + control block.</li>
+    <li>Circular <code>shared_ptr</code> references = memory leak. Break with <code>weak_ptr</code>.</li>
+    <li>Smart pointers use RAII: Resource Acquisition Is Initialization.</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p>Two <code>shared_ptr</code>s created from the same raw pointer = double delete crash! Always create from <code>make_shared</code> or from another <code>shared_ptr</code>, never from a raw pointer already managed.</p></div>
+</div></section>
+
+<!-- ============ 8. PROCESS VS THREAD ============ -->
+<section class="concept" id="proc-thread"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Process vs Thread</h2><span class="badge badge-concept">Concept</span><span class="read-time">3 min</span></div>
+  <div class="one-liner">Process = independent program with its own memory space (the house). Thread = lightweight worker inside a process sharing the same memory (roommates in the house). Thread creation is ~100x cheaper than process.</div>
+
+  <div class="explanation">
+    <p>Process is like a separate house — own kitchen, bathroom, everything. Thread is like roommates in the same house — share kitchen and bathroom but have their own beds. Sharing makes threads faster to create and communicate, but creates problems (race conditions).</p>
+    <p>Each process has its own virtual address space, file descriptors, stack, heap. Threads within a process share heap, code, data segments — but each thread has its own stack and registers.</p>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Process A -->
+      <rect x="15" y="15" width="240" height="170" rx="12" fill="none" stroke="#F5A623" stroke-width="2"/>
+      <text x="135" y="38" text-anchor="middle" font-weight="bold" font-size="13" fill="#F5A623">PROCESS A</text>
+
+      <rect x="30" y="48" width="210" height="28" rx="5" fill="rgba(59,130,246,.1)" stroke="#3b82f6" stroke-width="1"/>
+      <text x="135" y="67" text-anchor="middle" font-size="10">Code + Data (shared by all threads)</text>
+
+      <rect x="30" y="82" width="210" height="28" rx="5" fill="rgba(16,185,129,.1)" stroke="#10b981" stroke-width="1"/>
+      <text x="135" y="101" text-anchor="middle" font-size="10">Heap Memory (shared)</text>
+
+      <!-- Threads -->
+      <rect x="35" y="118" width="60" height="55" rx="6" fill="rgba(139,92,246,.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="65" y="138" text-anchor="middle" font-size="9" font-weight="bold">Thread 1</text>
+      <text x="65" y="153" text-anchor="middle" font-size="8" opacity=".6">Own Stack</text>
+      <text x="65" y="165" text-anchor="middle" font-size="8" opacity=".6">Own Regs</text>
+
+      <rect x="105" y="118" width="60" height="55" rx="6" fill="rgba(139,92,246,.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="135" y="138" text-anchor="middle" font-size="9" font-weight="bold">Thread 2</text>
+      <text x="135" y="153" text-anchor="middle" font-size="8" opacity=".6">Own Stack</text>
+      <text x="135" y="165" text-anchor="middle" font-size="8" opacity=".6">Own Regs</text>
+
+      <rect x="175" y="118" width="60" height="55" rx="6" fill="rgba(139,92,246,.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="205" y="138" text-anchor="middle" font-size="9" font-weight="bold">Thread 3</text>
+      <text x="205" y="153" text-anchor="middle" font-size="8" opacity=".6">Own Stack</text>
+      <text x="205" y="165" text-anchor="middle" font-size="8" opacity=".6">Own Regs</text>
+
+      <!-- Divider -->
+      <line x1="280" y1="35" x2="280" y2="170" stroke="currentColor" stroke-width="1" stroke-dasharray="6" opacity=".15"/>
+      <text x="280" y="100" text-anchor="middle" font-size="10" opacity=".3" transform="rotate(-90,280,100)">ISOLATED</text>
+
+      <!-- Process B -->
+      <rect x="310" y="15" width="235" height="170" rx="12" fill="none" stroke="#ef4444" stroke-width="2"/>
+      <text x="427" y="38" text-anchor="middle" font-weight="bold" font-size="13" fill="#ef4444">PROCESS B</text>
+
+      <rect x="325" y="55" width="205" height="35" rx="5" fill="rgba(239,68,68,.06)" stroke="#ef4444" stroke-width="1"/>
+      <text x="427" y="78" text-anchor="middle" font-size="10">Completely separate memory</text>
+
+      <rect x="325" y="100" width="205" height="65" rx="5" fill="none" stroke="#ef4444" stroke-width="1" stroke-dasharray="4" opacity=".3"/>
+      <text x="427" y="135" text-anchor="middle" font-size="10" opacity=".4">Cannot directly access</text>
+      <text x="427" y="152" text-anchor="middle" font-size="10" opacity=".4">Process A's memory</text>
+    </svg>
+    <p class="diagram-label">Threads share memory within a process. Processes are fully isolated from each other.</p>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li><strong>Process:</strong> Own address space, heavy, isolated, crash-safe.</li>
+    <li><strong>Thread:</strong> Shared address space, lightweight, fast communication, shared fate.</li>
+    <li>Thread creation: ~microseconds. Process creation: ~milliseconds.</li>
+    <li>Each thread has own stack + registers. Shares: code, data, heap, files.</li>
+    <li>One thread crash can kill entire process (shared memory).</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p>"Threads share everything" — <strong>Wrong!</strong> Each thread has its own stack and registers. They share heap, code, and data. Getting this wrong shows you haven't thought deeply about it.</p></div>
+</div></section>
+
+<!-- ============ 9. MEMORY LEAK & SEGFAULT ============ -->
+<section class="concept" id="mem-issues"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>Memory Leak & Segmentation Fault</h2><span class="badge badge-core">Core</span><span class="read-time">4 min</span></div>
+  <div class="one-liner">Memory leak = allocated memory but forgot to free it (lost forever until program ends). Segfault = tried to access memory you're not allowed to (instant crash). Leak = booking hotel rooms, never checking out. Segfault = breaking into someone's house.</div>
+
+  <div class="explanation">
+    <p><strong>Memory leak:</strong> You do <code>new</code> but never <code>delete</code>. The memory stays allocated but unreachable. Program slowly eats more and more RAM. In short-lived programs, almost harmless (OS reclaims on exit). In long-running servers, catastrophic.</p>
+    <p><strong>Segmentation fault:</strong> Accessing memory you shouldn't — dereferencing NULL, dangling pointer, buffer overflow, stack overflow. The OS sends SIGSEGV signal and kills your program.</p>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Memory Leak Examples</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="cm">// ─── MEMORY LEAK: forgot to delete ───</span>
+<span class="type">void</span> <span class="fn">leaky</span>() {
+    <span class="type">int</span>* p = <span class="kw">new</span> <span class="type">int</span>[<span class="num">1000</span>];
+    <span class="cm">// ... use p ...</span>
+    <span class="kw">return</span>;         <span class="cm">// LEAK! p is lost, memory never freed</span>
+}
+
+<span class="cm">// ─── FIX: use smart pointer ───</span>
+<span class="type">void</span> <span class="fn">safe</span>() {
+    <span class="kw">auto</span> p = std::<span class="fn">make_unique</span>&lt;<span class="type">int</span>[]&gt;(<span class="num">1000</span>);
+    <span class="cm">// auto-freed when scope exits, even on exception</span>
+}
+</pre>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — Segfault Examples</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="cm">// ─── NULL dereference ───</span>
+<span class="type">int</span>* p = <span class="kw">nullptr</span>;
+*p = <span class="num">42</span>;           <span class="cm">// SEGFAULT!</span>
+
+<span class="cm">// ─── Dangling pointer ───</span>
+<span class="type">int</span>* q = <span class="kw">new</span> <span class="type">int</span>(<span class="num">10</span>);
+<span class="kw">delete</span> q;
+*q = <span class="num">20</span>;           <span class="cm">// SEGFAULT! memory already freed</span>
+
+<span class="cm">// ─── Stack overflow ───</span>
+<span class="type">void</span> <span class="fn">infinite</span>() {
+    <span class="fn">infinite</span>();      <span class="cm">// never-ending recursion → stack overflow</span>
+}
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li><strong>Leak causes:</strong> Forgotten delete, exception before delete, circular shared_ptr.</li>
+    <li><strong>Segfault causes:</strong> NULL dereference, dangling pointer, out-of-bounds, stack overflow.</li>
+    <li><strong>Tools:</strong> Valgrind (leak detection), AddressSanitizer (segfault debugging).</li>
+    <li><strong>Prevention:</strong> Smart pointers, RAII, bounds checking, avoid raw new/delete.</li>
+  </ul></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>Memory leak is <strong>NOT</strong> undefined behavior — your program still runs, just slowly eats RAM. Segfault usually IS undefined behavior. Also mention that Valgrind's <code>--leak-check=full</code> catches every single leak with exact line numbers.</p></div>
+</div></section>
+
+<!-- ============ 10. MALLOC/FREE VS NEW/DELETE ============ -->
+<section class="concept" id="malloc-new"><div class="concept-accent"></div><div class="ci">
+  <div class="concept-header"><h2>malloc/free vs new/delete</h2><span class="badge badge-core">Core</span><span class="badge badge-important">Classic</span><span class="read-time">3 min</span></div>
+  <div class="one-liner">malloc/free are C functions — allocate raw bytes, no constructor/destructor. new/delete are C++ operators — allocate memory AND call constructor/destructor. Always prefer new/delete (or better, smart pointers) in C++.</div>
+
+  <table class="compare-table">
+    <tr>
+      <th>Aspect</th>
+      <th>malloc / free</th>
+      <th>new / delete</th>
+    </tr>
+    <tr>
+      <td><strong>Language</strong></td>
+      <td>C function</td>
+      <td>C++ operator</td>
+    </tr>
+    <tr>
+      <td><strong>Constructor</strong></td>
+      <td class="no">Does NOT call</td>
+      <td class="yes">Calls constructor</td>
+    </tr>
+    <tr>
+      <td><strong>Destructor</strong></td>
+      <td class="no">Does NOT call</td>
+      <td class="yes">Calls destructor</td>
+    </tr>
+    <tr>
+      <td><strong>Return type</strong></td>
+      <td><code>void*</code> (needs cast)</td>
+      <td>Typed pointer (no cast)</td>
+    </tr>
+    <tr>
+      <td><strong>On failure</strong></td>
+      <td>Returns NULL</td>
+      <td>Throws <code>std::bad_alloc</code></td>
+    </tr>
+    <tr>
+      <td><strong>Size</strong></td>
+      <td>Manual: <code>sizeof(T)*n</code></td>
+      <td>Automatic</td>
+    </tr>
+    <tr>
+      <td><strong>Overloadable</strong></td>
+      <td class="no">No</td>
+      <td class="yes">Yes (operator overloading)</td>
+    </tr>
+  </table>
+
+  <div class="code-wrap">
+    <div class="code-header"><span class="code-lang">C++ — malloc vs new</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre class="code-block">
+<span class="cm">// ─── malloc: raw bytes, no constructor ───</span>
+<span class="type">int</span>* arr = (<span class="type">int</span>*)<span class="fn">malloc</span>(<span class="num">5</span> * <span class="kw">sizeof</span>(<span class="type">int</span>));  <span class="cm">// just raw memory</span>
+<span class="kw">if</span> (arr == <span class="kw">NULL</span>) { <span class="cm">/* handle error */</span> }
+<span class="fn">free</span>(arr);
+
+<span class="cm">// ─── new: allocate + construct ───</span>
+<span class="type">int</span>* arr2 = <span class="kw">new</span> <span class="type">int</span>[<span class="num">5</span>];               <span class="cm">// allocated + initialized</span>
+<span class="kw">delete</span>[] arr2;                         <span class="cm">// delete[] for arrays!</span>
+
+<span class="cm">// ─── For objects — new CALLS constructor ───</span>
+<span class="type">MyClass</span>* obj1 = (<span class="type">MyClass</span>*)<span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="type">MyClass</span>));
+<span class="cm">// obj1 is GARBAGE — constructor never ran!</span>
+<span class="fn">free</span>(obj1);
+
+<span class="type">MyClass</span>* obj2 = <span class="kw">new</span> <span class="type">MyClass</span>();          <span class="cm">// constructor runs ✓</span>
+<span class="kw">delete</span> obj2;                           <span class="cm">// destructor runs ✓</span>
+
+<span class="cm">// ─── BEST: use smart pointers ───</span>
+<span class="kw">auto</span> obj3 = std::<span class="fn">make_unique</span>&lt;<span class="type">MyClass</span>&gt;();  <span class="cm">// auto-managed ✓✓</span>
+</pre>
+  </div>
+
+  <div class="key-points"><h4>Key Interview Points</h4><ul>
+    <li><code>new</code> = allocate + construct. <code>delete</code> = destruct + free.</li>
+    <li><code>malloc</code> = allocate raw bytes. <code>free</code> = release bytes. No ctor/dtor.</li>
+    <li><code>new</code> throws on failure. <code>malloc</code> returns NULL.</li>
+    <li><code>new/delete</code> are operators (can be overloaded). <code>malloc/free</code> are functions.</li>
+    <li><strong>Never mix:</strong> Don't <code>free()</code> what you <code>new</code>'d, don't <code>delete</code> what you <code>malloc</code>'d.</li>
+  </ul></div>
+
+  <div class="gotcha"><h4>Trap</h4><p><code>new[]</code> must be paired with <code>delete[]</code> (NOT <code>delete</code>). Using <code>delete</code> on an array from <code>new[]</code> is <strong>undefined behavior</strong> — only the first destructor runs, rest are skipped.</p></div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>Internally, <code>new</code> calls <code>operator new</code> (which often uses <code>malloc</code>) then calls the constructor via placement new. You can override <code>operator new</code> for custom memory pools. Mention this to show you understand the layers.</p></div>
+</div></section>
+
+</main>
+</div>
+
+<button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+<div class="quick-jump">
+  <button class="jump-btn" id="jumpBtn" aria-expanded="false">🌐 Hyperjump</button>
+  <div class="jump-menu" id="qm">
+    <a href="index.html">Home</a>
+    <a href="01-DBMS.html">01. DBMS</a>
+    <a href="02-OOPs.html">02. OOPs</a>
+    <a href="03-Computer-Networks.html">03. Computer Networks</a>
+    <a href="04-Operating-System.html">04. Operating System</a>
+    <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+    <a href="05-Language-Core-Java.html">05. Java Core</a>
+    <a href="05-Language-Core-Python.html">05. Python Core</a>
+    <a href="06-Puzzles.html">06. Puzzles</a>
+    <a href="07-Linux.html">07. Linux</a>
+    <a href="08-Git.html">08. Git</a>
+    <a href="09-SQL.html">09. SQL</a>
+    <a href="10-Projects-Behavioral.html">10. Projects</a>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const d=document.documentElement,isDark=d.getAttribute('data-theme')==='dark';d.setAttribute('data-theme',isDark?'':'dark');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';localStorage.setItem('theme',isDark?'light':'dark');}
+(function(){const t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}})();
+function toggleFocus(){const sb=document.getElementById('sidebar');sb.classList.toggle('hidden');document.body.classList.toggle('focus-mode');document.getElementById('focusBtn').textContent=sb.classList.contains('hidden')?'Expand':'Focus';}
+function updateProgress(){const s=document.documentElement.scrollTop||document.body.scrollTop;const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;document.getElementById('progressBar').style.width=(s/h)*100+'%';}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+function highlightActive(){const sections=document.querySelectorAll('.concept');const sideLinks=document.querySelectorAll('.sidebar a');const navLinks=document.querySelectorAll('.nav-links a');let current='';sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id;});sideLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));}
+function copyCode(btn){const code=btn.closest('.code-wrap').querySelector('.code-block').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});}
+window.addEventListener('scroll',function(){document.getElementById('bttBtn').style.display=window.scrollY>400?'block':'none';updateProgress();highlightActive();});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t){window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});}if(window.innerWidth<=900){document.getElementById('sidebar').classList.add('hidden');document.body.classList.add('focus-mode');document.getElementById('focusBtn').textContent='Expand';}});});
+(function(){const qBtn=document.getElementById('jumpBtn');const qMenu=document.getElementById('qm');if(!qBtn||!qMenu)return;qBtn.addEventListener('click',function(e){e.stopPropagation();qMenu.classList.toggle('active');qBtn.setAttribute('aria-expanded',qMenu.classList.contains('active'));});document.addEventListener('click',function(e){if(!qMenu.contains(e.target)&&!qBtn.contains(e.target)&&qMenu.classList.contains('active')){qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}});qMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}));})();
+updateProgress();highlightActive();
+</script>
+</body>
+</html>

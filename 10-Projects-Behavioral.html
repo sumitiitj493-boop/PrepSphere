@@ -1,0 +1,3538 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Projects & Behavioral — Interview Mastery Notes</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 280px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.08);
+        --amberBg: rgba(245, 158, 11, 0.08);
+        --redBg: rgba(239, 68, 68, 0.06);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.06);
+        --cyanBg: rgba(6, 182, 212, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 5px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.78rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.63rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2rem;
+      }
+      .topic-header h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      /* CONCEPT CARD */
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.12);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.63rem;
+        padding: 3px 11px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-project {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-behavioral {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-technical {
+        background: var(--cyanBg);
+        color: var(--cyan);
+      }
+      .badge-critical {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .read-time {
+        font-size: 0.73rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      /* WHAT THEY ASK */
+      .what-asking {
+        background: var(--blueBg);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .what-asking h4 {
+        color: var(--blue);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .what-asking ul {
+        list-style: none;
+        margin: 0;
+      }
+      .what-asking li {
+        position: relative;
+        padding-left: 1.3rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+      }
+      .what-asking li::before {
+        content: "?";
+        position: absolute;
+        left: 0;
+        color: var(--blue);
+        font-weight: bold;
+        font-size: 0.85rem;
+      }
+
+      /* FRAMEWORK BOX */
+      .framework {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border: 1px solid rgba(245, 166, 35, 0.25);
+        border-radius: 12px;
+        padding: 1.3rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .framework h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.8rem;
+        font-weight: 800;
+      }
+      .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .framework-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem;
+      }
+      .framework-item .letter {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: var(--gold);
+        margin-bottom: 0.3rem;
+      }
+      .framework-item .title {
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+      }
+      .framework-item .desc {
+        font-size: 0.82rem;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      /* ANSWER STRUCTURE */
+      .answer-structure {
+        margin: 1.5rem 0;
+      }
+      .answer-structure h4 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .answer-step {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+        align-items: flex-start;
+      }
+      .answer-step-num {
+        min-width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--green);
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+      }
+      .answer-step-content {
+        flex: 1;
+      }
+      .answer-step-content .title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+      }
+      .answer-step-content .desc {
+        font-size: 0.88rem;
+        color: var(--text2);
+        line-height: 1.6;
+      }
+      .answer-step-content .example {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--green);
+        padding: 0.8rem 1rem;
+        margin-top: 0.6rem;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.85rem;
+        font-style: italic;
+        color: var(--text);
+      }
+
+      /* KEY POINTS */
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      /* RED FLAGS */
+      .red-flags {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .red-flags h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .red-flags ul {
+        list-style: none;
+      }
+      .red-flags li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.88rem;
+      }
+      .red-flags li::before {
+        content: "✗";
+        position: absolute;
+        left: 0;
+        color: var(--red);
+        font-weight: bold;
+      }
+
+      /* PRO TIPS */
+      .pro-tips {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .pro-tips::before {
+        content: "★";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        font-size: 4.5rem;
+        color: var(--gold);
+        opacity: 0.07;
+      }
+      .pro-tips h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .pro-tips ul {
+        list-style: none;
+      }
+      .pro-tips li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+      .pro-tips li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-weight: bold;
+      }
+
+      /* SAMPLE ANSWER */
+      .sample-answer {
+        margin: 1.5rem 0;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .sample-answer-header {
+        background: var(--purpleBg);
+        padding: 0.8rem 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .sample-answer-header span {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--purple);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .sample-answer-content {
+        padding: 1.2rem 1.5rem;
+        background: var(--surface);
+        font-size: 0.9rem;
+        line-height: 1.8;
+      }
+      .sample-answer-content p {
+        margin-bottom: 1rem;
+      }
+      .sample-answer-content p:last-child {
+        margin-bottom: 0;
+      }
+      .sample-answer-content strong {
+        color: var(--gold);
+      }
+      .sample-answer-content .highlight {
+        background: var(--goldLight);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      /* CHECKLIST */
+      .checklist {
+        margin: 1.5rem 0;
+      }
+      .checklist h4 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--cyan);
+        margin-bottom: 0.8rem;
+      }
+      .checklist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.6rem;
+      }
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.8rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.85rem;
+      }
+      .checklist-item .check {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        border: 2px solid var(--cyan);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: var(--cyan);
+        flex-shrink: 0;
+      }
+
+      /* DIAGRAM */
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      /* FOLLOW UP */
+      .follow-up {
+        margin: 1.5rem 0;
+      }
+      .follow-up h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--amber);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .follow-up details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .follow-up summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .follow-up summary::-webkit-details-marker {
+        display: none;
+      }
+      .follow-up summary::before {
+        content: "Q";
+        font-size: 0.63rem;
+        font-weight: 800;
+        background: var(--amberBg);
+        color: var(--amber);
+        padding: 3px 7px;
+        border-radius: 5px;
+      }
+      .follow-up summary:hover {
+        background: var(--amberBg);
+      }
+      .follow-up .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      /* INTRO BOX */
+      .intro-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+      }
+      .intro-box h3 {
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: var(--gold);
+      }
+      .intro-box p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.7;
+      }
+      .intro-box ul {
+        list-style: none;
+        margin-top: 1rem;
+      }
+      .intro-box li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.92rem;
+      }
+      .intro-box li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-weight: bold;
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+        .main {
+          padding: 1.5rem 1rem 4rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .topic-header h1 {
+          font-size: 1.7rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+        .framework-grid {
+          grid-template-columns: 1fr;
+        }
+        .checklist-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+
+      /* Quick Jump styles */
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="nav-brand">Projects & Behavioral</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#architecture">Architecture</a>
+        <a href="#challenge">Challenge</a>
+        <a href="#tech-stack">Tech Stack</a>
+        <a href="#scalability">Scalability</a>
+        <a href="#database">Database</a>
+        <a href="#security">Security</a>
+        <a href="#performance">Performance</a>
+        <a href="#cicd">CI/CD</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#caching">Caching</a>
+        <a href="#failure">Failure</a>
+        <a href="#conflict">Conflict</a>
+        <a href="#leadership">Leadership</a>
+        <a href="#bug">Prod Bug</a>
+        <a href="#hire">Why Hire</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Project Deep-Dives</div>
+        <a href="#architecture"
+          ><span class="num">1</span>Project Architecture</a
+        >
+        <a href="#challenge"><span class="num">2</span>Biggest Challenge</a>
+        <a href="#tech-stack"><span class="num">3</span>Why This Tech Stack</a>
+        <a href="#scalability"><span class="num">4</span>Scalability</a>
+        <a href="#database"><span class="num">5</span>Database Design</a>
+        <a href="#security"><span class="num">6</span>Security</a>
+        <a href="#performance"><span class="num">7</span>Performance</a>
+        <a href="#cicd"><span class="num">8</span>CI/CD Pipeline</a>
+        <a href="#monitoring"><span class="num">9</span>Monitoring & Logging</a>
+        <a href="#caching"><span class="num">10</span>Caching Strategy</a>
+        <a href="#failure"><span class="num">11</span>Failure Handling</a>
+
+        <div class="sidebar-title">Behavioral</div>
+        <a href="#conflict"><span class="num">12</span>Team Conflict</a>
+        <a href="#leadership"><span class="num">13</span>Leadership Example</a>
+        <a href="#bug"><span class="num">14</span>Production Bug</a>
+        <a href="#hire"><span class="num">15</span>Why Hire You</a>
+      </aside>
+
+      <main class="main">
+        <div class="topic-header">
+          <h1>Projects & Behavioral</h1>
+          <p>
+            15 Critical Questions — Where technical skill meets communication.
+            This is where offers are won or lost.
+          </p>
+        </div>
+
+        <!-- INTRO BOX -->
+        <div class="intro-box">
+          <h3>The Golden Rules for Project & Behavioral Questions</h3>
+          <p>
+            These questions aren't testing if you built something — they're
+            testing
+            <strong>how you think, communicate, and collaborate</strong>. A
+            mediocre project explained brilliantly beats a brilliant project
+            explained poorly.
+          </p>
+          <ul>
+            <li>
+              <strong>Own your decisions</strong> — Say "I chose" not "we had
+              to". Show ownership.
+            </li>
+            <li>
+              <strong>Quantify everything</strong> — "Improved performance" →
+              "Reduced latency from 800ms to 120ms"
+            </li>
+            <li>
+              <strong>Admit trade-offs</strong> — Every decision has downsides.
+              Acknowledge them before interviewer asks.
+            </li>
+            <li>
+              <strong>Tell stories</strong> — Situation → Action → Result. Make
+              them feel the problem.
+            </li>
+            <li>
+              <strong>Prepare 2-3 projects deeply</strong> — Know every
+              decision, every bug, every number.
+            </li>
+          </ul>
+        </div>
+
+        <!-- STAR FRAMEWORK -->
+        <div class="framework">
+          <h4>The STAR Framework — Use for Every Behavioral Answer</h4>
+          <div class="framework-grid">
+            <div class="framework-item">
+              <div class="letter">S</div>
+              <div class="title">Situation</div>
+              <div class="desc">
+                Set the context. What was the project? What was happening? Keep
+                it brief — 2-3 sentences max.
+              </div>
+            </div>
+            <div class="framework-item">
+              <div class="letter">T</div>
+              <div class="title">Task</div>
+              <div class="desc">
+                What was YOUR specific responsibility? What problem did YOU need
+                to solve?
+              </div>
+            </div>
+            <div class="framework-item">
+              <div class="letter">A</div>
+              <div class="title">Action</div>
+              <div class="desc">
+                What did YOU do? This is the longest part. Be specific about
+                your contributions.
+              </div>
+            </div>
+            <div class="framework-item">
+              <div class="letter">R</div>
+              <div class="title">Result</div>
+              <div class="desc">
+                What happened? Quantify the impact. What did you learn? End on a
+                positive note.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ 1. PROJECT ARCHITECTURE ============ -->
+        <section class="concept" id="architecture">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Explain Your Project Architecture</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-critical">Most Asked</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>
+                  Can you explain complex systems simply? (Communication skill)
+                </li>
+                <li>
+                  Do you understand WHY the architecture is designed this way?
+                </li>
+                <li>Did you actually build this or just follow tutorials?</li>
+                <li>Can you think at a system level, not just code level?</li>
+              </ul>
+            </div>
+
+            <div class="answer-structure">
+              <h4>How to Structure Your Answer</h4>
+
+              <div class="answer-step">
+                <div class="answer-step-num">1</div>
+                <div class="answer-step-content">
+                  <div class="title">Start with the 30-second overview</div>
+                  <div class="desc">
+                    What does the system do? Who uses it? What's the scale?
+                  </div>
+                  <div class="example">
+                    "It's a real-time collaborative document editor — like
+                    Google Docs. We had about 5,000 DAU with 50-100 concurrent
+                    users on busy documents."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">2</div>
+                <div class="answer-step-content">
+                  <div class="title">
+                    Draw or describe the high-level architecture
+                  </div>
+                  <div class="desc">
+                    Walk through the main components: Client → API Gateway →
+                    Services → Database. Name the technologies.
+                  </div>
+                  <div class="example">
+                    "React frontend connects to a Node.js API gateway, which
+                    routes to microservices — document service, collaboration
+                    service, auth service. MongoDB for document storage, Redis
+                    for real-time presence, PostgreSQL for user data."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">3</div>
+                <div class="answer-step-content">
+                  <div class="title">Explain the interesting decisions</div>
+                  <div class="desc">
+                    Pick 2-3 architectural decisions and explain WHY. This is
+                    where you shine.
+                  </div>
+                  <div class="example">
+                    "We used WebSockets for real-time sync, with Redis Pub/Sub
+                    to broadcast changes across server instances. Chose CRDTs
+                    over OT for conflict resolution because they're eventually
+                    consistent without a central server."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">4</div>
+                <div class="answer-step-content">
+                  <div class="title">
+                    Mention trade-offs and what you'd change
+                  </div>
+                  <div class="desc">
+                    Shows maturity. No architecture is perfect.
+                  </div>
+                  <div class="example">
+                    "The CRDT approach increased memory usage significantly. If
+                    I rebuilt it, I'd consider a hybrid approach — CRDTs for
+                    text, OT for structured data like tables."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg">
+                <text
+                  x="300"
+                  y="20"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-weight="bold"
+                  font-size="12"
+                >
+                  Sample Architecture Diagram (Know How to Draw This)
+                </text>
+
+                <!-- Client -->
+                <rect
+                  x="20"
+                  y="50"
+                  width="100"
+                  height="50"
+                  rx="8"
+                  fill="var(--blueBg)"
+                  stroke="var(--blue)"
+                  stroke-width="2"
+                />
+                <text
+                  x="70"
+                  y="80"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="10"
+                  font-weight="bold"
+                >
+                  React App
+                </text>
+
+                <!-- Arrow -->
+                <line
+                  x1="120"
+                  y1="75"
+                  x2="170"
+                  y2="75"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+                <text
+                  x="145"
+                  y="65"
+                  text-anchor="middle"
+                  fill="var(--text2)"
+                  font-size="8"
+                >
+                  HTTPS
+                </text>
+
+                <!-- Load Balancer -->
+                <rect
+                  x="175"
+                  y="50"
+                  width="80"
+                  height="50"
+                  rx="8"
+                  fill="var(--amberBg)"
+                  stroke="var(--amber)"
+                  stroke-width="2"
+                />
+                <text
+                  x="215"
+                  y="72"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Load
+                </text>
+                <text
+                  x="215"
+                  y="85"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Balancer
+                </text>
+
+                <!-- Arrows to servers -->
+                <line
+                  x1="255"
+                  y1="65"
+                  x2="295"
+                  y2="45"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+                <line
+                  x1="255"
+                  y1="75"
+                  x2="295"
+                  y2="75"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+                <line
+                  x1="255"
+                  y1="85"
+                  x2="295"
+                  y2="105"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- API Servers -->
+                <rect
+                  x="300"
+                  y="25"
+                  width="70"
+                  height="35"
+                  rx="6"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="335"
+                  y="47"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  API Server 1
+                </text>
+                <rect
+                  x="300"
+                  y="65"
+                  width="70"
+                  height="35"
+                  rx="6"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="335"
+                  y="87"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  API Server 2
+                </text>
+                <rect
+                  x="300"
+                  y="105"
+                  width="70"
+                  height="35"
+                  rx="6"
+                  fill="var(--greenBg)"
+                  stroke="var(--green)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="335"
+                  y="127"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  API Server 3
+                </text>
+
+                <!-- Arrow to services -->
+                <line
+                  x1="370"
+                  y1="82"
+                  x2="420"
+                  y2="82"
+                  stroke="var(--gold)"
+                  stroke-width="2"
+                  marker-end="url(#arrowG)"
+                />
+
+                <!-- Microservices -->
+                <rect
+                  x="425"
+                  y="35"
+                  width="80"
+                  height="30"
+                  rx="6"
+                  fill="var(--purpleBg)"
+                  stroke="var(--purple)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="465"
+                  y="55"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Auth Service
+                </text>
+                <rect
+                  x="425"
+                  y="70"
+                  width="80"
+                  height="30"
+                  rx="6"
+                  fill="var(--purpleBg)"
+                  stroke="var(--purple)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="465"
+                  y="90"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  User Service
+                </text>
+                <rect
+                  x="425"
+                  y="105"
+                  width="80"
+                  height="30"
+                  rx="6"
+                  fill="var(--purpleBg)"
+                  stroke="var(--purple)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="465"
+                  y="125"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  Order Service
+                </text>
+
+                <!-- Databases -->
+                <line
+                  x1="505"
+                  y1="85"
+                  x2="530"
+                  y2="85"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="530"
+                  y1="85"
+                  x2="530"
+                  y2="180"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="530"
+                  y1="180"
+                  x2="420"
+                  y2="180"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+                <line
+                  x1="530"
+                  y1="180"
+                  x2="530"
+                  y2="240"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="530"
+                  y1="240"
+                  x2="420"
+                  y2="240"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+
+                <rect
+                  x="340"
+                  y="165"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--cyanBg)"
+                  stroke="var(--cyan)"
+                  stroke-width="2"
+                />
+                <text
+                  x="380"
+                  y="187"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  PostgreSQL
+                </text>
+
+                <rect
+                  x="340"
+                  y="225"
+                  width="80"
+                  height="35"
+                  rx="6"
+                  fill="var(--redBg)"
+                  stroke="var(--red)"
+                  stroke-width="2"
+                />
+                <text
+                  x="380"
+                  y="247"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Redis Cache
+                </text>
+
+                <!-- Message Queue -->
+                <rect
+                  x="175"
+                  y="170"
+                  width="100"
+                  height="40"
+                  rx="6"
+                  fill="var(--amberBg)"
+                  stroke="var(--amber)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="225"
+                  y="192"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="9"
+                  font-weight="bold"
+                >
+                  Message Queue
+                </text>
+                <text
+                  x="225"
+                  y="205"
+                  text-anchor="middle"
+                  fill="currentColor"
+                  font-size="8"
+                >
+                  (RabbitMQ/Kafka)
+                </text>
+
+                <line
+                  x1="335"
+                  y1="140"
+                  x2="335"
+                  y2="155"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="335"
+                  y1="155"
+                  x2="275"
+                  y2="155"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="275"
+                  y1="155"
+                  x2="275"
+                  y2="170"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                  marker-end="url(#arrowG)"
+                />
+
+                <defs>
+                  <marker
+                    id="arrowG"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path d="M0,0 L8,3 L0,6" fill="var(--gold)" />
+                  </marker>
+                </defs>
+              </svg>
+              <p class="diagram-label">
+                Practice drawing your architecture on a whiteboard. Know every
+                box and arrow.
+              </p>
+            </div>
+
+            <div class="checklist">
+              <h4>Topics to Prepare for Your Project</h4>
+              <div class="checklist-grid">
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Client-side architecture (React/Vue structure)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  API design (REST/GraphQL choices)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Authentication flow (JWT, OAuth, sessions)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Database schema (key tables, relationships)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Caching layers (what's cached, TTL)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  External services (payments, email, etc.)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Deployment architecture (containers, cloud)
+                </div>
+                <div class="checklist-item">
+                  <div class="check">○</div>
+                  Background jobs (queues, workers)
+                </div>
+              </div>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These</h4>
+              <ul>
+                <li>
+                  "We just used the standard MVC pattern" — Too generic, shows
+                  no thought
+                </li>
+                <li>
+                  "My teammate handled that part" — You should understand the
+                  full system
+                </li>
+                <li>Can't explain why specific technologies were chosen</li>
+                <li>No mention of scale, performance, or real users</li>
+                <li>
+                  Unable to discuss trade-offs or what you'd do differently
+                </li>
+              </ul>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Draw diagrams while explaining — it shows confidence and helps
+                  them follow
+                </li>
+                <li>Start zoomed out, then zoom into interesting parts</li>
+                <li>
+                  Mention specific numbers: requests/second, database size,
+                  response times
+                </li>
+                <li>
+                  If it's a simple CRUD app, focus on the interesting parts
+                  (auth, real-time, etc.)
+                </li>
+              </ul>
+            </div>
+
+            <div class="follow-up">
+              <h4>Common Follow-up Questions</h4>
+              <details>
+                <summary>
+                  What would you change if you rebuilt this from scratch?
+                </summary>
+                <div class="ans">
+                  Have 2-3 specific things ready. Example: "I'd use TypeScript
+                  instead of JavaScript — we had several runtime type errors
+                  that TypeScript would have caught. Also, I'd implement proper
+                  event sourcing from the start rather than retrofitting it
+                  later."
+                </div>
+              </details>
+              <details>
+                <summary>How would this scale to 10x/100x users?</summary>
+                <div class="ans">
+                  Discuss: horizontal scaling of stateless services, database
+                  sharding/read replicas, CDN for static assets, caching
+                  strategy improvements, potential move to microservices if
+                  monolithic, queue-based processing for heavy operations.
+                </div>
+              </details>
+              <details>
+                <summary>What's the most complex part of the system?</summary>
+                <div class="ans">
+                  Pick something genuinely complex and explain it. Could be:
+                  real-time sync, search indexing, payment processing,
+                  permission system, etc. Show depth.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 2. BIGGEST TECHNICAL CHALLENGE ============ -->
+        <section class="concept" id="challenge">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Biggest Technical Challenge</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-behavioral">Behavioral</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>
+                  How do you approach problems when there's no obvious solution?
+                </li>
+                <li>Do you give up easily or persist through difficulties?</li>
+                <li>
+                  Can you break down complex problems into solvable pieces?
+                </li>
+                <li>Do you learn from challenges or just move on?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>What Makes a Good Challenge Story</h4>
+              <ul>
+                <li>
+                  <strong>Genuinely difficult</strong> — Not "I didn't know the
+                  syntax" but real architectural/algorithmic challenges
+                </li>
+                <li>
+                  <strong>You solved it</strong> — Not "we hired a consultant"
+                  or "we abandoned it"
+                </li>
+                <li>
+                  <strong>Has technical depth</strong> — You can explain the
+                  problem at multiple levels
+                </li>
+                <li>
+                  <strong>Has a measurable outcome</strong> — "Fixed the bug" vs
+                  "Reduced crash rate by 94%"
+                </li>
+                <li>
+                  <strong>You learned something</strong> — Shows growth mindset
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Sample Answer Structure</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  <strong>The Problem (30 sec):</strong> "We had a real-time
+                  notification system that worked fine in dev but in production,
+                  users were receiving notifications
+                  <span class="highlight">30-60 seconds late</span> during peak
+                  hours. This was a critical feature — users needed instant
+                  alerts for time-sensitive actions."
+                </p>
+
+                <p>
+                  <strong>Why It Was Hard (30 sec):</strong> "The tricky part
+                  was that it was intermittent. Only happened at scale, only
+                  during certain times. Logs showed messages were being sent
+                  immediately, but delivery was delayed. The problem seemed to
+                  be somewhere between our server and the user's device."
+                </p>
+
+                <p>
+                  <strong>Your Approach (1-2 min):</strong> "I started by adding
+                  detailed timing logs at every step of the pipeline. Discovered
+                  the bottleneck was in our WebSocket server — we were using a
+                  single Node.js process that was getting overwhelmed. But
+                  simply adding more instances created a new problem: messages
+                  were being sent to the wrong server instance because we
+                  weren't handling sticky sessions properly."
+                </p>
+
+                <p>
+                  <strong>The Solution (30 sec):</strong> "Implemented Redis
+                  Pub/Sub as a message broker between instances. When a
+                  notification came in, it was published to Redis, and all
+                  WebSocket servers subscribed. The correct server would deliver
+                  to its connected users. Also added connection pooling and
+                  optimized our presence tracking."
+                </p>
+
+                <p>
+                  <strong>The Result (20 sec):</strong> "Notification latency
+                  dropped from
+                  <span class="highlight">30-60 seconds to under 200ms</span>.
+                  System now handles 10x the previous load. More importantly, I
+                  learned the importance of designing for horizontal scaling
+                  from day one."
+                </p>
+              </div>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These</h4>
+              <ul>
+                <li>Challenge is too simple: "Figuring out CSS flexbox"</li>
+                <li>
+                  You didn't actually solve it: "Eventually we just removed that
+                  feature"
+                </li>
+                <li>
+                  Blaming others: "The previous developer wrote terrible code"
+                </li>
+                <li>
+                  No learning: Just solved it, didn't reflect on what you
+                  learned
+                </li>
+                <li>Can't explain the technical details when probed</li>
+              </ul>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Prepare 3 challenge stories: one algorithmic, one
+                  architectural, one debugging
+                </li>
+                <li>
+                  Include the emotional journey: "I was stuck for 2 days and
+                  almost gave up..."
+                </li>
+                <li>
+                  Mention resources you used: "I found a research paper on CRDTs
+                  that..."
+                </li>
+                <li>
+                  If it was a team effort, be clear about YOUR specific
+                  contribution
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 3. WHY THIS TECH STACK ============ -->
+        <section class="concept" id="tech-stack">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Why This Tech Stack?</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>
+                  Do you make decisions based on reasoning or just trends?
+                </li>
+                <li>
+                  Do you understand the trade-offs of your technology choices?
+                </li>
+                <li>
+                  Are you a "one stack fits all" developer or do you evaluate
+                  options?
+                </li>
+                <li>Can you justify decisions to stakeholders?</li>
+              </ul>
+            </div>
+
+            <div class="answer-structure">
+              <h4>How to Structure Your Answer</h4>
+
+              <div class="answer-step">
+                <div class="answer-step-num">1</div>
+                <div class="answer-step-content">
+                  <div class="title">
+                    State the requirements that drove the decision
+                  </div>
+                  <div class="example">
+                    "We needed real-time updates, fast time-to-market, and our
+                    team had strong JavaScript experience."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">2</div>
+                <div class="answer-step-content">
+                  <div class="title">Explain alternatives you considered</div>
+                  <div class="example">
+                    "We evaluated Node.js vs Go vs Python. Go had better
+                    performance, but our team would need ramp-up time. Python's
+                    async support wasn't as mature then."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">3</div>
+                <div class="answer-step-content">
+                  <div class="title">Explain why you chose what you chose</div>
+                  <div class="example">
+                    "Node.js gave us: team familiarity, excellent WebSocket
+                    libraries, shared code between frontend and backend, and
+                    large npm ecosystem for quick development."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">4</div>
+                <div class="answer-step-content">
+                  <div class="title">Acknowledge trade-offs honestly</div>
+                  <div class="example">
+                    "The trade-off was CPU-intensive operations — Node's
+                    single-threaded nature hurt us for PDF generation. We
+                    offloaded that to a Python microservice."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Valid Reasons for Technology Choices</h4>
+              <ul>
+                <li>
+                  <strong>Team expertise</strong> — Pragmatic: "Team knew React
+                  well, faster delivery"
+                </li>
+                <li>
+                  <strong>Performance requirements</strong> — "Go for
+                  low-latency, Python for ML pipelines"
+                </li>
+                <li>
+                  <strong>Ecosystem/libraries</strong> — "Node has best
+                  WebSocket libraries"
+                </li>
+                <li>
+                  <strong>Hiring market</strong> — "More React developers
+                  available than Vue"
+                </li>
+                <li>
+                  <strong>Existing infrastructure</strong> — "Company already
+                  had PostgreSQL expertise"
+                </li>
+                <li>
+                  <strong>Specific features</strong> — "Chose Postgres for JSONB
+                  support"
+                </li>
+              </ul>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These Reasons</h4>
+              <ul>
+                <li>"It was trending" — Shows no independent thinking</li>
+                <li>
+                  "I saw it on a YouTube tutorial" — No evaluation process
+                </li>
+                <li>"It's the best" — No technology is best for everything</li>
+                <li>
+                  No awareness of alternatives — Suggests limited knowledge
+                </li>
+                <li>Can't name any drawbacks — Unrealistic optimism</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 4. SCALABILITY ============ -->
+        <section class="concept" id="scalability">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Scalability Improvements</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you think beyond "it works on my machine"?</li>
+                <li>Do you understand horizontal vs vertical scaling?</li>
+                <li>Can you identify and fix bottlenecks?</li>
+                <li>
+                  Have you actually dealt with scale, or is it theoretical?
+                </li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Scalability Improvements to Discuss</h4>
+              <ul>
+                <li>
+                  <strong>Database scaling:</strong> Read replicas, sharding,
+                  connection pooling, query optimization
+                </li>
+                <li>
+                  <strong>Caching layers:</strong> Redis/Memcached for sessions,
+                  query results, computed data
+                </li>
+                <li>
+                  <strong>Horizontal scaling:</strong> Stateless services, load
+                  balancers, auto-scaling groups
+                </li>
+                <li>
+                  <strong>Async processing:</strong> Message queues for heavy
+                  operations (email, reports, etc.)
+                </li>
+                <li>
+                  <strong>CDN:</strong> Static assets, edge caching for global
+                  users
+                </li>
+                <li>
+                  <strong>Database optimization:</strong> Indexing,
+                  denormalization, materialized views
+                </li>
+                <li>
+                  <strong>Connection optimization:</strong> Connection pooling,
+                  keep-alive, HTTP/2
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  "When we launched, the app handled 100 concurrent users fine.
+                  At 500 users, response times spiked from 200ms to 3 seconds.
+                  Here's what we did:"
+                </p>
+
+                <p>
+                  <strong>1. Database:</strong> "Added indexes on
+                  frequently-queried columns — reduced a critical query from
+                  800ms to 15ms. Set up a read replica for reporting queries."
+                </p>
+
+                <p>
+                  <strong>2. Caching:</strong> "Implemented Redis caching for
+                  user sessions and frequently-accessed product data.
+                  <span class="highlight">Cache hit rate of 92%</span>, reduced
+                  database load by 60%."
+                </p>
+
+                <p>
+                  <strong>3. Async processing:</strong> "Moved email sending,
+                  PDF generation, and analytics to background workers using Bull
+                  queue. API response times dropped significantly."
+                </p>
+
+                <p>
+                  <strong>4. Frontend:</strong> "Implemented lazy loading, code
+                  splitting, and moved static assets to CloudFront CDN."
+                </p>
+
+                <p>
+                  <strong>Result:</strong> "System now handles
+                  <span class="highlight">5,000 concurrent users</span> with p95
+                  latency under 300ms."
+                </p>
+              </div>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Always mention how you MEASURED the improvement — "I used New
+                  Relic to profile..."
+                </li>
+                <li>
+                  Know the difference between vertical (bigger machine) and
+                  horizontal (more machines) scaling
+                </li>
+                <li>
+                  If you haven't dealt with scale, discuss what you WOULD do and
+                  why
+                </li>
+                <li>
+                  Mention cost trade-offs: "Caching reduced our database costs
+                  by 40%"
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 5. DATABASE DESIGN ============ -->
+        <section class="concept" id="database">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Database Design Decisions</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you understand data modeling and normalization?</li>
+                <li>
+                  Can you make appropriate trade-offs (normalization vs
+                  performance)?
+                </li>
+                <li>Do you think about data integrity and relationships?</li>
+                <li>SQL vs NoSQL — do you know when to use each?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Topics You Should Be Ready to Discuss</h4>
+              <ul>
+                <li>
+                  <strong>Schema design:</strong> Key tables, relationships, why
+                  normalized or denormalized
+                </li>
+                <li>
+                  <strong>SQL vs NoSQL choice:</strong> Why PostgreSQL vs
+                  MongoDB vs DynamoDB
+                </li>
+                <li>
+                  <strong>Indexing strategy:</strong> Which columns indexed,
+                  composite indexes, why
+                </li>
+                <li>
+                  <strong>Handling relationships:</strong> One-to-many,
+                  many-to-many, self-referential
+                </li>
+                <li>
+                  <strong>Data integrity:</strong> Foreign keys, constraints,
+                  transactions
+                </li>
+                <li>
+                  <strong>Soft deletes vs hard deletes:</strong> And why you
+                  chose one
+                </li>
+                <li>
+                  <strong>Audit trails:</strong> Tracking who changed what and
+                  when
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example: E-commerce Database Design</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  "We used <strong>PostgreSQL</strong> for transactional data
+                  (orders, users, inventory) because we needed ACID compliance
+                  for financial data and complex reporting queries. Used
+                  <strong>MongoDB</strong> for product catalog because products
+                  have varying attributes — a phone has different specs than a
+                  shirt."
+                </p>
+
+                <p><strong>Key design decisions:</strong></p>
+                <p>
+                  "<span class="highlight">Denormalized order snapshots</span> —
+                  when an order is placed, we store a snapshot of product
+                  details in the order. If product name/price changes later,
+                  order history stays accurate."
+                </p>
+
+                <p>
+                  "<span class="highlight">Soft deletes with deleted_at</span> —
+                  we never hard delete user data (legal requirements). Filtered
+                  in queries with WHERE deleted_at IS NULL."
+                </p>
+
+                <p>
+                  "<span class="highlight">JSONB for flexible fields</span> —
+                  product metadata stored as JSONB in Postgres. Lets us add new
+                  product attributes without schema migrations."
+                </p>
+              </div>
+            </div>
+
+            <div class="follow-up">
+              <h4>Common Follow-up Questions</h4>
+              <details>
+                <summary>Why SQL over NoSQL (or vice versa)?</summary>
+                <div class="ans">
+                  <strong>SQL when:</strong> Complex relationships, need for
+                  transactions, complex queries/reporting, data integrity is
+                  critical. <strong>NoSQL when:</strong> Flexible schema needed,
+                  horizontal scaling priority, simple access patterns,
+                  document-oriented data (like product catalogs or user
+                  profiles).
+                </div>
+              </details>
+              <details>
+                <summary>How did you handle migrations?</summary>
+                <div class="ans">
+                  Discuss: migration tools (Flyway, Knex, Alembic),
+                  backward-compatible changes, zero-downtime migrations, how you
+                  tested migrations before production.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 6. SECURITY ============ -->
+        <section class="concept" id="security">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Security Implementations</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-critical">Important</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>
+                  Do you think about security proactively or as an afterthought?
+                </li>
+                <li>Do you know common vulnerabilities (OWASP Top 10)?</li>
+                <li>
+                  Have you implemented authentication/authorization properly?
+                </li>
+                <li>Do you understand security at multiple layers?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Security Measures You Should Discuss</h4>
+              <ul>
+                <li>
+                  <strong>Authentication:</strong> JWT implementation, refresh
+                  tokens, secure storage, OAuth flows
+                </li>
+                <li>
+                  <strong>Authorization:</strong> Role-based access (RBAC),
+                  resource-level permissions, principle of least privilege
+                </li>
+                <li>
+                  <strong>Input validation:</strong> Server-side validation,
+                  sanitization, parameterized queries (SQL injection prevention)
+                </li>
+                <li>
+                  <strong>XSS prevention:</strong> Output encoding, CSP headers,
+                  HttpOnly cookies
+                </li>
+                <li>
+                  <strong>CSRF protection:</strong> CSRF tokens, SameSite
+                  cookies
+                </li>
+                <li>
+                  <strong>Data protection:</strong> Encryption at rest,
+                  encryption in transit (HTTPS), PII handling
+                </li>
+                <li>
+                  <strong>Rate limiting:</strong> API rate limits, brute force
+                  protection on login
+                </li>
+                <li>
+                  <strong>Secrets management:</strong> Environment variables,
+                  vault systems, no secrets in code
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  "Security was a priority since we handled payment information.
+                  Here's what we implemented:"
+                </p>
+
+                <p>
+                  <strong>Authentication:</strong> "JWT tokens with short expiry
+                  (15 min), stored in HttpOnly cookies. Refresh tokens in
+                  database with device fingerprinting. Password hashing with
+                  bcrypt, cost factor 12."
+                </p>
+
+                <p>
+                  <strong>Authorization:</strong> "Role-based access control
+                  (Admin, Manager, User). Resource-level checks — users can only
+                  access their own orders. Middleware validates permissions on
+                  every request."
+                </p>
+
+                <p>
+                  <strong>Input handling:</strong> "All inputs validated with
+                  Joi on server-side. Used parameterized queries exclusively —
+                  no string concatenation in SQL. React auto-escapes outputs,
+                  plus CSP headers."
+                </p>
+
+                <p>
+                  <strong>Infrastructure:</strong> "HTTPS everywhere with HSTS.
+                  Database credentials in AWS Secrets Manager. Regular
+                  dependency audits with npm audit and Snyk."
+                </p>
+              </div>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These</h4>
+              <ul>
+                <li>
+                  "We used JWT" without explaining secure implementation details
+                </li>
+                <li>Storing passwords in plain text or weak hashing (MD5)</li>
+                <li>Not knowing what SQL injection or XSS is</li>
+                <li>
+                  "Security wasn't really my responsibility" — Everyone is
+                  responsible
+                </li>
+                <li>
+                  Storing secrets in code or environment variables without
+                  encryption
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 7. PERFORMANCE ============ -->
+        <section class="concept" id="performance">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Performance Optimizations</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you measure before optimizing or guess?</li>
+                <li>Do you understand where bottlenecks typically occur?</li>
+                <li>Can you balance performance with code maintainability?</li>
+                <li>
+                  Do you know the difference between premature and necessary
+                  optimization?
+                </li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Performance Optimizations to Discuss</h4>
+              <ul>
+                <li>
+                  <strong>Frontend:</strong> Lazy loading, code splitting, image
+                  optimization, bundle size reduction, virtual scrolling
+                </li>
+                <li>
+                  <strong>Backend:</strong> Database query optimization, N+1
+                  query fixes, connection pooling, async processing
+                </li>
+                <li>
+                  <strong>Database:</strong> Indexing, query plans (EXPLAIN),
+                  denormalization, caching hot data
+                </li>
+                <li>
+                  <strong>Network:</strong> Compression (gzip/brotli), CDN,
+                  HTTP/2, reducing round trips
+                </li>
+                <li>
+                  <strong>Caching:</strong> Browser caching, Redis/Memcached,
+                  query result caching, HTTP cache headers
+                </li>
+                <li>
+                  <strong>Profiling tools:</strong> Chrome DevTools, Lighthouse,
+                  New Relic, database query analyzers
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  "Our dashboard page took 8 seconds to load. I used Chrome
+                  DevTools and New Relic to identify bottlenecks:"
+                </p>
+
+                <p>
+                  <strong>Problem 1 — N+1 queries:</strong> "The page made 47
+                  database queries due to N+1 issue loading user profiles. Fixed
+                  with eager loading (Sequelize include). Queries reduced to 3."
+                </p>
+
+                <p>
+                  <strong>Problem 2 — Large bundle:</strong> "JavaScript bundle
+                  was 2.4MB. Implemented code splitting with React.lazy() and
+                  dynamic imports. Initial bundle reduced to 380KB."
+                </p>
+
+                <p>
+                  <strong>Problem 3 — Unoptimized images:</strong> "Product
+                  images were 3-5MB each. Implemented image resizing pipeline
+                  with Sharp, served WebP format with fallbacks. Average image
+                  size: 150KB."
+                </p>
+
+                <p>
+                  <strong>Problem 4 — No caching:</strong> "Added Redis caching
+                  for frequently-accessed product listings. 6-hour TTL with
+                  cache invalidation on product updates."
+                </p>
+
+                <p>
+                  <strong>Result:</strong> "Page load time dropped from
+                  <span class="highlight">8 seconds to 1.2 seconds</span>.
+                  Lighthouse score improved from 34 to 89."
+                </p>
+              </div>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Always start with measurement: "I profiled and found that..."
+                </li>
+                <li>
+                  Know your tools: Lighthouse, WebPageTest, EXPLAIN ANALYZE,
+                  flame graphs
+                </li>
+                <li>
+                  Mention the trade-offs: "Caching improved speed but added
+                  complexity..."
+                </li>
+                <li>
+                  Quantify everything: Before/after numbers are impressive
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 8. CI/CD ============ -->
+        <section class="concept" id="cicd">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>CI/CD Pipeline</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">DevOps</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you understand modern deployment practices?</li>
+                <li>Can you ship code safely and frequently?</li>
+                <li>Do you automate repetitive tasks?</li>
+                <li>
+                  How do you ensure code quality before it reaches production?
+                </li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>CI/CD Topics You Should Know</h4>
+              <ul>
+                <li>
+                  <strong>CI Tools:</strong> GitHub Actions, GitLab CI, Jenkins,
+                  CircleCI
+                </li>
+                <li>
+                  <strong>Pipeline stages:</strong> Lint → Test → Build → Deploy
+                  (Staging) → Deploy (Production)
+                </li>
+                <li>
+                  <strong>Testing:</strong> Unit tests, integration tests, E2E
+                  tests, test coverage thresholds
+                </li>
+                <li>
+                  <strong>Deployment strategies:</strong> Blue-green, canary,
+                  rolling deployments
+                </li>
+                <li>
+                  <strong>Environment management:</strong> Dev, staging,
+                  production parity
+                </li>
+                <li>
+                  <strong>Artifact management:</strong> Docker images, npm
+                  packages, versioning
+                </li>
+                <li>
+                  <strong>Rollback strategy:</strong> How to revert quickly if
+                  deployment fails
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  "We used <strong>GitHub Actions</strong> for CI/CD with the
+                  following pipeline:"
+                </p>
+
+                <p><strong>On every PR:</strong></p>
+                <p>
+                  "1. ESLint + Prettier check (code style)<br />
+                  2. TypeScript compilation (type safety)<br />
+                  3. Unit tests with Jest (80% coverage required)<br />
+                  4. Integration tests against test database<br />
+                  5. Build Docker image and scan for vulnerabilities"
+                </p>
+
+                <p><strong>On merge to main:</strong></p>
+                <p>
+                  "1. All above checks run<br />
+                  2. Auto-deploy to staging environment<br />
+                  3. Run E2E tests with Cypress<br />
+                  4. Slack notification with deploy preview link"
+                </p>
+
+                <p><strong>Production deploy:</strong></p>
+                <p>
+                  "Manual approval required. Blue-green deployment on AWS ECS.
+                  Health checks for 5 minutes. Automatic rollback if error rate
+                  exceeds 1%."
+                </p>
+              </div>
+            </div>
+
+            <div class="follow-up">
+              <h4>Common Follow-up Questions</h4>
+              <details>
+                <summary>How do you handle database migrations in CD?</summary>
+                <div class="ans">
+                  Run migrations before deploying new code. Use
+                  backward-compatible migrations (add columns before removing
+                  old ones). Never deploy code that requires schema changes
+                  simultaneously — deploy schema first, then code.
+                </div>
+              </details>
+              <details>
+                <summary>What happens if a deployment fails?</summary>
+                <div class="ans">
+                  Automatic rollback to previous version. Alerts sent to
+                  on-call. Deploy is blocked until issue is investigated.
+                  Post-mortem required for any production incidents.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 9. MONITORING & LOGGING ============ -->
+        <section class="concept" id="monitoring">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Monitoring & Logging</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">DevOps</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Can you detect and diagnose production issues?</li>
+                <li>Do you think about observability proactively?</li>
+                <li>Do you know what metrics matter for your application?</li>
+                <li>
+                  Can you find the needle in the haystack when things break?
+                </li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Monitoring & Logging Topics</h4>
+              <ul>
+                <li>
+                  <strong>Logging:</strong> Structured logs (JSON), log levels,
+                  centralized logging (ELK, CloudWatch), correlation IDs
+                </li>
+                <li>
+                  <strong>Metrics:</strong> RED method (Rate, Errors, Duration),
+                  custom business metrics, dashboards
+                </li>
+                <li>
+                  <strong>Alerting:</strong> PagerDuty, OpsGenie, alert
+                  thresholds, on-call rotations
+                </li>
+                <li>
+                  <strong>APM:</strong> New Relic, Datadog, distributed tracing,
+                  flame graphs
+                </li>
+                <li>
+                  <strong>Health checks:</strong> Liveness probes, readiness
+                  probes, synthetic monitoring
+                </li>
+                <li>
+                  <strong>Error tracking:</strong> Sentry, Bugsnag, stack
+                  traces, error grouping
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>"We implemented comprehensive observability:"</p>
+
+                <p>
+                  <strong>Logging:</strong> "Structured JSON logs with Winston,
+                  including request ID for tracing across services. Logs shipped
+                  to CloudWatch, with 30-day retention."
+                </p>
+
+                <p>
+                  <strong>Metrics:</strong> "Prometheus metrics for API latency
+                  (p50, p95, p99), request rate, error rate, and custom metrics
+                  (orders/minute, checkout conversion). Grafana dashboards for
+                  visualization."
+                </p>
+
+                <p>
+                  <strong>Alerting:</strong> "PagerDuty alerts for: error rate >
+                  1%, p95 latency > 500ms, database connection failures. Slack
+                  alerts for non-critical warnings."
+                </p>
+
+                <p>
+                  <strong>Error tracking:</strong> "Sentry for frontend and
+                  backend. Errors grouped by type, with full stack traces and
+                  user context. We triage new errors in weekly bug review."
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 10. CACHING ============ -->
+        <section class="concept" id="caching">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Caching Strategy</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you understand the different layers of caching?</li>
+                <li>Do you know cache invalidation strategies?</li>
+                <li>Can you balance freshness vs performance?</li>
+                <li>Have you dealt with cache-related bugs?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Caching Layers to Discuss</h4>
+              <ul>
+                <li>
+                  <strong>Browser cache:</strong> HTTP cache headers
+                  (Cache-Control, ETag), service workers
+                </li>
+                <li>
+                  <strong>CDN cache:</strong> Static assets, edge caching, cache
+                  invalidation
+                </li>
+                <li>
+                  <strong>Application cache:</strong> Redis, Memcached,
+                  in-memory caches
+                </li>
+                <li>
+                  <strong>Database cache:</strong> Query cache, materialized
+                  views
+                </li>
+                <li>
+                  <strong>Cache patterns:</strong> Cache-aside, write-through,
+                  write-behind
+                </li>
+                <li>
+                  <strong>Invalidation:</strong> TTL-based, event-based, manual
+                  purge
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>"We used multiple caching layers:"</p>
+
+                <p>
+                  <strong>Redis (Application cache):</strong> "Cached user
+                  sessions (24h TTL), product listings (1h TTL), and computed
+                  recommendation scores. Used
+                  <span class="highlight">cache-aside pattern</span> — check
+                  cache first, fetch from DB if miss, populate cache."
+                </p>
+
+                <p>
+                  <strong>CDN (CloudFront):</strong> "Static assets (JS, CSS,
+                  images) cached at edge with 1-year expiry. Versioned filenames
+                  (main.abc123.js) for instant invalidation on deploy."
+                </p>
+
+                <p>
+                  <strong>Invalidation strategy:</strong> "Event-driven
+                  invalidation. When product is updated, we publish event to
+                  SNS, cache invalidation worker removes affected keys. Used key
+                  prefixes (product:123:*) for grouped invalidation."
+                </p>
+
+                <p>
+                  <strong>Result:</strong> "Cache hit rate of 94%. Database load
+                  reduced by 70%. Average API response time from 400ms to 45ms
+                  for cached requests."
+                </p>
+              </div>
+            </div>
+
+            <div class="follow-up">
+              <h4>Common Follow-up Questions</h4>
+              <details>
+                <summary>How do you handle cache stampede?</summary>
+                <div class="ans">
+                  Cache stampede happens when a popular cache key expires and
+                  many requests simultaneously try to regenerate it. Solutions:
+                  (1) Lock mechanism — first request locks, others wait. (2)
+                  Stale-while-revalidate — serve stale data while refreshing
+                  async. (3) Background refresh — regenerate before expiry.
+                </div>
+              </details>
+              <details>
+                <summary>What's the hardest part about caching?</summary>
+                <div class="ans">
+                  "Cache invalidation and naming things." But seriously —
+                  knowing when to invalidate. Too eager = low hit rate. Too lazy
+                  = stale data. Event-driven invalidation is usually best.
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 11. FAILURE HANDLING ============ -->
+        <section class="concept" id="failure">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Failure Handling</h2>
+              <span class="badge badge-project">Project</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">3 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Do you design for failure, not just the happy path?</li>
+                <li>Do you understand graceful degradation?</li>
+                <li>How do you ensure system resilience?</li>
+                <li>Have you dealt with cascading failures?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Failure Handling Patterns</h4>
+              <ul>
+                <li>
+                  <strong>Retry with backoff:</strong> Exponential backoff for
+                  transient failures
+                </li>
+                <li>
+                  <strong>Circuit breaker:</strong> Stop calling a failing
+                  service to prevent cascade
+                </li>
+                <li>
+                  <strong>Timeouts:</strong> Never wait forever, fail fast
+                </li>
+                <li>
+                  <strong>Fallbacks:</strong> Return cached/default data when
+                  service is down
+                </li>
+                <li>
+                  <strong>Bulkheads:</strong> Isolate failures — one failing
+                  component shouldn't take down others
+                </li>
+                <li>
+                  <strong>Dead letter queues:</strong> Don't lose failed
+                  messages, process later
+                </li>
+                <li>
+                  <strong>Idempotency:</strong> Safe to retry operations without
+                  side effects
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>"We handled failures at multiple levels:"</p>
+
+                <p>
+                  <strong>External API calls:</strong> "3 retries with
+                  exponential backoff (1s, 2s, 4s). Circuit breaker trips after
+                  5 consecutive failures, auto-resets after 30 seconds. Fallback
+                  to cached data when payment provider is down — we show
+                  'temporarily unavailable' rather than crashing."
+                </p>
+
+                <p>
+                  <strong>Database:</strong> "Connection pool with health
+                  checks. If primary fails, auto-failover to read replica (RDS
+                  handled this). Queries have 5-second timeout."
+                </p>
+
+                <p>
+                  <strong>Message queue:</strong> "Failed messages go to dead
+                  letter queue after 3 attempts. Separate worker processes DLQ
+                  with manual intervention. All queue operations are
+                  idempotent."
+                </p>
+
+                <p>
+                  <strong>Graceful degradation:</strong> "If recommendation
+                  service is slow, we return popular items instead of
+                  personalized recommendations. Users get slightly worse
+                  experience, but the page still loads."
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 12. TEAM CONFLICT ============ -->
+        <section class="concept" id="conflict">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Team Conflict Situation</h2>
+              <span class="badge badge-behavioral">Behavioral</span>
+              <span class="badge badge-critical">Critical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Can you work with people you disagree with?</li>
+                <li>Do you escalate or resolve conflicts yourself?</li>
+                <li>Are you collaborative or combative?</li>
+                <li>
+                  Can you separate technical disagreements from personal ones?
+                </li>
+              </ul>
+            </div>
+
+            <div class="framework">
+              <h4>Structure Your Answer with STAR</h4>
+              <div class="framework-grid">
+                <div class="framework-item">
+                  <div class="letter">S</div>
+                  <div class="title">Situation</div>
+                  <div class="desc">
+                    "We were deciding between REST and GraphQL for our new API.
+                    I strongly preferred GraphQL, but a senior teammate was
+                    adamant about REST."
+                  </div>
+                </div>
+                <div class="framework-item">
+                  <div class="letter">T</div>
+                  <div class="title">Task</div>
+                  <div class="desc">
+                    "We needed to reach a decision that the whole team could
+                    support, without damaging working relationships."
+                  </div>
+                </div>
+                <div class="framework-item">
+                  <div class="letter">A</div>
+                  <div class="title">Action</div>
+                  <div class="desc">
+                    "I scheduled a 1:1 to understand his concerns. Turned out he
+                    had bad experience with GraphQL's N+1 problem. We researched
+                    solutions together..."
+                  </div>
+                </div>
+                <div class="framework-item">
+                  <div class="letter">R</div>
+                  <div class="title">Result</div>
+                  <div class="desc">
+                    "We agreed on GraphQL with DataLoader for batching. The
+                    project succeeded, and we actually became closer
+                    collaborators afterward."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Key Elements of a Good Answer</h4>
+              <ul>
+                <li>
+                  <strong>Acknowledge the other person's perspective</strong> —
+                  You listened and understood their view
+                </li>
+                <li>
+                  <strong>Focus on the problem, not the person</strong> — It was
+                  a technical disagreement, not personal
+                </li>
+                <li>
+                  <strong>You took initiative to resolve it</strong> — Didn't
+                  wait for manager to intervene
+                </li>
+                <li>
+                  <strong>Outcome was positive</strong> — Both the project and
+                  relationship improved
+                </li>
+                <li>
+                  <strong>You learned something</strong> — Shows humility and
+                  growth
+                </li>
+              </ul>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These</h4>
+              <ul>
+                <li>
+                  Blaming the other person: "They were just being stubborn"
+                </li>
+                <li>
+                  You "won" the argument: "Eventually they admitted I was right"
+                </li>
+                <li>
+                  Escalating to manager as first step: "I told my manager about
+                  the problem"
+                </li>
+                <li>No resolution: "We just agreed to disagree"</li>
+                <li>
+                  Getting emotional: "It really frustrated me that they wouldn't
+                  listen"
+                </li>
+              </ul>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Pick a real conflict with a good resolution — fake stories are
+                  obvious
+                </li>
+                <li>
+                  Show empathy: "I realized they had valid concerns I hadn't
+                  considered"
+                </li>
+                <li>The conflict should be professional, not personal drama</li>
+                <li>End with what you learned about handling disagreements</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 13. LEADERSHIP EXAMPLE ============ -->
+        <section class="concept" id="leadership">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Leadership Example</h2>
+              <span class="badge badge-behavioral">Behavioral</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Can you influence without authority?</li>
+                <li>Do you take initiative or wait for instructions?</li>
+                <li>Can you help others grow?</li>
+                <li>Do you have potential for senior/lead roles?</li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Leadership Doesn't Require a Title — Examples That Work</h4>
+              <ul>
+                <li>
+                  <strong>Mentoring a junior developer</strong> — Helped them
+                  grow, code reviews, pair programming
+                </li>
+                <li>
+                  <strong>Driving a technical initiative</strong> — Proposed and
+                  led adoption of new technology
+                </li>
+                <li>
+                  <strong>Improving team processes</strong> — Identified
+                  problem, proposed solution, got buy-in
+                </li>
+                <li>
+                  <strong>Stepping up in crisis</strong> — Took charge during a
+                  production incident
+                </li>
+                <li>
+                  <strong>Cross-team collaboration</strong> — Coordinated work
+                  across multiple teams
+                </li>
+                <li>
+                  <strong>Knowledge sharing</strong> — Created documentation,
+                  gave tech talks, onboarding improvements
+                </li>
+              </ul>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>
+                  <strong>Situation:</strong> "Our team's code review process
+                  was a bottleneck — PRs sat for days waiting for review,
+                  blocking deployments."
+                </p>
+
+                <p>
+                  <strong>Task:</strong> "As an individual contributor, I wanted
+                  to improve this without stepping on any toes."
+                </p>
+
+                <p>
+                  <strong>Action:</strong> "I started by gathering data —
+                  average review time was 3 days. I proposed a rotating 'review
+                  buddy' system in team meeting, volunteered to pilot it myself.
+                  Created a Slack bot that reminded people about pending reviews
+                  and tracked metrics. Held brief training on how to give
+                  efficient, actionable reviews."
+                </p>
+
+                <p>
+                  <strong>Result:</strong> "Review time dropped from
+                  <span class="highlight">3 days to 4 hours</span>. The system
+                  was adopted by two other teams. It also improved code quality
+                  because people were doing more frequent, smaller reviews
+                  instead of dreading massive PRs."
+                </p>
+
+                <p>
+                  <strong>What I learned:</strong> "That leadership is about
+                  solving problems for the team, not about authority. Getting
+                  buy-in from peers is about making THEIR lives easier, not
+                  pushing my ideas."
+                </p>
+              </div>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Show influence without authority — you didn't force people,
+                  you convinced them
+                </li>
+                <li>Highlight the impact on OTHERS, not just yourself</li>
+                <li>
+                  If you mentored someone, talk about their growth, not just
+                  what you taught
+                </li>
+                <li>Be specific about what YOU did vs what the team did</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 14. PRODUCTION BUG ============ -->
+        <section class="concept" id="bug">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Production Bug You Solved</h2>
+              <span class="badge badge-behavioral">Behavioral</span>
+              <span class="badge badge-technical">Technical</span>
+              <span class="read-time">4 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>How do you handle pressure?</li>
+                <li>What's your debugging methodology?</li>
+                <li>Do you stay calm when things are on fire?</li>
+                <li>Do you learn from incidents and prevent recurrence?</li>
+              </ul>
+            </div>
+
+            <div class="answer-structure">
+              <h4>How to Structure Your Answer</h4>
+
+              <div class="answer-step">
+                <div class="answer-step-num">1</div>
+                <div class="answer-step-content">
+                  <div class="title">The Impact (Why it mattered)</div>
+                  <div class="example">
+                    "Users couldn't complete checkout — we were losing
+                    approximately $50K per hour in revenue."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">2</div>
+                <div class="answer-step-content">
+                  <div class="title">How you discovered/triaged it</div>
+                  <div class="example">
+                    "Alerts fired at 2am for elevated error rates. I joined the
+                    incident call, checked dashboards, identified it was only
+                    affecting the payments service."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">3</div>
+                <div class="answer-step-content">
+                  <div class="title">Your debugging process</div>
+                  <div class="example">
+                    "Checked recent deploys — none. Checked logs — timeout
+                    errors from Stripe. Tested Stripe API directly — working.
+                    Found the issue in our connection pool config — max
+                    connections exhausted."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">4</div>
+                <div class="answer-step-content">
+                  <div class="title">The fix and verification</div>
+                  <div class="example">
+                    "Increased pool size and added connection timeout. Deployed
+                    hotfix. Error rate dropped to zero within 5 minutes."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">5</div>
+                <div class="answer-step-content">
+                  <div class="title">Prevention measures</div>
+                  <div class="example">
+                    "Added connection pool metrics to dashboards, set alerts for
+                    pool exhaustion. Conducted post-mortem, documented runbook
+                    for similar issues."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="key-points">
+              <h4>Good Bug Stories Have</h4>
+              <ul>
+                <li>
+                  <strong>Real business impact</strong> — Not "a button was
+                  misaligned"
+                </li>
+                <li>
+                  <strong>Systematic debugging</strong> — You didn't just guess
+                  randomly
+                </li>
+                <li>
+                  <strong>Clear resolution</strong> — You actually fixed it
+                </li>
+                <li>
+                  <strong>Prevention mindset</strong> — You made sure it
+                  wouldn't happen again
+                </li>
+                <li><strong>Calm under pressure</strong> — You didn't panic</li>
+              </ul>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Include the time pressure: "At 2am with customers impacted..."
+                </li>
+                <li>
+                  Mention collaboration: "I pulled in the DBA to help verify..."
+                </li>
+                <li>
+                  Show systematic thinking: "I ruled out X, Y, Z before
+                  finding..."
+                </li>
+                <li>
+                  Post-mortem is crucial: Always mention what you did to prevent
+                  recurrence
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 15. WHY SHOULD WE HIRE YOU ============ -->
+        <section class="concept" id="hire">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Why Should We Hire You?</h2>
+              <span class="badge badge-behavioral">Behavioral</span>
+              <span class="badge badge-critical">The Closer</span>
+              <span class="read-time">5 min</span>
+            </div>
+
+            <div class="what-asking">
+              <h4>What They're Really Asking</h4>
+              <ul>
+                <li>Can you articulate your value clearly?</li>
+                <li>Do you understand what we need?</li>
+                <li>Are you confident without being arrogant?</li>
+                <li>Will you hit the ground running?</li>
+              </ul>
+            </div>
+
+            <div class="answer-structure">
+              <h4>The Formula: 3 Strengths + Evidence + Company Fit</h4>
+
+              <div class="answer-step">
+                <div class="answer-step-num">1</div>
+                <div class="answer-step-content">
+                  <div class="title">
+                    Strength 1: Technical Skill with Proof
+                  </div>
+                  <div class="example">
+                    "I'm a strong full-stack developer — I've built and shipped
+                    3 production applications from scratch, including a
+                    real-time collaboration tool handling 10K concurrent users."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">2</div>
+                <div class="answer-step-content">
+                  <div class="title">
+                    Strength 2: Soft Skill / Working Style
+                  </div>
+                  <div class="example">
+                    "I communicate complex ideas clearly — I've mentored 4
+                    junior developers, wrote technical documentation that's now
+                    used for onboarding, and led architecture discussions."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">3</div>
+                <div class="answer-step-content">
+                  <div class="title">Strength 3: Something Unique</div>
+                  <div class="example">
+                    "I have a passion for performance optimization — I genuinely
+                    enjoy profiling and making things faster. In my last
+                    project, I reduced page load time by 85%."
+                  </div>
+                </div>
+              </div>
+
+              <div class="answer-step">
+                <div class="answer-step-num">4</div>
+                <div class="answer-step-content">
+                  <div class="title">Connect to THEIR Needs</div>
+                  <div class="example">
+                    "I know your team is scaling quickly and building real-time
+                    features. I've done exactly that, and I can contribute
+                    immediately while also helping grow the team."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sample-answer">
+              <div class="sample-answer-header">
+                <span>Example Answer</span>
+              </div>
+              <div class="sample-answer-content">
+                <p>"Three things set me apart:"</p>
+
+                <p>
+                  "<strong>First, I ship.</strong> I've built three production
+                  systems from the ground up — not just prototypes, but real
+                  applications with users, monitoring, and on-call. I understand
+                  the full lifecycle from 'we have an idea' to 'it's running at
+                  scale.'"
+                </p>
+
+                <p>
+                  "<strong>Second, I communicate well.</strong> I've written
+                  documentation that's now the standard onboarding material, led
+                  architecture reviews, and mentored junior developers. I can
+                  explain complex systems simply, which helps teams move
+                  faster."
+                </p>
+
+                <p>
+                  "<strong>Third, I care about quality.</strong> I'm not
+                  satisfied with 'it works' — I want it to work well. I
+                  proactively add tests, monitoring, and documentation. I've
+                  never had to be asked to write tests; I consider them part of
+                  the work."
+                </p>
+
+                <p>
+                  "I've researched your company and I know you're building
+                  [specific product] and scaling your engineering team. I've
+                  dealt with similar challenges at [previous company], and I'm
+                  excited to bring that experience here while continuing to
+                  grow."
+                </p>
+              </div>
+            </div>
+
+            <div class="red-flags">
+              <h4>Red Flags — Avoid These</h4>
+              <ul>
+                <li>"I'm a hard worker" — Too generic, everyone says this</li>
+                <li>"I'm a fast learner" — Show, don't tell; give examples</li>
+                <li>
+                  "I really need this job" — Desperation is not attractive
+                </li>
+                <li>
+                  Listing technologies without context — "I know React, Node,
+                  Python..."
+                </li>
+                <li>
+                  Being too humble — "I'm not sure, but maybe I could help..."
+                </li>
+                <li>
+                  Being arrogant — "I'm the best developer you'll interview"
+                </li>
+              </ul>
+            </div>
+
+            <div class="pro-tips">
+              <h4>Pro Tips</h4>
+              <ul>
+                <li>
+                  Research the company — mention specific challenges they're
+                  facing
+                </li>
+                <li>
+                  Tailor your answer to the role — backend role? Emphasize
+                  backend skills
+                </li>
+                <li>
+                  Use specifics, not generics — Numbers, project names, concrete
+                  examples
+                </li>
+                <li>
+                  Be confident but humble — "I'm proud of what I've built, and
+                  excited to learn more"
+                </li>
+                <li>
+                  End on enthusiasm — "I'm genuinely excited about this
+                  opportunity"
+                </li>
+                <li>
+                  Practice this answer out loud — it should feel natural, not
+                  memorized
+                </li>
+              </ul>
+            </div>
+
+            <div class="key-points">
+              <h4>Customize for Common Role Types</h4>
+              <ul>
+                <li>
+                  <strong>For startups:</strong> Emphasize versatility,
+                  ownership, moving fast, wearing many hats
+                </li>
+                <li>
+                  <strong>For big tech:</strong> Emphasize scale experience,
+                  collaboration across teams, technical depth
+                </li>
+                <li>
+                  <strong>For senior roles:</strong> Emphasize leadership,
+                  mentoring, system design, driving initiatives
+                </li>
+                <li>
+                  <strong>For growth companies:</strong> Emphasize shipping,
+                  handling ambiguity, building processes
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- FINAL CHECKLIST -->
+        <div class="intro-box" style="margin-top: 2rem">
+          <h3>Pre-Interview Checklist: Projects & Behavioral</h3>
+          <ul>
+            <li>
+              Can I draw my project architecture on a whiteboard in 3 minutes?
+            </li>
+            <li>
+              Do I know specific numbers? (Response times, user counts,
+              improvements)
+            </li>
+            <li>Can I explain every technology choice and its trade-offs?</li>
+            <li>Do I have 3 different "challenge" stories ready?</li>
+            <li>
+              Do I have a conflict resolution story with a positive ending?
+            </li>
+            <li>
+              Can I explain a production bug I fixed with systematic debugging?
+            </li>
+            <li>Do I have a leadership example (even without a title)?</li>
+            <li>Is my "Why hire me" answer under 2 minutes and compelling?</li>
+            <li>Have I researched THIS company's specific challenges?</li>
+            <li>Have I practiced these answers OUT LOUD?</li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle("focus-mode");
+        document.getElementById("focusBtn").textContent = sb.classList.contains(
+          "hidden",
+        )
+          ? "Expand"
+          : "Focus";
+      }
+
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Expand";
+          }
+        });
+      });
+
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

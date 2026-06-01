@@ -1,0 +1,3285 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python Core — Interview Notes</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700;800&display=swap");
+
+      :root {
+        --gold: #f5a623;
+        --gold-light: #ffd080;
+        --gold-dim: rgba(245, 166, 35, 0.13);
+        --bg: #f4f2ee;
+        --surface: #ffffff;
+        --surface2: #edeae3;
+        --border: #e0dad0;
+        --text: #1a1714;
+        --text2: #5a5450;
+        --text3: #9c968e;
+        --easy: #27ae60;
+        --medium: #e67e22;
+        --hard: #c0392b;
+        --easy-bg: rgba(39, 174, 96, 0.1);
+        --medium-bg: rgba(230, 126, 34, 0.1);
+        --hard-bg: rgba(192, 57, 43, 0.1);
+        --code-bg: #1a1814;
+        --red-warn: rgba(192, 57, 43, 0.07);
+        --py-blue: #3572a5;
+        --py-yellow: #ffe873;
+        --sidebar-w: 264px;
+        --nav-h: 54px;
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 8px 36px rgba(0, 0, 0, 0.11);
+      }
+      [data-theme="dark"] {
+        --bg: #131110;
+        --surface: #1c1a16;
+        --surface2: #232018;
+        --border: #302c24;
+        --text: #ede8df;
+        --text2: #b0a89c;
+        --text3: #6a6258;
+        --code-bg: #0c0b09;
+        --red-warn: rgba(192, 57, 43, 0.13);
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 8px 36px rgba(0, 0, 0, 0.55);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Sora", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14.5px;
+        line-height: 1.72;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: var(--nav-h);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 22px;
+        box-shadow: var(--shadow);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+      }
+      .nav-py-badge {
+        background: var(--py-blue);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.06em;
+      }
+      .nav-title-text {
+        color: var(--gold);
+      }
+      .nav-sep {
+        width: 1px;
+        height: 20px;
+        background: var(--border);
+      }
+      .pbar-wrap {
+        flex: 1;
+        height: 3px;
+        background: var(--border);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .pbar {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--py-blue), var(--gold));
+        transition: width 0.15s;
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+      }
+      .btn-sm {
+        padding: 5px 13px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        color: var(--text2);
+        font-family: "Sora", sans-serif;
+        transition: all 0.15s;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .btn-sm:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .btn-sm.active {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+
+      /* ── LAYOUT ── */
+      .layout {
+        display: flex;
+        margin-top: var(--nav-h);
+        min-height: calc(100vh - var(--nav-h));
+      }
+
+      /* ── SIDEBAR ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        height: calc(100vh - var(--nav-h));
+        overflow-y: auto;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 18px 0 40px;
+        transition: transform 0.3s;
+        z-index: 50;
+      }
+      .sidebar.hidden {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+      .sb-section-label {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text3);
+        padding: 10px 18px 5px;
+      }
+      .sb-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 7px 18px;
+        font-size: 12.5px;
+        color: var(--text2);
+        text-decoration: none;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        transition: all 0.14s;
+        line-height: 1.4;
+      }
+      .sb-num {
+        min-width: 18px;
+        height: 18px;
+        background: var(--surface2);
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text3);
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.14s;
+      }
+      .sb-link:hover {
+        color: var(--gold);
+        background: var(--gold-dim);
+        border-left-color: var(--gold);
+      }
+      .sb-link:hover .sb-num {
+        background: var(--gold);
+        color: #000;
+      }
+      .sb-link.active {
+        color: var(--gold);
+        background: var(--gold-dim);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sb-link.active .sb-num {
+        background: var(--gold);
+        color: #000;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 3px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        padding: 32px 44px 80px;
+        max-width: calc(100% - var(--sidebar-w));
+        transition:
+          margin-left 0.3s,
+          max-width 0.3s;
+      }
+      .main.full {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      /* ── PAGE HEADER ── */
+      .page-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 0 22px;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 30px;
+      }
+      .ph-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #3572a5 0%, #ffe873 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+        box-shadow: var(--shadow);
+      }
+      .ph-title {
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .ph-sub {
+        font-size: 13px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+      .ph-count {
+        margin-left: auto;
+        background: var(--gold-dim);
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 6px 14px;
+        text-align: center;
+      }
+      .ph-count-num {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--gold);
+        line-height: 1;
+      }
+      .ph-count-label {
+        font-size: 10px;
+        color: var(--text3);
+      }
+
+      /* ── CONCEPT CARD ── */
+      .concept {
+        background: var(--surface);
+        border-radius: 14px;
+        border-left: 4px solid var(--py-blue);
+        box-shadow: var(--shadow);
+        margin-bottom: 26px;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+      }
+      .concept:hover {
+        box-shadow: var(--shadow-lg);
+      }
+
+      .concept-header {
+        padding: 16px 22px 13px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .c-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--py-blue);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .c-title {
+        font-size: 17px;
+        font-weight: 700;
+        flex: 1;
+        min-width: 0;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .easy {
+        background: var(--easy-bg);
+        color: var(--easy);
+      }
+      .medium {
+        background: var(--medium-bg);
+        color: var(--medium);
+      }
+      .hard {
+        background: var(--hard-bg);
+        color: var(--hard);
+      }
+      .read-time {
+        font-size: 11px;
+        color: var(--text3);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+
+      .concept-body {
+        padding: 20px 22px;
+      }
+
+      /* ── ONE LINE ── */
+      .one-line {
+        background: linear-gradient(
+          90deg,
+          rgba(53, 114, 165, 0.08),
+          transparent
+        );
+        border-left: 3px solid var(--py-blue);
+        border-radius: 0 8px 8px 0;
+        padding: 12px 16px;
+        font-weight: 700;
+        font-size: 14.5px;
+        margin-bottom: 18px;
+        color: var(--text);
+      }
+
+      /* ── EXPLANATION ── */
+      .explanation {
+        margin-bottom: 18px;
+      }
+      .explanation p {
+        color: var(--text2);
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .explanation p strong {
+        color: var(--text);
+      }
+      .explanation p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ── KEY POINTS ── */
+      .key-points {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+      }
+      .kp-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--py-blue);
+        margin-bottom: 10px;
+      }
+      .key-points ul {
+        list-style: none;
+        padding: 0;
+      }
+      .key-points li {
+        font-size: 13.5px;
+        color: var(--text2);
+        padding: 5px 0 5px 22px;
+        position: relative;
+        border-bottom: 1px solid var(--border);
+      }
+      .key-points li:last-child {
+        border-bottom: none;
+      }
+      .key-points li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-weight: 700;
+      }
+
+      /* ── INTERVIEW Q ── */
+      .iq-wrap {
+        margin-bottom: 18px;
+      }
+      .iq-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .iq-item {
+        margin-bottom: 10px;
+      }
+      .iq-q {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+      .iq-a {
+        font-size: 13px;
+        color: var(--text2);
+        padding-left: 14px;
+        border-left: 2px solid var(--border);
+      }
+
+      /* ── GOTCHA ── */
+      .gotcha {
+        border: 1px solid var(--hard);
+        background: var(--red-warn);
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 18px;
+      }
+      .gotcha-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--hard);
+        margin-bottom: 8px;
+      }
+      .gotcha ul {
+        padding-left: 16px;
+      }
+      .gotcha li {
+        font-size: 13px;
+        color: var(--text2);
+        margin-bottom: 5px;
+      }
+      .gotcha p {
+        font-size: 13px;
+        color: var(--text2);
+      }
+
+      /* ── EDGE ── */
+      .edge {
+        border: 1px solid var(--gold);
+        background: var(--gold-dim);
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 18px;
+      }
+      .edge-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      .edge p {
+        font-size: 13px;
+        color: var(--text2);
+      }
+
+      /* ── DIAGRAM ── */
+      .diagram-wrap {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 20px 16px;
+        margin-bottom: 18px;
+        overflow-x: auto;
+      }
+      .diagram-wrap svg {
+        display: block;
+        margin: 0 auto;
+      }
+      .diagram-label {
+        font-size: 10px;
+        color: var(--text3);
+        text-align: center;
+        margin-top: 8px;
+        letter-spacing: 0.04em;
+      }
+
+      /* ── CODE ── */
+      .code-block {
+        background: var(--code-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .code-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .code-lang {
+        font-size: 11px;
+        color: #6a7280;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .copy-btn {
+        font-size: 11px;
+        padding: 3px 10px;
+        border-radius: 4px;
+        background: rgba(53, 114, 165, 0.15);
+        color: #60a0d0;
+        border: 1px solid rgba(53, 114, 165, 0.3);
+        cursor: pointer;
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+      }
+      .copy-btn:hover {
+        background: rgba(53, 114, 165, 0.25);
+      }
+      pre {
+        padding: 16px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.72;
+        color: #dce0d8;
+      }
+      .kw {
+        color: #cf8dfb;
+      }
+      .cm {
+        color: #5a6472;
+        font-style: italic;
+      }
+      .str {
+        color: #98d982;
+      }
+      .num {
+        color: #f5a623;
+      }
+      .fn {
+        color: #60bfff;
+      }
+      .bi {
+        color: #ffb347;
+      }
+      .op {
+        color: #e8c97a;
+      }
+
+      /* ── TABLE ── */
+      .ctable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .ctable th {
+        background: var(--surface2);
+        color: var(--text);
+        font-weight: 700;
+        padding: 9px 14px;
+        border: 1px solid var(--border);
+        text-align: left;
+        font-size: 12px;
+      }
+      .ctable td {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        color: var(--text2);
+        vertical-align: top;
+      }
+      .ctable tr:nth-child(even) td {
+        background: var(--surface2);
+      }
+
+      /* ── RESOURCES ── */
+      .resources {
+        margin-top: 18px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+      .res-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .res-cards {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .res-card {
+        flex: 1;
+        min-width: 170px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 13px;
+        text-decoration: none;
+        color: var(--text2);
+        transition: all 0.14s;
+        font-size: 12.5px;
+      }
+      .res-card:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .res-card-icon {
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .res-card-name {
+        font-weight: 600;
+        font-size: 12px;
+        color: var(--text);
+        margin-bottom: 2px;
+      }
+      .res-card-why {
+        font-size: 11px;
+        color: var(--text3);
+      }
+
+      /* ── CALLOUT (info box) ── */
+      .callout {
+        background: rgba(53, 114, 165, 0.07);
+        border-left: 3px solid var(--py-blue);
+        border-radius: 0 8px 8px 0;
+        padding: 11px 15px;
+        margin-bottom: 18px;
+        font-size: 13.5px;
+        color: var(--text2);
+      }
+
+      /* ── BACK TOP ── */
+      #back-top {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--py-blue);
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-lg);
+        border: none;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        z-index: 200;
+      }
+      #back-top.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #back-top:hover {
+        transform: translateY(-3px);
+      }
+
+      /* ── FOCUS ── */
+      body.focus .sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+      body.focus .main {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      /* ── MOBILE ── */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(calc(-1 * var(--sidebar-w)));
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 20px 16px 60px;
+        }
+        .ph-title {
+          font-size: 22px;
+        }
+        .ph-count {
+          display: none;
+        }
+        #mob-menu-btn {
+          display: flex !important;
+        }
+      }
+
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-logo">
+        <span class="nav-py-badge">PY</span>
+        <span class="nav-title-text">Python Core</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+      <div class="nav-right">
+        <button class="btn-sm" id="focusBtn" onclick="toggleFocus()">
+          Focus Mode
+        </button>
+        <button class="btn-sm" id="themeBtn" onclick="toggleTheme()">
+          Dark Mode
+        </button>
+        <button
+          class="btn-sm"
+          id="mob-menu-btn"
+          style="display: none"
+          onclick="toggleSidebar()"
+        >
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sb-section-label">Python Core — 10 Questions</div>
+        <a class="sb-link" onclick="jumpTo('q1')"
+          ><span class="sb-num">1</span>GIL (Global Interpreter Lock)</a
+        >
+        <a class="sb-link" onclick="jumpTo('q2')"
+          ><span class="sb-num">2</span>Multithreading vs Multiprocessing</a
+        >
+        <a class="sb-link" onclick="jumpTo('q3')"
+          ><span class="sb-num">3</span>Mutable vs Immutable Objects</a
+        >
+        <a class="sb-link" onclick="jumpTo('q4')"
+          ><span class="sb-num">4</span>is vs ==</a
+        >
+        <a class="sb-link" onclick="jumpTo('q5')"
+          ><span class="sb-num">5</span>Deep Copy vs Shallow Copy</a
+        >
+        <a class="sb-link" onclick="jumpTo('q6')"
+          ><span class="sb-num">6</span>Python Memory Management</a
+        >
+        <a class="sb-link" onclick="jumpTo('q7')"
+          ><span class="sb-num">7</span>How Python Code Executes</a
+        >
+        <a class="sb-link" onclick="jumpTo('q8')"
+          ><span class="sb-num">8</span>List vs Tuple</a
+        >
+        <a class="sb-link" onclick="jumpTo('q9')"
+          ><span class="sb-num">9</span>Generators & Memory Efficiency</a
+        >
+        <a class="sb-link" onclick="jumpTo('q10')"
+          ><span class="sb-num">10</span>Interpreter vs Compiler in Python</a
+        >
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main" id="main">
+        <div class="page-header">
+          <div class="ph-icon">🐍</div>
+          <div>
+            <div class="ph-title">Language Core — Python</div>
+            <div class="ph-sub">
+              Top 10 Must-Asked Interview Questions · Revision-Optimised
+            </div>
+          </div>
+          <div class="ph-count">
+            <div class="ph-count-num">10</div>
+            <div class="ph-count-label">Concepts</div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q1: GIL -->
+        <div class="concept" id="q1">
+          <div class="concept-header">
+            <div class="c-num">1</div>
+            <div class="c-title">What is GIL — Global Interpreter Lock?</div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">5 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              GIL is a mutex inside CPython that allows only ONE thread to
+              execute Python bytecode at any given moment — even on multi-core
+              machines.
+            </div>
+
+            <div class="explanation">
+              <p>
+                CPython (the standard Python) uses reference counting for memory
+                management. Every object has a counter — how many variables
+                point to it. When that counter hits zero, the object is freed.
+                The problem? Reference count updates are NOT thread-safe by
+                default. Two threads incrementing/decrementing the same counter
+                simultaneously = corruption.
+              </p>
+              <p>
+                The GIL is the brutal but simple fix: "Only one thread runs
+                Python bytecode at a time, period." It's like a single baton in
+                a relay race — a thread must hold the GIL to run, and it
+                releases it periodically (every 5ms in Python 3.2+) or during
+                I/O so other threads get a turn.
+              </p>
+              <p>
+                This means Python threads are <strong>concurrent</strong> (they
+                take turns) but NOT <strong>parallel</strong> (they don't run
+                simultaneously on multiple cores). For CPU-heavy tasks, threads
+                give you zero speedup — you're still using one core. For
+                I/O-heavy tasks (network calls, file reads), threads work fine
+                because the GIL is released during I/O waits.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 520 160"
+                width="520"
+                height="160"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="a1"
+                    markerWidth="8"
+                    markerHeight="6"
+                    refX="8"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,8 3,0 6" fill="#F5A623" />
+                  </marker>
+                </defs>
+
+                <!-- Title labels -->
+                <text
+                  x="120"
+                  y="16"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  SINGLE CORE (GIL)
+                </text>
+                <text
+                  x="390"
+                  y="16"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  MULTI CORE ILLUSION
+                </text>
+
+                <!-- Timeline row left -->
+                <rect
+                  x="10"
+                  y="30"
+                  width="220"
+                  height="28"
+                  rx="4"
+                  fill="none"
+                  stroke="#333"
+                  stroke-width="1"
+                />
+                <!-- T1 blocks -->
+                <rect
+                  x="10"
+                  y="30"
+                  width="55"
+                  height="28"
+                  rx="4"
+                  fill="#3572A5"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="37"
+                  y="49"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  T1 runs
+                </text>
+                <rect
+                  x="65"
+                  y="30"
+                  width="55"
+                  height="28"
+                  rx="4"
+                  fill="#E67E22"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="92"
+                  y="49"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  T2 runs
+                </text>
+                <rect
+                  x="120"
+                  y="30"
+                  width="55"
+                  height="28"
+                  rx="4"
+                  fill="#3572A5"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="147"
+                  y="49"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  T1 runs
+                </text>
+                <rect
+                  x="175"
+                  y="30"
+                  width="55"
+                  height="28"
+                  rx="4"
+                  fill="#E67E22"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="202"
+                  y="49"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  T2 runs
+                </text>
+
+                <text
+                  x="120"
+                  y="76"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  Takes turns — NOT parallel
+                </text>
+
+                <!-- GIL lock icon -->
+                <rect
+                  x="96"
+                  y="84"
+                  width="48"
+                  height="40"
+                  rx="6"
+                  fill="#C0392B"
+                  fill-opacity="0.12"
+                  stroke="#C0392B"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="120"
+                  y="110"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="20"
+                  font-family="Sora,sans-serif"
+                >
+                  🔒
+                </text>
+                <text
+                  x="120"
+                  y="136"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  GIL mutex
+                </text>
+
+                <!-- Right: true parallel (multiprocessing) -->
+                <!-- Core 1 -->
+                <rect
+                  x="290"
+                  y="26"
+                  width="220"
+                  height="14"
+                  rx="3"
+                  fill="#3572A5"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="400"
+                  y="37"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  Core 1 — Process A running
+                </text>
+                <!-- Core 2 -->
+                <rect
+                  x="290"
+                  y="46"
+                  width="220"
+                  height="14"
+                  rx="3"
+                  fill="#27AE60"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="400"
+                  y="57"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  Core 2 — Process B running
+                </text>
+                <!-- Core 3 -->
+                <rect
+                  x="290"
+                  y="66"
+                  width="220"
+                  height="14"
+                  rx="3"
+                  fill="#E67E22"
+                  fill-opacity="0.7"
+                />
+                <text
+                  x="400"
+                  y="77"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  Core 3 — Process C running
+                </text>
+
+                <text
+                  x="400"
+                  y="100"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  True parallelism — multiprocessing
+                </text>
+                <text
+                  x="400"
+                  y="115"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  Each process has its own GIL
+                </text>
+                <text
+                  x="400"
+                  y="130"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  No contention, fully parallel
+                </text>
+              </svg>
+              <div class="diagram-label">
+                Left: Threads fight over one GIL. Right: Processes run on
+                separate cores independently.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  GIL only exists in CPython (reference implementation). Jython
+                  and PyPy-STM don't have it.
+                </li>
+                <li>
+                  I/O-bound tasks: threads work well — GIL released during I/O
+                  wait, other threads run.
+                </li>
+                <li>
+                  CPU-bound tasks: threads are useless — use multiprocessing to
+                  get real parallelism.
+                </li>
+                <li>
+                  GIL is released every ~5ms (sys.getswitchinterval) or
+                  explicitly during I/O and C extensions.
+                </li>
+                <li>
+                  Python 3.13 is introducing a "free-threaded" mode (no GIL) — a
+                  big upcoming change.
+                </li>
+              </ul>
+            </div>
+
+            <div class="iq-wrap">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">Q: Why not just remove the GIL?</div>
+                <div class="iq-a">
+                  Tried many times. Reference counting everywhere in CPython
+                  makes it extremely hard. Each object's refcount update would
+                  need its own lock — massive complexity. Larry Hastings'
+                  "Gilectomy" project showed ~30x slowdown on single-threaded
+                  code due to lock overhead.
+                </div>
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">Q: How do NumPy/SciPy bypass the GIL?</div>
+                <div class="iq-a">
+                  C extensions can release the GIL manually using
+                  Py_BEGIN_ALLOW_THREADS macro. NumPy does this for heavy array
+                  computations — so NumPy operations CAN run truly in parallel
+                  in threads.
+                </div>
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Saying "Python can't do multithreading" — wrong. It can. It
+                  just can't do CPU-parallel multithreading.
+                </li>
+                <li>
+                  Saying GIL prevents ALL concurrency — no, async I/O (asyncio)
+                  is concurrent and doesn't even use threads.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Python 3.13 (Oct 2024) ships with an experimental free-threaded
+                build (<code>--disable-gil</code>). This is the most significant
+                Python change in decades. If you know this and mention PEP 703,
+                you'll stand out at any senior-level interview.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+GIL+explained+realpython"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">Real Python — GIL Explained</div>
+                  <div class="res-card-why">
+                    Best deep-dive, covers CPython internals
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://realpython.com/python-gil/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    RealPython — Python's GIL Article
+                  </div>
+                  <div class="res-card-why">
+                    Most comprehensive written explanation with benchmarks
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q2: Threading vs Multiprocessing -->
+        <div class="concept" id="q2">
+          <div class="concept-header">
+            <div class="c-num">2</div>
+            <div class="c-title">Multithreading vs Multiprocessing</div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">5 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Threads share memory, are fast to create, but bottlenecked by GIL
+              for CPU work. Processes have isolated memory, bypass GIL, but are
+              heavier to create and need IPC to communicate.
+            </div>
+
+            <div class="explanation">
+              <p>
+                This is the direct consequence of the GIL. For
+                <strong>I/O-bound tasks</strong> (web scraping, API calls,
+                reading files), use <code>threading</code> — the GIL gets
+                released during I/O, threads can overlap their wait times, and
+                you get real speedup with low overhead.
+              </p>
+              <p>
+                For <strong>CPU-bound tasks</strong> (image processing, number
+                crunching, data transformation), use
+                <code>multiprocessing</code> — each process is a separate Python
+                interpreter with its own GIL, so they run truly in parallel on
+                multiple cores. The cost: each process has its own memory copy,
+                and communication between processes requires pickling
+                (serializing) data.
+              </p>
+              <p>
+                There's also <strong>asyncio</strong> — a third option. It's
+                single-threaded, single-process, but uses event loops and
+                coroutines. Perfect when you have thousands of I/O operations
+                and the overhead of threads is too high. Think web servers
+                handling 10k concurrent connections.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Aspect</th>
+                <th>threading</th>
+                <th>multiprocessing</th>
+                <th>asyncio</th>
+              </tr>
+              <tr>
+                <td>GIL impact</td>
+                <td>Bottlenecked for CPU</td>
+                <td>No GIL (separate process)</td>
+                <td>No threads, no GIL issue</td>
+              </tr>
+              <tr>
+                <td>Memory</td>
+                <td>Shared</td>
+                <td>Separate copy per process</td>
+                <td>Single thread, shared</td>
+              </tr>
+              <tr>
+                <td>Best for</td>
+                <td>I/O-bound tasks</td>
+                <td>CPU-bound tasks</td>
+                <td>High-concurrency I/O</td>
+              </tr>
+              <tr>
+                <td>Overhead</td>
+                <td>Low</td>
+                <td>High (process fork)</td>
+                <td>Very low</td>
+              </tr>
+              <tr>
+                <td>Communication</td>
+                <td>Shared variables (with locks)</td>
+                <td>Queue, Pipe, Manager</td>
+                <td>Coroutines, queues</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  The "use threads for I/O, processes for CPU" rule — this is
+                  the answer to 90% of interview scenarios.
+                </li>
+                <li>
+                  multiprocessing.Pool maps work across processes easily for
+                  parallel CPU tasks.
+                </li>
+                <li>
+                  concurrent.futures gives a unified interface for both threads
+                  (ThreadPoolExecutor) and processes (ProcessPoolExecutor).
+                </li>
+                <li>
+                  Shared state in multiprocessing needs Manager objects or
+                  shared memory — can't just use a global variable.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Using threads for heavy CPU computation expecting speedup —
+                  you'll get slowdown due to GIL contention and context
+                  switching overhead.
+                </li>
+                <li>
+                  Forgetting that multiprocessing on Windows uses "spawn" by
+                  default (not fork) — your code must be inside
+                  <code>if __name__ == "__main__"</code> block or you get
+                  infinite spawning.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+threading+vs+multiprocessing+corey+schafer"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    Corey Schafer — Threading & Multiprocessing
+                  </div>
+                  <div class="res-card-why">
+                    Best hands-on tutorial with real benchmarks
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/multiprocessing-vs-multithreading-python/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    GFG — Multiprocessing vs Multithreading
+                  </div>
+                  <div class="res-card-why">Side-by-side code comparison</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q3: Mutable vs Immutable -->
+        <div class="concept" id="q3">
+          <div class="concept-header">
+            <div class="c-num">3</div>
+            <div class="c-title">Mutable vs Immutable Objects</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Immutable objects can't be changed after creation (int, str,
+              tuple). Mutable objects can be changed in-place (list, dict, set).
+              This has real consequences for function arguments and dict keys.
+            </div>
+
+            <div class="explanation">
+              <p>
+                In Python, <em>everything</em> is an object. When you do
+                <code>x = 5</code>, x is a variable that <em>points to</em> the
+                integer object 5. When you do <code>x = x + 1</code>, you're not
+                changing the 5 — you're making x point to a new integer object
+                6. The original 5 is untouched. That's immutability.
+              </p>
+              <p>
+                With a list, <code>my_list.append(4)</code> actually modifies
+                the same list object in memory. Any other variable pointing to
+                that same list will see the change. This is why passing a list
+                to a function and modifying it inside changes the original —
+                they both point to the same object.
+              </p>
+              <p>
+                Python uses <strong>integer caching</strong> (small ints -5 to
+                256 are pre-created and shared). So
+                <code>a = 5; b = 5; a is b</code> is True — both point to the
+                same cached int object. This can confuse people with the
+                <code>is</code> operator.
+              </p>
+            </div>
+
+            <div class="callout">
+              <strong>Immutable:</strong> int, float, bool, str, tuple,
+              frozenset, bytes<br />
+              <strong>Mutable:</strong> list, dict, set, bytearray, and most
+              user-defined objects
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Immutable objects are hashable → can be used as dict keys or
+                  set elements. Mutable objects cannot.
+                </li>
+                <li>
+                  Default mutable arguments in functions is a classic Python
+                  trap — the default is created once, not per call.
+                </li>
+                <li>
+                  String concatenation in a loop creates a new string object
+                  each time — use join() or list + join instead.
+                </li>
+                <li>
+                  Tuple is immutable but if it contains a mutable object (like a
+                  list), that inner list can still be changed.
+                </li>
+              </ul>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">python</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># Classic mutable default argument trap</span>
+<span class="kw">def</span> <span class="fn">add_item</span>(item, lst=[]):  <span class="cm"># BAD! [] created once</span>
+    lst.append(item)
+    <span class="kw">return</span> lst
+
+<span class="fn">print</span>(add_item(<span class="num">1</span>))   <span class="cm"># [1]</span>
+<span class="fn">print</span>(add_item(<span class="num">2</span>))   <span class="cm"># [1, 2]  ← same list!</span>
+
+<span class="cm"># FIX: use None as default</span>
+<span class="kw">def</span> <span class="fn">add_item_fixed</span>(item, lst=<span class="kw">None</span>):
+    <span class="kw">if</span> lst <span class="kw">is</span> <span class="kw">None</span>:
+        lst = []
+    lst.append(item)
+    <span class="kw">return</span> lst</pre>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Mutable default argument in function definition — one of the
+                  most common Python bugs. The list is shared across all calls.
+                </li>
+                <li>
+                  A tuple containing a list is "immutable" but the list inside
+                  can still be modified. The tuple can't grow/shrink, but its
+                  contents can mutate if they're mutable objects.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/mutable-vs-immutable-objects-in-python/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    GFG — Mutable vs Immutable in Python
+                  </div>
+                  <div class="res-card-why">
+                    Memory diagrams + id() examples
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q4: is vs == -->
+        <div class="concept" id="q4">
+          <div class="concept-header">
+            <div class="c-num">4</div>
+            <div class="c-title">
+              Difference Between <code>is</code> and <code>==</code>
+            </div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              <code>==</code> checks if two objects have the same value.
+              <code>is</code> checks if they are literally the same object in
+              memory (same id).
+            </div>
+
+            <div class="explanation">
+              <p>
+                Think of <code>==</code> as "do these two objects look the
+                same?" and <code>is</code> as "are these the exact same person,
+                not just a twin?" Two different list objects with identical
+                contents will pass <code>==</code> but fail <code>is</code>,
+                because they're two separate objects in memory.
+              </p>
+              <p>
+                Python caches small integers (-5 to 256) and interned strings,
+                so <code>a = 5; b = 5; a is b</code> will be True. But
+                <code>a = 1000; b = 1000; a is b</code> might be False — Python
+                doesn't cache large integers. This behavior is an implementation
+                detail, not a language guarantee.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">python</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre>a = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+b = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+c = a
+
+<span class="fn">print</span>(a == b)   <span class="cm"># True  — same content</span>
+<span class="fn">print</span>(a <span class="kw">is</span> b)   <span class="cm"># False — different objects</span>
+<span class="fn">print</span>(a <span class="kw">is</span> c)   <span class="cm"># True  — c points to same object as a</span>
+
+<span class="cm"># Small int caching</span>
+x = <span class="num">100</span>; y = <span class="num">100</span>
+<span class="fn">print</span>(x <span class="kw">is</span> y)   <span class="cm"># True  — cached</span>
+
+x = <span class="num">1000</span>; y = <span class="num">1000</span>
+<span class="fn">print</span>(x <span class="kw">is</span> y)   <span class="cm"># False — not cached (usually)</span></pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Use <code>is</code> only for None checks (<code
+                    >if x is None</code
+                  >) — that's the idiomatic Python way.
+                </li>
+                <li>
+                  Never use <code>is</code> to compare strings or integers in
+                  production — behavior depends on implementation.
+                </li>
+                <li>
+                  <code>is</code> checks <code>id()</code> — memory address.
+                  <code>==</code> calls <code>__eq__()</code> method —
+                  customizable.
+                </li>
+                <li>
+                  PEP 8 explicitly says: use <code>is</code> for None/True/False
+                  comparisons, not <code>==</code>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Relying on <code>"hello" is "hello"</code> being True — it
+                  usually is due to string interning, but it's not guaranteed.
+                  Different Python implementations may behave differently.
+                </li>
+                <li>
+                  Using <code>if x == None</code> — works but not Pythonic.
+                  Always use <code>if x is None</code>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://realpython.com/python-is-identity-vs-equality/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">RealPython — is vs ==</div>
+                  <div class="res-card-why">
+                    Covers identity vs equality, caching, None comparisons
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q5: Deep vs Shallow Copy -->
+        <div class="concept" id="q5">
+          <div class="concept-header">
+            <div class="c-num">5</div>
+            <div class="c-title">Deep Copy vs Shallow Copy</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Shallow copy creates a new container but keeps references to the
+              same inner objects. Deep copy duplicates everything recursively —
+              fully independent.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Imagine you have a list of lists. Shallow copy gives you a new
+                outer list, but the inner lists are the <em>same objects</em> as
+                the original. Modify an inner list — both copies see the change.
+              </p>
+              <p>
+                Deep copy creates completely new objects at every level. Change
+                anything in the deep copy — original is untouched. Use
+                <code>copy.copy()</code> for shallow,
+                <code>copy.deepcopy()</code> for deep.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 480 170"
+                width="480"
+                height="170"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="a2"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#3572A5" />
+                  </marker>
+                  <marker
+                    id="a3"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#27AE60" />
+                  </marker>
+                  <marker
+                    id="a4"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#C0392B" />
+                  </marker>
+                </defs>
+
+                <!-- Original -->
+                <text
+                  x="60"
+                  y="14"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  ORIGINAL
+                </text>
+                <rect
+                  x="20"
+                  y="20"
+                  width="80"
+                  height="30"
+                  rx="5"
+                  fill="#3572A5"
+                  fill-opacity="0.2"
+                  stroke="#3572A5"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="60"
+                  y="39"
+                  text-anchor="middle"
+                  fill="#3572A5"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                >
+                  outer list
+                </text>
+                <rect
+                  x="120"
+                  y="20"
+                  width="80"
+                  height="30"
+                  rx="5"
+                  fill="#3572A5"
+                  fill-opacity="0.35"
+                  stroke="#3572A5"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="160"
+                  y="39"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                >
+                  [1, 2, 3]
+                </text>
+                <line
+                  x1="100"
+                  y1="35"
+                  x2="116"
+                  y2="35"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a2)"
+                />
+
+                <!-- SHALLOW -->
+                <text
+                  x="60"
+                  y="84"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  SHALLOW COPY
+                </text>
+                <rect
+                  x="20"
+                  y="90"
+                  width="80"
+                  height="30"
+                  rx="5"
+                  fill="#27AE60"
+                  fill-opacity="0.15"
+                  stroke="#27AE60"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="60"
+                  y="109"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                >
+                  new outer
+                </text>
+                <!-- Points to same inner -->
+                <line
+                  x1="100"
+                  y1="105"
+                  x2="116"
+                  y2="35"
+                  stroke="#C0392B"
+                  stroke-width="1.5"
+                  stroke-dasharray="4"
+                  marker-end="url(#a4)"
+                />
+                <text
+                  x="148"
+                  y="80"
+                  fill="#C0392B"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  SAME inner object!
+                </text>
+
+                <!-- DEEP -->
+                <text
+                  x="60"
+                  y="144"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  DEEP COPY
+                </text>
+                <rect
+                  x="20"
+                  y="148"
+                  width="80"
+                  height="28"
+                  rx="5"
+                  fill="#27AE60"
+                  fill-opacity="0.15"
+                  stroke="#27AE60"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="60"
+                  y="166"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                >
+                  new outer
+                </text>
+                <rect
+                  x="120"
+                  y="148"
+                  width="80"
+                  height="28"
+                  rx="5"
+                  fill="#27AE60"
+                  fill-opacity="0.25"
+                  stroke="#27AE60"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="160"
+                  y="166"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                >
+                  [1, 2, 3]
+                </text>
+                <line
+                  x1="100"
+                  y1="162"
+                  x2="116"
+                  y2="162"
+                  stroke="#27AE60"
+                  stroke-width="1.5"
+                  marker-end="url(#a3)"
+                />
+                <text
+                  x="260"
+                  y="166"
+                  fill="#27AE60"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  NEW independent copy
+                </text>
+              </svg>
+              <div class="diagram-label">
+                Shallow: new container, same inner objects. Deep: everything
+                new.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>copy.copy()</code> → shallow copy.
+                  <code>copy.deepcopy()</code> → deep copy.
+                </li>
+                <li>
+                  For a 1D list of immutables (like <code>[1,2,3]</code>),
+                  shallow copy is effectively the same as deep — there's nothing
+                  nested to share.
+                </li>
+                <li>
+                  Deep copy can be slow for large nested structures. Profile
+                  before using everywhere.
+                </li>
+                <li>
+                  Slice <code>list[:]</code>, <code>list(original)</code>,
+                  <code>list.copy()</code> — all shallow copies.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Thinking <code>b = a[:]</code> makes an independent copy —
+                  it's shallow. Nested mutable objects are still shared.
+                </li>
+                <li>
+                  Deep copy on objects with circular references can cause
+                  infinite recursion — Python's deepcopy handles this, but
+                  custom __deepcopy__ must too.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://realpython.com/copying-python-objects/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    RealPython — Copying Objects in Python
+                  </div>
+                  <div class="res-card-why">
+                    Covers all copy methods with diagrams
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q6: Memory Management -->
+        <div class="concept" id="q6">
+          <div class="concept-header">
+            <div class="c-num">6</div>
+            <div class="c-title">How Python Memory Management Works</div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">5 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Python uses reference counting as primary GC + a cyclic garbage
+              collector for objects that reference each other in a cycle. Memory
+              is managed by a private heap via CPython's memory allocator.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Every Python object has a reference count — a number tracking
+                how many variables/containers point to it. When you do
+                <code>x = obj</code>, obj's refcount goes up. When x goes out of
+                scope or you do <code>del x</code>, refcount goes down. When
+                refcount hits 0 — the object is <em>immediately</em> freed. No
+                GC pause needed.
+              </p>
+              <p>
+                But reference counting alone can't handle
+                <strong>circular references</strong>. If object A has a
+                reference to B, and B references back to A, even when all
+                external references are gone, both have refcount 1. They'll
+                never be freed. Python's <strong>cyclic GC</strong> runs
+                periodically to detect and clean these up.
+              </p>
+              <p>
+                Memory is not directly requested from the OS for each object.
+                Python maintains a private heap and uses an allocator called
+                <code>pymalloc</code> that manages small objects (≤512 bytes)
+                efficiently using fixed-size memory pools — much faster than
+                calling malloc for every tiny object.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 480 140"
+                width="480"
+                height="140"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="a5"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#F5A623" />
+                  </marker>
+                </defs>
+                <!-- Object box -->
+                <rect
+                  x="170"
+                  y="30"
+                  width="140"
+                  height="80"
+                  rx="8"
+                  fill="#3572A5"
+                  fill-opacity="0.1"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="240"
+                  y="52"
+                  text-anchor="middle"
+                  fill="#3572A5"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  Python Object
+                </text>
+                <text
+                  x="240"
+                  y="70"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  ob_refcnt: 2
+                </text>
+                <text
+                  x="240"
+                  y="85"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  ob_type: &lt;str&gt;
+                </text>
+                <text
+                  x="240"
+                  y="100"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  value: "hello"
+                </text>
+
+                <!-- vars pointing -->
+                <rect
+                  x="20"
+                  y="50"
+                  width="60"
+                  height="22"
+                  rx="4"
+                  fill="#27AE60"
+                  fill-opacity="0.15"
+                  stroke="#27AE60"
+                  stroke-width="1"
+                />
+                <text
+                  x="50"
+                  y="65"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  x = ...
+                </text>
+                <line
+                  x1="80"
+                  y1="61"
+                  x2="166"
+                  y2="64"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                  marker-end="url(#a5)"
+                />
+
+                <rect
+                  x="20"
+                  y="82"
+                  width="60"
+                  height="22"
+                  rx="4"
+                  fill="#27AE60"
+                  fill-opacity="0.15"
+                  stroke="#27AE60"
+                  stroke-width="1"
+                />
+                <text
+                  x="50"
+                  y="97"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  y = ...
+                </text>
+                <line
+                  x1="80"
+                  y1="93"
+                  x2="166"
+                  y2="80"
+                  stroke="#F5A623"
+                  stroke-width="1.5"
+                  marker-end="url(#a5)"
+                />
+
+                <text
+                  x="50"
+                  y="128"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  2 references → refcnt=2
+                </text>
+
+                <!-- Right: when freed -->
+                <rect
+                  x="370"
+                  y="50"
+                  width="100"
+                  height="60"
+                  rx="8"
+                  fill="#C0392B"
+                  fill-opacity="0.1"
+                  stroke="#C0392B"
+                  stroke-width="1.2"
+                  stroke-dasharray="4"
+                />
+                <text
+                  x="420"
+                  y="74"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  refcnt → 0
+                </text>
+                <text
+                  x="420"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  memory freed
+                </text>
+                <text
+                  x="420"
+                  y="104"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  immediately
+                </text>
+              </svg>
+              <div class="diagram-label">
+                Reference counting: when all references removed, object is freed
+                instantly.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Primary GC = reference counting (immediate dealloc when refcnt
+                  hits 0). Backup GC = cyclic collector.
+                </li>
+                <li>
+                  <code>sys.getrefcount(obj)</code> gives reference count — it's
+                  always 1 higher than you'd expect because calling the function
+                  creates a reference.
+                </li>
+                <li>
+                  Cyclic GC has 3 generations (young, middle, old) — Gen 0
+                  collected most often. Long-lived objects promoted to Gen 2.
+                </li>
+                <li>
+                  <code>gc.disable()</code> disables cyclic GC — safe if your
+                  code has no circular references (performance optimization).
+                </li>
+                <li>
+                  Memory fragmentation is mitigated by pymalloc's object pools
+                  for small objects.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Thinking Python GC works like Java GC (stop-the-world,
+                  generational only) — Python's reference counting is
+                  deterministic and immediate. Java's is not.
+                </li>
+                <li>
+                  Assuming <code>del x</code> frees memory — it only removes a
+                  reference. Memory is freed only when refcount reaches 0.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                <code>__slots__</code> in Python classes bypasses the default
+                <code>__dict__</code> per object, saving significant memory (up
+                to 40–50%) when creating thousands of instances. At scale (a
+                million objects), this matters a lot. Mention this for system
+                design interviews asking about Python performance.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+memory+management+reference+counting+explained"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Python Memory Management
+                  </div>
+                  <div class="res-card-why">
+                    Visualises refcounting + cyclic GC clearly
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://realpython.com/python-memory-management/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    RealPython — Memory Management
+                  </div>
+                  <div class="res-card-why">
+                    pymalloc, arenas, pools — deep and accurate
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q7: Python Execution -->
+        <div class="concept" id="q7">
+          <div class="concept-header">
+            <div class="c-num">7</div>
+            <div class="c-title">
+              What Happens When Python Code Executes Internally?
+            </div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">5 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Source → Tokenizer → Parser → AST → Compiler → Bytecode (.pyc) →
+              CPython VM interprets bytecode one instruction at a time.
+            </div>
+
+            <div class="explanation">
+              <p>
+                When you run <code>python script.py</code>, Python first reads
+                your source code and <strong>tokenizes</strong> it — breaks it
+                into meaningful chunks (keywords, identifiers, operators). Then
+                a <strong>parser</strong> turns those tokens into an
+                <strong>Abstract Syntax Tree (AST)</strong> — a tree structure
+                representing the logical structure of your code.
+              </p>
+              <p>
+                A <strong>compiler</strong> then converts the AST into
+                <strong>bytecode</strong> — a sequence of low-level instructions
+                for the CPython VM. This bytecode is cached in
+                <code>__pycache__/*.pyc</code> files so next time you run the
+                same script, the tokenize/parse/compile steps are skipped.
+              </p>
+              <p>
+                Finally, the <strong>CPython Virtual Machine</strong> —
+                basically a giant loop — reads bytecode instructions one by one
+                and executes them. Unlike Java's JVM, CPython is a pure
+                interpreter. There's no JIT compilation by default (though PyPy
+                has JIT).
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 540 56"
+                width="540"
+                height="56"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="a6"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#3572A5" />
+                  </marker>
+                </defs>
+                <rect
+                  x="0"
+                  y="12"
+                  width="72"
+                  height="28"
+                  rx="5"
+                  fill="#3572A5"
+                  fill-opacity="0.15"
+                  stroke="#3572A5"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="36"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#3572A5"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  .py source
+                </text>
+                <line
+                  x1="72"
+                  y1="26"
+                  x2="90"
+                  y2="26"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a6)"
+                />
+                <rect
+                  x="92"
+                  y="12"
+                  width="72"
+                  height="28"
+                  rx="5"
+                  fill="#F5A623"
+                  fill-opacity="0.15"
+                  stroke="#F5A623"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="128"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  Tokenizer
+                </text>
+                <line
+                  x1="164"
+                  y1="26"
+                  x2="182"
+                  y2="26"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a6)"
+                />
+                <rect
+                  x="184"
+                  y="12"
+                  width="60"
+                  height="28"
+                  rx="5"
+                  fill="#27AE60"
+                  fill-opacity="0.15"
+                  stroke="#27AE60"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="214"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#27AE60"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  Parser → AST
+                </text>
+                <line
+                  x1="244"
+                  y1="26"
+                  x2="262"
+                  y2="26"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a6)"
+                />
+                <rect
+                  x="264"
+                  y="12"
+                  width="72"
+                  height="28"
+                  rx="5"
+                  fill="#CF8DFB"
+                  fill-opacity="0.15"
+                  stroke="#CF8DFB"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="300"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#CF8DFB"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  Compiler
+                </text>
+                <line
+                  x1="336"
+                  y1="26"
+                  x2="354"
+                  y2="26"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a6)"
+                />
+                <rect
+                  x="356"
+                  y="12"
+                  width="72"
+                  height="28"
+                  rx="5"
+                  fill="#E67E22"
+                  fill-opacity="0.15"
+                  stroke="#E67E22"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="392"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#E67E22"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  .pyc bytecode
+                </text>
+                <line
+                  x1="428"
+                  y1="26"
+                  x2="446"
+                  y2="26"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                  marker-end="url(#a6)"
+                />
+                <rect
+                  x="448"
+                  y="12"
+                  width="90"
+                  height="28"
+                  rx="5"
+                  fill="#3572A5"
+                  fill-opacity="0.2"
+                  stroke="#3572A5"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="493"
+                  y="30"
+                  text-anchor="middle"
+                  fill="#3572A5"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  CPython VM
+                </text>
+              </svg>
+              <div class="diagram-label">
+                The full Python execution pipeline — .pyc is cached to skip
+                tokenize/parse/compile on re-runs.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>__pycache__</code> stores compiled bytecode — Python
+                  skips compilation if source hasn't changed (based on mtime and
+                  size).
+                </li>
+                <li>
+                  <code>dis</code> module lets you see bytecode:
+                  <code>import dis; dis.dis(my_function)</code>
+                </li>
+                <li>
+                  CPython has no JIT — that's why PyPy (with JIT) can be 5–50x
+                  faster for CPU-intensive code.
+                </li>
+                <li>
+                  The CPython VM's main loop is <code>ceval.c</code> — a giant
+                  switch-case over bytecode opcodes.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Python 3.11 introduced "specializing adaptive interpreter" — the
+                VM observes types at runtime and specializes instructions (e.g.,
+                <code>LOAD_ATTR</code> becomes <code>LOAD_ATTR_MODULE</code> for
+                known modules). This is a step toward JIT without a full JIT.
+                Python 3.13 adds an experimental JIT compiler. Mention this to
+                show you follow CPython evolution.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+execution+internals+bytecode+cpython+explained"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Python Bytecode & CPython VM
+                  </div>
+                  <div class="res-card-why">
+                    Shows dis module output, explains opcodes
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://leanpub.com/insidethepythonvirtualmachine/read"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    Inside the Python Virtual Machine (free)
+                  </div>
+                  <div class="res-card-why">
+                    Deep-dive reference for serious preparation
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q8: List vs Tuple -->
+        <div class="concept" id="q8">
+          <div class="concept-header">
+            <div class="c-num">8</div>
+            <div class="c-title">List vs Tuple</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              List is mutable, dynamic, slightly slower. Tuple is immutable,
+              fixed-size, faster access, and can be a dict key. Choose based on
+              whether your collection should change.
+            </div>
+
+            <div class="explanation">
+              <p>
+                The practical rule: use a <strong>list</strong> when you have a
+                collection that might grow or change (a list of user inputs,
+                results to accumulate). Use a <strong>tuple</strong> when the
+                data is fixed (coordinates, RGB color, a function returning
+                multiple values, dict keys).
+              </p>
+              <p>
+                Because tuples are immutable, CPython can make some
+                optimizations — tuple literals are often pre-created at compile
+                time rather than at runtime. Tuple creation is faster, and
+                tuples take slightly less memory than equivalent lists.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Aspect</th>
+                <th>List</th>
+                <th>Tuple</th>
+              </tr>
+              <tr>
+                <td>Mutability</td>
+                <td>Mutable</td>
+                <td>Immutable</td>
+              </tr>
+              <tr>
+                <td>Syntax</td>
+                <td><code>[1, 2, 3]</code></td>
+                <td><code>(1, 2, 3)</code></td>
+              </tr>
+              <tr>
+                <td>Dict key?</td>
+                <td>No (not hashable)</td>
+                <td>Yes (if contents hashable)</td>
+              </tr>
+              <tr>
+                <td>Methods</td>
+                <td>append, extend, pop, sort…</td>
+                <td>count, index only</td>
+              </tr>
+              <tr>
+                <td>Memory</td>
+                <td>Larger (over-allocates)</td>
+                <td>Smaller (exact fit)</td>
+              </tr>
+              <tr>
+                <td>Performance</td>
+                <td>Slower iteration</td>
+                <td>Slightly faster</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Lists over-allocate memory (double when full) to make appends
+                  O(1) amortized. Tuples allocate exact size.
+                </li>
+                <li>
+                  A one-element tuple needs a trailing comma:
+                  <code>(1,)</code> not <code>(1)</code> — that's just
+                  parentheses around an int.
+                </li>
+                <li>
+                  Tuple packing/unpacking is Pythonic:
+                  <code>a, b = 1, 2</code> is a tuple on the right side.
+                </li>
+                <li>
+                  Named tuples (collections.namedtuple or typing.NamedTuple)
+                  give you tuple performance with field names.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  <code>(1)</code> is an integer, NOT a tuple.
+                  <code>(1,)</code> is a tuple. Miss that comma and you'll get a
+                  baffling type error.
+                </li>
+                <li>
+                  A tuple containing a list is NOT fully immutable — the list
+                  inside can still be modified. The tuple itself can't be
+                  resized, but its mutable contents can change.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/python-difference-between-list-and-tuple/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — List vs Tuple</div>
+                  <div class="res-card-why">
+                    Memory comparison + use-case examples
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q9: Generators -->
+        <div class="concept" id="q9">
+          <div class="concept-header">
+            <div class="c-num">9</div>
+            <div class="c-title">
+              Generators & Why They Are Memory Efficient
+            </div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">5 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              A generator produces values one at a time on demand (lazy
+              evaluation) instead of building the whole collection in memory
+              upfront — perfect for large or infinite sequences.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Normal function: call it → runs to completion → returns a value.
+                Generator function: call it → returns a generator object
+                (nothing executes yet). Every time you call
+                <code>next()</code> on it, execution runs until the next
+                <code>yield</code>, pauses there, and hands back the yielded
+                value. The function's local state is preserved between calls.
+              </p>
+              <p>
+                The magic: only one value exists in memory at a time. If you
+                need to process a 10GB log file line by line, a generator gives
+                you one line at a time. A list would try to load all 10GB into
+                RAM and crash.
+              </p>
+              <p>
+                Generator expressions are like list comprehensions but with
+                <code>()</code> instead of <code>[]</code>:
+                <code>(x*2 for x in range(1000000))</code> uses constant memory.
+                <code>[x*2 for x in range(1000000)]</code> creates a
+                million-element list immediately.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">python</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># List: creates ALL values in memory at once</span>
+squares_list = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1_000_000</span>)]  <span class="cm"># ~8MB</span>
+
+<span class="cm"># Generator: creates values ONE AT A TIME</span>
+squares_gen = (x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1_000_000</span>))   <span class="cm"># ~120 bytes!</span>
+
+<span class="cm"># Generator function with yield</span>
+<span class="kw">def</span> <span class="fn">read_big_file</span>(path):
+    <span class="kw">with</span> <span class="fn">open</span>(path) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            <span class="kw">yield</span> line.strip()   <span class="cm"># one line at a time</span>
+
+<span class="cm"># Only one line in memory at any moment</span>
+<span class="kw">for</span> line <span class="kw">in</span> <span class="fn">read_big_file</span>(<span class="str">"10gb_log.txt"</span>):
+    <span class="fn">process</span>(line)</pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>yield</code> pauses execution and saves function state.
+                  <code>return</code> ends function.
+                </li>
+                <li>
+                  Generators are iterators — they implement
+                  <code>__iter__</code> and <code>__next__</code> automatically.
+                </li>
+                <li>
+                  Once exhausted, a generator is done. You can't reset it —
+                  you'd need to create a new generator.
+                </li>
+                <li>
+                  <code>yield from</code> (Python 3.3+) delegates to a
+                  sub-generator — useful for recursive generators and
+                  coroutines.
+                </li>
+                <li>
+                  Generators are the foundation of async/await coroutines in
+                  Python.
+                </li>
+              </ul>
+            </div>
+
+            <div class="iq-wrap">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">
+                  Q: What's the difference between a generator and an iterator?
+                </div>
+                <div class="iq-a">
+                  All generators are iterators, but not all iterators are
+                  generators. An iterator is any object implementing
+                  <code>__iter__</code> and <code>__next__</code>. A generator
+                  is a convenient way to create iterators using
+                  <code>yield</code> — no class boilerplate needed.
+                </div>
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">Q: Can you send values into a generator?</div>
+                <div class="iq-a">
+                  Yes — <code>gen.send(value)</code> resumes the generator AND
+                  sends a value back as the result of the
+                  <code>yield</code> expression inside. This is how coroutines
+                  work in Python.
+                </div>
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Trying to get the length of a generator — generators have no
+                  <code>len()</code>. You'd have to exhaust it, which defeats
+                  the purpose.
+                </li>
+                <li>
+                  Expecting to iterate a generator twice — it's exhausted after
+                  the first pass. Assign to a list if you need multiple passes.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Python's <code>itertools</code> module is a treasure chest of
+                memory-efficient lazy operations: <code>itertools.chain</code>,
+                <code>islice</code>, <code>takewhile</code>,
+                <code>groupby</code>. Mentioning that you'd compose generators
+                with itertools for pipeline-style data processing shows
+                senior-level Python knowledge.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+generators+explained+corey+schafer"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    Corey Schafer — Python Generators
+                  </div>
+                  <div class="res-card-why">
+                    Best practical tutorial, real use-cases
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://realpython.com/introduction-to-python-generators/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">RealPython — Generators</div>
+                  <div class="res-card-why">
+                    Covers yield, send, yield from, coroutines
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════ Q10: Interpreter vs Compiler -->
+        <div class="concept" id="q10">
+          <div class="concept-header">
+            <div class="c-num">10</div>
+            <div class="c-title">Interpreter vs Compiler in Python</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Python is both: it compiles source code to bytecode (compiler
+              step), then interprets that bytecode line-by-line using the
+              CPython VM (interpreter step). It's not a "pure interpreter."
+            </div>
+
+            <div class="explanation">
+              <p>
+                This question trips many people because the answer is nuanced.
+                Traditionally, <strong>compilers</strong> translate source code
+                to machine code all at once before running (C, C++, Rust).
+                <strong>Interpreters</strong> execute source code line-by-line
+                without producing a separate binary (old BASIC interpreters).
+              </p>
+              <p>
+                Python is a hybrid. It has a <em>compilation phase</em> (source
+                → bytecode) that happens when you run the script. Then it has an
+                <em>interpretation phase</em> (bytecode → execution) by the
+                CPython VM. The bytecode is not machine code — it's still an
+                intermediate language that the VM interprets at runtime.
+              </p>
+              <p>
+                CPython = interpreted. <strong>PyPy</strong> = JIT compiled —
+                takes Python bytecode and compiles hot code paths to native
+                machine code on the fly. This is why PyPy can be dramatically
+                faster for CPU-bound code. <strong>Cython</strong> = transpiles
+                Python-like code to C, then compiles to machine code.
+                <strong>Nuitka</strong> = compiles Python to C/machine code.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Implementation</th>
+                <th>Mechanism</th>
+                <th>Speed</th>
+                <th>Use case</th>
+              </tr>
+              <tr>
+                <td>CPython</td>
+                <td>Bytecode interpreted</td>
+                <td>Baseline</td>
+                <td>Default, general purpose</td>
+              </tr>
+              <tr>
+                <td>PyPy</td>
+                <td>JIT compiled</td>
+                <td>5–50× faster</td>
+                <td>CPU-heavy Python</td>
+              </tr>
+              <tr>
+                <td>Cython</td>
+                <td>Python→C→machine code</td>
+                <td>Near C speed</td>
+                <td>Performance-critical modules</td>
+              </tr>
+              <tr>
+                <td>Nuitka</td>
+                <td>Python→C compiled</td>
+                <td>Near C speed</td>
+                <td>Full program compilation</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Python is not a "pure interpreter" — there is a compilation
+                  step to bytecode, just not to machine code.
+                </li>
+                <li>
+                  The <code>.pyc</code> files in <code>__pycache__</code> are
+                  the compiled bytecode artifacts.
+                </li>
+                <li>
+                  JIT compilation in PyPy profiles which code runs most and
+                  compiles only hot paths — avoids compiling rarely-executed
+                  code.
+                </li>
+                <li>
+                  CPython's lack of JIT is a design choice for simplicity and
+                  portability, not an oversight.
+                </li>
+              </ul>
+            </div>
+
+            <div class="iq-wrap">
+              <div class="iq-title">Follow-up Questions</div>
+              <div class="iq-item">
+                <div class="iq-q">
+                  Q: If Python is interpreted, why do we get SyntaxErrors before
+                  running?
+                </div>
+                <div class="iq-a">
+                  Because Python fully parses and compiles the entire file to
+                  bytecode before execution starts. Syntax errors are caught at
+                  compile time. Only runtime errors (NameError, TypeError)
+                  appear during execution.
+                </div>
+              </div>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Traps Candidates Fall Into</div>
+              <ul>
+                <li>
+                  Saying Python is "purely interpreted" — it has a compilation
+                  step. The correct term is "bytecode-compiled and
+                  VM-interpreted."
+                </li>
+                <li>
+                  Thinking CPython and Python are the same — Python is the
+                  language spec; CPython is the reference implementation.
+                  Jython, PyPy, MicroPython are all Python implementations.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Python 3.11 (30–60% faster than 3.10) and 3.12's specializing
+                adaptive interpreter significantly narrowed the gap between
+                CPython and PyPy. The CPython team is taking performance
+                seriously now — knowing version-by-version improvements shows
+                genuine engagement with the language.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=python+interpreter+compiler+bytecode+difference"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Python Interpreter vs Compiler
+                  </div>
+                  <div class="res-card-why">
+                    Clears the common misconception with demo
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/python-compiled-or-interpreted/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    GFG — Is Python Compiled or Interpreted?
+                  </div>
+                  <div class="res-card-why">
+                    Direct answer with bytecode explanation
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <button
+      id="back-top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      ↑
+    </button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      const pbar = document.getElementById("pbar");
+      const allLinks = document.querySelectorAll(".sb-link");
+      const allConcepts = document.querySelectorAll(".concept");
+
+      window.addEventListener("scroll", () => {
+        const h = document.documentElement;
+        pbar.style.width =
+          (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+        document
+          .getElementById("back-top")
+          .classList.toggle("show", h.scrollTop > 300);
+        updateActive();
+      });
+
+      function updateActive() {
+        let current = "";
+        allConcepts.forEach((c) => {
+          if (c.getBoundingClientRect().top < 90) current = c.id;
+        });
+        allLinks.forEach((l) => {
+          const m = l.getAttribute("onclick")?.match(/'([^']+)'/);
+          l.classList.toggle("active", m && m[1] === current);
+        });
+      }
+
+      function jumpTo(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          window.scrollTo({
+            top: el.getBoundingClientRect().top + window.scrollY - 66,
+            behavior: "smooth",
+          });
+          if (window.innerWidth <= 768)
+            document.getElementById("sidebar").classList.remove("open");
+        }
+      }
+
+      function toggleTheme() {
+        const dark =
+          document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.setAttribute(
+          "data-theme",
+          dark ? "light" : "dark",
+        );
+        document.getElementById("themeBtn").textContent = dark
+          ? "Dark Mode"
+          : "Light Mode";
+      }
+
+      let focusOn = false;
+      function toggleFocus() {
+        focusOn = !focusOn;
+        document.body.classList.toggle("focus", focusOn);
+        const btn = document.getElementById("focusBtn");
+        btn.textContent = focusOn ? "Exit Focus" : "Focus Mode";
+        btn.classList.toggle("active", focusOn);
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      function checkMobile() {
+        document.getElementById("mob-menu-btn").style.display =
+          window.innerWidth <= 768 ? "flex" : "none";
+      }
+      window.addEventListener("resize", checkMobile);
+      checkMobile();
+
+      document.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = btn
+            .closest(".code-block")
+            .querySelector("pre").textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            btn.textContent = "Copied!";
+            setTimeout(() => (btn.textContent = "Copy"), 1500);
+          });
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

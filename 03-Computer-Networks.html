@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Computer Networks — Interview Mastery Notes</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f8fc;--surface:#fff;--text:#1a1a2e;--text2:#5a5a7a;--border:#e4e6ef;
+  --gold:#F5A623;--gold2:#d4890a;--goldLight:rgba(245,166,35,.1);
+  --code-bg:#1e1e2e;--card-bg:#fff;--nav-bg:rgba(255,255,255,.92);
+  --shadow:0 4px 24px rgba(0,0,0,.06);
+  --green:#10b981;--greenBg:rgba(16,185,129,.1);
+  --amber:#f59e0b;--amberBg:rgba(245,158,11,.1);
+  --red:#ef4444;--redBg:rgba(239,68,68,.08);
+  --blue:#3b82f6;--blueBg:rgba(59,130,246,.1);
+  --purple:#8b5cf6;--purpleBg:rgba(139,92,246,.1);
+  --cyan:#06b6d4;--cyanBg:rgba(6,182,212,.1);
+  --sidebar-w:270px
+}
+[data-theme="dark"]{
+  --bg:#0a0a0f;--surface:#12121a;--text:#e8e8ed;--text2:#9ca3af;--border:#252530;
+  --card-bg:#16161f;--nav-bg:rgba(10,10,15,.95);--shadow:0 4px 24px rgba(0,0,0,.5);
+  --goldLight:rgba(245,166,35,.08);--greenBg:rgba(16,185,129,.08);
+  --amberBg:rgba(245,158,11,.08);--redBg:rgba(239,68,68,.06);
+  --blueBg:rgba(59,130,246,.08);--purpleBg:rgba(139,92,246,.06);--cyanBg:rgba(6,182,212,.06)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;transition:background .3s,color .3s}
+a{color:var(--gold);text-decoration:none}a:hover{color:var(--gold2)}
+.navbar{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;height:60px;gap:1rem}
+.nav-brand{font-weight:900;font-size:1.1rem;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.nav-progress{flex:1;max-width:180px;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+.nav-progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;transition:width .25s}
+.nav-links{display:flex;gap:.35rem;overflow-x:auto;flex:1;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{font-size:.68rem;font-weight:600;padding:5px 9px;border-radius:99px;white-space:nowrap;color:var(--text2);background:var(--surface);border:1px solid var(--border);transition:all .2s}
+.nav-links a:hover,.nav-links a.active{background:var(--goldLight);color:var(--gold);border-color:var(--gold)}
+.nav-btns{display:flex;gap:.5rem}
+.nav-btns button{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text);transition:all .2s}
+.nav-btns button:hover{border-color:var(--gold);color:var(--gold);background:var(--goldLight)}
+.layout{display:flex;min-height:calc(100vh - 60px)}
+.sidebar{width:var(--sidebar-w);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);background:var(--surface);padding:1.5rem 1rem;transition:all .3s;scrollbar-width:thin}
+.sidebar.hidden{margin-left:calc(-1 * var(--sidebar-w));opacity:0;pointer-events:none}
+.st{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin:1.2rem 0 .6rem;font-weight:800;display:flex;align-items:center;gap:.5rem}
+.st::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.sidebar a{display:flex;align-items:center;gap:.6rem;font-size:.78rem;padding:7px 10px;border-radius:8px;color:var(--text2);margin-bottom:2px;transition:all .15s;border-left:3px solid transparent}
+.sidebar a:hover{background:var(--goldLight);color:var(--text);padding-left:13px}
+.sidebar a.active{background:var(--goldLight);color:var(--gold);border-left-color:var(--gold);font-weight:600}
+.sidebar .n{font-size:.63rem;font-weight:700;color:var(--gold);background:var(--goldLight);min-width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center}
+.main{flex:1;max-width:950px;margin:0 auto;padding:2.5rem 2rem 5rem}
+body.focus-mode .main{max-width:1050px}
+.topic-header{text-align:center;padding:1rem 0 2.5rem}
+.topic-header h1{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.topic-header p{color:var(--text2);font-size:1rem;max-width:600px;margin:0 auto}
+.concept{margin-bottom:3rem;border-radius:16px;background:var(--card-bg);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden;transition:all .3s}
+.concept:hover{box-shadow:0 8px 32px rgba(245,166,35,.12);border-color:rgba(245,166,35,.3)}
+.ca{height:4px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.ci{padding:2rem 2.2rem}
+.ch{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem}
+.ch h2{font-size:1.3rem;font-weight:800}
+.badge{font-size:.63rem;padding:3px 11px;border-radius:99px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.b1{background:var(--blueBg);color:var(--blue)}.b2{background:var(--redBg);color:var(--red)}.b3{background:var(--purpleBg);color:var(--purple)}.b4{background:var(--greenBg);color:var(--green)}
+.rt{font-size:.73rem;color:var(--text2);margin-left:auto;background:var(--surface);padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
+.one{background:linear-gradient(135deg,var(--goldLight),transparent);border-left:4px solid var(--gold);padding:1rem 1.3rem;margin-bottom:1.5rem;border-radius:0 12px 12px 0;font-weight:600;font-size:1rem;line-height:1.6}
+.exp p{margin-bottom:1rem;font-size:.94rem}
+.exp strong{color:var(--gold)}
+.kp{background:var(--goldLight);border:1px solid rgba(245,166,35,.2);border-radius:12px;padding:1.2rem 1.5rem;margin:1.5rem 0}
+.kp h4{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.6rem;font-weight:800}
+.kp ul{list-style:none}.kp li{position:relative;padding-left:1.4rem;margin-bottom:.5rem;font-size:.9rem;line-height:1.6}
+.kp li::before{content:"✦";position:absolute;left:0;color:var(--gold);font-size:.7rem}
+.gotcha{border:1px solid var(--red);border-left:4px solid var(--red);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;background:var(--redBg)}
+.gotcha h4{color:var(--red);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:800}
+.gotcha p{font-size:.9rem;line-height:1.6}
+.edge{border:1px solid var(--gold);border-radius:12px;padding:1.2rem 1.5rem;margin:1.5rem 0;background:linear-gradient(135deg,var(--goldLight),transparent);position:relative;overflow:hidden}
+.edge::before{content:"★";position:absolute;top:-12px;right:-12px;font-size:4.5rem;color:var(--gold);opacity:.07}
+.edge h4{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.5rem;font-weight:800}
+.edge p{font-size:.9rem;line-height:1.6}
+.ct{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.85rem;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.ct th{background:var(--goldLight);color:var(--gold);font-weight:700;text-transform:uppercase;font-size:.7rem;letter-spacing:1px;padding:12px 14px;text-align:left}
+.ct td{padding:10px 14px;border-top:1px solid var(--border);background:var(--surface);vertical-align:top}
+.ct tr:hover td{background:var(--goldLight)}
+.ct .y{color:var(--green);font-weight:600}.ct .nr{color:var(--red);font-weight:600}
+.dw{margin:1.5rem 0;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow-x:auto;text-align:center}
+.dw svg text{fill:var(--text)}
+[data-theme="dark"] .dw svg text{fill:#e8e8ed}
+.dw svg{max-width:100%;height:auto}
+.dl{font-size:.78rem;color:var(--text2);margin-top:.8rem;font-style:italic}
+.iq{margin:1.5rem 0}
+.iq h4{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin-bottom:.7rem;font-weight:800}
+.iq details{margin-bottom:.6rem;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.iq summary{padding:.8rem 1.2rem;cursor:pointer;font-weight:600;font-size:.88rem;transition:all .2s;list-style:none;display:flex;align-items:center;gap:.6rem}
+.iq summary::-webkit-details-marker{display:none}
+.iq summary::before{content:"Q";font-size:.63rem;font-weight:800;background:var(--cyanBg);color:var(--cyan);padding:3px 7px;border-radius:5px}
+.iq summary:hover{background:var(--cyanBg)}
+.iq .ans{padding:1rem 1.2rem;font-size:.88rem;border-top:1px solid var(--border);line-height:1.7}
+.btt{position:fixed;bottom:2rem;right:2rem;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 6px 20px rgba(245,166,35,.4);display:none;z-index:99;transition:all .2s}
+.btt:hover{transform:scale(1.1) translateY(-2px)}
+.quick-jump{position:fixed;bottom:2rem;left:2rem;z-index:1100}
+.jump-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;border:none;padding:10px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.15);cursor:pointer;font-weight:700}
+.jump-menu{position:absolute;bottom:56px;left:0;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:8px;padding:6px;display:none;min-width:220px;max-height:420px;overflow-y:auto}
+.jump-menu.active{display:block}
+.jump-menu a{display:block;padding:8px 10px;color:var(--text);text-decoration:none;border-radius:6px;font-size:.9rem}
+.jump-menu a:hover{background:var(--goldLight);color:var(--gold)}
+@media(max-width:900px){
+  .sidebar{position:fixed;left:0;top:60px;z-index:90;box-shadow:4px 0 30px rgba(0,0,0,.15)}
+  .sidebar.hidden{margin-left:calc(-1 * var(--sidebar-w))}
+  .main{padding:1.5rem 1rem 4rem}.ci{padding:1.5rem 1.2rem}
+  .nav-links{display:none}.topic-header h1{font-size:1.7rem}.ch h2{font-size:1.15rem}
+}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:99px}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="nav-brand">Networks — Interview Prep</span>
+  <div class="nav-progress"><div class="nav-progress-bar" id="progressBar"></div></div>
+  <div class="nav-links">
+    <a href="#tcp-udp">TCP/UDP</a><a href="#osi">OSI</a><a href="#tcpip">TCP/IP</a><a href="#handshake">3-Way</a><a href="#termination">4-Way</a><a href="#http">HTTP/S</a><a href="#dns">DNS</a><a href="#lb">Load Bal</a><a href="#rp">Rev Proxy</a><a href="#tls">SSL/TLS</a><a href="#cookies">Cookies</a><a href="#rest">REST</a><a href="#ws">WebSocket</a><a href="#cdn">CDN</a><a href="#google">Google.com</a>
+  </div>
+  <div class="nav-btns">
+    <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+    <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </div>
+</nav>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="st">Protocols</div>
+  <a href="#tcp-udp"><span class="n">1</span>TCP vs UDP</a>
+  <a href="#osi"><span class="n">2</span>OSI Model</a>
+  <a href="#tcpip"><span class="n">3</span>TCP/IP Model</a>
+  <a href="#handshake"><span class="n">4</span>3-Way Handshake</a>
+  <a href="#termination"><span class="n">5</span>4-Way Termination</a>
+  <div class="st">Web & Security</div>
+  <a href="#http"><span class="n">6</span>HTTP vs HTTPS</a>
+  <a href="#dns"><span class="n">7</span>DNS Working</a>
+  <a href="#tls"><span class="n">10</span>SSL/TLS</a>
+  <a href="#cookies"><span class="n">11</span>Cookies vs Sessions</a>
+  <div class="st">Infrastructure</div>
+  <a href="#lb"><span class="n">8</span>Load Balancer</a>
+  <a href="#rp"><span class="n">9</span>Reverse Proxy</a>
+  <a href="#cdn"><span class="n">14</span>CDN</a>
+  <div class="st">Application Layer</div>
+  <a href="#rest"><span class="n">12</span>REST APIs</a>
+  <a href="#ws"><span class="n">13</span>WebSocket</a>
+  <a href="#google"><span class="n">15</span>Browser Opens Google</a>
+</aside>
+
+<main class="main">
+<div class="topic-header">
+  <h1>Computer Networks</h1>
+  <p>15 Core Networking Concepts — From TCP handshakes to how Google.com loads. Know these, own any networking question.</p>
+</div>
+
+<!-- 1. TCP VS UDP -->
+<section class="concept" id="tcp-udp"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>TCP vs UDP</h2><span class="badge b1">Core</span><span class="badge b2">Most Asked</span><span class="rt">4 min</span></div>
+  <div class="one">TCP = reliable, ordered, connection-oriented (phone call). UDP = fast, unordered, connectionless (shouting across the room). TCP guarantees delivery; UDP doesn't care — it just sends.</div>
+  <div class="exp">
+    <p><strong>TCP (Transmission Control Protocol):</strong> Before sending data, it sets up a connection (3-way handshake). Every packet is numbered and acknowledged. If a packet is lost, it's retransmitted. Data arrives in order. Think of it as a registered letter — you know it arrived.</p>
+    <p><strong>UDP (User Datagram Protocol):</strong> No connection setup. Just fire packets and hope they arrive. No ordering, no retransmission, no acknowledgement. Think of it as throwing a paper airplane — fast, but no guarantee. Perfect when speed matters more than reliability (video calls, gaming, DNS).</p>
+  </div>
+  <table class="ct">
+    <tr><th>Aspect</th><th>TCP</th><th>UDP</th></tr>
+    <tr><td><strong>Connection</strong></td><td>Connection-oriented (handshake)</td><td>Connectionless</td></tr>
+    <tr><td><strong>Reliability</strong></td><td class="y">Guaranteed delivery + ACK</td><td class="nr">No guarantee</td></tr>
+    <tr><td><strong>Ordering</strong></td><td class="y">Ordered (sequence numbers)</td><td class="nr">No ordering</td></tr>
+    <tr><td><strong>Speed</strong></td><td>Slower (overhead)</td><td class="y">Faster (no overhead)</td></tr>
+    <tr><td><strong>Flow Control</strong></td><td class="y">Yes (sliding window)</td><td class="nr">No</td></tr>
+    <tr><td><strong>Header Size</strong></td><td>20-60 bytes</td><td>8 bytes</td></tr>
+    <tr><td><strong>Use Cases</strong></td><td>HTTP, FTP, Email, SSH</td><td>DNS, Video, Gaming, VoIP</td></tr>
+  </table>
+  <div class="kp"><h4>Key Interview Points</h4><ul>
+    <li>TCP uses <strong>sequence numbers</strong> to order packets and detect loss</li>
+    <li>TCP has <strong>congestion control</strong> (slow start, congestion avoidance) — prevents flooding the network</li>
+    <li>UDP is used for DNS because queries are small (single packet) and speed matters</li>
+    <li>Video streaming uses UDP because a dropped frame is better than waiting (buffering)</li>
+    <li>HTTP/3 (QUIC) is built on UDP but adds reliability — best of both worlds</li>
+  </ul></div>
+  <div class="edge"><h4>Competitive Edge</h4><p>Mention <strong>QUIC protocol</strong> (HTTP/3) — Google's answer to TCP's limitations. Built on UDP but adds reliability, multiplexing, and 0-RTT connection setup. It's what YouTube and Google Search actually use today.</p></div>
+</div></section>
+
+<!-- 2. OSI MODEL -->
+<section class="concept" id="osi"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>OSI Model</h2><span class="badge b1">Core</span><span class="badge b2">Theory</span><span class="rt">5 min</span></div>
+  <div class="one">7 layers of networking: Physical → Data Link → Network → Transport → Session → Presentation → Application. Each layer handles a specific job and talks to layers above and below it.</div>
+
+  <div class="dw">
+    <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Layer 7 -->
+      <rect x="120" y="10" width="360" height="36" rx="6" fill="rgba(239,68,68,.12)" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="150" y="33" font-weight="bold" font-size="11" fill="#ef4444">7</text>
+      <text x="175" y="33" font-weight="bold" font-size="11">Application</text>
+      <text x="480" y="33" text-anchor="end" font-size="9" opacity=".6">HTTP, FTP, DNS, SMTP</text>
+
+      <!-- Layer 6 -->
+      <rect x="120" y="52" width="360" height="36" rx="6" fill="rgba(245,158,11,.12)" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="150" y="75" font-weight="bold" font-size="11" fill="#f59e0b">6</text>
+      <text x="175" y="75" font-weight="bold" font-size="11">Presentation</text>
+      <text x="480" y="75" text-anchor="end" font-size="9" opacity=".6">SSL/TLS, Encryption, JPEG</text>
+
+      <!-- Layer 5 -->
+      <rect x="120" y="94" width="360" height="36" rx="6" fill="rgba(245,166,35,.12)" stroke="#F5A623" stroke-width="1.5"/>
+      <text x="150" y="117" font-weight="bold" font-size="11" fill="#F5A623">5</text>
+      <text x="175" y="117" font-weight="bold" font-size="11">Session</text>
+      <text x="480" y="117" text-anchor="end" font-size="9" opacity=".6">Session mgmt, Auth</text>
+
+      <!-- Layer 4 -->
+      <rect x="120" y="136" width="360" height="36" rx="6" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="150" y="159" font-weight="bold" font-size="11" fill="#10b981">4</text>
+      <text x="175" y="159" font-weight="bold" font-size="11">Transport</text>
+      <text x="480" y="159" text-anchor="end" font-size="9" opacity=".6">TCP, UDP — Port numbers</text>
+
+      <!-- Layer 3 -->
+      <rect x="120" y="178" width="360" height="36" rx="6" fill="rgba(59,130,246,.12)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="150" y="201" font-weight="bold" font-size="11" fill="#3b82f6">3</text>
+      <text x="175" y="201" font-weight="bold" font-size="11">Network</text>
+      <text x="480" y="201" text-anchor="end" font-size="9" opacity=".6">IP, Routers — IP addresses</text>
+
+      <!-- Layer 2 -->
+      <rect x="120" y="220" width="360" height="36" rx="6" fill="rgba(139,92,246,.12)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="150" y="243" font-weight="bold" font-size="11" fill="#8b5cf6">2</text>
+      <text x="175" y="243" font-weight="bold" font-size="11">Data Link</text>
+      <text x="480" y="243" text-anchor="end" font-size="9" opacity=".6">Ethernet, WiFi — MAC addr</text>
+
+      <!-- Layer 1 -->
+      <rect x="120" y="262" width="360" height="36" rx="6" fill="rgba(107,114,128,.12)" stroke="#6b7280" stroke-width="1.5"/>
+      <text x="150" y="285" font-weight="bold" font-size="11" fill="#6b7280">1</text>
+      <text x="175" y="285" font-weight="bold" font-size="11">Physical</text>
+      <text x="480" y="285" text-anchor="end" font-size="9" opacity=".6">Cables, signals, bits</text>
+
+      <!-- Side labels -->
+      <text x="60" y="33" text-anchor="middle" font-size="9" opacity=".4">Software</text>
+      <text x="60" y="50" text-anchor="middle" font-size="9" opacity=".4">Layers</text>
+      <text x="60" y="200" text-anchor="middle" font-size="9" opacity=".4">Hardware</text>
+      <text x="60" y="217" text-anchor="middle" font-size="9" opacity=".4">Layers</text>
+      <line x1="95" y1="130" x2="105" y2="130" stroke="var(--gold)" stroke-width="1" opacity=".3"/>
+    </svg>
+    <p class="dl">Mnemonic: "Please Do Not Throw Sausage Pizza Away" (bottom to top)</p>
+  </div>
+
+  <div class="kp"><h4>Key Interview Points</h4><ul>
+    <li><strong>Layer 4 (Transport):</strong> TCP/UDP — identifies processes via port numbers</li>
+    <li><strong>Layer 3 (Network):</strong> IP — routing between networks via IP addresses</li>
+    <li><strong>Layer 2 (Data Link):</strong> MAC addresses — communication within a local network (switch)</li>
+    <li>Data goes DOWN the stack on sender (encapsulation), UP the stack on receiver (decapsulation)</li>
+    <li>Each layer adds its own header: Application data → Segment → Packet → Frame → Bits</li>
+  </ul></div>
+  <div class="gotcha"><h4>Trap</h4><p>OSI is a <strong>reference model</strong> — real internet uses TCP/IP model (4 layers). Nobody implements "pure" OSI. But interviewers love asking about it because it cleanly separates concerns.</p></div>
+</div></section>
+
+<!-- 3. TCP/IP MODEL -->
+<section class="concept" id="tcpip"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>TCP/IP Model</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
+  <div class="one">The practical model that the real internet uses. 4 layers: Network Access → Internet → Transport → Application. Maps to OSI but combines some layers. This is what actually runs.</div>
+  <table class="ct">
+    <tr><th>TCP/IP Layer</th><th>OSI Equivalent</th><th>Protocols</th><th>Data Unit</th></tr>
+    <tr><td><strong>Application</strong></td><td>Layers 5, 6, 7</td><td>HTTP, DNS, FTP, SMTP</td><td>Data/Message</td></tr>
+    <tr><td><strong>Transport</strong></td><td>Layer 4</td><td>TCP, UDP</td><td>Segment/Datagram</td></tr>
+    <tr><td><strong>Internet</strong></td><td>Layer 3</td><td>IP, ICMP, ARP</td><td>Packet</td></tr>
+    <tr><td><strong>Network Access</strong></td><td>Layers 1, 2</td><td>Ethernet, WiFi</td><td>Frame</td></tr>
+  </table>
+  <div class="kp"><h4>Key Difference from OSI</h4><ul>
+    <li>TCP/IP is practical (implemented). OSI is theoretical (reference).</li>
+    <li>TCP/IP merges Session + Presentation + Application into one layer.</li>
+    <li>TCP/IP merges Physical + Data Link into Network Access.</li>
+    <li>TCP/IP was designed first, OSI came later as a generalized model.</li>
+  </ul></div>
+</div></section>
+
+<!-- 4. THREE-WAY HANDSHAKE -->
+<section class="concept" id="handshake"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>Three-Way Handshake</h2><span class="badge b1">Core</span><span class="badge b2">Must Draw</span><span class="rt">4 min</span></div>
+  <div class="one">TCP connection setup in 3 steps: SYN → SYN-ACK → ACK. Client says "Hey, let's talk" (SYN), server says "Sure, I'm ready too" (SYN-ACK), client says "Great, let's go" (ACK). Now the connection is established.</div>
+
+  <div class="dw">
+    <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+      <!-- Client and Server lines -->
+      <line x1="100" y1="30" x2="100" y2="220" stroke="var(--blue)" stroke-width="2"/>
+      <line x1="380" y1="30" x2="380" y2="220" stroke="var(--green)" stroke-width="2"/>
+
+      <rect x="55" y="10" width="90" height="25" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
+      <text x="100" y="27" text-anchor="middle" font-weight="bold" font-size="11">CLIENT</text>
+
+      <rect x="335" y="10" width="90" height="25" rx="6" fill="var(--greenBg)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="380" y="27" text-anchor="middle" font-weight="bold" font-size="11">SERVER</text>
+
+      <!-- Step 1: SYN -->
+      <line x1="105" y1="70" x2="375" y2="95" stroke="#F5A623" stroke-width="2" marker-end="url(#aN)"/>
+      <rect x="170" y="60" width="140" height="24" rx="5" fill="var(--goldLight)" stroke="var(--gold)" stroke-width="1"/>
+      <text x="240" y="77" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--gold)">1. SYN (seq=x)</text>
+
+      <!-- Step 2: SYN-ACK -->
+      <line x1="375" y1="120" x2="105" y2="145" stroke="#10b981" stroke-width="2" marker-end="url(#aGr)"/>
+      <rect x="140" y="112" width="200" height="24" rx="5" fill="var(--greenBg)" stroke="var(--green)" stroke-width="1"/>
+      <text x="240" y="129" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--green)">2. SYN-ACK (seq=y, ack=x+1)</text>
+
+      <!-- Step 3: ACK -->
+      <line x1="105" y1="170" x2="375" y2="195" stroke="var(--blue)" stroke-width="2" marker-end="url(#aBl)"/>
+      <rect x="170" y="162" width="140" height="24" rx="5" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1"/>
+      <text x="240" y="179" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--blue)">3. ACK (ack=y+1)</text>
+
+      <!-- Connection established -->
+      <text x="240" y="218" text-anchor="middle" font-size="10" font-weight="bold" fill="var(--gold)">✓ CONNECTION ESTABLISHED</text>
+
+      <defs>
+        <marker id="aN" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#F5A623"/></marker>
+        <marker id="aGr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#10b981"/></marker>
+        <marker id="aBl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3b82f6"/></marker>
+      </defs>
+    </svg>
+    <p class="dl">Both sides exchange sequence numbers so they can track data later.</p>
+  </div>
+
+  <div class="kp"><h4>Key Interview Points</h4><ul>
+    <li><strong>SYN:</strong> Client picks random sequence number (x), sends to server.</li>
+    <li><strong>SYN-ACK:</strong> Server picks its own seq number (y), acknowledges client's with ack=x+1.</li>
+    <li><strong>ACK:</strong> Client acknowledges server with ack=y+1. Connection is now full-duplex.</li>
+    <li>Sequence numbers prevent packet confusion and enable ordered delivery.</li>
+  </ul></div>
+  <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>SYN flood attack</strong>: attacker sends millions of SYNs without completing handshake, filling server's half-open connection table. Defense: <strong>SYN cookies</strong> — server doesn't store state until ACK is received.</p></div>
+</div></section>
+
+<!-- 5. FOUR-WAY TERMINATION -->
+<section class="concept" id="termination"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>Four-Way Connection Termination</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
+  <div class="one">TCP closes connection in 4 steps: FIN → ACK → FIN → ACK. Each side must independently say "I'm done sending." It's 4 steps (not 3) because each direction closes separately — TCP is full-duplex.</div>
+
+  <div class="dw">
+    <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+      <line x1="100" y1="30" x2="100" y2="260" stroke="var(--blue)" stroke-width="2"/>
+      <line x1="380" y1="30" x2="380" y2="260" stroke="var(--green)" stroke-width="2"/>
+
+      <rect x="55" y="10" width="90" height="25" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
+      <text x="100" y="27" text-anchor="middle" font-weight="bold" font-size="11">CLIENT</text>
+      <rect x="335" y="10" width="90" height="25" rx="6" fill="var(--greenBg)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="380" y="27" text-anchor="middle" font-weight="bold" font-size="11">SERVER</text>
+
+      <!-- Step 1 -->
+      <line x1="105" y1="65" x2="375" y2="85" stroke="#F5A623" stroke-width="2" marker-end="url(#aN)"/>
+      <text x="240" y="63" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--gold)">1. FIN</text>
+
+      <!-- Step 2 -->
+      <line x1="375" y1="110" x2="105" y2="130" stroke="#10b981" stroke-width="2" marker-end="url(#aGr)"/>
+      <text x="240" y="110" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--green)">2. ACK</text>
+
+      <text x="430" y="150" font-size="8" opacity=".5">Server may</text>
+      <text x="430" y="162" font-size="8" opacity=".5">still send data</text>
+
+      <!-- Step 3 -->
+      <line x1="375" y1="180" x2="105" y2="200" stroke="#10b981" stroke-width="2" marker-end="url(#aGr)"/>
+      <text x="240" y="180" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--green)">3. FIN</text>
+
+      <!-- Step 4 -->
+      <line x1="105" y1="225" x2="375" y2="245" stroke="var(--blue)" stroke-width="2" marker-end="url(#aBl)"/>
+      <text x="240" y="225" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--blue)">4. ACK</text>
+
+      <text x="240" y="270" text-anchor="middle" font-size="10" font-weight="bold" fill="var(--red)">✓ CONNECTION CLOSED</text>
+    </svg>
+    <p class="dl">4 steps because each side closes independently. Server may still send data between steps 2 and 3 (half-close).</p>
+  </div>
+  <div class="kp"><h4>Key Points</h4><ul>
+    <li>After sending FIN, sender enters <strong>FIN_WAIT</strong> state — can still receive data.</li>
+    <li>After final ACK, client enters <strong>TIME_WAIT</strong> (2×MSL ≈ 60 sec) to handle delayed packets.</li>
+    <li>This is why you see "address already in use" error — port is still in TIME_WAIT.</li>
+  </ul></div>
+</div></section>
+
+<!-- 6. HTTP VS HTTPS -->
+<section class="concept" id="http"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>HTTP vs HTTPS</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
+  <div class="one">HTTP sends data in plaintext — anyone can read it. HTTPS = HTTP + TLS encryption — data is encrypted in transit. HTTPS uses port 443, HTTP uses port 80. No HTTPS = no modern web (browsers mark HTTP as "Not Secure").</div>
+  <table class="ct">
+    <tr><th>Aspect</th><th>HTTP</th><th>HTTPS</th></tr>
+    <tr><td><strong>Encryption</strong></td><td class="nr">None — plaintext</td><td class="y">TLS/SSL encrypted</td></tr>
+    <tr><td><strong>Port</strong></td><td>80</td><td>443</td></tr>
+    <tr><td><strong>Certificate</strong></td><td>Not needed</td><td>SSL certificate required</td></tr>
+    <tr><td><strong>Speed</strong></td><td>Slightly faster</td><td>TLS handshake adds ~1 RTT</td></tr>
+    <tr><td><strong>SEO</strong></td><td>Penalized</td><td class="y">Google ranks higher</td></tr>
+    <tr><td><strong>URL</strong></td><td>http://</td><td>https:// (lock icon)</td></tr>
+  </table>
+  <div class="kp"><h4>What HTTPS Protects Against</h4><ul>
+    <li><strong>Eavesdropping:</strong> Can't read data in transit (encryption)</li>
+    <li><strong>Tampering:</strong> Can't modify data without detection (integrity)</li>
+    <li><strong>Impersonation:</strong> Certificate proves server identity (authentication)</li>
+  </ul></div>
+</div></section>
+
+<!-- 7. DNS -->
+<section class="concept" id="dns"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>DNS Working</h2><span class="badge b1">Core</span><span class="badge b2">Important</span><span class="rt">4 min</span></div>
+  <div class="one">DNS = Domain Name System. Translates human-readable domain names (google.com) to IP addresses (142.250.80.46). It's the internet's phone book. Without DNS, you'd memorize IP addresses.</div>
+  <div class="exp">
+    <p><strong>Resolution flow:</strong> Browser cache → OS cache → Router cache → ISP's Recursive Resolver → Root DNS → TLD DNS (.com) → Authoritative DNS → IP address returned.</p>
+  </div>
+
+  <div class="dw">
+    <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Browser -->
+      <rect x="10" y="80" width="70" height="40" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
+      <text x="45" y="105" text-anchor="middle" font-weight="bold" font-size="9">Browser</text>
+
+      <!-- Recursive Resolver -->
+      <rect x="120" y="80" width="90" height="40" rx="6" fill="var(--goldLight)" stroke="var(--gold)" stroke-width="1.5"/>
+      <text x="165" y="98" text-anchor="middle" font-weight="bold" font-size="9">Recursive</text>
+      <text x="165" y="112" text-anchor="middle" font-size="8">Resolver</text>
+
+      <!-- Root -->
+      <rect x="260" y="20" width="80" height="36" rx="6" fill="var(--redBg)" stroke="var(--red)" stroke-width="1.5"/>
+      <text x="300" y="43" text-anchor="middle" font-weight="bold" font-size="9">Root DNS</text>
+
+      <!-- TLD -->
+      <rect x="390" y="20" width="80" height="36" rx="6" fill="var(--amberBg)" stroke="var(--amber)" stroke-width="1.5"/>
+      <text x="430" y="43" text-anchor="middle" font-weight="bold" font-size="9">.com TLD</text>
+
+      <!-- Authoritative -->
+      <rect x="390" y="140" width="100" height="40" rx="6" fill="var(--greenBg)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="440" y="158" text-anchor="middle" font-weight="bold" font-size="9">Authoritative</text>
+      <text x="440" y="172" text-anchor="middle" font-size="8">google.com</text>
+
+      <!-- Arrows -->
+      <line x1="80" y1="100" x2="118" y2="100" stroke="var(--gold)" stroke-width="1.5" marker-end="url(#aN)"/>
+      <text x="98" y="93" text-anchor="middle" font-size="7" fill="var(--gold)">1</text>
+
+      <line x1="210" y1="90" x2="258" y2="45" stroke="var(--red)" stroke-width="1.5" marker-end="url(#aR)"/>
+      <text x="228" y="60" text-anchor="middle" font-size="7" fill="var(--red)">2</text>
+
+      <line x1="340" y1="38" x2="388" y2="38" stroke="var(--amber)" stroke-width="1.5" marker-end="url(#aAm)"/>
+      <text x="364" y="32" text-anchor="middle" font-size="7" fill="var(--amber)">3</text>
+
+      <line x1="430" y1="58" x2="430" y2="138" stroke="var(--green)" stroke-width="1.5" marker-end="url(#aGrn)"/>
+      <text x="445" y="100" font-size="7" fill="var(--green)">4</text>
+
+      <line x1="388" y1="160" x2="212" y2="110" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#aBl2)"/>
+      <text x="305" y="145" text-anchor="middle" font-size="7" fill="var(--blue)">5 IP returned</text>
+
+      <line x1="118" y1="108" x2="80" y2="108" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#aBl3)"/>
+      <text x="98" y="118" text-anchor="middle" font-size="7" fill="var(--blue)">6</text>
+
+      <defs>
+        <marker id="aR" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#ef4444"/></marker>
+        <marker id="aAm" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#f59e0b"/></marker>
+        <marker id="aGrn" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#10b981"/></marker>
+        <marker id="aBl2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#3b82f6"/></marker>
+        <marker id="aBl3" markerWidth="7" markerHeight="5" refX="0" refY="2.5" orient="auto"><path d="M7,0 L0,2.5 L7,5" fill="#3b82f6"/></marker>
+      </defs>
+    </svg>
+    <p class="dl">Recursive resolver does the heavy lifting — queries Root → TLD → Authoritative on your behalf.</p>
+  </div>
+
+  <div class="kp"><h4>Key Interview Points</h4><ul>
+    <li><strong>DNS uses UDP</strong> (port 53) because queries are small and speed matters. Falls back to TCP for large responses (zone transfers).</li>
+    <li><strong>TTL (Time To Live):</strong> How long DNS records are cached. Low TTL = faster updates, more queries.</li>
+    <li><strong>Record types:</strong> A (IPv4), AAAA (IPv6), CNAME (alias), MX (email), NS (nameserver).</li>
+    <li>There are only <strong>13 root server addresses</strong> — but hundreds of physical servers via anycast.</li>
+  </ul></div>
+</div></section>
+
+<!-- 8. LOAD BALANCER -->
+<section class="concept" id="lb"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>Load Balancer</h2><span class="badge b3">Concept</span><span class="rt">3 min</span></div>
+  <div class="one">Distributes incoming traffic across multiple servers so no single server gets overwhelmed. Improves availability, reliability, and scalability. If one server dies, LB routes traffic to healthy ones.</div>
+  <div class="kp"><h4>Load Balancing Algorithms</h4><ul>
+    <li><strong>Round Robin:</strong> Rotate through servers sequentially. Simple, works for equal-capacity servers.</li>
+    <li><strong>Weighted Round Robin:</strong> More powerful servers get more requests.</li>
+    <li><strong>Least Connections:</strong> Send to server with fewest active connections.</li>
+    <li><strong>IP Hash:</strong> Same client IP always goes to same server (session affinity).</li>
+    <li><strong>Layer 4 (Transport):</strong> Routes based on IP + port. Fast, no packet inspection.</li>
+    <li><strong>Layer 7 (Application):</strong> Routes based on URL, headers, cookies. Smarter but slower.</li>
+  </ul></div>
+  <div class="edge"><h4>Competitive Edge</h4><p>Know the difference between <strong>Layer 4</strong> and <strong>Layer 7</strong> load balancers. L4 is faster (just forwards TCP connections). L7 understands HTTP (can route /api to backend servers, /images to CDN). AWS ALB = Layer 7, NLB = Layer 4.</p></div>
+</div></section>
+
+<!-- 9. REVERSE PROXY -->
+<section class="concept" id="rp"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>Reverse Proxy</h2><span class="badge b3">Concept</span><span class="rt">3 min</span></div>
+  <div class="one">Sits in front of backend servers and forwards client requests to them. Client talks to proxy, proxy talks to server. Client never knows the real server. Used for: load balancing, caching, SSL termination, security.</div>
+  <table class="ct">
+    <tr><th>Aspect</th><th>Forward Proxy</th><th>Reverse Proxy</th></tr>
+    <tr><td><strong>Sits in front of</strong></td><td>Clients</td><td>Servers</td></tr>
+    <tr><td><strong>Hides</strong></td><td>Client identity from server</td><td>Server identity from client</td></tr>
+    <tr><td><strong>Use case</strong></td><td>VPN, anonymity, content filtering</td><td>Load balancing, caching, SSL, security</td></tr>
+    <tr><td><strong>Example</strong></td><td>VPN service, corporate proxy</td><td>Nginx, HAProxy, Cloudflare</td></tr>
+  </table>
+  <div class="kp"><h4>Why Use Reverse Proxy</h4><ul>
+    <li><strong>SSL Termination:</strong> Handle HTTPS at proxy, send plain HTTP to backend (faster for backends).</li>
+    <li><strong>Caching:</strong> Cache responses to reduce backend load.</li>
+    <li><strong>Security:</strong> Backend servers not exposed to internet. DDoS protection.</li>
+    <li><strong>Compression:</strong> Gzip/Brotli responses before sending to client.</li>
+  </ul></div>
+</div></section>
+
+<!-- 10. SSL/TLS -->
+<section class="concept" id="tls"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>SSL/TLS</h2><span class="badge b1">Core</span><span class="badge b2">Security</span><span class="rt">4 min</span></div>
+  <div class="one">TLS (Transport Layer Security) encrypts data between client and server. SSL is the old name (deprecated). TLS handshake: exchange certificates, agree on encryption method, create session keys. All HTTPS traffic uses TLS.</div>
+  <div class="exp">
+    <p><strong>TLS Handshake flow:</strong> (1) Client Hello — supported cipher suites, random number. (2) Server Hello — chosen cipher, server certificate (contains public key). (3) Client verifies certificate with CA. (4) Client sends pre-master secret encrypted with server's public key. (5) Both derive session key. (6) Encrypted communication begins.</p>
+    <p>Uses <strong>asymmetric encryption</strong> (RSA/ECDSA) for handshake (slow, secure for key exchange) and <strong>symmetric encryption</strong> (AES) for actual data transfer (fast).</p>
+  </div>
+  <div class="kp"><h4>Key Interview Points</h4><ul>
+    <li><strong>SSL is dead.</strong> SSL 3.0 was deprecated in 2015. We use TLS 1.2 or TLS 1.3 today.</li>
+    <li><strong>TLS 1.3</strong> reduced handshake from 2-RTT to 1-RTT (and 0-RTT for repeat connections).</li>
+    <li><strong>Certificate Authority (CA)</strong> — trusted third party (Let's Encrypt, DigiCert) that vouches for server identity.</li>
+    <li>Asymmetric for key exchange, symmetric for data = best of both worlds.</li>
+  </ul></div>
+</div></section>
+
+<!-- 11. COOKIES VS SESSIONS -->
+<section class="concept" id="cookies"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>Cookies vs Sessions</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
+  <div class="one">Cookies are stored on the CLIENT (browser). Sessions are stored on the SERVER. Cookie = your movie ticket stub (you carry it). Session = restaurant reservation (restaurant remembers you by your reservation number).</div>
+  <table class="ct">
+    <tr><th>Aspect</th><th>Cookies</th><th>Sessions</th></tr>
+    <tr><td><strong>Storage</strong></td><td>Client-side (browser)</td><td>Server-side (memory/DB/Redis)</td></tr>
+    <tr><td><strong>Size Limit</strong></td><td>~4KB per cookie</td><td>No practical limit</td></tr>
+    <tr><td><strong>Security</strong></td><td>Less secure (user can modify)</td><td>More secure (server-controlled)</td></tr>
+    <tr><td><strong>Expiry</strong></td><td>Set by Expires/Max-Age</td><td>Server decides (timeout)</td></tr>
+    <tr><td><strong>Scalability</strong></td><td class="y">Stateless (scales easily)</td><td>Requires shared session store</td></tr>
+  </table>
+  <div class="kp"><h4>How They Work Together</h4><ul>
+    <li>Server creates session → generates session ID → stores data server-side.</li>
+    <li>Session ID sent to client as a cookie (<code>Set-Cookie: sessionId=abc123</code>).</li>
+    <li>Client sends cookie with every request → server looks up session data.</li>
+    <li><strong>JWT tokens</strong> are an alternative — all data in the cookie itself, no server-side storage.</li>
+  </ul></div>
+</div></section>
+
+<!-- 12. REST APIs -->
+<section class="concept" id="rest"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>REST APIs</h2><span class="badge b1">Core</span><span class="badge b4">Practical</span><span class="rt">3 min</span></div>
+  <div class="one">REST = Representational State Transfer. An architectural style for designing APIs using standard HTTP methods. Resources identified by URLs, actions by HTTP verbs (GET, POST, PUT, DELETE). Stateless — each request contains all needed info.</div>
+  <table class="ct">
+    <tr><th>HTTP Method</th><th>CRUD</th><th>Example</th><th>Idempotent?</th></tr>
+    <tr><td><strong>GET</strong></td><td>Read</td><td>GET /users/123</td><td class="y">Yes</td></tr>
+    <tr><td><strong>POST</strong></td><td>Create</td><td>POST /users</td><td class="nr">No</td></tr>
+    <tr><td><strong>PUT</strong></td><td>Update (full)</td><td>PUT /users/123</td><td class="y">Yes</td></tr>
+    <tr><td><strong>PATCH</strong></td><td>Update (partial)</td><td>PATCH /users/123</td><td class="nr">No</td></tr>
+    <tr><td><strong>DELETE</strong></td><td>Delete</td><td>DELETE /users/123</td><td class="y">Yes</td></tr>
+  </table>
+  <div class="kp"><h4>REST Principles</h4><ul>
+    <li><strong>Stateless:</strong> Server stores no client state. Each request is independent.</li>
+    <li><strong>Resource-based:</strong> URLs represent resources (/users, /orders), not actions.</li>
+    <li><strong>Use HTTP status codes:</strong> 200 OK, 201 Created, 400 Bad Request, 404 Not Found, 500 Server Error.</li>
+    <li><strong>Idempotent:</strong> GET, PUT, DELETE give same result when called multiple times.</li>
+  </ul></div>
+  <div class="gotcha"><h4>Trap</h4><p>POST is NOT idempotent — calling <code>POST /users</code> twice creates TWO users. PUT IS idempotent — calling <code>PUT /users/123</code> twice produces the same result. This distinction is asked frequently.</p></div>
+</div></section>
+
+<!-- 13. WEBSOCKET -->
+<section class="concept" id="ws"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>WebSocket</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
+  <div class="one">Full-duplex, persistent connection between client and server. Unlike HTTP (request-response), WebSocket lets both sides send messages anytime without polling. Starts as HTTP upgrade, then switches protocol.</div>
+  <table class="ct">
+    <tr><th>Aspect</th><th>HTTP</th><th>WebSocket</th></tr>
+    <tr><td><strong>Communication</strong></td><td>Request-Response (half-duplex)</td><td>Full-duplex (both ways anytime)</td></tr>
+    <tr><td><strong>Connection</strong></td><td>New connection per request (or keep-alive)</td><td>Persistent single connection</td></tr>
+    <tr><td><strong>Overhead</strong></td><td>Headers sent every request</td><td>Minimal after handshake</td></tr>
+    <tr><td><strong>Use Case</strong></td><td>REST APIs, web pages</td><td>Chat, live scores, gaming, trading</td></tr>
+    <tr><td><strong>Protocol</strong></td><td>http:// or https://</td><td>ws:// or wss://</td></tr>
+  </table>
+  <div class="kp"><h4>Key Points</h4><ul>
+    <li>Starts with HTTP Upgrade request: <code>Connection: Upgrade, Upgrade: websocket</code></li>
+    <li>After upgrade, it's a raw TCP connection — no HTTP overhead.</li>
+    <li>Server can PUSH data without client asking — no polling needed.</li>
+    <li>Use cases: real-time chat, live dashboards, multiplayer games, stock tickers.</li>
+  </ul></div>
+  <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>SSE (Server-Sent Events)</strong> as alternative — server pushes to client only (one-way), uses regular HTTP, auto-reconnects. Simpler than WebSocket for use cases like live feeds. WebSocket is needed when client must also send frequently (chat, gaming).</p></div>
+</div></section>
+
+<!-- 14. CDN -->
+<section class="concept" id="cdn"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>CDN (Content Delivery Network)</h2><span class="badge b3">Concept</span><span class="rt">3 min</span></div>
+  <div class="one">Network of servers distributed worldwide that cache and serve content from locations close to users. Instead of every user hitting your origin server in US, users in India get content from a server in Mumbai. Less latency, less origin load.</div>
+  <div class="kp"><h4>What CDN Caches</h4><ul>
+    <li><strong>Static assets:</strong> Images, CSS, JS, fonts, videos — perfect for CDN.</li>
+    <li><strong>Dynamic content:</strong> Some CDNs cache API responses with short TTL.</li>
+    <li><strong>Edge computing:</strong> Modern CDNs (Cloudflare Workers) run code at edge nodes.</li>
+  </ul></div>
+  <div class="kp"><h4>How CDN Works</h4><ul>
+    <li>User requests image → DNS resolves to nearest CDN edge server (via anycast/GeoDNS).</li>
+    <li><strong>Cache HIT:</strong> Edge has the file → serve instantly. Super fast.</li>
+    <li><strong>Cache MISS:</strong> Edge fetches from origin, caches it, then serves. Next user gets cache hit.</li>
+    <li>Providers: Cloudflare, AWS CloudFront, Akamai, Fastly.</li>
+  </ul></div>
+  <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>cache invalidation strategies</strong>: TTL-based (expire after time), versioned URLs (main.abc123.js — change hash to force new version), purge API (manually invalidate). Versioned URLs are best — infinite cache + instant updates.</p></div>
+</div></section>
+
+<!-- 15. HOW BROWSER OPENS GOOGLE.COM -->
+<section class="concept" id="google"><div class="ca"></div><div class="ci">
+  <div class="ch"><h2>How Browser Opens Google.com</h2><span class="badge b1">Core</span><span class="badge b2">The Big One</span><span class="rt">6 min</span></div>
+  <div class="one">This single question tests your knowledge of DNS, TCP, TLS, HTTP, rendering — everything. The answer walks through every layer of networking. Master this, and you've demonstrated complete understanding.</div>
+
+  <div class="exp">
+    <p><strong>Step 1 — URL Parsing:</strong> Browser parses "https://www.google.com" → protocol (HTTPS), host (www.google.com), path (/).</p>
+
+    <p><strong>Step 2 — DNS Resolution:</strong> Browser needs IP for google.com. Checks: browser cache → OS cache → router cache → ISP resolver → root DNS → .com TLD → Google's authoritative DNS. Gets back something like 142.250.80.46.</p>
+
+    <p><strong>Step 3 — TCP Connection:</strong> Browser initiates 3-way handshake (SYN → SYN-ACK → ACK) with Google's server on port 443.</p>
+
+    <p><strong>Step 4 — TLS Handshake:</strong> Since it's HTTPS, TLS handshake happens: exchange certificates, verify server identity, agree on cipher, create session keys. Now all data is encrypted.</p>
+
+    <p><strong>Step 5 — HTTP Request:</strong> Browser sends <code>GET / HTTP/2</code> with headers (User-Agent, Accept, Cookies, etc.).</p>
+
+    <p><strong>Step 6 — Server Processing:</strong> Google's load balancer routes to a backend server. Server processes request, generates HTML response.</p>
+
+    <p><strong>Step 7 — HTTP Response:</strong> Server sends back <code>200 OK</code> with HTML content, headers (Content-Type, Cache-Control, etc.).</p>
+
+    <p><strong>Step 8 — Browser Rendering:</strong> Parse HTML → build DOM tree. Parse CSS → build CSSOM. Combine → Render tree. Layout (calculate positions) → Paint (draw pixels) → Composite (layer management).</p>
+
+    <p><strong>Step 9 — Sub-resources:</strong> Browser discovers images, CSS, JS files → makes parallel requests for each. JS execution may modify DOM (more rendering).</p>
+
+    <p><strong>Step 10 — Page Interactive:</strong> All critical resources loaded, JavaScript executed, event listeners attached. Page is fully interactive.</p>
+  </div>
+
+  <div class="dw">
+    <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5" y="40" width="72" height="40" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
+      <text x="41" y="55" text-anchor="middle" font-weight="bold" font-size="8">URL Parse</text>
+      <text x="41" y="68" text-anchor="middle" font-size="7" opacity=".6">+ Check</text>
+      <text x="41" y="78" text-anchor="middle" font-size="7" opacity=".6">HSTS</text>
+
+      <text x="85" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="95" y="40" width="60" height="40" rx="6" fill="var(--redBg)" stroke="var(--red)" stroke-width="1.5"/>
+      <text x="125" y="58" text-anchor="middle" font-weight="bold" font-size="8">DNS</text>
+      <text x="125" y="72" text-anchor="middle" font-size="7" opacity=".6">→ IP</text>
+
+      <text x="163" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="173" y="40" width="60" height="40" rx="6" fill="var(--greenBg)" stroke="var(--green)" stroke-width="1.5"/>
+      <text x="203" y="58" text-anchor="middle" font-weight="bold" font-size="8">TCP</text>
+      <text x="203" y="72" text-anchor="middle" font-size="7" opacity=".6">3-way</text>
+
+      <text x="241" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="251" y="40" width="60" height="40" rx="6" fill="var(--purpleBg)" stroke="var(--purple)" stroke-width="1.5"/>
+      <text x="281" y="58" text-anchor="middle" font-weight="bold" font-size="8">TLS</text>
+      <text x="281" y="72" text-anchor="middle" font-size="7" opacity=".6">encrypt</text>
+
+      <text x="319" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="329" y="40" width="60" height="40" rx="6" fill="var(--amberBg)" stroke="var(--amber)" stroke-width="1.5"/>
+      <text x="359" y="58" text-anchor="middle" font-weight="bold" font-size="8">HTTP</text>
+      <text x="359" y="72" text-anchor="middle" font-size="7" opacity=".6">GET /</text>
+
+      <text x="397" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="407" y="40" width="72" height="40" rx="6" fill="var(--cyanBg)" stroke="var(--cyan)" stroke-width="1.5"/>
+      <text x="443" y="58" text-anchor="middle" font-weight="bold" font-size="8">Server</text>
+      <text x="443" y="72" text-anchor="middle" font-size="7" opacity=".6">Process</text>
+
+      <text x="487" y="62" fill="var(--gold)" font-size="14">→</text>
+
+      <rect x="497" y="40" width="72" height="40" rx="6" fill="var(--goldLight)" stroke="var(--gold)" stroke-width="1.5"/>
+      <text x="533" y="55" text-anchor="middle" font-weight="bold" font-size="8">Render</text>
+      <text x="533" y="68" text-anchor="middle" font-size="7" opacity=".6">DOM+CSSOM</text>
+      <text x="533" y="78" text-anchor="middle" font-size="7" opacity=".6">→ Pixels</text>
+
+      <text x="300" y="108" text-anchor="middle" font-size="9" font-weight="bold" fill="var(--gold)">Total: ~200-500ms for first meaningful paint</text>
+    </svg>
+    <p class="dl">Each step takes milliseconds. The whole flow completes in under a second for cached resources.</p>
+  </div>
+
+  <div class="kp"><h4>Bonus Points to Mention</h4><ul>
+    <li><strong>HSTS:</strong> Browser remembers sites that require HTTPS — auto-redirects even before DNS.</li>
+    <li><strong>HTTP/2 Multiplexing:</strong> Multiple requests over single TCP connection — no head-of-line blocking for resources.</li>
+    <li><strong>Preconnect/Prefetch:</strong> Browser may pre-resolve DNS and pre-connect to frequently used domains.</li>
+    <li><strong>Service Workers:</strong> Can intercept requests and serve from cache — instant loads for repeat visits.</li>
+    <li><strong>Critical Rendering Path:</strong> HTML → DOM, CSS → CSSOM, JS blocks rendering (use async/defer).</li>
+  </ul></div>
+
+  <div class="iq"><h4>Follow-ups</h4>
+    <details><summary>What if the domain is already cached?</summary><div class="ans">DNS step is skipped entirely (saves ~20-100ms). Browser goes straight to TCP connection with cached IP. This is why repeat visits are faster.</div></details>
+    <details><summary>What's the difference between HTTP/1.1 and HTTP/2?</summary><div class="ans"><strong>HTTP/1.1:</strong> One request per TCP connection (or pipelining, poorly supported). <strong>HTTP/2:</strong> Multiplexing (many requests on one connection), header compression (HPACK), server push. <strong>HTTP/3:</strong> Uses QUIC (UDP-based), 0-RTT connection, no head-of-line blocking at transport layer.</div></details>
+    <details><summary>What happens when you type IP address directly?</summary><div class="ans">DNS step is completely skipped. Browser goes directly to TCP handshake with that IP. But HTTPS may still fail if the certificate doesn't match the IP (certificates are issued for domain names, not IPs usually).</div></details>
+  </div>
+
+  <div class="edge"><h4>Competitive Edge</h4><p>When you answer this, draw the flow on a whiteboard. Start with "There are roughly 10 steps" and walk through each. Mention performance optimizations at each step: DNS prefetch, TCP fast open, TLS 1.3 0-RTT, HTTP/2 multiplexing, CDN caching, browser cache, service workers. This shows you don't just know the theory — you think about real-world performance.</p></div>
+</div></section>
+
+</main>
+</div>
+
+<button class="btt" id="bttBtn" onclick="scrollToTop()">↑</button>
+
+<div class="quick-jump">
+  <button class="jump-btn" id="jumpBtn" aria-expanded="false">🌐 Hyperjump</button>
+  <div class="jump-menu" id="qm">
+    <a href="index.html">Home</a>
+    <a href="01-DBMS.html">01. DBMS</a>
+    <a href="02-OOPs.html">02. OOPs</a>
+    <a href="03-Computer-Networks.html">03. Computer Networks</a>
+    <a href="04-Operating-System.html">04. Operating System</a>
+    <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+    <a href="05-Language-Core-Java.html">05. Java Core</a>
+    <a href="05-Language-Core-Python.html">05. Python Core</a>
+    <a href="06-Puzzles.html">06. Puzzles</a>
+    <a href="07-Linux.html">07. Linux</a>
+    <a href="08-Git.html">08. Git</a>
+    <a href="09-SQL.html">09. SQL</a>
+    <a href="10-Projects-Behavioral.html">10. Projects</a>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){const d=document.documentElement,isDark=d.getAttribute('data-theme')==='dark';d.setAttribute('data-theme',isDark?'':'dark');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';localStorage.setItem('theme',isDark?'light':'dark');}
+(function(){const t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}})();
+function toggleFocus(){const sb=document.getElementById('sidebar');sb.classList.toggle('hidden');document.body.classList.toggle('focus-mode');document.getElementById('focusBtn').textContent=sb.classList.contains('hidden')?'Expand':'Focus';}
+function updateProgress(){const s=document.documentElement.scrollTop||document.body.scrollTop;const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;document.getElementById('progressBar').style.width=(s/h)*100+'%';}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
+function highlightActive(){const sections=document.querySelectorAll('.concept');const sideLinks=document.querySelectorAll('.sidebar a');const navLinks=document.querySelectorAll('.nav-links a');let current='';sections.forEach(s=>{if(s.getBoundingClientRect().top<150)current=s.id;});sideLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));}
+window.addEventListener('scroll',function(){document.getElementById('bttBtn').style.display=window.scrollY>400?'block':'none';updateProgress();highlightActive();});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t){window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});}if(window.innerWidth<=900){document.getElementById('sidebar').classList.add('hidden');document.body.classList.add('focus-mode');document.getElementById('focusBtn').textContent='Expand';}});});
+(function(){const qBtn=document.getElementById('jumpBtn');const qMenu=document.getElementById('qm');if(!qBtn||!qMenu)return;qBtn.addEventListener('click',function(e){e.stopPropagation();qMenu.classList.toggle('active');qBtn.setAttribute('aria-expanded',qMenu.classList.contains('active'));});document.addEventListener('click',function(e){if(!qMenu.contains(e.target)&&!qBtn.contains(e.target)&&qMenu.classList.contains('active')){qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}});qMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{qMenu.classList.remove('active');qBtn.setAttribute('aria-expanded','false');}));})();
+updateProgress();highlightActive();
+</script>
+</body>
+</html>

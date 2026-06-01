@@ -1,0 +1,3624 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linux — Interview Notes</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700;800&display=swap");
+
+      :root {
+        --gold: #f5a623;
+        --gold-light: #ffd080;
+        --gold-dim: rgba(245, 166, 35, 0.13);
+        --bg: #f4f2ee;
+        --surface: #ffffff;
+        --surface2: #edeae3;
+        --border: #e0dad0;
+        --text: #1a1714;
+        --text2: #5a5450;
+        --text3: #9c968e;
+        --easy: #27ae60;
+        --medium: #e67e22;
+        --hard: #c0392b;
+        --easy-bg: rgba(39, 174, 96, 0.1);
+        --medium-bg: rgba(230, 126, 34, 0.1);
+        --hard-bg: rgba(192, 57, 43, 0.1);
+        --code-bg: #1a1814;
+        --red-warn: rgba(192, 57, 43, 0.07);
+        --linux-green: #2e8b57;
+        --linux-dark: #1a4731;
+        --sidebar-w: 264px;
+        --nav-h: 54px;
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 8px 36px rgba(0, 0, 0, 0.11);
+      }
+      [data-theme="dark"] {
+        --bg: #0d110e;
+        --surface: #141a16;
+        --surface2: #1a211c;
+        --border: #253020;
+        --text: #e8f0ea;
+        --text2: #9db8a4;
+        --text3: #5a7060;
+        --code-bg: #0a0d0b;
+        --red-warn: rgba(192, 57, 43, 0.13);
+        --shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 8px 36px rgba(0, 0, 0, 0.55);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Sora", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 14.5px;
+        line-height: 1.72;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: var(--nav-h);
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 22px;
+        box-shadow: var(--shadow);
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
+      }
+      .nav-badge {
+        background: var(--linux-green);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.06em;
+      }
+      .nav-title-text {
+        color: var(--gold);
+      }
+      .nav-sep {
+        width: 1px;
+        height: 20px;
+        background: var(--border);
+      }
+      .pbar-wrap {
+        flex: 1;
+        height: 3px;
+        background: var(--border);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .pbar {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--linux-green), var(--gold));
+        transition: width 0.15s;
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+      }
+      .btn-sm {
+        padding: 5px 13px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        color: var(--text2);
+        font-family: "Sora", sans-serif;
+        transition: all 0.15s;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .btn-sm:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .btn-sm.active {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+
+      .layout {
+        display: flex;
+        margin-top: var(--nav-h);
+        min-height: calc(100vh - var(--nav-h));
+      }
+
+      .sidebar {
+        width: var(--sidebar-w);
+        flex-shrink: 0;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        height: calc(100vh - var(--nav-h));
+        overflow-y: auto;
+        background: var(--surface);
+        border-right: 1px solid var(--border);
+        padding: 18px 0 40px;
+        transition: transform 0.3s;
+        z-index: 50;
+      }
+      .sb-section-label {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text3);
+        padding: 10px 18px 5px;
+      }
+      .sb-link {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 6px 18px;
+        font-size: 12px;
+        color: var(--text2);
+        text-decoration: none;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        transition: all 0.14s;
+        line-height: 1.4;
+      }
+      .sb-num {
+        min-width: 18px;
+        height: 18px;
+        background: var(--surface2);
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text3);
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.14s;
+      }
+      .sb-link:hover {
+        color: var(--gold);
+        background: var(--gold-dim);
+        border-left-color: var(--gold);
+      }
+      .sb-link:hover .sb-num {
+        background: var(--gold);
+        color: #000;
+      }
+      .sb-link.active {
+        color: var(--gold);
+        background: var(--gold-dim);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sb-link.active .sb-num {
+        background: var(--gold);
+        color: #000;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 3px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        padding: 32px 44px 80px;
+        max-width: calc(100% - var(--sidebar-w));
+        transition:
+          margin-left 0.3s,
+          max-width 0.3s;
+      }
+
+      .page-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 24px 0 22px;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 30px;
+      }
+      .ph-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1a4731 0%, #f5a623 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+        box-shadow: var(--shadow);
+      }
+      .ph-title {
+        font-size: 28px;
+        font-weight: 800;
+      }
+      .ph-sub {
+        font-size: 13px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+      .ph-count {
+        margin-left: auto;
+        background: var(--gold-dim);
+        border: 1px solid var(--gold);
+        border-radius: 8px;
+        padding: 6px 14px;
+        text-align: center;
+      }
+      .ph-count-num {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--gold);
+        line-height: 1;
+      }
+      .ph-count-label {
+        font-size: 10px;
+        color: var(--text3);
+      }
+
+      .concept {
+        background: var(--surface);
+        border-radius: 14px;
+        border-left: 4px solid var(--linux-green);
+        box-shadow: var(--shadow);
+        margin-bottom: 26px;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+      }
+      .concept:hover {
+        box-shadow: var(--shadow-lg);
+      }
+      .concept-header {
+        padding: 16px 22px 13px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .c-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--linux-green);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .c-title {
+        font-size: 17px;
+        font-weight: 700;
+        flex: 1;
+        min-width: 0;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .easy {
+        background: var(--easy-bg);
+        color: var(--easy);
+      }
+      .medium {
+        background: var(--medium-bg);
+        color: var(--medium);
+      }
+      .hard {
+        background: var(--hard-bg);
+        color: var(--hard);
+      }
+      .read-time {
+        font-size: 11px;
+        color: var(--text3);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+
+      .concept-body {
+        padding: 20px 22px;
+      }
+
+      .one-line {
+        background: linear-gradient(
+          90deg,
+          rgba(46, 139, 87, 0.09),
+          transparent
+        );
+        border-left: 3px solid var(--linux-green);
+        border-radius: 0 8px 8px 0;
+        padding: 12px 16px;
+        font-weight: 700;
+        font-size: 14.5px;
+        margin-bottom: 18px;
+        color: var(--text);
+      }
+
+      .explanation {
+        margin-bottom: 18px;
+      }
+      .explanation p {
+        color: var(--text2);
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .explanation p strong {
+        color: var(--text);
+      }
+      .explanation p:last-child {
+        margin-bottom: 0;
+      }
+
+      .key-points {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 18px;
+      }
+      .kp-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--linux-green);
+        margin-bottom: 10px;
+      }
+      .key-points ul {
+        list-style: none;
+        padding: 0;
+      }
+      .key-points li {
+        font-size: 13.5px;
+        color: var(--text2);
+        padding: 5px 0 5px 22px;
+        position: relative;
+        border-bottom: 1px solid var(--border);
+      }
+      .key-points li:last-child {
+        border-bottom: none;
+      }
+      .key-points li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-weight: 700;
+      }
+
+      .iq-wrap {
+        margin-bottom: 18px;
+      }
+      .iq-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .iq-item {
+        margin-bottom: 10px;
+      }
+      .iq-q {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 3px;
+      }
+      .iq-a {
+        font-size: 13px;
+        color: var(--text2);
+        padding-left: 14px;
+        border-left: 2px solid var(--border);
+      }
+
+      .gotcha {
+        border: 1px solid var(--hard);
+        background: var(--red-warn);
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 18px;
+      }
+      .gotcha-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--hard);
+        margin-bottom: 8px;
+      }
+      .gotcha ul {
+        padding-left: 16px;
+      }
+      .gotcha li {
+        font-size: 13px;
+        color: var(--text2);
+        margin-bottom: 5px;
+      }
+      .gotcha p {
+        font-size: 13px;
+        color: var(--text2);
+      }
+
+      .edge {
+        border: 1px solid var(--gold);
+        background: var(--gold-dim);
+        border-radius: 10px;
+        padding: 13px 16px;
+        margin-bottom: 18px;
+      }
+      .edge-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      .edge p {
+        font-size: 13px;
+        color: var(--text2);
+      }
+
+      .diagram-wrap {
+        background: var(--surface2);
+        border-radius: 10px;
+        padding: 20px 16px;
+        margin-bottom: 18px;
+        overflow-x: auto;
+      }
+      .diagram-wrap svg {
+        display: block;
+        margin: 0 auto;
+      }
+      .diagram-label {
+        font-size: 10px;
+        color: var(--text3);
+        text-align: center;
+        margin-top: 8px;
+        letter-spacing: 0.04em;
+      }
+
+      .code-block {
+        background: var(--code-bg);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .code-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .code-lang {
+        font-size: 11px;
+        color: #6a7280;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .copy-btn {
+        font-size: 11px;
+        padding: 3px 10px;
+        border-radius: 4px;
+        background: rgba(46, 139, 87, 0.15);
+        color: #60d090;
+        border: 1px solid rgba(46, 139, 87, 0.3);
+        cursor: pointer;
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+      }
+      .copy-btn:hover {
+        background: rgba(46, 139, 87, 0.25);
+      }
+      pre {
+        padding: 16px;
+        overflow-x: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.72;
+        color: #dce0d8;
+      }
+      .kw {
+        color: #cf8dfb;
+      }
+      .cm {
+        color: #5a6472;
+        font-style: italic;
+      }
+      .str {
+        color: #98d982;
+      }
+      .num {
+        color: #f5a623;
+      }
+      .fn {
+        color: #60bfff;
+      }
+      .prompt {
+        color: #2e8b57;
+        font-weight: 600;
+      }
+      .flag {
+        color: #ffb347;
+      }
+      .out {
+        color: #9db8a4;
+      }
+
+      .ctable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 18px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .ctable th {
+        background: var(--surface2);
+        color: var(--text);
+        font-weight: 700;
+        padding: 9px 14px;
+        border: 1px solid var(--border);
+        text-align: left;
+        font-size: 12px;
+      }
+      .ctable td {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        color: var(--text2);
+        vertical-align: top;
+      }
+      .ctable tr:nth-child(even) td {
+        background: var(--surface2);
+      }
+
+      .resources {
+        margin-top: 18px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+      .res-title {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 10px;
+      }
+      .res-cards {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .res-card {
+        flex: 1;
+        min-width: 170px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 13px;
+        text-decoration: none;
+        color: var(--text2);
+        transition: all 0.14s;
+        font-size: 12.5px;
+      }
+      .res-card:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .res-card-icon {
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .res-card-name {
+        font-weight: 600;
+        font-size: 12px;
+        color: var(--text);
+        margin-bottom: 2px;
+      }
+      .res-card-why {
+        font-size: 11px;
+        color: var(--text3);
+      }
+
+      .callout {
+        background: rgba(46, 139, 87, 0.07);
+        border-left: 3px solid var(--linux-green);
+        border-radius: 0 8px 8px 0;
+        padding: 11px 15px;
+        margin-bottom: 18px;
+        font-size: 13.5px;
+        color: var(--text2);
+      }
+
+      #back-top {
+        position: fixed;
+        bottom: 26px;
+        right: 26px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--linux-green);
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-lg);
+        border: none;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        z-index: 200;
+      }
+      #back-top.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #back-top:hover {
+        transform: translateY(-3px);
+      }
+
+      body.focus .sidebar {
+        transform: translateX(calc(-1 * var(--sidebar-w)));
+      }
+      body.focus .main {
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(calc(-1 * var(--sidebar-w)));
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          margin-left: 0;
+          max-width: 100%;
+          padding: 20px 16px 60px;
+        }
+        .ph-title {
+          font-size: 22px;
+        }
+        .ph-count {
+          display: none;
+        }
+        #mob-menu-btn {
+          display: flex !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-logo">
+        <span class="nav-badge">LINUX</span>
+        <span class="nav-title-text">Linux Core</span>
+      </div>
+      <div class="nav-sep"></div>
+      <div class="pbar-wrap"><div class="pbar" id="pbar"></div></div>
+      <div class="nav-right">
+        <button class="btn-sm" id="focusBtn" onclick="toggleFocus()">
+          Focus Mode
+        </button>
+        <button class="btn-sm" id="themeBtn" onclick="toggleTheme()">
+          Dark Mode
+        </button>
+        <button
+          class="btn-sm"
+          id="mob-menu-btn"
+          style="display: none"
+          onclick="toggleSidebar()"
+        >
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sb-section-label">Linux — 20 Questions</div>
+        <a class="sb-link" onclick="jumpTo('q1')"
+          ><span class="sb-num">1</span>What happens when you type a command?</a
+        >
+        <a class="sb-link" onclick="jumpTo('q2')"
+          ><span class="sb-num">2</span>Process vs Thread</a
+        >
+        <a class="sb-link" onclick="jumpTo('q3')"
+          ><span class="sb-num">3</span>Zombie Process</a
+        >
+        <a class="sb-link" onclick="jumpTo('q4')"
+          ><span class="sb-num">4</span>Daemon Process</a
+        >
+        <a class="sb-link" onclick="jumpTo('q5')"
+          ><span class="sb-num">5</span>Hard Link vs Soft Link</a
+        >
+        <a class="sb-link" onclick="jumpTo('q6')"
+          ><span class="sb-num">6</span>What is an Inode?</a
+        >
+        <a class="sb-link" onclick="jumpTo('q7')"
+          ><span class="sb-num">7</span>chmod 755 explained</a
+        >
+        <a class="sb-link" onclick="jumpTo('q8')"
+          ><span class="sb-num">8</span>kill vs kill -9</a
+        >
+        <a class="sb-link" onclick="jumpTo('q9')"
+          ><span class="sb-num">9</span>grep vs find vs locate</a
+        >
+        <a class="sb-link" onclick="jumpTo('q10')"
+          ><span class="sb-num">10</span>> vs >></a
+        >
+        <a class="sb-link" onclick="jumpTo('q11')"
+          ><span class="sb-num">11</span>Pipe | in Linux</a
+        >
+        <a class="sb-link" onclick="jumpTo('q12')"
+          ><span class="sb-num">12</span>Swap Memory</a
+        >
+        <a class="sb-link" onclick="jumpTo('q13')"
+          ><span class="sb-num">13</span>What happens when RAM is full?</a
+        >
+        <a class="sb-link" onclick="jumpTo('q14')"
+          ><span class="sb-num">14</span>TCP vs UDP</a
+        >
+        <a class="sb-link" onclick="jumpTo('q15')"
+          ><span class="sb-num">15</span>HTTP vs HTTPS</a
+        >
+        <a class="sb-link" onclick="jumpTo('q16')"
+          ><span class="sb-num">16</span>What is SSH?</a
+        >
+        <a class="sb-link" onclick="jumpTo('q17')"
+          ><span class="sb-num">17</span>Cron Job</a
+        >
+        <a class="sb-link" onclick="jumpTo('q18')"
+          ><span class="sb-num">18</span>Environment Variable & PATH</a
+        >
+        <a class="sb-link" onclick="jumpTo('q19')"
+          ><span class="sb-num">19</span>fork() and exec()</a
+        >
+        <a class="sb-link" onclick="jumpTo('q20')"
+          ><span class="sb-num">20</span>Production Server is Down — Debug</a
+        >
+      </aside>
+
+      <main class="main" id="main">
+        <div class="page-header">
+          <div class="ph-icon">🐧</div>
+          <div>
+            <div class="ph-title">Linux — Interview Notes</div>
+            <div class="ph-sub">
+              20 Must-Know Questions · Commands, Internals & Production
+              Scenarios
+            </div>
+          </div>
+          <div class="ph-count">
+            <div class="ph-count-num">20</div>
+            <div class="ph-count-label">Concepts</div>
+          </div>
+        </div>
+
+        <!-- Q1 -->
+        <div class="concept" id="q1">
+          <div class="concept-header">
+            <div class="c-num">1</div>
+            <div class="c-title">
+              What Happens When You Type a Command in Terminal?
+            </div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Shell reads your input → finds the binary using PATH → fork()s a
+              child process → exec()s the binary in that child → child runs →
+              exits → shell waits and takes back control.
+            </div>
+
+            <div class="explanation">
+              <p>
+                When you type <code>ls -la</code> and hit Enter, the shell
+                (bash/zsh) reads that string. First it checks if it's a built-in
+                command (like <code>cd</code>, <code>echo</code>). If not, it
+                searches through directories listed in your
+                <strong>PATH</strong> environment variable — one by one — until
+                it finds a binary named <code>ls</code>.
+              </p>
+              <p>
+                Once found, the shell calls <strong>fork()</strong> — cloning
+                itself into a parent and child process. The child process then
+                calls <strong>exec()</strong> — which replaces the child's
+                entire memory with the <code>ls</code> program. The parent shell
+                calls <strong>wait()</strong> — pauses itself until the child
+                finishes. When ls is done, the child exits, and the parent wakes
+                up and shows you the prompt again.
+              </p>
+              <p>
+                This fork-exec pattern is the foundation of how every command
+                runs in Linux. Even when you run a Python script — the shell
+                forks, the child execs the Python interpreter, Python
+                interpreter runs your script, exits, shell resumes.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 520 130"
+                width="520"
+                height="130"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="a1"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#2E8B57" />
+                  </marker>
+                </defs>
+                <rect
+                  x="0"
+                  y="40"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="#2E8B57"
+                  fill-opacity="0.15"
+                  stroke="#2E8B57"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="45"
+                  y="59"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  Shell reads input
+                </text>
+                <line
+                  x1="90"
+                  y1="55"
+                  x2="108"
+                  y2="55"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#a1)"
+                />
+                <rect
+                  x="110"
+                  y="40"
+                  width="90"
+                  height="30"
+                  rx="5"
+                  fill="#F5A623"
+                  fill-opacity="0.15"
+                  stroke="#F5A623"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="155"
+                  y="59"
+                  text-anchor="middle"
+                  fill="#F5A623"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  PATH lookup
+                </text>
+                <line
+                  x1="200"
+                  y1="55"
+                  x2="218"
+                  y2="55"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#a1)"
+                />
+                <rect
+                  x="220"
+                  y="40"
+                  width="70"
+                  height="30"
+                  rx="5"
+                  fill="#CF8DFB"
+                  fill-opacity="0.15"
+                  stroke="#CF8DFB"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="255"
+                  y="59"
+                  text-anchor="middle"
+                  fill="#CF8DFB"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  fork()
+                </text>
+                <line
+                  x1="290"
+                  y1="55"
+                  x2="308"
+                  y2="55"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#a1)"
+                />
+                <rect
+                  x="310"
+                  y="40"
+                  width="70"
+                  height="30"
+                  rx="5"
+                  fill="#E67E22"
+                  fill-opacity="0.15"
+                  stroke="#E67E22"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="345"
+                  y="59"
+                  text-anchor="middle"
+                  fill="#E67E22"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  exec(binary)
+                </text>
+                <line
+                  x1="380"
+                  y1="55"
+                  x2="398"
+                  y2="55"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#a1)"
+                />
+                <rect
+                  x="400"
+                  y="40"
+                  width="70"
+                  height="30"
+                  rx="5"
+                  fill="#C0392B"
+                  fill-opacity="0.15"
+                  stroke="#C0392B"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="435"
+                  y="59"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="600"
+                >
+                  exit() → wait()
+                </text>
+                <text
+                  x="45"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  bash/zsh
+                </text>
+                <text
+                  x="155"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  /usr/bin/ls
+                </text>
+                <text
+                  x="255"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  clone shell
+                </text>
+                <text
+                  x="345"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  child runs cmd
+                </text>
+                <text
+                  x="435"
+                  y="90"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  shell resumes
+                </text>
+                <text
+                  x="260"
+                  y="120"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  Parent shell waits during exec. Control returns when child
+                  exits.
+                </text>
+              </svg>
+              <div class="diagram-label">
+                Every external command in Linux follows this exact
+                fork-exec-wait cycle.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Built-in commands (cd, echo, export) run in the shell process
+                  itself — no fork needed.
+                </li>
+                <li>
+                  PATH is searched left to right — first match wins.
+                  <code>which ls</code> shows you which binary gets found.
+                </li>
+                <li>
+                  If binary not found anywhere in PATH → "command not found"
+                  error.
+                </li>
+                <li>
+                  <code>&amp;</code> at the end (e.g. <code>ls &amp;</code>)
+                  makes the shell NOT wait — runs the child in the background.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=what+happens+when+you+type+command+linux+shell"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Linux Command Execution
+                  </div>
+                  <div class="res-card-why">
+                    TechWorld with Nana — shell internals visualised
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://linuxjourney.com/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">Linux Journey</div>
+                  <div class="res-card-why">
+                    Interactive, starts from zero, covers shell execution
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="concept" id="q2">
+          <div class="concept-header">
+            <div class="c-num">2</div>
+            <div class="c-title">Process vs Thread in Linux</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Process = isolated program with its own memory. Thread =
+              lightweight unit inside a process sharing the same memory. Threads
+              communicate easily but need synchronization. Processes are safer
+              but slower to create and communicate.
+            </div>
+
+            <div class="explanation">
+              <p>
+                In Linux, a <strong>process</strong> is what the kernel gives
+                its own virtual address space, file descriptor table, and PID.
+                When you run <code>python script.py</code>, that's a process.
+                Each process is isolated — one crashing doesn't kill others.
+              </p>
+              <p>
+                A <strong>thread</strong> (called a "light-weight process" in
+                Linux) lives inside a process. All threads share the heap, code
+                segment, and open files. They each have their own stack and CPU
+                registers. Creating a thread is much cheaper — no new address
+                space needed. Communication is just reading/writing shared
+                memory — but that needs locks or you'll have race conditions.
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Aspect</th>
+                <th>Process</th>
+                <th>Thread</th>
+              </tr>
+              <tr>
+                <td>Memory</td>
+                <td>Separate, isolated</td>
+                <td>Shared heap, own stack</td>
+              </tr>
+              <tr>
+                <td>Creation</td>
+                <td>fork() — heavy</td>
+                <td>pthread_create() — light</td>
+              </tr>
+              <tr>
+                <td>Communication</td>
+                <td>IPC: pipes, sockets</td>
+                <td>Shared variables (with mutex)</td>
+              </tr>
+              <tr>
+                <td>Crash isolation</td>
+                <td>Yes — others unaffected</td>
+                <td>No — one crash kills all</td>
+              </tr>
+              <tr>
+                <td>Linux command</td>
+                <td><code>ps aux</code></td>
+                <td><code>ps -eLf</code> or <code>top -H</code></td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Linux doesn't really distinguish processes and threads
+                  internally — both are "tasks". <code>clone()</code> syscall
+                  creates both, with different flags for what to share.
+                </li>
+                <li>
+                  <code>ps aux</code> shows processes. <code>top</code> shows
+                  real-time. <code>htop</code> is the nicer version.
+                </li>
+                <li>
+                  A process always has at least one thread — the main thread.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/difference-between-process-and-thread/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — Process vs Thread Linux</div>
+                  <div class="res-card-why">
+                    Linux-specific details + comparison table
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="concept" id="q3">
+          <div class="concept-header">
+            <div class="c-num">3</div>
+            <div class="c-title">What is a Zombie Process?</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              A zombie process has finished execution but still has an entry in
+              the process table because its parent hasn't called wait() to read
+              its exit status. It's dead but not fully cleaned up.
+            </div>
+
+            <div class="explanation">
+              <p>
+                When a child process exits, it doesn't disappear immediately.
+                The kernel keeps a tiny record of it in the process table — its
+                PID, exit status, resource usage — waiting for the parent to
+                come and collect this info via <code>wait()</code> or
+                <code>waitpid()</code>. Until the parent does that, the child
+                sits as a <strong>zombie</strong> — it's done running, uses no
+                CPU or memory, but its PID slot is occupied.
+              </p>
+              <p>
+                A handful of zombies is normal. Thousands of zombies means the
+                parent is badly written — never calling wait(). This exhausts
+                PIDs (Linux has a finite PID limit, typically 32768). Fix: fix
+                the parent code, or kill the parent (which makes zombies
+                orphans, adopted by init/systemd, which properly reaps them).
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Zombie shows as <code>Z</code> in process state in
+                  <code>ps aux</code> output.
+                </li>
+                <li>
+                  You cannot kill a zombie — it's already dead. Only killing the
+                  parent cleans it up.
+                </li>
+                <li>
+                  When parent dies, init (PID 1) adopts all orphan children and
+                  reaps them properly.
+                </li>
+                <li>
+                  Fix properly: parent installs SIGCHLD signal handler and calls
+                  wait() in it.
+                </li>
+              </ul>
+            </div>
+
+            <div class="gotcha">
+              <div class="gotcha-title">⚠ Common Trap</div>
+              <ul>
+                <li>
+                  People say "kill the zombie" — you literally can't, kill -9
+                  won't work on a zombie. Kill the parent instead.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/zombie-and-orphan-processes-in-c/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    GFG — Zombie & Orphan Processes
+                  </div>
+                  <div class="res-card-why">
+                    Code demo + explanation of wait() call
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="concept" id="q4">
+          <div class="concept-header">
+            <div class="c-num">4</div>
+            <div class="c-title">What is a Daemon Process?</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              A daemon is a background process that runs continuously without a
+              controlling terminal — started at boot, serves requests, never
+              interacts directly with users. Think: web servers, SSH server,
+              cron, syslog.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Daemons are the workhorses of Linux. They start when the system
+                boots (managed by <strong>systemd</strong> or older init) and
+                keep running silently. <code>sshd</code> waits for SSH
+                connections. <code>crond</code> runs scheduled jobs.
+                <code>nginx</code> or <code>apache</code> serves web pages.
+                <code>syslogd</code> collects logs.
+              </p>
+              <p>
+                To become a daemon, a process typically: forks and lets the
+                parent exit (so the shell thinks the job is done), calls
+                <code>setsid()</code> to detach from the terminal (no
+                controlling TTY), closes stdin/stdout/stderr (redirects them to
+                /dev/null or a log file), changes working directory to / (so it
+                doesn't block unmounting any filesystem).
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Daemon names conventionally end in 'd': sshd, crond, httpd,
+                  mysqld, dockerd.
+                </li>
+                <li>
+                  Check running daemons:
+                  <code>systemctl list-units --type=service</code>
+                </li>
+                <li>
+                  Start/stop daemons: <code>systemctl start nginx</code>,
+                  <code>systemctl stop nginx</code>
+                </li>
+                <li>
+                  View daemon logs: <code>journalctl -u nginx</code> or
+                  <code>/var/log/</code>
+                </li>
+                <li>
+                  Running a process in background with <code>&amp;</code> is NOT
+                  a daemon — it's still tied to your terminal session. Close the
+                  terminal, process dies.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=linux+daemon+process+systemd+explained"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Linux Daemons & systemd
+                  </div>
+                  <div class="res-card-why">
+                    TechWorld with Nana — systemd service lifecycle
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="concept" id="q5">
+          <div class="concept-header">
+            <div class="c-num">5</div>
+            <div class="c-title">Hard Link vs Soft Link (Symlink)</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Hard link = another name pointing directly to the same inode (same
+              file data). Soft link = a shortcut file containing a path to the
+              original — like a Windows shortcut. Delete original: hard link
+              still works, soft link breaks.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Every file in Linux has an <strong>inode</strong> — a data
+                structure holding the file's metadata and location on disk. The
+                filename is just a label pointing to an inode. A
+                <strong>hard link</strong> creates another filename pointing to
+                the exact same inode. Both names are equal — neither is "the
+                original." The file data is only deleted when ALL hard links to
+                it are removed (inode reference count hits 0).
+              </p>
+              <p>
+                A <strong>soft link (symlink)</strong> is a special file that
+                contains a path string — like a shortcut. When you access a
+                symlink, Linux follows the path inside it to the target. Delete
+                the target? The symlink still exists but points to nothing — a
+                "dangling symlink." Soft links can cross filesystems and point
+                to directories; hard links cannot.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 480 140"
+                width="480"
+                height="140"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="hl1"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#2E8B57" />
+                  </marker>
+                  <marker
+                    id="hl2"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#E67E22" />
+                  </marker>
+                  <marker
+                    id="hl3"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#C0392B" />
+                  </marker>
+                </defs>
+                <!-- Inode box -->
+                <rect
+                  x="190"
+                  y="50"
+                  width="100"
+                  height="50"
+                  rx="6"
+                  fill="#2E8B57"
+                  fill-opacity="0.15"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="240"
+                  y="72"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  inode #42
+                </text>
+                <text
+                  x="240"
+                  y="88"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  actual file data
+                </text>
+
+                <!-- file.txt hard link -->
+                <rect
+                  x="20"
+                  y="56"
+                  width="80"
+                  height="28"
+                  rx="4"
+                  fill="#2E8B57"
+                  fill-opacity="0.1"
+                  stroke="#2E8B57"
+                  stroke-width="1"
+                />
+                <text
+                  x="60"
+                  y="74"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  file.txt
+                </text>
+                <line
+                  x1="100"
+                  y1="70"
+                  x2="186"
+                  y2="70"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#hl1)"
+                />
+
+                <!-- hardlink.txt -->
+                <rect
+                  x="20"
+                  y="94"
+                  width="80"
+                  height="28"
+                  rx="4"
+                  fill="#2E8B57"
+                  fill-opacity="0.1"
+                  stroke="#2E8B57"
+                  stroke-width="1"
+                />
+                <text
+                  x="60"
+                  y="112"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  hardlink.txt
+                </text>
+                <line
+                  x1="100"
+                  y1="108"
+                  x2="186"
+                  y2="82"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#hl1)"
+                />
+                <text
+                  x="60"
+                  y="132"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  HARD LINK
+                </text>
+
+                <!-- symlink -->
+                <rect
+                  x="360"
+                  y="30"
+                  width="100"
+                  height="28"
+                  rx="4"
+                  fill="#E67E22"
+                  fill-opacity="0.1"
+                  stroke="#E67E22"
+                  stroke-width="1"
+                />
+                <text
+                  x="410"
+                  y="48"
+                  text-anchor="middle"
+                  fill="#E67E22"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  symlink → path
+                </text>
+                <line
+                  x1="360"
+                  y1="56"
+                  x2="298"
+                  y2="68"
+                  stroke="#E67E22"
+                  stroke-width="1.5"
+                  stroke-dasharray="4"
+                  marker-end="url(#hl2)"
+                />
+                <text
+                  x="410"
+                  y="18"
+                  text-anchor="middle"
+                  fill="#E67E22"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  SOFT LINK
+                </text>
+
+                <!-- dangling -->
+                <rect
+                  x="360"
+                  y="90"
+                  width="100"
+                  height="28"
+                  rx="4"
+                  fill="#C0392B"
+                  fill-opacity="0.1"
+                  stroke="#C0392B"
+                  stroke-width="1"
+                  stroke-dasharray="4"
+                />
+                <text
+                  x="410"
+                  y="108"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  dangling link
+                </text>
+                <text
+                  x="410"
+                  y="126"
+                  text-anchor="middle"
+                  fill="#C0392B"
+                  font-size="9"
+                  font-family="Sora,sans-serif"
+                >
+                  target deleted → broken
+                </text>
+              </svg>
+              <div class="diagram-label">
+                Hard links: both filenames equal, both survive deletion of
+                either. Soft link breaks if target is deleted.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Create hard link: <code>ln file.txt hardlink.txt</code>.
+                  Create symlink: <code>ln -s file.txt symlink.txt</code>
+                </li>
+                <li>
+                  Hard links can't cross filesystem boundaries (different
+                  partitions). Soft links can.
+                </li>
+                <li>
+                  Hard links can't point to directories (prevents loops). Soft
+                  links to directories: common and useful.
+                </li>
+                <li>
+                  <code>ls -li</code> shows inode numbers — hard links to same
+                  file have same inode number.
+                </li>
+                <li>
+                  Soft links are what <code>/usr/bin/python</code> often is — a
+                  symlink to the actual python3.x binary.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/soft-hard-links-unixlinux/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — Hard vs Soft Links</div>
+                  <div class="res-card-why">
+                    Inode diagram + command examples
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="concept" id="q6">
+          <div class="concept-header">
+            <div class="c-num">6</div>
+            <div class="c-title">What is an Inode in Linux?</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              An inode is a data structure on disk that stores everything about
+              a file except its name and actual content — permissions, owner,
+              size, timestamps, and pointers to the actual data blocks on disk.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Think of a filesystem like a library. The book content is stored
+                on shelves (data blocks). The catalog card for each book is the
+                <strong>inode</strong> — it tells you who wrote it (owner), when
+                it was last read (timestamps), how many pages (size), and which
+                shelf it's on (data block pointers). The book's title is just a
+                label in a directory that points to the catalog card number
+                (inode number).
+              </p>
+              <p>
+                Every file and directory has exactly one inode. Directories are
+                just files containing a list of (filename → inode number)
+                mappings. When you access <code>/home/user/file.txt</code>,
+                Linux traverses: root inode → home directory inode → user
+                directory inode → file.txt's inode → reads data blocks.
+                Filenames live in directories, not in inodes. That's why hard
+                links work — two names, one inode.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>stat filename</code> shows the inode of a file — all its
+                  metadata.
+                </li>
+                <li>
+                  <code>ls -i</code> shows inode numbers alongside filenames.
+                </li>
+                <li>
+                  Inode count is fixed at filesystem creation — you can run out
+                  of inodes even with free disk space (many tiny files).
+                </li>
+                <li>
+                  <code>df -i</code> shows inode usage. Critical for log servers
+                  and mail servers that generate millions of small files.
+                </li>
+                <li>
+                  Inode doesn't store filename — that's stored in the parent
+                  directory's data.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                At companies like Flipkart/Amazon, storage systems can hit "disk
+                full" errors even when <code>df -h</code> shows free space —
+                because inodes are exhausted. Knowing to run
+                <code>df -i</code> and finding which directory has millions of
+                tiny files (usually /tmp or a logging path) shows production
+                debugging maturity.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/inode-in-operating-system/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — Inode in Linux</div>
+                  <div class="res-card-why">
+                    Structure diagram + stat command output explained
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="concept" id="q7">
+          <div class="concept-header">
+            <div class="c-num">7</div>
+            <div class="c-title">Explain chmod 755</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              chmod 755 means owner can read+write+execute (7), group can
+              read+execute (5), others can read+execute (5). Each digit is a sum
+              of read(4), write(2), execute(1).
+            </div>
+
+            <div class="explanation">
+              <p>
+                Linux file permissions have three levels:
+                <strong>owner</strong> (the user who owns the file),
+                <strong>group</strong> (members of the file's group), and
+                <strong>others</strong> (everyone else). Each level gets three
+                possible permissions: <strong>r</strong>ead (4),
+                <strong>w</strong>rite (2), e<strong>x</strong>ecute (1). Add
+                them up to get the octal digit.
+              </p>
+              <p>
+                So 755: Owner = 4+2+1 = 7 (full control). Group = 4+0+1 = 5
+                (read and run, can't modify). Others = 4+0+1 = 5 (read and run,
+                can't modify). This is the standard permission for executables
+                and web directories — everyone can read and run, only owner can
+                modify.
+              </p>
+            </div>
+
+            <div class="callout">
+              <strong>Quick reference:</strong> 7=rwx · 6=rw- · 5=r-x · 4=r-- ·
+              0=--- &nbsp;|&nbsp; chmod 644 = owner rw, group r, others r
+              (standard for files) · chmod 755 = standard for executables/dirs
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Symbolic form: <code>chmod u+x file</code> (add execute for
+                  user), <code>chmod go-w file</code> (remove write from group
+                  and others).
+                </li>
+                <li>
+                  Execute on a <strong>directory</strong> means you can enter it
+                  (cd into it). Without execute, you can't traverse the
+                  directory even if you know file names inside.
+                </li>
+                <li>
+                  <code>chown user:group file</code> changes ownership.
+                  <code>chmod</code> changes permissions.
+                </li>
+                <li>
+                  Special bits: setuid (4xxx), setgid (2xxx), sticky bit (1xxx).
+                  <code>chmod 1777</code> on /tmp — sticky bit means only file
+                  owner can delete their own files.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://linuxjourney.com/lesson/file-permissions"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    Linux Journey — File Permissions
+                  </div>
+                  <div class="res-card-why">
+                    Interactive exercises on chmod, chown, umask
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="concept" id="q8">
+          <div class="concept-header">
+            <div class="c-num">8</div>
+            <div class="c-title">Difference Between kill and kill -9</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              kill (SIGTERM) politely asks the process to stop — it can catch
+              this signal, save state, and exit cleanly. kill -9 (SIGKILL) is
+              instant forced termination by the kernel — process has no chance
+              to respond or clean up.
+            </div>
+
+            <div class="explanation">
+              <p>
+                <code>kill PID</code> sends
+                <strong>SIGTERM (signal 15)</strong>. This is a request, not a
+                demand. A well-written program catches SIGTERM, closes database
+                connections, flushes logs, releases locks, then exits cleanly. A
+                process can even ignore SIGTERM if it wants — which is why
+                sometimes kill doesn't work on a stubborn process.
+              </p>
+              <p>
+                <code>kill -9 PID</code> sends
+                <strong>SIGKILL (signal 9)</strong>. This one the kernel handles
+                directly — the process never even sees it. No cleanup happens.
+                No signal handlers run. File handles may not be flushed, temp
+                files not deleted, database connections abruptly cut. Use it as
+                the last resort when kill doesn't work.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Always try SIGTERM first. Give it 5-10 seconds. Then escalate
+                  to SIGKILL.
+                </li>
+                <li>
+                  <code>kill -l</code> lists all signals (there are 64). Common
+                  ones: 1=SIGHUP (reload config), 2=SIGINT (Ctrl+C), 15=SIGTERM,
+                  9=SIGKILL.
+                </li>
+                <li>
+                  <code>pkill processname</code> kills by name.
+                  <code>killall nginx</code> kills all processes named nginx.
+                </li>
+                <li>
+                  SIGKILL and SIGSTOP are the only two signals a process CANNOT
+                  catch, block, or ignore.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/kill-command-in-linux-with-examples/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — kill command in Linux</div>
+                  <div class="res-card-why">
+                    All signal types + when to use each
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="concept" id="q9">
+          <div class="concept-header">
+            <div class="c-num">9</div>
+            <div class="c-title">grep vs find vs locate</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              grep searches INSIDE files for text patterns. find searches the
+              filesystem for files by name/type/size/date in real-time. locate
+              searches a pre-built database of filenames — very fast but may be
+              stale.
+            </div>
+
+            <div class="explanation">
+              <p>
+                These three tools do completely different things and people
+                often mix them up. <strong>grep</strong> looks through file
+                content — give it a pattern and files, it prints matching lines.
+                <strong>find</strong> walks the directory tree looking for files
+                matching criteria — name, permissions, size, modification time.
+                <strong>locate</strong> queries a database (built by
+                <code>updatedb</code>, runs nightly) of all filenames — blazing
+                fast but won't find files created today until updatedb runs
+                again.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># grep — search INSIDE files for pattern</span>
+<span class="prompt">$</span> grep <span class="flag">-r</span> <span class="str">"ERROR"</span> /var/log/       <span class="cm"># recursive search</span>
+<span class="prompt">$</span> grep <span class="flag">-n</span> <span class="str">"def main"</span> script.py   <span class="cm"># show line numbers</span>
+
+<span class="cm"># find — search for FILES by properties</span>
+<span class="prompt">$</span> find /home <span class="flag">-name</span> <span class="str">"*.log"</span>         <span class="cm"># by name pattern</span>
+<span class="prompt">$</span> find /tmp <span class="flag">-mtime</span> <span class="flag">+7</span>              <span class="cm"># modified >7 days ago</span>
+<span class="prompt">$</span> find / <span class="flag">-size</span> <span class="flag">+100M</span>               <span class="cm"># files bigger than 100MB</span>
+
+<span class="cm"># locate — fast filename search (pre-indexed)</span>
+<span class="prompt">$</span> locate nginx.conf                 <span class="cm"># instant, uses database</span>
+<span class="prompt">$</span> sudo updatedb                     <span class="cm"># rebuild the database</span></pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Combine them:
+                  <code>find /var/log -name "*.log" | xargs grep "ERROR"</code>
+                  — find files, then search inside them.
+                </li>
+                <li>
+                  <code>grep -i</code> = case insensitive.
+                  <code>grep -v</code> = invert (exclude matching lines).
+                  <code>grep -c</code> = count matches.
+                </li>
+                <li>
+                  <code>find -exec</code> runs a command on each result:
+                  <code>find /tmp -name "*.tmp" -exec rm {} \;</code>
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/grep-command-in-unixlinux/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — grep, find, locate</div>
+                  <div class="res-card-why">
+                    All options with practical examples
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="concept" id="q10">
+          <div class="concept-header">
+            <div class="c-num">10</div>
+            <div class="c-title">Difference Between &gt; and &gt;&gt;</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">2 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              &gt; redirects output to a file, overwriting it completely.
+              &gt;&gt; appends output to the end of a file, preserving existing
+              content.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Output redirection is how you save command output to files
+                instead of printing to screen. <code>&gt;</code> is destructive
+                — it opens the file, truncates it to zero, then writes. If the
+                file doesn't exist, it's created. If it does exist, all previous
+                content is gone. <code>&gt;&gt;</code> opens the file at the end
+                and appends — previous content is safe.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="prompt">$</span> echo <span class="str">"line 1"</span> > file.txt    <span class="cm"># creates/overwrites</span>
+<span class="prompt">$</span> echo <span class="str">"line 2"</span> > file.txt    <span class="cm"># "line 1" is GONE</span>
+
+<span class="prompt">$</span> echo <span class="str">"line 1"</span> >> log.txt   <span class="cm"># appends</span>
+<span class="prompt">$</span> echo <span class="str">"line 2"</span> >> log.txt   <span class="cm"># both lines now in file</span>
+
+<span class="cm"># Redirect stderr (2) and stdout (1)</span>
+<span class="prompt">$</span> command > out.txt 2> err.txt   <span class="cm"># separate</span>
+<span class="prompt">$</span> command > all.txt 2>&1          <span class="cm"># merge both to one file</span>
+<span class="prompt">$</span> command 2>/dev/null             <span class="cm"># discard errors</span></pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>2&gt;&amp;1</code> means "redirect stderr (fd 2) to
+                  wherever stdout (fd 1) is going" — very common in scripts.
+                </li>
+                <li>
+                  <code>/dev/null</code> is the black hole — anything written
+                  there is discarded. Perfect for silencing noisy commands.
+                </li>
+                <li>
+                  <code>&lt;</code> redirects input from a file:
+                  <code>wc -l &lt; file.txt</code>
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://linuxjourney.com/lesson/stdout-lesson"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    Linux Journey — I/O Redirection
+                  </div>
+                  <div class="res-card-why">
+                    stdin/stdout/stderr explained interactively
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="concept" id="q11">
+          <div class="concept-header">
+            <div class="c-num">11</div>
+            <div class="c-title">What is Pipe | in Linux?</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Pipe connects the stdout of one command to the stdin of the next —
+              letting you chain commands together to build powerful one-liners
+              without creating intermediate files.
+            </div>
+
+            <div class="explanation">
+              <p>
+                The pipe is one of Linux's most elegant ideas. Instead of
+                running a command, saving output to a file, running next command
+                on that file — you just connect them directly. The kernel sets
+                up an in-memory buffer between them. The first command writes to
+                it, the second reads from it. They run concurrently — producer
+                and consumer.
+              </p>
+              <p>
+                This Unix philosophy of small, focused tools that do one thing
+                well and chain via pipes is why Linux command line is so
+                powerful. <code>cat</code> reads, <code>grep</code> filters,
+                <code>sort</code> sorts, <code>uniq</code> deduplicates,
+                <code>wc</code> counts — combine them any way you need.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># Count ERROR lines in a log</span>
+<span class="prompt">$</span> cat app.log | grep <span class="str">"ERROR"</span> | wc -l
+
+<span class="cm"># Find top 5 largest files</span>
+<span class="prompt">$</span> du -sh * | sort -rh | head -5
+
+<span class="cm"># Who are the top memory-using processes?</span>
+<span class="prompt">$</span> ps aux | sort <span class="flag">-k4</span> <span class="flag">-rn</span> | head -10
+
+<span class="cm"># Find all unique IP addresses in access log</span>
+<span class="prompt">$</span> awk <span class="str">'{print $1}'</span> access.log | sort | uniq -c | sort -rn</pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>Pipe is unidirectional — data flows left to right only.</li>
+                <li>
+                  Named pipes (FIFOs) persist on the filesystem:
+                  <code>mkfifo mypipe</code> — useful for inter-process
+                  communication.
+                </li>
+                <li>
+                  Each command in a pipeline runs as a separate process — they
+                  execute concurrently, connected by kernel buffers.
+                </li>
+                <li>
+                  <code>tee</code> splits the pipe: sends output to both stdout
+                  AND a file:
+                  <code>command | tee output.txt | next_command</code>
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://linuxjourney.com/lesson/pipe-and-redirect"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    Linux Journey — Pipes & Redirection
+                  </div>
+                  <div class="res-card-why">
+                    Builds up pipe chaining from basics
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="concept" id="q12">
+          <div class="concept-header">
+            <div class="c-num">12</div>
+            <div class="c-title">What is Swap Memory?</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Swap is disk space used as overflow memory when RAM is full. The
+              kernel moves less-used memory pages from RAM to swap (disk),
+              freeing RAM for active processes — but disk is 10–1000x slower
+              than RAM.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Think of RAM as your desk and swap as a filing cabinet. When
+                your desk is full, you move less-used papers to the filing
+                cabinet to make room. You can still access them — just much
+                slower (you have to get up, walk to the cabinet, find the
+                paper). Swap works the same way — the kernel moves cold memory
+                pages to a swap partition or swap file on disk. This prevents
+                out-of-memory crashes, but performance tanks heavily when you're
+                swapping a lot (called "thrashing").
+              </p>
+              <p>
+                Modern SSDs make swap less painful but still nowhere near RAM
+                speeds. A server running on swap is a server in trouble — it
+                means you're out of RAM and need to add memory or kill
+                memory-hungry processes.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>free -h</code> shows RAM and swap usage.
+                  <code>swapon --show</code> shows swap partitions/files.
+                </li>
+                <li>
+                  <code>swappiness</code> kernel parameter (0–100) controls how
+                  aggressively Linux uses swap. Default 60. Set lower (10-20) on
+                  servers to prefer RAM.
+                </li>
+                <li>
+                  High swap usage = performance problem. Check with
+                  <code>vmstat 1</code> — if si/so (swap in/out) columns are
+                  non-zero, you're swapping.
+                </li>
+                <li>
+                  Swap can be a partition or a file. Docker and some cloud VMs
+                  have no swap by default.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/swap-space-in-operating-system/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — Swap Space in Linux</div>
+                  <div class="res-card-why">
+                    How paging works + swappiness explained
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="concept" id="q13">
+          <div class="concept-header">
+            <div class="c-num">13</div>
+            <div class="c-title">What Happens When RAM Gets Full?</div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Linux first tries to free RAM by evicting page cache, then starts
+              using swap space, then if still critical — the OOM Killer
+              activates and kills the process consuming the most memory to save
+              the system.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Linux is smart about memory. A lot of "used" RAM is actually the
+                <strong>page cache</strong> — disk data cached in RAM for speed.
+                When memory is needed, the kernel first reclaims this cache — it
+                can always re-read from disk. This is why
+                <code>free -h</code> often shows very little "free" memory on a
+                healthy system — Linux uses all available RAM for caching.
+                That's normal and good.
+              </p>
+              <p>
+                If reclaiming cache isn't enough, Linux starts
+                <strong>swapping</strong> — moving inactive process memory pages
+                to disk. Performance degrades. If swap is also exhausted — the
+                <strong>OOM Killer</strong> (Out of Memory Killer) activates. It
+                scores every process by memory usage, importance, and other
+                factors, and kills the highest-scoring one. This is a last
+                resort. Often it kills your app server instead of a less
+                important process — a painful production incident.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  OOM kill events are logged:
+                  <code>dmesg | grep -i "oom"</code> or
+                  <code>grep -i "killed process" /var/log/syslog</code>
+                </li>
+                <li>
+                  You can influence OOM killer with <code>oom_score_adj</code>:
+                  set to -1000 to make a process unkillable, +1000 to make it
+                  first victim.
+                </li>
+                <li>
+                  <code>free -h</code>: "available" column is most useful — how
+                  much RAM is actually available for new processes (includes
+                  reclaimable cache).
+                </li>
+                <li>
+                  Memory overcommit: Linux by default allows processes to
+                  allocate more memory than physically available (banking on
+                  most never using what they asked for). Controlled by
+                  <code>vm.overcommit_memory</code>.
+                </li>
+              </ul>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Knowing that "low free memory" on Linux is NORMAL (Linux fills
+                RAM with page cache) separates you from candidates who panic at
+                seeing 95% memory usage. Interviewers love asking "our server
+                shows 95% RAM used — is it a problem?" The correct answer: check
+                "available" column and swap usage, not just "free."
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/oom-killer-in-linux/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — OOM Killer in Linux</div>
+                  <div class="res-card-why">
+                    How scoring works, how to control it
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="concept" id="q14">
+          <div class="concept-header">
+            <div class="c-num">14</div>
+            <div class="c-title">TCP vs UDP</div>
+            <span class="badge medium">Medium</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              TCP is reliable, ordered, connection-based — guarantees delivery
+              with a handshake and acknowledgments. UDP is fire-and-forget — no
+              connection, no guarantees, but much faster and lower overhead.
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>TCP</strong> (Transmission Control Protocol): Before
+                sending any data, TCP does a
+                <strong>3-way handshake</strong> (SYN → SYN-ACK → ACK) to
+                establish a connection. Every packet sent must be acknowledged
+                by the receiver. Lost packets are retransmitted. Packets arrive
+                in order. This reliability costs time — extra round trips, more
+                overhead. Use TCP when data integrity matters: HTTP/HTTPS, SSH,
+                databases, file transfers.
+              </p>
+              <p>
+                <strong>UDP</strong> (User Datagram Protocol): Just send packets
+                — no connection setup, no acknowledgment, no retransmission, no
+                ordering guarantees. It's fast and has minimal overhead. If a
+                packet is lost, it's lost — the application layer has to handle
+                it if it cares. Use UDP when speed beats reliability: live video
+                streaming, online gaming, DNS queries, VoIP calls (a dropped
+                frame in video is fine — waiting for retransmission ruins the
+                experience).
+              </p>
+            </div>
+
+            <table class="ctable">
+              <tr>
+                <th>Aspect</th>
+                <th>TCP</th>
+                <th>UDP</th>
+              </tr>
+              <tr>
+                <td>Connection</td>
+                <td>Yes (3-way handshake)</td>
+                <td>No (connectionless)</td>
+              </tr>
+              <tr>
+                <td>Reliability</td>
+                <td>Guaranteed delivery</td>
+                <td>Best effort, may drop</td>
+              </tr>
+              <tr>
+                <td>Ordering</td>
+                <td>In-order delivery</td>
+                <td>Out-of-order possible</td>
+              </tr>
+              <tr>
+                <td>Speed</td>
+                <td>Slower (overhead)</td>
+                <td>Faster (no overhead)</td>
+              </tr>
+              <tr>
+                <td>Use cases</td>
+                <td>HTTP, SSH, FTP, DB</td>
+                <td>DNS, video, gaming, VoIP</td>
+              </tr>
+              <tr>
+                <td>Header size</td>
+                <td>20–60 bytes</td>
+                <td>8 bytes</td>
+              </tr>
+            </table>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  TCP 3-way handshake: SYN (client) → SYN-ACK (server) → ACK
+                  (client). Connection established.
+                </li>
+                <li>
+                  TCP 4-way termination: FIN → ACK → FIN → ACK. (More complex
+                  because both sides need to close independently.)
+                </li>
+                <li>
+                  HTTP/3 (QUIC) runs over UDP but implements its own reliability
+                  — best of both worlds.
+                </li>
+                <li>
+                  <code>netstat -an</code> or <code>ss -an</code> shows active
+                  TCP/UDP connections and their states.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=tcp+vs+udp+explained+simply"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">YouTube — TCP vs UDP</div>
+                  <div class="res-card-why">
+                    ByteByteGo or Fireship — clear visual explanation
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/differences-between-tcp-and-udp/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — TCP vs UDP</div>
+                  <div class="res-card-why">
+                    Full comparison + header structure
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="concept" id="q15">
+          <div class="concept-header">
+            <div class="c-num">15</div>
+            <div class="c-title">HTTP vs HTTPS</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              HTTP sends data in plain text — anyone on the network can read it.
+              HTTPS wraps HTTP in TLS encryption — data is encrypted in transit,
+              server identity is verified via certificates. Port 80 vs 443.
+            </div>
+
+            <div class="explanation">
+              <p>
+                HTTP (HyperText Transfer Protocol) is the language browsers and
+                servers use to talk. The problem: everything is sent in
+                plaintext. Your login credentials, credit card numbers, session
+                cookies — all visible to anyone doing a man-in-the-middle attack
+                on a public WiFi network. Packet capture tools like Wireshark
+                make this trivial.
+              </p>
+              <p>
+                HTTPS adds a
+                <strong>TLS (Transport Layer Security)</strong> layer. Before
+                any HTTP data flows, TLS does a handshake — client verifies the
+                server's certificate (issued by a trusted CA like Let's
+                Encrypt), they negotiate an encryption algorithm and exchange
+                keys, and from then on all data is encrypted. Even if someone
+                captures the packets, they see gibberish.
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  HTTP = port 80. HTTPS = port 443. These are defaults — can be
+                  changed.
+                </li>
+                <li>
+                  TLS certificate has: domain name it's valid for, expiry date,
+                  CA signature. Browser verifies all three.
+                </li>
+                <li>
+                  Let's Encrypt provides free SSL/TLS certs — made HTTPS
+                  accessible to everyone.
+                </li>
+                <li>
+                  HSTS (HTTP Strict Transport Security): server tells browser
+                  "always use HTTPS for this domain, never HTTP."
+                </li>
+                <li>
+                  Mixed content: HTTPS page loading HTTP resources — browser
+                  blocks it as a security risk.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/difference-between-http-and-https/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — HTTP vs HTTPS</div>
+                  <div class="res-card-why">
+                    TLS handshake + certificate chain explained
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q16 -->
+        <div class="concept" id="q16">
+          <div class="concept-header">
+            <div class="c-num">16</div>
+            <div class="c-title">What is SSH?</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              SSH (Secure Shell) is an encrypted protocol to remotely access and
+              control a Linux server. Everything is encrypted — unlike old
+              Telnet which sent passwords in plaintext. Uses public-key
+              cryptography for passwordless, more secure login.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Before SSH, people used Telnet to connect to remote servers —
+                username, password, all commands sent completely in plaintext.
+                Anyone on the network could sniff the traffic and steal your
+                password. SSH (1995) fixed this with strong encryption. Every
+                byte between your terminal and the server is encrypted.
+              </p>
+              <p>
+                SSH also supports <strong>key-based authentication</strong> —
+                even more secure than passwords. You generate a key pair:
+                private key stays on your laptop, public key goes on the
+                server's <code>~/.ssh/authorized_keys</code>. When you connect,
+                SSH proves you have the private key (without sending it) using a
+                cryptographic challenge-response. No password transmitted, and
+                even if someone has your public key, they can't log in without
+                your private key.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># Basic SSH connection</span>
+<span class="prompt">$</span> ssh user@192.168.1.10
+
+<span class="cm"># Generate SSH key pair</span>
+<span class="prompt">$</span> ssh-keygen <span class="flag">-t</span> ed25519 <span class="flag">-C</span> <span class="str">"my-laptop"</span>
+
+<span class="cm"># Copy public key to server (enables passwordless login)</span>
+<span class="prompt">$</span> ssh-copy-id user@server
+
+<span class="cm"># SSH tunneling — forward local port 8080 to remote 80</span>
+<span class="prompt">$</span> ssh <span class="flag">-L</span> 8080:localhost:80 user@server
+
+<span class="cm"># Connect with specific key and port</span>
+<span class="prompt">$</span> ssh <span class="flag">-i</span> ~/.ssh/mykey <span class="flag">-p</span> 2222 user@server</pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Default SSH port is 22. Changing it to a non-standard port
+                  (security through obscurity) reduces automated bot attacks.
+                </li>
+                <li>
+                  Disable password authentication in
+                  <code>/etc/ssh/sshd_config</code> — force key-based auth only.
+                  Much more secure.
+                </li>
+                <li>
+                  SSH tunneling/port forwarding: access services on remote
+                  network through encrypted tunnel.
+                </li>
+                <li>
+                  <code>~/.ssh/config</code> file lets you set aliases:
+                  <code>ssh myserver</code> instead of typing full address every
+                  time.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=ssh+explained+techworld+with+nana"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    TechWorld with Nana — SSH Explained
+                  </div>
+                  <div class="res-card-why">
+                    Key-based auth + tunneling explained clearly
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="concept" id="q17">
+          <div class="concept-header">
+            <div class="c-num">17</div>
+            <div class="c-title">What is a Cron Job?</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Cron is Linux's task scheduler — it runs commands automatically at
+              specified times. Crontab file defines the schedule. Format: minute
+              hour day month weekday command.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Every Linux system has the <code>crond</code> daemon running in
+                the background. Every minute it checks the crontab files to see
+                if any job is due. If yes — it runs the command. It's how
+                sysadmins automate: backup every night at 2 AM, clean temp files
+                every week, check disk space every hour and alert if nearly
+                full, rotate logs daily.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># Edit your crontab</span>
+<span class="prompt">$</span> crontab -e
+
+<span class="cm"># Format: MIN HOUR DAY MONTH WEEKDAY COMMAND</span>
+<span class="cm">#  *    *    *    *     *</span>
+
+<span class="cm"># Run backup every day at 2:30 AM</span>
+<span class="out">30 2 * * * /home/user/backup.sh</span>
+
+<span class="cm"># Run every 5 minutes</span>
+<span class="out">*/5 * * * * /scripts/health_check.sh</span>
+
+<span class="cm"># Run every Monday at 9 AM</span>
+<span class="out">0 9 * * 1 /scripts/weekly_report.sh</span>
+
+<span class="cm"># Run at system reboot</span>
+<span class="out">@reboot /scripts/start_app.sh</span>
+
+<span class="cm"># List your cron jobs</span>
+<span class="prompt">$</span> crontab -l</pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Use absolute paths in cron commands — cron runs with minimal
+                  PATH, your usual aliases/commands may not be found.
+                </li>
+                <li>
+                  Cron output goes to email by default. Redirect to a log file:
+                  <code>command >> /var/log/myjob.log 2>&amp;1</code>
+                </li>
+                <li>
+                  System-wide crons in <code>/etc/cron.d/</code>,
+                  <code>/etc/cron.daily/</code>, <code>/etc/cron.hourly/</code>
+                </li>
+                <li>
+                  Use <code>crontab.guru</code> website to validate cron
+                  expressions — everyone uses it, even seniors.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://crontab.guru/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">crontab.guru</div>
+                  <div class="res-card-why">
+                    Interactive cron expression validator — bookmark this
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="concept" id="q18">
+          <div class="concept-header">
+            <div class="c-num">18</div>
+            <div class="c-title">Environment Variable & PATH</div>
+            <span class="badge easy">Easy</span>
+            <span class="read-time">3 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Environment variables are key-value pairs available to all
+              processes — they store config like database URLs, API keys, and
+              system settings. PATH is a special one listing directories where
+              the shell looks for executables.
+            </div>
+
+            <div class="explanation">
+              <p>
+                Every process in Linux inherits environment variables from its
+                parent. When you start a shell, it inherits from its parent, and
+                passes them to commands it runs. This is how you pass
+                configuration to programs without hardcoding it — database
+                connection strings, API keys, feature flags, Java home
+                directory, Python paths.
+              </p>
+              <p>
+                <strong>PATH</strong> is the most important environment
+                variable. It's a colon-separated list of directories. When you
+                type <code>ls</code>, the shell searches
+                <code>/usr/local/bin</code>, then <code>/usr/bin</code>, then
+                <code>/bin</code>, etc. — whichever comes first in PATH wins.
+                Adding a directory to PATH makes any executables in it available
+                as commands.
+              </p>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># View all environment variables</span>
+<span class="prompt">$</span> env
+<span class="prompt">$</span> printenv
+
+<span class="cm"># View specific variable</span>
+<span class="prompt">$</span> echo $PATH
+<span class="out">/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin</span>
+
+<span class="cm"># Set a variable (only in current shell)</span>
+<span class="prompt">$</span> export DB_URL=<span class="str">"postgres://localhost:5432/mydb"</span>
+
+<span class="cm"># Add to PATH permanently — put in ~/.bashrc or ~/.zshrc</span>
+<span class="prompt">$</span> export PATH=<span class="str">"$HOME/.local/bin:$PATH"</span>
+
+<span class="cm"># Pass env var to a single command only</span>
+<span class="prompt">$</span> DEBUG=true node app.js</pre>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  <code>export VAR=value</code> makes it available to child
+                  processes. Without export, it's only in the current shell.
+                </li>
+                <li>
+                  Permanent changes go in <code>~/.bashrc</code> (interactive
+                  bash), <code>~/.bash_profile</code> (login bash), or
+                  <code>/etc/environment</code> (system-wide).
+                </li>
+                <li>
+                  Never commit secrets (API keys, DB passwords) in code — use
+                  environment variables. Services like AWS Secrets Manager or
+                  .env files (never committed) handle this.
+                </li>
+                <li>
+                  <code>which command</code> tells you which PATH directory the
+                  command is found in.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://linuxjourney.com/lesson/environment"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    Linux Journey — Environment Variables
+                  </div>
+                  <div class="res-card-why">
+                    Covers .bashrc, .bash_profile, export, PATH
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="concept" id="q19">
+          <div class="concept-header">
+            <div class="c-num">19</div>
+            <div class="c-title">Explain fork() and exec()</div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">4 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              fork() creates an identical copy of the current process (child).
+              exec() replaces the calling process's entire memory with a new
+              program. Together, fork-exec is how Linux runs any new program.
+            </div>
+
+            <div class="explanation">
+              <p>
+                <strong>fork()</strong> duplicates the calling process — same
+                code, same memory (using copy-on-write, so it's efficient), same
+                file descriptors, but a new PID. Fork returns 0 in the child
+                process and the child's PID in the parent — this is how you know
+                which process you're in. At this point, both parent and child
+                are running the same code.
+              </p>
+              <p>
+                <strong>exec()</strong> (actually a family: execv, execve,
+                execl...) replaces the current process image with a new program.
+                The process keeps its PID, file descriptors, and environment,
+                but its memory (code, stack, heap) is completely replaced by the
+                new program. After exec(), the old program's code is gone — only
+                the new program runs.
+              </p>
+              <p>
+                This two-step design is intentional. The gap between fork and
+                exec gives you a chance to set up the child's environment —
+                redirect file descriptors, set up pipes, change user permissions
+                — before replacing it with the target program.
+              </p>
+            </div>
+
+            <div class="diagram-wrap">
+              <svg
+                viewBox="0 0 480 160"
+                width="480"
+                height="160"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker
+                    id="fe1"
+                    markerWidth="7"
+                    markerHeight="5"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                  >
+                    <polygon points="0 0,7 2.5,0 5" fill="#2E8B57" />
+                  </marker>
+                </defs>
+                <!-- Parent -->
+                <rect
+                  x="10"
+                  y="60"
+                  width="90"
+                  height="32"
+                  rx="5"
+                  fill="#2E8B57"
+                  fill-opacity="0.2"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="55"
+                  y="80"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="11"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  Parent (shell)
+                </text>
+
+                <!-- fork arrow -->
+                <line
+                  x1="100"
+                  y1="76"
+                  x2="140"
+                  y2="50"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#fe1)"
+                />
+                <line
+                  x1="100"
+                  y1="76"
+                  x2="140"
+                  y2="108"
+                  stroke="#2E8B57"
+                  stroke-width="1.5"
+                  marker-end="url(#fe1)"
+                />
+                <text
+                  x="115"
+                  y="72"
+                  fill="#F5A623"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                  font-weight="700"
+                >
+                  fork()
+                </text>
+
+                <!-- Parent continues -->
+                <rect
+                  x="145"
+                  y="36"
+                  width="110"
+                  height="28"
+                  rx="5"
+                  fill="#2E8B57"
+                  fill-opacity="0.12"
+                  stroke="#2E8B57"
+                  stroke-width="1"
+                />
+                <text
+                  x="200"
+                  y="54"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  Parent: wait()
+                </text>
+                <line
+                  x1="255"
+                  y1="50"
+                  x2="290"
+                  y2="50"
+                  stroke="#2E8B57"
+                  stroke-width="1.2"
+                  marker-end="url(#fe1)"
+                />
+                <rect
+                  x="295"
+                  y="36"
+                  width="110"
+                  height="28"
+                  rx="5"
+                  fill="#2E8B57"
+                  fill-opacity="0.12"
+                  stroke="#2E8B57"
+                  stroke-width="1"
+                />
+                <text
+                  x="350"
+                  y="54"
+                  text-anchor="middle"
+                  fill="#2E8B57"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  resumes after child exits
+                </text>
+
+                <!-- Child exec -->
+                <rect
+                  x="145"
+                  y="94"
+                  width="110"
+                  height="28"
+                  rx="5"
+                  fill="#CF8DFB"
+                  fill-opacity="0.15"
+                  stroke="#CF8DFB"
+                  stroke-width="1"
+                />
+                <text
+                  x="200"
+                  y="112"
+                  text-anchor="middle"
+                  fill="#CF8DFB"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  Child: exec(ls)
+                </text>
+                <line
+                  x1="255"
+                  y1="108"
+                  x2="290"
+                  y2="108"
+                  stroke="#CF8DFB"
+                  stroke-width="1.2"
+                  marker-end="url(#fe1)"
+                />
+                <rect
+                  x="295"
+                  y="94"
+                  width="110"
+                  height="28"
+                  rx="5"
+                  fill="#E67E22"
+                  fill-opacity="0.15"
+                  stroke="#E67E22"
+                  stroke-width="1.2"
+                />
+                <text
+                  x="350"
+                  y="112"
+                  text-anchor="middle"
+                  fill="#E67E22"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  ls runs → exits
+                </text>
+
+                <text
+                  x="240"
+                  y="148"
+                  text-anchor="middle"
+                  fill="#888"
+                  font-size="10"
+                  font-family="Sora,sans-serif"
+                >
+                  Child memory completely replaced by ls binary after exec()
+                </text>
+              </svg>
+              <div class="diagram-label">
+                fork() duplicates process. exec() replaces child with new
+                program. Parent waits. Child exits.
+              </div>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">What Interviewers Check</div>
+              <ul>
+                <li>
+                  Copy-on-write: fork doesn't actually copy all memory
+                  immediately — pages are shared until one process writes, then
+                  a copy is made. Makes fork fast even for large processes.
+                </li>
+                <li>
+                  fork() returns -1 on failure (process limit reached), 0 in
+                  child, child PID in parent.
+                </li>
+                <li>
+                  vfork() is like fork() but child borrows parent's address
+                  space — must exec immediately. Lighter but dangerous.
+                </li>
+                <li>
+                  In Python: <code>os.fork()</code> and <code>os.exec*()</code>.
+                  The <code>subprocess</code> module uses fork-exec internally.
+                </li>
+              </ul>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/fork-system-call/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">GFG — fork() System Call</div>
+                  <div class="res-card-why">
+                    Code + return value logic + exec combination
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="concept" id="q20">
+          <div class="concept-header">
+            <div class="c-num">20</div>
+            <div class="c-title">
+              Production Server is Down — How Will You Debug?
+            </div>
+            <span class="badge hard">Hard</span>
+            <span class="read-time">6 min</span>
+          </div>
+          <div class="concept-body">
+            <div class="one-line">
+              Start broad, go narrow. Check if server is reachable → check if
+              the process is running → check logs for errors → check system
+              resources (CPU, RAM, disk, connections) → trace the issue to root
+              cause → fix and verify.
+            </div>
+
+            <div class="explanation">
+              <p>
+                This is the most important question for any backend/DevOps role.
+                Interviewers want to see that you have a
+                <strong>systematic approach</strong> — not guessing randomly.
+                There's a clear order of operations. Don't jump to checking
+                application logs before confirming the server is even reachable.
+                That's wasted time in a real incident.
+              </p>
+              <p>
+                Think in layers: Network → OS → Process → Application → Data.
+                Each layer needs to be ruled out before going deeper. And always
+                communicate — in a real incident, you're not working in silence.
+                You're updating your team every few minutes: "Server is
+                reachable, SSH works, checking process status now."
+              </p>
+            </div>
+
+            <div class="key-points">
+              <div class="kp-title">The Debugging Playbook — Step by Step</div>
+              <ul>
+                <li>
+                  <strong>Step 1 — Can I reach the server?</strong>
+                  <code>ping server-ip</code> — if no response, network/DNS
+                  issue or server completely dead.
+                </li>
+                <li>
+                  <strong>Step 2 — Can I SSH in?</strong>
+                  <code>ssh user@server</code> — if yes, OS is alive. If no,
+                  check VPN, security groups, firewall.
+                </li>
+                <li>
+                  <strong>Step 3 — Is the process running?</strong>
+                  <code>ps aux | grep nginx</code> or
+                  <code>systemctl status nginx</code> — crashed? Restart + find
+                  why.
+                </li>
+                <li>
+                  <strong>Step 4 — Check the logs.</strong>
+                  <code>tail -f /var/log/nginx/error.log</code>,
+                  <code>journalctl -u appname -n 100</code> — look for errors
+                  right before crash.
+                </li>
+                <li>
+                  <strong>Step 5 — Check system resources.</strong>
+                  <code>top</code> or <code>htop</code> (CPU),
+                  <code>free -h</code> (RAM), <code>df -h</code> (disk),
+                  <code>df -i</code> (inodes).
+                </li>
+                <li>
+                  <strong>Step 6 — Check network/connections.</strong>
+                  <code>ss -an | grep :80</code> (port listening?),
+                  <code>netstat -s</code> (connection stats), check firewall
+                  rules.
+                </li>
+                <li>
+                  <strong>Step 7 — Check recent changes.</strong> Any
+                  deployments? Config changes? Cron jobs that ran?
+                  <code>last</code> command shows recent logins.
+                  <code>history</code> shows commands run.
+                </li>
+                <li>
+                  <strong>Step 8 — If OOM killed.</strong>
+                  <code>dmesg | grep -i oom</code> — which process was killed?
+                  Add more RAM or fix memory leak.
+                </li>
+              </ul>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-lang">bash — Production Debug Cheatsheet</span
+                ><button class="copy-btn">Copy</button>
+              </div>
+              <pre><span class="cm"># ─── CONNECTIVITY ─────────────────────────────────</span>
+<span class="prompt">$</span> ping -c 4 server-ip
+<span class="prompt">$</span> curl -I https://yoursite.com      <span class="cm"># HTTP response headers</span>
+<span class="prompt">$</span> traceroute server-ip              <span class="cm"># where does it stop?</span>
+
+<span class="cm"># ─── PROCESS STATUS ───────────────────────────────</span>
+<span class="prompt">$</span> systemctl status nginx
+<span class="prompt">$</span> ps aux | grep <span class="str">"app_name"</span>
+
+<span class="cm"># ─── LOGS ─────────────────────────────────────────</span>
+<span class="prompt">$</span> journalctl <span class="flag">-u</span> nginx <span class="flag">-n</span> 200 <span class="flag">--no-pager</span>
+<span class="prompt">$</span> tail <span class="flag">-f</span> /var/log/app/error.log
+<span class="prompt">$</span> dmesg | grep <span class="flag">-i</span> <span class="str">"oom\|error\|fail"</span>
+
+<span class="cm"># ─── RESOURCES ────────────────────────────────────</span>
+<span class="prompt">$</span> top                               <span class="cm"># CPU + memory live</span>
+<span class="prompt">$</span> free <span class="flag">-h</span>                           <span class="cm"># RAM + swap</span>
+<span class="prompt">$</span> df <span class="flag">-h</span> && df <span class="flag">-i</span>                    <span class="cm"># disk space + inodes</span>
+<span class="prompt">$</span> iostat <span class="flag">-x</span> 1 5                     <span class="cm"># disk I/O</span>
+
+<span class="cm"># ─── NETWORK ──────────────────────────────────────</span>
+<span class="prompt">$</span> ss <span class="flag">-tlnp</span>                          <span class="cm"># listening ports + processes</span>
+<span class="prompt">$</span> ss <span class="flag">-an</span> | grep <span class="str">":80"</span> | wc -l       <span class="cm"># connection count</span>
+<span class="prompt">$</span> iptables <span class="flag">-L</span> <span class="flag">-n</span>                    <span class="cm"># firewall rules</span></pre>
+            </div>
+
+            <div class="iq-wrap">
+              <div class="iq-title">
+                What Interviewers Actually Want to Hear
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">
+                  Q: You SSH in but the app is not responding on port 80 — what
+                  do you do?
+                </div>
+                <div class="iq-a">
+                  Check if process is running (<code>ps aux</code>). Check if
+                  it's listening (<code>ss -tlnp | grep 80</code>). Check
+                  application logs for errors. Check if firewall is blocking
+                  (<code>iptables -L</code>). Check if disk is full (app can't
+                  write logs, refuses requests). Restart the service, watch logs
+                  in real time.
+                </div>
+              </div>
+              <div class="iq-item">
+                <div class="iq-q">
+                  Q: Server is responding but very slowly — what's your
+                  approach?
+                </div>
+                <div class="iq-a">
+                  <code>top</code> — check CPU (high user%? application bug.
+                  high sys%? kernel issue. high wa%? disk I/O wait). Check RAM
+                  and swap usage. Check connection count. Check database query
+                  times. Check if a cron job is running and consuming resources.
+                </div>
+              </div>
+            </div>
+
+            <div class="edge">
+              <div class="edge-title">🏆 Competitive Edge</div>
+              <p>
+                Mention <strong>runbooks</strong> — pre-written step-by-step
+                guides for common incidents. Say "in production, we'd have a
+                runbook for this exact scenario — I'd follow that, then update
+                it with any new findings." Interviewers at senior companies love
+                candidates who think about process and documentation, not just
+                heroic one-off debugging.
+              </p>
+            </div>
+
+            <div class="resources">
+              <div class="res-title">Best Resources</div>
+              <div class="res-cards">
+                <a
+                  class="res-card"
+                  href="https://www.youtube.com/results?search_query=linux+server+troubleshooting+production+debug"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">▶</div>
+                  <div class="res-card-name">
+                    YouTube — Linux Server Troubleshooting
+                  </div>
+                  <div class="res-card-why">
+                    TechWorld with Nana — real incident debug walkthrough
+                  </div>
+                </a>
+                <a
+                  class="res-card"
+                  href="https://www.geeksforgeeks.org/linux-commands-for-system-troubleshooting/"
+                  target="_blank"
+                >
+                  <div class="res-card-icon">📄</div>
+                  <div class="res-card-name">
+                    GFG — Linux Troubleshooting Commands
+                  </div>
+                  <div class="res-card-why">
+                    All debug commands in one place
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <button
+      id="back-top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      ↑
+    </button>
+
+    <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+      </div>
+    </div>
+
+    <script>
+      const pbar = document.getElementById("pbar");
+      const allLinks = document.querySelectorAll(".sb-link");
+      const allConcepts = document.querySelectorAll(".concept");
+
+      window.addEventListener("scroll", () => {
+        const h = document.documentElement;
+        pbar.style.width =
+          (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+        document
+          .getElementById("back-top")
+          .classList.toggle("show", h.scrollTop > 300);
+        updateActive();
+      });
+
+      function updateActive() {
+        let current = "";
+        allConcepts.forEach((c) => {
+          if (c.getBoundingClientRect().top < 90) current = c.id;
+        });
+        allLinks.forEach((l) => {
+          const m = l.getAttribute("onclick")?.match(/'([^']+)'/);
+          l.classList.toggle("active", m && m[1] === current);
+        });
+      }
+
+      function jumpTo(id) {
+        const el = document.getElementById(id);
+        if (el) {
+          window.scrollTo({
+            top: el.getBoundingClientRect().top + window.scrollY - 66,
+            behavior: "smooth",
+          });
+          if (window.innerWidth <= 768)
+            document.getElementById("sidebar").classList.remove("open");
+        }
+      }
+
+      function toggleTheme() {
+        const dark =
+          document.documentElement.getAttribute("data-theme") === "dark";
+        document.documentElement.setAttribute(
+          "data-theme",
+          dark ? "light" : "dark",
+        );
+        document.getElementById("themeBtn").textContent = dark
+          ? "Dark Mode"
+          : "Light Mode";
+      }
+
+      let focusOn = false;
+      function toggleFocus() {
+        focusOn = !focusOn;
+        document.body.classList.toggle("focus", focusOn);
+        const btn = document.getElementById("focusBtn");
+        btn.textContent = focusOn ? "Exit Focus" : "Focus Mode";
+        btn.classList.toggle("active", focusOn);
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      function checkMobile() {
+        document.getElementById("mob-menu-btn").style.display =
+          window.innerWidth <= 768 ? "flex" : "none";
+      }
+      window.addEventListener("resize", checkMobile);
+      checkMobile();
+
+      document.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const code = btn
+            .closest(".code-block")
+            .querySelector("pre").textContent;
+          navigator.clipboard.writeText(code).then(() => {
+            btn.textContent = "Copied!";
+            setTimeout(() => (btn.textContent = "Copy"), 1500);
+          });
+        });
+      });
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>
