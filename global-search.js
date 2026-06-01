@@ -133,7 +133,13 @@
   const launcher = document.createElement("button");
   launcher.className = "ps-search-launcher";
   launcher.type = "button";
-  launcher.textContent = "Search /";
+  // Use a subtle SVG magnifying-glass icon (more professional than an emoji)
+  launcher.innerHTML = `
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `;
   launcher.setAttribute("aria-label", "Open search");
 
   const root = document.createElement("div");
