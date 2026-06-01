@@ -3879,7 +3879,6 @@
         <a href="10-Projects-Behavioral.html">10. Projects</a>
       </div>
     </div>
-
     <script>
       function toggleTheme() {
         const d = document.documentElement,
@@ -3901,10 +3900,17 @@
         const btn = document.getElementById("focusBtn");
         const isMobile = window.innerWidth <= 900;
         sb.classList.toggle("hidden");
-        document.body.classList.toggle("focus-mode", sb.classList.contains("hidden"));
+        document.body.classList.toggle(
+          "focus-mode",
+          sb.classList.contains("hidden"),
+        );
         btn.textContent = isMobile
-          ? sb.classList.contains("hidden") ? "Menu" : "Close"
-          : sb.classList.contains("hidden") ? "Expand" : "Focus";
+          ? sb.classList.contains("hidden")
+            ? "Menu"
+            : "Close"
+          : sb.classList.contains("hidden")
+            ? "Expand"
+            : "Focus";
       }
 
       (function initMobileSidebar() {

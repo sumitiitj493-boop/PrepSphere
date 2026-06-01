@@ -280,3 +280,26 @@
     }
   });
 })();
+
+// Auto-fix quick-jump menu numbering across pages
+(function () {
+  try {
+    const qm = document.getElementById('qm');
+    if (!qm) return;
+    const anchors = Array.from(qm.querySelectorAll('a'));
+    let idx = 1;
+    anchors.forEach((a) => {
+      const href = (a.getAttribute('href') || '').toLowerCase();
+      const text = (a.textContent || '').replace(/^\s*\d+\.\s*/, '').trim();
+      if (href === 'index.html' || text.toLowerCase() === 'home') {
+        a.textContent = 'Home';
+        return;
+      }
+      const label = (idx < 10 ? '0' + idx : idx) + '. ' + text;
+      a.textContent = label;
+      idx++;
+    });
+  } catch (e) {
+    // fail silently
+  }
+})();

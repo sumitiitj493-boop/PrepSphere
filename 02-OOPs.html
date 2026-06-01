@@ -775,7 +775,6 @@
         background: var(--gold);
         border-radius: 99px;
       }
-
     </style>
     <style>
       .quick-jump {
@@ -1860,7 +1859,9 @@ cout &lt;&lt; <span class="type">Employee</span>::<span class="fn">getTotal</spa
                 role="img"
                 aria-labelledby="diamondTitle diamondDesc"
               >
-                <title id="diamondTitle">Diamond Problem Inheritance Diagram</title>
+                <title id="diamondTitle">
+                  Diamond Problem Inheritance Diagram
+                </title>
                 <desc id="diamondDesc">
                   Class D inherits from B and C, and both B and C inherit from
                   A, creating ambiguity about which A is inherited.
@@ -2458,18 +2459,18 @@ cart.<span class="fn">checkout</span>(<span class="num">50</span>);
       </button>
       <div class="jump-menu" id="qm">
         <a href="index.html">Home</a>
-        <a href="01-DBMS.html">DBMS</a>
-        <a href="02-OOPs.html">OOPs</a>
-        <a href="03-Computer-Networks.html">Computer Networks</a>
-        <a href="04-Operating-System.html">Operating System</a>
-        <a href="05-Language-Core-CPP.html">C++</a>
-        <a href="05-Language-Core-Java.html">Java</a>
-        <a href="05-Language-Core-Python.html">Python</a>
-        <a href="06-Puzzles.html">Puzzles</a>
-        <a href="07-Linux.html">Linux</a>
-        <a href="08-Git.html">Git</a>
-        <a href="09-SQL.html">SQL</a>
-        <a href="10-Projects-Behavioral.html">Projects & Behavioral</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
       </div>
     </div>
 
@@ -2495,10 +2496,17 @@ cart.<span class="fn">checkout</span>(<span class="num">50</span>);
         const btn = document.getElementById("focusBtn");
         const isMobile = window.innerWidth <= 900;
         sb.classList.toggle("hidden");
-        document.body.classList.toggle("focus-mode", sb.classList.contains("hidden"));
+        document.body.classList.toggle(
+          "focus-mode",
+          sb.classList.contains("hidden"),
+        );
         btn.textContent = isMobile
-          ? sb.classList.contains("hidden") ? "Menu" : "Close"
-          : sb.classList.contains("hidden") ? "Expand" : "Focus";
+          ? sb.classList.contains("hidden")
+            ? "Menu"
+            : "Close"
+          : sb.classList.contains("hidden")
+            ? "Expand"
+            : "Focus";
       }
 
       (function initMobileSidebar() {
