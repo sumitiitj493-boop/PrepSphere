@@ -6,24 +6,35 @@
   style.textContent = `
     .ps-search-launcher {
       position: fixed;
-      right: 20px;
-      bottom: 88px;
+      right: var(--ps-widget-right, 20px);
+      bottom: var(--ps-widget-bottom, 22px);
       z-index: 9991;
+      width: var(--ps-widget-size, 44px);
+      height: var(--ps-widget-size, 44px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid rgba(245, 166, 35, 0.35);
       border-radius: 999px;
       background: rgba(15, 15, 24, 0.92);
       color: #f5a623;
       font: 700 12px/1 system-ui, -apple-system, Segoe UI, sans-serif;
-      padding: 11px 15px;
+      padding: 0;
       cursor: pointer;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
       backdrop-filter: blur(14px);
+      transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
     }
     .ps-search-launcher:hover,
     .ps-search-launcher:focus-visible {
       color: #fff;
       border-color: rgba(245, 166, 35, 0.75);
       outline: none;
+      transform: translateY(-1px);
+    }
+    body.ps-search-open .ps-search-launcher {
+      opacity: 0;
+      pointer-events: none;
     }
     .ps-search-root {
       position: fixed;
@@ -116,9 +127,8 @@
     }
     @media (max-width: 700px) {
       .ps-search-launcher {
-        right: 14px;
-        bottom: 78px;
-        padding: 10px 13px;
+        right: var(--ps-widget-right, 14px);
+        bottom: var(--ps-widget-bottom, calc(14px + env(safe-area-inset-bottom)));
       }
       .ps-search-root {
         padding-top: 72px;
@@ -224,6 +234,7 @@
 
   function openSearch(prefill) {
     root.classList.add("open");
+    document.body.classList.add("ps-search-open");
     input.value = prefill || "";
     update();
     setTimeout(() => input.focus(), 0);
@@ -231,6 +242,7 @@
 
   function closeSearch() {
     root.classList.remove("open");
+    document.body.classList.remove("ps-search-open");
     input.blur();
   }
 

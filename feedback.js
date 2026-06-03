@@ -1,134 +1,138 @@
-console.log("PrepSphere Feedback System initialized. v3");
-
 (function () {
   if (document.getElementById("ps-feedback-root")) return;
 
   const style = document.createElement("style");
   style.textContent = `
+    :root {
+      --ps-widget-right: 20px;
+      --ps-widget-bottom: 22px;
+      --ps-widget-size: 44px;
+      --ps-widget-gap: 12px;
+    }
+
     .ps-feedback-launcher {
       position: fixed;
-      right: 20px;
-      bottom: 80px; 
-      z-index: 99999;
-      border: 1px solid rgba(255, 100, 100, 0.35);
-      border-radius: 999px;
-      background: rgba(15, 15, 24, 0.92);
-      color: #ff6b6b;
-      font: 700 13px/1 system-ui, -apple-system, sans-serif;
-      padding: 12px 18px;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
-      backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-    .ps-feedback-launcher:hover {
-      color: #fff;
-      border-color: rgba(255, 100, 100, 0.75);
-      transform: translateY(-2px);
-    }
-    
-    .ps-feedback-root {
-      position: fixed;
-      inset: 0;
-      z-index: 999999;
-      display: none;
+      right: var(--ps-widget-right);
+      bottom: calc(var(--ps-widget-bottom) + var(--ps-widget-size) + var(--ps-widget-gap));
+      z-index: 9990;
+      width: var(--ps-widget-size);
+      height: var(--ps-widget-size);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(3, 2, 10, 0.75);
-      backdrop-filter: blur(8px);
-      padding: 20px;
-    }
-    .ps-feedback-root.open {
-      display: flex;
-      animation: psFsFadeIn 0.2s ease forwards;
-    }
-    @keyframes psFsFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .ps-feedback-modal {
-      width: 100%;
-      max-width: 450px;
-      background: #0f1016;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-      overflow: hidden;
-      transform: translateY(20px);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .ps-feedback-root.open .ps-feedback-modal {
-      transform: translateY(0);
-    }
-
-    .ps-feedback-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .ps-feedback-header h3 {
-      font: 700 18px system-ui, -apple-system, sans-serif;
-      color: #fff;
-      margin: 0;
-    }
-    .ps-feedback-close {
-      background: transparent;
-      border: 0;
-      color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(245, 166, 35, 0.28);
+      border-radius: 999px;
+      background: rgba(15, 15, 24, 0.9);
+      color: #f5a623;
       cursor: pointer;
-      font-size: 24px;
-      line-height: 1;
-      padding: 0;
-      margin: 0;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(14px);
+      transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
     }
-    .ps-feedback-close:hover {
+
+    .ps-feedback-launcher:hover,
+    .ps-feedback-launcher:focus-visible {
       color: #fff;
+      border-color: rgba(245, 166, 35, 0.72);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .ps-feedback-launcher svg {
+      display: block;
+    }
+
+    .ps-feedback-root {
+      position: fixed;
+      right: var(--ps-widget-right);
+      bottom: calc(var(--ps-widget-bottom) + var(--ps-widget-size) + var(--ps-widget-gap));
+      z-index: 9993;
+      width: min(360px, calc(100vw - 32px));
+      display: none;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    .ps-feedback-root.open {
+      display: block;
+    }
+
+    .ps-feedback-card {
+      overflow: hidden;
+      border: 1px solid rgba(245, 166, 35, 0.28);
+      border-radius: 14px;
+      background: rgba(16, 16, 24, 0.98);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
+      backdrop-filter: blur(18px);
+    }
+
+    .ps-feedback-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ps-feedback-title {
+      margin: 0;
+      color: #fff;
+      font: 800 14px/1.2 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    .ps-feedback-subtitle {
+      display: block;
+      margin-top: 3px;
+      color: rgba(255, 255, 255, 0.48);
+      font: 600 11px/1.4 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    .ps-feedback-close {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.64);
+      cursor: pointer;
+      font: 800 18px/1 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    .ps-feedback-close:hover,
+    .ps-feedback-close:focus-visible {
+      color: #fff;
+      border-color: rgba(245, 166, 35, 0.48);
+      outline: none;
     }
 
     .ps-feedback-body {
-      padding: 24px;
-    }
-    
-    .ps-feedback-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: grid;
+      gap: 12px;
+      padding: 14px;
     }
 
-    .ps-feedback-group {
-      display: flex;
-      flex-direction: column;
+    .ps-feedback-label {
+      display: grid;
       gap: 6px;
-    }
-    
-    .ps-feedback-group label {
-      font: 600 12px system-ui, sans-serif;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.66);
+      font: 700 11px/1.3 system-ui, -apple-system, Segoe UI, sans-serif;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
     }
 
-    .ps-feedback-input, .ps-feedback-select {
+    .ps-feedback-input,
+    .ps-feedback-select,
+    .ps-feedback-textarea {
       width: 100%;
-      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.055);
       color: #fff;
-      font: 400 14px system-ui, sans-serif;
+      font: 600 13px/1.45 system-ui, -apple-system, Segoe UI, sans-serif;
+      padding: 10px 11px;
       outline: none;
-      transition: border-color 0.2s;
-    }
-    
-    .ps-feedback-input:focus, .ps-feedback-select:focus {
-      border-color: #ff6b6b;
-      background: rgba(255, 255, 255, 0.06);
     }
 
     .ps-feedback-select {
@@ -136,171 +140,220 @@ console.log("PrepSphere Feedback System initialized. v3");
       cursor: pointer;
     }
 
-    textarea.ps-feedback-input {
+    .ps-feedback-textarea {
+      min-height: 92px;
       resize: vertical;
-      min-height: 100px;
-      font-family: inherit;
     }
 
-    .ps-feedback-submit {
-      margin-top: 8px;
-      background: #ff6b6b;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 14px;
-      font: 700 15px system-ui, sans-serif;
+    .ps-feedback-input:focus,
+    .ps-feedback-select:focus,
+    .ps-feedback-textarea:focus {
+      border-color: rgba(245, 166, 35, 0.58);
+      box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.1);
+    }
+
+    .ps-feedback-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 2px;
+    }
+
+    .ps-feedback-send {
+      border: 1px solid rgba(245, 166, 35, 0.45);
+      border-radius: 999px;
+      background: rgba(245, 166, 35, 0.14);
+      color: #f5a623;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    
-    .ps-feedback-submit:hover {
-      background: #ff5252;
-    }
-    .ps-feedback-submit:active {
-      transform: scale(0.98);
-    }
-    .ps-feedback-submit:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+      font: 800 12px/1 system-ui, -apple-system, Segoe UI, sans-serif;
+      padding: 11px 15px;
     }
 
-    .ps-feedback-status {
-      text-align: center;
-      font-size: 14px;
-      margin-top: 10px;
-      font-weight: 600;
-      min-height: 20px;
+    .ps-feedback-send:hover,
+    .ps-feedback-send:focus-visible {
+      color: #fff;
+      border-color: rgba(245, 166, 35, 0.8);
+      outline: none;
     }
-    
-    @media (max-width: 600px) {
-      .ps-feedback-launcher {
-        bottom: 80px; 
-        right: 14px;
-        padding: 10px 14px;
+
+    .ps-feedback-send:disabled {
+      opacity: 0.64;
+      cursor: progress;
+    }
+
+    .ps-feedback-note {
+      min-height: 18px;
+      color: rgba(255, 255, 255, 0.5);
+      font: 600 12px/1.5 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+
+    body.ps-search-open .ps-feedback-launcher,
+    body.ps-search-open .ps-feedback-root {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 700px) {
+      :root {
+        --ps-widget-right: 14px;
+        --ps-widget-bottom: calc(14px + env(safe-area-inset-bottom));
+        --ps-widget-size: 42px;
+        --ps-widget-gap: 10px;
       }
-      .ps-feedback-launcher span {
-        display: none;
+
+      .ps-feedback-root {
+        left: 14px;
+        right: 14px;
+        width: auto;
       }
     }
   `;
   document.head.appendChild(style);
 
-  // 1) Launcher Button
   const launcher = document.createElement("button");
   launcher.className = "ps-feedback-launcher";
   launcher.type = "button";
+  launcher.setAttribute("aria-label", "Open feedback");
+  launcher.setAttribute("title", "Feedback");
   launcher.innerHTML = `
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 8.5h10M7 12h6M8 19l-4 2V5.8C4 4.8 4.8 4 5.8 4h12.4c1 0 1.8.8 1.8 1.8v9.4c0 1-.8 1.8-1.8 1.8H9.6L8 19z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span>Feedback</span>
   `;
-  document.body.appendChild(launcher);
 
-  // 2) Modal Root
   const root = document.createElement("div");
-  root.className = "ps-feedback-root";
   root.id = "ps-feedback-root";
-
+  root.className = "ps-feedback-root";
   root.innerHTML = `
-    <div class="ps-feedback-modal">
-      <div class="ps-feedback-header">
-        <h3>Send Feedback</h3>
-        <button type="button" class="ps-feedback-close">&times;</button>
+    <section class="ps-feedback-card" role="dialog" aria-modal="false" aria-label="Feedback">
+      <div class="ps-feedback-head">
+        <div>
+          <h2 class="ps-feedback-title">Feedback</h2>
+          <span class="ps-feedback-subtitle">Quick notes for improving this page.</span>
+        </div>
+        <button class="ps-feedback-close" type="button" aria-label="Close feedback">&times;</button>
       </div>
-      <div class="ps-feedback-body">
-        <form class="ps-feedback-form" id="ps-feedback-form" action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="721d917e-03e2-45de-bb75-3772c97f9fc4">
-          <input type="hidden" name="subject" value="New Submission from PrepSphere Feedback Form">
-          
-          <div class="ps-feedback-group">
-            <label>Topic / Page</label>
-            <input type="text" class="ps-feedback-input" name="page" id="fb-page" readonly value="${document.title}" />
-          </div>
-
-          <div class="ps-feedback-group">
-            <label>What's on your mind?</label>
-            <select class="ps-feedback-select" name="type" id="fb-type" required>
-              <option value="Mistake / Correction">Found a mistake or typo</option>
-              <option value="Feature Request">Request a new feature</option>
-              <option value="General Confusion">Something is confusing</option>
-              <option value="Other">Other feedback</option>
-            </select>
-          </div>
-
-          <div class="ps-feedback-group">
-            <label>Message</label>
-            <textarea class="ps-feedback-input" name="message" id="fb-message" placeholder="Describe the issue or feature here..." required></textarea>
-          </div>
-          
-          <button type="submit" class="ps-feedback-submit" id="fb-submit-btn">Submit Feedback</button>
-          <div class="ps-feedback-status" id="fb-status"></div>
-        </form>
-      </div>
-    </div>
+      <form class="ps-feedback-body" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="721d917e-03e2-45de-bb75-3772c97f9fc4" />
+        <input type="hidden" name="subject" value="New Submission from PrepSphere Feedback Form" />
+        <input type="hidden" name="url" />
+        <label class="ps-feedback-label">
+          Page
+          <input class="ps-feedback-input" name="page" type="text" readonly />
+        </label>
+        <label class="ps-feedback-label">
+          Type
+          <select class="ps-feedback-select" name="type" required>
+            <option value="Mistake / Correction">Found a mistake or typo</option>
+            <option value="Feature Request">Request a new feature</option>
+            <option value="General Confusion">Something is confusing</option>
+            <option value="Other">Other feedback</option>
+          </select>
+        </label>
+        <label class="ps-feedback-label">
+          Message
+          <textarea class="ps-feedback-textarea" name="message" placeholder="What should be fixed or improved?" required></textarea>
+        </label>
+        <div class="ps-feedback-actions">
+          <button class="ps-feedback-send" type="submit">Submit Feedback</button>
+        </div>
+        <div class="ps-feedback-note" aria-live="polite"></div>
+      </form>
+    </section>
   `;
+
+  document.body.appendChild(launcher);
   document.body.appendChild(root);
 
-  // 3) Logic
+  const form = root.querySelector("form");
   const closeBtn = root.querySelector(".ps-feedback-close");
-  const form = document.getElementById("ps-feedback-form");
-  const submitBtn = document.getElementById("fb-submit-btn");
-  const statusBox = document.getElementById("fb-status");
+  const sendBtn = root.querySelector(".ps-feedback-send");
+  const pageInput = root.querySelector("[name='page']");
+  const urlInput = root.querySelector("[name='url']");
+  const messageInput = root.querySelector("[name='message']");
+  const note = root.querySelector(".ps-feedback-note");
+
+  pageInput.value = document.title || window.location.pathname;
+  urlInput.value = window.location.href;
 
   function openFeedback() {
     root.classList.add("open");
+    launcher.setAttribute("aria-expanded", "true");
+    note.textContent = "";
+    note.style.color = "rgba(255, 255, 255, 0.5)";
+    setTimeout(() => messageInput.focus(), 0);
   }
 
   function closeFeedback() {
     root.classList.remove("open");
-    setTimeout(() => {
-        statusBox.innerHTML = "";
-        form.reset();
-    }, 300);
+    launcher.setAttribute("aria-expanded", "false");
   }
 
-  launcher.addEventListener("click", openFeedback);
-  closeBtn.addEventListener("click", closeFeedback);
-  
-  root.addEventListener("click", (e) => {
-    if (e.target === root) closeFeedback();
+  launcher.addEventListener("click", (event) => {
+    event.stopPropagation();
+    root.classList.contains("open") ? closeFeedback() : openFeedback();
   });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    submitBtn.textContent = "Sending...";
-    submitBtn.disabled = true;
-    statusBox.innerHTML = "";
+  closeBtn.addEventListener("click", closeFeedback);
 
-    const formData = new FormData(form);
+  root.addEventListener("click", (event) => event.stopPropagation());
+
+  document.addEventListener("click", () => {
+    if (root.classList.contains("open")) closeFeedback();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && root.classList.contains("open")) closeFeedback();
+  });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const message = messageInput.value.trim();
+
+    if (!message) {
+      note.textContent = "Write a short note first.";
+      note.style.color = "#f5a623";
+      return;
+    }
+
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
+    note.textContent = "";
+    note.style.color = "rgba(255, 255, 255, 0.5)";
 
     try {
-        const response = await fetch(form.action, {
-            method: "POST",
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
+      urlInput.value = window.location.href;
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
-        if (response.ok) {
-            statusBox.innerHTML = "✅ Feedback sent successfully!";
-            statusBox.style.color = "#10b981"; 
-            form.reset();
-            setTimeout(closeFeedback, 2500);
-        } else {
-            const data = await response.json();
-            statusBox.innerHTML = data.message || "❌ Oops! Something went wrong.";
-            statusBox.style.color = "#ef4444"; 
-        }
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (error) {
+        data = {};
+      }
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not send feedback.");
+      }
+
+      note.textContent = "Feedback sent successfully.";
+      note.style.color = "#10b981";
+      form.reset();
+      pageInput.value = document.title || window.location.pathname;
+      urlInput.value = window.location.href;
+      setTimeout(closeFeedback, 1800);
     } catch (error) {
-        statusBox.innerHTML = "❌ Network error. Please try again.";
-        statusBox.style.color = "#ef4444";
+      note.textContent = error.message || "Network error. Please try again.";
+      note.style.color = "#ef4444";
     } finally {
-        submitBtn.textContent = "Submit Feedback";
-        submitBtn.disabled = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Submit Feedback";
     }
   });
 })();
