@@ -14,7 +14,7 @@
 }
     </script>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>PrepSphere • Interview Universe</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -101,6 +101,7 @@
         position: fixed;
         inset: 0;
         z-index: 1;
+        touch-action: none;
       }
 
       /* ── BLOOM CANVAS (manual software bloom overlay) ── */
@@ -537,6 +538,9 @@
         background: var(--gold);
         opacity: 0.6;
       }
+      .mobile-hint {
+        display: none;
+      }
 
       /* ── DETAIL PANEL ── */
       #detail {
@@ -769,6 +773,139 @@
       }
 
       @media (max-width: 700px) {
+        body {
+          cursor: auto;
+        }
+        #cur,
+        #cur-ring,
+        #cur-dot,
+        #tooltip {
+          display: none;
+        }
+        #vig {
+          background: radial-gradient(
+            ellipse 95% 82% at 50% 48%,
+            transparent 30%,
+            rgba(3, 2, 10, 0.5) 78%,
+            rgba(3, 2, 10, 0.86) 100%
+          );
+        }
+        .hdr {
+          padding: max(14px, env(safe-area-inset-top)) 14px 0;
+          align-items: center;
+        }
+        .hdr-logo {
+          font-size: 20px;
+          letter-spacing: -1px;
+        }
+        .hdr-tag {
+          font-size: 7px;
+          letter-spacing: 3px;
+        }
+        .hud {
+          gap: 5px;
+        }
+        .hud-pill {
+          padding: 6px 10px;
+          font-size: 9px;
+          letter-spacing: 1.2px;
+        }
+        #sidebar {
+          left: 12px;
+          right: 12px;
+          top: auto;
+          bottom: calc(74px + env(safe-area-inset-bottom));
+          transform: none;
+          min-width: 0;
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          padding: 8px;
+          border-radius: 14px;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-x;
+        }
+        #sidebar::-webkit-scrollbar {
+          display: none;
+        }
+        #sidebar .sb-head {
+          display: none;
+        }
+        .sb-item {
+          flex: 0 0 auto;
+          min-height: 34px;
+          padding: 8px 11px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.035);
+          color: rgba(255, 255, 255, 0.72);
+          font-size: 10px;
+        }
+        .sb-item:hover {
+          padding-left: 11px;
+        }
+        .sp-label .nm {
+          font-size: 9px;
+          letter-spacing: 1px;
+        }
+        .sp-label .sub {
+          display: none;
+        }
+        .sp-label .bar {
+          width: 14px;
+          margin-top: 3px;
+        }
+        #detail {
+          left: 12px;
+          right: 12px;
+          top: auto;
+          bottom: calc(132px + env(safe-area-inset-bottom));
+          width: auto;
+          padding: 16px;
+          border-radius: 16px;
+          transform: translateY(14px);
+        }
+        #detail.open {
+          transform: translateY(0);
+        }
+        #detail .dt-name {
+          font-size: 17px;
+        }
+        #detail .dt-enter {
+          min-height: 42px;
+          font-size: 11px;
+        }
+        .btm {
+          left: 12px;
+          right: 12px;
+          bottom: calc(14px + env(safe-area-inset-bottom));
+          transform: none;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          border-radius: 16px;
+        }
+        .btm-item {
+          justify-content: center;
+          min-height: 34px;
+          padding: 8px 9px;
+          font-size: 8px;
+          letter-spacing: 1.2px;
+          white-space: nowrap;
+          border-right: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .btm-item:nth-child(2n) {
+          border-right: none;
+        }
+        .btm-item:nth-child(n + 3) {
+          border-bottom: none;
+        }
+        .desktop-hint {
+          display: none;
+        }
+        .mobile-hint {
+          display: inline;
+        }
         .about-backdrop {
           padding: 14px;
           align-items: flex-end;
@@ -943,19 +1080,23 @@
     <div class="btm">
       <div class="btm-item">
         <div class="btm-icon"></div>
-        Drag to orbit
+        <span class="desktop-hint">Drag to orbit</span>
+        <span class="mobile-hint">Swipe to rotate</span>
       </div>
       <div class="btm-item">
         <div class="btm-icon"></div>
-        Scroll to zoom
+        <span class="desktop-hint">Scroll to zoom</span>
+        <span class="mobile-hint">All topics in frame</span>
       </div>
       <div class="btm-item">
         <div class="btm-icon"></div>
-        Click planet to enter
+        <span class="desktop-hint">Click planet to enter</span>
+        <span class="mobile-hint">Tap a planet</span>
       </div>
       <div class="btm-item">
         <div class="btm-icon"></div>
-        H to reset
+        <span class="desktop-hint">H to reset</span>
+        <span class="mobile-hint">Use topic rail</span>
       </div>
     </div>
 
@@ -1026,11 +1167,18 @@
       // ═══════════════════════════════════════════════════════════
       const W = () => window.innerWidth,
         H = () => window.innerHeight;
+      const mobileQuery = window.matchMedia("(max-width: 700px), (pointer: coarse)");
+      const isMobileLayout = () => mobileQuery.matches;
       const canvas = document.getElementById("cv");
       const scene = new THREE.Scene();
 
-      const camera = new THREE.PerspectiveCamera(52, W() / H(), 0.05, 600);
-      camera.position.set(0, 5, 22);
+      const camera = new THREE.PerspectiveCamera(
+        isMobileLayout() ? 68 : 52,
+        W() / H(),
+        0.05,
+        600,
+      );
+      camera.position.set(0, isMobileLayout() ? 3 : 5, isMobileLayout() ? 31 : 22);
 
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -1039,7 +1187,7 @@
         powerPreference: "high-performance",
       });
       renderer.setSize(W(), H());
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1841,13 +1989,24 @@
         velX = 0,
         velY = 0;
       let orbitTheta = 0,
-        orbitPhi = 0.35;
-      let camR = 22,
-        targetR = 22;
+        orbitPhi = isMobileLayout() ? 0.98 : 0.35;
+      let camR = isMobileLayout() ? 31 : 22,
+        targetR = camR;
       let autoOrbit = true,
         resumeTimer = null;
       const MIN_PHI = 0.08,
         MAX_PHI = Math.PI - 0.08;
+      function resetView() {
+        orbitTheta = 0;
+        orbitPhi = isMobileLayout() ? 0.98 : 0.35;
+        targetR = isMobileLayout() ? 31 : 22;
+        camR = targetR;
+        camera.fov = isMobileLayout() ? 68 : 52;
+        camera.aspect = W() / H();
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5));
+        updateCamera();
+      }
 
       function updateCamera() {
         camera.position.set(
@@ -1857,7 +2016,7 @@
         );
         camera.lookAt(0, 0, 0);
       }
-      updateCamera();
+      resetView();
 
       // ═══════════════════════════════════════════════════════════
       // RAYCASTER + INTERACTION
@@ -1907,6 +2066,10 @@
       aboutPanel.addEventListener("click", (e) => {
         if (e.target === aboutPanel) closeAbout();
       });
+      [detail, sidebarEl].forEach((el) => {
+        el.addEventListener("pointerdown", (e) => e.stopPropagation());
+        el.addEventListener("click", (e) => e.stopPropagation());
+      });
       dtClose.addEventListener("click", () => {
         detail.classList.remove("open");
         selectedIdx = -1;
@@ -1919,6 +2082,16 @@
       const CUR = document.getElementById("cur");
       const CRING = document.getElementById("cur-ring");
       const CDOT = document.getElementById("cur-dot");
+
+      function eventHitsUi(e) {
+        return Boolean(
+          e.target &&
+            e.target.closest &&
+            e.target.closest(
+              ".hdr, #sidebar, #detail, .about-backdrop, .btm, .ps-search-launcher, .ps-feedback-launcher",
+            ),
+        );
+      }
 
       function onMove(e) {
         cursorX = e.clientX;
@@ -1988,6 +2161,7 @@
       }
 
       function onDown(e) {
+        if (eventHitsUi(e)) return;
         isDrag = true;
         prevX = e.clientX;
         prevY = e.clientY;
@@ -1999,6 +2173,7 @@
       }
 
       function onClick(e) {
+        if (eventHitsUi(e)) return;
         if (Math.abs(velX) + Math.abs(velY) > 0.012) return;
         mouse2D.x = (e.clientX / W()) * 2 - 1;
         mouse2D.y = -(e.clientY / H()) * 2 + 1;
@@ -2006,7 +2181,11 @@
         const hits = raycaster.intersectObjects(spheres);
         if (hits.length > 0) {
           const idx = hits[0].object.userData.idx;
-          navigate(sData[idx].topic.file);
+          if (isMobileLayout()) {
+            openDetail(idx);
+          } else {
+            navigate(sData[idx].topic.file);
+          }
         }
       }
 
@@ -2019,10 +2198,27 @@
       window.addEventListener("mouseup", onUp);
       window.addEventListener("click", onClick);
       window.addEventListener("wheel", onWheel, { passive: true });
+      window.addEventListener(
+        "pointerdown",
+        (e) => {
+          if (e.pointerType === "mouse") return;
+          onDown(e);
+        },
+        { passive: true },
+      );
+      window.addEventListener(
+        "pointermove",
+        (e) => {
+          if (e.pointerType === "mouse") return;
+          onMove(e);
+        },
+        { passive: true },
+      );
+      window.addEventListener("pointerup", onUp, { passive: true });
+      window.addEventListener("pointercancel", onUp, { passive: true });
       window.addEventListener("resize", () => {
-        camera.aspect = W() / H();
-        camera.updateProjectionMatrix();
         renderer.setSize(W(), H());
+        resetView();
       });
 
       // Cursor ring lag
@@ -2037,11 +2233,8 @@
 
       document.addEventListener("keydown", (e) => {
         if (e.key.toLowerCase() === "h") {
-          orbitTheta = 0;
-          orbitPhi = 0.35;
-          targetR = 22;
           autoOrbit = true;
-          updateCamera();
+          resetView();
         }
         if (e.key === "Escape") {
           closeAbout();
@@ -2115,8 +2308,12 @@
 
           // Project to screen for label
           const vec = d.sphere.position.clone().project(camera);
-          const sx = (vec.x * 0.5 + 0.5) * W();
-          const sy = (-0.5 * vec.y + 0.5) * H();
+          let sx = (vec.x * 0.5 + 0.5) * W();
+          let sy = (-0.5 * vec.y + 0.5) * H();
+          if (isMobileLayout()) {
+            sx = Math.max(42, Math.min(W() - 42, sx));
+            sy = Math.max(86, Math.min(H() - 190, sy));
+          }
           const visible = vec.z < 0.99 && vec.z > -1;
           d.lbl.style.display = visible ? "block" : "none";
           d.lbl.style.left = sx + "px";
