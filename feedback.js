@@ -193,6 +193,15 @@
       pointer-events: none;
     }
 
+    body.focus-mode .ps-feedback-launcher,
+    body.focus .ps-feedback-launcher,
+    body.focus-mode .ps-feedback-root,
+    body.focus .ps-feedback-root {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     @media (max-width: 700px) {
       :root {
         --ps-widget-right: 14px;

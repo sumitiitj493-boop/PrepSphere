@@ -36,6 +36,22 @@
       opacity: 0;
       pointer-events: none;
     }
+    body.focus-mode .ps-search-launcher,
+    body.focus .ps-search-launcher,
+    body.focus-mode .ps-search-root,
+    body.focus .ps-search-root,
+    body.focus-mode .quick-jump,
+    body.focus .quick-jump,
+    body.focus-mode .hyper-btn,
+    body.focus .hyper-btn,
+    body.focus-mode #hyperPanel,
+    body.focus #hyperPanel,
+    body.focus-mode .hyper-panel,
+    body.focus .hyper-panel {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
     .ps-search-root {
       position: fixed;
       inset: 0;
