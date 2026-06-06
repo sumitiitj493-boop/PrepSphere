@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Core Interview Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../05-Language-Core-Java.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">JAVA CORE</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">Java Core <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 rigorous Java runtime, memory-engine, and concurrency-focused questions. Master HotSpot execution, garbage collection, Metaspace tables, and HashMap concurrency controls.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">JDK, JRE, JVM</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'JDK, JRE, JVM', 'Platform Independence', 'Heap vs Stack (JVM)', 'Garbage Collection',
+  '== vs equals()', 'HashMap vs ConcurrentHashMap', 'Process vs Thread (Java)', 'Synchronization & Deadlock',
+  'Java Program Execution', 'String vs StringBuilder vs StringBuffer'
+];
+const Q = [
+  // ── 1. JDK, JRE, JVM (3) ──
+  {
+    topic: 'JDK, JRE, JVM',
+    q: 'Which of the following correctly describes the nesting relationship and distinct purposes of JDK, JRE, and JVM?',
+    opts: [
+      'JVM ⊂ JDK ⊂ JRE; JRE is designed for developers, while JDK is optimized solely for end-users.',
+      'JVM ⊂ JRE ⊂ JDK; the JVM is the core execution engine, JRE adds standard class libraries to run applications, and JDK adds compiler and development tools (like javac) to build them.',
+      'JDK, JRE, and JVM are completely distinct, non-overlapping software suites with no shared components.',
+      'The JVM is only available inside JRE, and the JDK contains its own compiler but no JRE.'
+    ],
+    correct: 1,
+    concept: 'JDK is the full developer kit. It contains the JRE, which contains the JVM. The JVM is a spec representing the execution engine. JRE adds class libraries (rt.jar, metaspace structures) so programs can run. JDK adds compile-time components like javac, javadoc, and jdb so you can write and debug code.',
+    why: 'The interviewer is testing your understanding of the Java ecosystem structure. JVM ⊂ JRE ⊂ JDK represents the exact nesting relationship of the Holy Trinity.'
+  },
+  {
+    topic: 'JDK, JRE, JVM',
+    q: 'Is the Java Virtual Machine (JVM) itself platform-independent?',
+    opts: [
+      'Yes; the same JVM binary executes identically on Windows, Linux, and macOS without platform-specific modifications.',
+      'No; the JVM itself is platform-dependent (different native binaries must be installed for Windows, Linux, or Mac), but the compiled Java bytecode (.class file) it executes is platform-independent.',
+      'Yes; the JVM only runs on native Java-based processors.',
+      'No; the JVM is only platform-dependent when running under Java 8 or earlier.'
+    ],
+    correct: 1,
+    concept: 'A common misconception is that the JVM is platform-independent. The JVM itself is a native program compiled for a specific OS and hardware architecture. Its job is to ingest platform-neutral bytecode (.class) and translate it into the native machine code of the host system, absorbing all platform differences on behalf of the developer.',
+    why: 'This is a favorite trick question. The JVM is platform-dependent; the bytecode (.class) is platform-independent.'
+  },
+  {
+    topic: 'JDK, JRE, JVM',
+    q: 'What is the mechanical difference between the javac compiler and the JIT (Just-In-Time) compiler in the Java ecosystem?',
+    opts: [
+      'javac compiles bytecode to native code; JIT compiles source code to bytecode.',
+      'javac is a compile-time tool that compiles .java source files into intermediate .class bytecode; JIT is a runtime component of the JVM that translates heavily executed (hot) bytecode into native machine instructions on-the-fly for maximum performance.',
+      'They are identical compilers, but javac is only used for static methods.',
+      'The JIT compiler is run by the developer, whereas javac runs in the background of the user\'s browser.'
+    ],
+    correct: 1,
+    concept: '`javac` is the static developer-side compiler. The JIT compiler is part of the JVM execution engine. Initially, the JVM interprets bytecode (slowly). JIT monitors execution to identify hot spots (frequently called methods), compiles them into native machine instructions at runtime, and caches them to run at native speeds.',
+    why: 'The interviewer wants to see if you confuse compile-time translation (.java -> .class) with runtime translation (.class -> native machine code). JIT handles the latter for optimization.'
+  },
+  // ── 2. PLATFORM INDEPENDENCE (3) ──
+  {
+    topic: 'Platform Independence',
+    q: 'How does Java structurally achieve its famous "Write Once, Run Anywhere" (WORA) capability?',
+    opts: [
+      'By converting all Java source code directly into native assembly at compile-time for every global operating system.',
+      'By compiling Java source code into intermediate bytecode (.class) which is platform-neutral, and relying on platform-specific JVMs to translate that bytecode into native instructions at runtime.',
+      'By forcing all host operating systems to run inside a sandboxed Java-based browser.',
+      'By restricting Java programs to run only on web servers.'
+    ],
+    correct: 1,
+    concept: 'Java achieves platform independence via intermediate bytecode compilation. The JVM acts as a translation layer, abstracting OS and CPU architectures away from the compiled Java application.',
+    why: 'This is the core marketing promise of Java since 1995. The compiler produces universal bytecode, and the target platform\'s JVM translates it to native code on the fly.'
+  },
+  {
+    topic: 'Platform Independence',
+    q: 'What are the practical limitations of Java\'s platform independence that can cause a compiled .class file to fail when moved from Windows to Linux?',
+    opts: [
+      'The bytecode itself changes physically based on the operating system.',
+      'The program relies on platform-specific elements like hardcoded backslash file paths (C:\\temp), OS-dependent GUI toolkits, or native binaries loaded via JNI (Java Native Interface).',
+      'Linux does not support Java class structures.',
+      'The Java compiler cannot compile code for non-Windows platforms.'
+    ],
+    correct: 1,
+    concept: 'While the bytecode is universal, platform-specific code inside the program (like path separators, OS-specific terminal commands, or JNI native `.dll` / `.so` libraries) can still break cross-platform executions.',
+    why: 'Real-world software is often bound to system environments. Hardcoded path separators or native libraries break the platform-independent contract unless abstracted.'
+  },
+  {
+    topic: 'Platform Independence',
+    q: 'How does GraalVM differ from the traditional HotSpot JVM in how it compiles and executes Java applications?',
+    opts: [
+      'GraalVM compiles Java code directly to HTML5.',
+      'GraalVM supports Ahead-Of-Time (AOT) compilation, compiling Java bytecode directly into a platform-native executable that requires no JVM to run, resulting in near-instant startup times and significantly lower memory overhead.',
+      'GraalVM is an interpreter-only VM that does not support compilation.',
+      'GraalVM compiles Java code to run exclusively inside Docker containers.'
+    ],
+    correct: 1,
+    concept: 'GraalVM\'s Native Image technology uses AOT compilation to analyze the application\'s call graph, prune unused code, and compile the remaining bytecode directly into a standalone native binary, optimizing resource-constrained cloud-native and serverless environments.',
+    why: 'Bringing up GraalVM and AOT (Ahead-Of-Time) compilation is an excellent competitive edge. It shows you understand modern Java developments for fast startup and low memory footprints.'
+  },
+  // ── 3. HEAP VS STACK (JVM) (3) ──
+  {
+    topic: 'Heap vs Stack (JVM)',
+    q: 'What are the lifetime and thread-scoping characteristics of JVM Stack memory?',
+    opts: [
+      'Stack memory is shared globally across all threads and is cleaned by the Garbage Collector.',
+      'Each thread gets its own private, isolated Stack; when a method is called, a new Stack Frame is pushed containing local primitives, reference pointers, and operand registers, which is popped and automatically deallocated when the method returns, requiring no GC.',
+      'The stack only stores static class variables and class metadata.',
+      'The stack grows dynamically by borrowing memory from the hard drive.'
+    ],
+    correct: 1,
+    concept: 'Stack memory is thread-local. It uses LIFO frame allocations. Each method execution pushes a frame that holds local variables and references. On return, the frame is popped and the memory is reclaimed instantly, avoiding GC overhead.',
+    why: 'The stack has a rigid, fast, LIFO structure that manages thread execution. Primitives and heap references reside here inside method frames, and are cleaned up instantly upon return.'
+  },
+  {
+    topic: 'Heap vs Stack (JVM)',
+    q: 'In Java 8, what major structural change was made to the JVM memory layout regarding PermGen (Permanent Generation)?',
+    opts: [
+      'PermGen was renamed to the Young Generation and moved onto the stack.',
+      'PermGen (which stored class metadata in a fixed-size heap area) was completely removed and replaced by Metaspace, which stores class metadata in native off-heap memory, growing dynamically to prevent common OutOfMemoryErrors.',
+      'PermGen was converted into a read-only database file.',
+      'Class metadata was moved entirely into the CPU\'s register cache.'
+    ],
+    correct: 1,
+    concept: 'PermGen was a contiguous heap space with a fixed maximum size, often causing `java.lang.OutOfMemoryError: PermGen space` in applications with heavy classloading. Metaspace resides in native memory, meaning its limit is determined by the machine\'s physical RAM, preventing artificial caps.',
+    why: 'Declaring Metaspace as a Java 8 native off-heap replacement for PermGen is crucial. It avoids artificial limits on classloading.'
+  },
+  {
+    topic: 'Heap vs Stack (JVM)',
+    q: 'How does the JVM use "Escape Analysis" to optimize memory allocations that would traditionally land on the shared Heap?',
+    opts: [
+      'It moves unused heap objects to the swap space on disk.',
+      'If the JIT compiler determines that an object created with new never "escapes" the scope of its declaring method (is not returned or passed to other threads), it can optimize the allocation by putting the object directly on the thread\'s Stack, bypassing heap allocation and GC.',
+      'It compiles heap pointers into secure, encrypted memory offsets.',
+      'It automatically deletes any object that has more than three variables.'
+    ],
+    correct: 1,
+    concept: 'Escape Analysis is a high-performance JIT optimization. If an object\'s lifecycle is completely confined to a single method, allocating it on the stack avoids heap fragmentation and reduces garbage collector workload when the method exits.',
+    why: 'This shows you understand modern JVM optimizations. Escape analysis allows the compiler to prove that an object is thread-confined, allowing stack-allocation optimizations.'
+  },
+  // ── 4. GARBAGE COLLECTION (3) ──
+  {
+    topic: 'Garbage Collection',
+    q: 'What is the "Weak Generational Hypothesis" that forms the foundational architecture of Java\'s garbage collectors?',
+    opts: [
+      'The hypothesis that older objects are smaller than newer objects.',
+      'The empirical observation that the vast majority of objects die very young (e.g. temporary method scopes); this leads the JVM to split the heap into Young and Old generations and collect the Young generation frequently using rapid Minor GCs.',
+      'The theory that GC pauses can be completely eliminated by adding more RAM.',
+      'The assumption that static variables are the most common source of leaks.'
+    ],
+    correct: 1,
+    concept: 'Because most objects become unreachable shortly after creation, Java\'s GC segregates the heap. Collecting the Young Gen (Eden + Survivors) is extremely fast because only a tiny fraction of objects survive to be copied, avoiding expensive heap-wide scans.',
+    why: 'This generational hypothesis is the cornerstone of GC design. Minor GCs are fast because most young objects are garbage, and the copying collector only spends time moving survivors.'
+  },
+  {
+    topic: 'Garbage Collection',
+    q: 'Tracing the journey of a new Java object on the heap: What is the sequence of movements across spaces during GC cycles before it is promoted to the Old Generation?',
+    opts: [
+      'Eden → Old Gen → S0 → S1',
+      'New objects are created in Eden; on Minor GC, survivors move to S0. On subsequent Minor GCs, they alternate between S0 and S1 while their age increments; once they reach the tenuring threshold (default 15), they are promoted to the Old Generation.',
+      'Objects start in S0 and move to Eden when they are modified.',
+      'Eden and Survivor spaces are merged into a single static list on exit.'
+    ],
+    correct: 1,
+    concept: 'The young generation uses copying collector mechanics. New objects are allocated in Eden. During Minor GC, survivors are copied to the active Survivor space. Survivor spaces S0 and S1 alternate roles (one is always empty), acting as an aging nursery to filter out short-lived objects before promoting long-lived survivors to the Old Gen.',
+    why: 'This tests survivor-space alternation (aging). Objects alternate between S0 and S1 to separate transient garbage from truly persistent objects.'
+  },
+  {
+    topic: 'Garbage Collection',
+    q: 'What is the architectural difference between the G1 (Garbage First) collector and the ultra-low latency ZGC (Z Garbage Collector)?',
+    opts: [
+      'G1GC does not support multi-threading, whereas ZGC is fully parallel.',
+      'G1GC divides the heap into equal-size regions and prioritizes collecting regions with the most garbage to achieve predictable pause times; ZGC uses colored pointers and load barriers to perform almost all GC work concurrently with application threads, achieving sub-millisecond pauses.',
+      'G1GC is only used for stacks; ZGC is only for the native metaspace.',
+      'G1GC requires manual memory mapping, while ZGC is completely automatic.'
+    ],
+    correct: 1,
+    concept: 'G1GC (default since Java 9) segments the heap into regional blocks, targeting a user-defined pause limit. ZGC (available since Java 15+) is a highly advanced concurrent collector that scales to multi-terabyte heaps while keeping Stop-The-World (STW) pause times under a millisecond by running concurrent phases alongside execution.',
+    why: 'G1GC is standard for multi-gigabyte heaps. ZGC is the modern standard for ultra-low latency concurrent collection. Knowing this represents senior-level JVM knowledge.'
+  },
+  // ── 5. == VS EQUALS() (3) ──
+  {
+    topic: '== vs equals()',
+    q: 'What is the precise distinction between the == operator and the equals() method when comparing object instances in Java?',
+    opts: [
+      '== compares object content; equals() compares JVM version numbers.',
+      '== checks for reference equality (whether two pointers refer to the exact same physical memory address); equals() checks for logical equality (content comparison as defined by the overridden class).',
+      'They are identical and can be used interchangeably for all classes.',
+      '== is for heap-allocated classes, while equals() is for stack-allocated classes.'
+    ],
+    correct: 1,
+    concept: '== is a basic byte comparison. On objects, it checks if they point to the exact same heap address. equals() is a method in java.lang.Object (defaulting to == unless overridden) designed to evaluate if two separate objects are logically equivalent (e.g. comparing field values).',
+    why: 'Never confuse reference equality (same memory address) with logical equality (matching properties/contents).'
+  },
+  {
+    topic: '== vs equals()',
+    q: 'Given: String s1 = "hello"; String s2 = "hello"; String s3 = new String("hello"); what are the outputs of s1 == s2 and s1 == s3 respectively, and why?',
+    opts: [
+      'Both are false because Strings are immutable.',
+      's1 == s2 is true because string literals are cached in the String Pool and share the same reference; s1 == s3 is false because new String() forces the allocation of a brand-new object on the heap, bypassing the pool.',
+      's1 == s2 is false; s1 == s3 is true.',
+      'Both are true because the JVM automatically collapses all identical strings.'
+    ],
+    correct: 1,
+    concept: 'String literals go to the JVM\'s String Pool (inside the Heap). If the literal already exists, the JVM returns the existing reference, so s1 == s2 is true. Calling new String() explicitly creates a new object on the heap with a unique address, making s1 == s3 evaluate to false.',
+    why: 'This reveals the String Pool optimization. String literals are interned; heap allocations via new bypass interning unless intern() is called.'
+  },
+  {
+    topic: '== vs equals()',
+    q: 'Consider the comparisons: Integer a = 127; Integer b = 127; Integer c = 128; Integer d = 128; what are the values of a == b and c == d in Java, and why?',
+    opts: [
+      'Both are true because values are equal.',
+      'a == b is true because Java caches Integer objects with values from -128 to 127 and reuses their references; c == d is false because 128 falls outside this cache limit, forcing the instantiation of separate, unique Integer objects.',
+      'a == b is false; c == d is true.',
+      'Both are false because Java autoboxing always creates unique references.'
+    ],
+    correct: 1,
+    concept: 'To save memory, Java\'s Integer.valueOf() caches Integer instances in the range [-128, 127]. Autoboxing (Integer x = val) internally calls Integer.valueOf(val). Since 127 is in the cache, a and b share the same reference. 128 is outside the cache, returning separate instantiated references, making c == d false.',
+    why: 'This is a legendary Java interview trap. The Integer cache applies to the autoboxing range [-128, 127]. Values outside this range instantiate new objects.'
+  },
+  // ── 6. HASHMAP VS CONCURRENTHASHMAP (3) ──
+  {
+    topic: 'HashMap vs ConcurrentHashMap',
+    q: 'How does a Java 8 HashMap store elements internally, and what is the "treeification" mechanism used to optimize worst-case performance?',
+    opts: [
+      'It stores elements in a simple binary array that compiles to an internal SQL table.',
+      'It uses an array of buckets. When hash collisions occur, entries are stored in a linked list. In Java 8, if a bucket\'s size exceeds 8 and the total map capacity is at least 64, the linked list is converted (treeified) into a Red-Black Tree, improving worst-case search time from O(n) to O(log n).',
+      'It stores all keys on the Stack and values on the Heap to bypass collision.',
+      'It forces the JVM to synchronize all access using the Ostrich algorithm.'
+    ],
+    correct: 1,
+    concept: 'Traditional HashMap buckets suffer from O(n) performance during high hash collisions because of long linked list traversals. Java 8 optimizes this by converting buckets that cross the threshold (TREEIFY_THRESHOLD = 8) into balanced Red-Black Trees, reducing worst-case lookups to logarithmic complexity.',
+    why: 'Java 8 treeification limits hash collision attack vectors (DoS) and preserves O(log n) worst-case performance.'
+  },
+  {
+    topic: 'HashMap vs ConcurrentHashMap',
+    q: 'How did the concurrency locking model of ConcurrentHashMap evolve from Java 7 to Java 8?',
+    opts: [
+      'Java 7 used global lock structures; Java 8 disabled locks entirely.',
+      'Java 7 used Segment Locking (dividing the map into 16 separate locked segments); Java 8 completely removed segments, utilizing low-level CAS (Compare-And-Swap) operations and locking (via synchronized) on individual bucket heads, achieving fine-grained node-level concurrency.',
+      'Java 7 used node-level locks; Java 8 downgraded to Hashtable-style coarse locks.',
+      'Java 8 delegated all synchronization to the database layer.'
+    ],
+    correct: 1,
+    concept: 'Java 7 CHM used reentrant locks on segments (concurrency level of 16). Java 8 CHM redesigned this entirely. It uses CAS for inserting new bucket nodes (lock-free) and only locks (synchronizes) the head node of a bucket when updating an existing list or tree, maximizing parallel write performance.',
+    why: 'Segment locking capped parallel writes at 16 locks. Java 8 CHM locks on individual bucket heads using CAS, reducing lock contention to near-zero.'
+  },
+  {
+    topic: 'HashMap vs ConcurrentHashMap',
+    q: 'Why does iterating over a HashMap in a multi-threaded program trigger a ConcurrentModificationException while ConcurrentHashMap does not, and how do their iterators differ?',
+    opts: [
+      'HashMap uses read-only iterators; CHM uses write-only iterators.',
+      'HashMap has a "fail-fast" iterator that monitors a modCount variable; if the map is modified during iteration, it throws an exception immediately. ConcurrentHashMap uses a "weakly-consistent" iterator that operates on a snapshot or live view of the bucket nodes, allowing safe concurrent modifications without exceptions.',
+      'HashMap\'s iterator is locked to the CPU register; CHM\'s iterator runs on the hard drive.',
+      'They are identical, but HashMap requires a virtual thread to iterate.'
+    ],
+    correct: 1,
+    concept: 'Fail-fast iterators detect structural changes to the collection during iteration to prevent reading corrupted states, throwing an exception immediately. ConcurrentHashMap iterators are weakly-consistent (fail-safe), meaning they do not throw, but they might not reflect the absolute latest updates made after iteration started.',
+    why: 'HashMap = Fail-fast iterator (throws on concurrent write). CHM = Fail-safe/weakly-consistent iterator (no exception, allows concurrent writes).'
+  },
+  // ── 7. PROCESS VS THREAD (JAVA) (3) ──
+  {
+    topic: 'Process vs Thread (Java)',
+    q: 'In standard Java (before virtual threads), what is the relationship between a Java Thread and an Operating System (OS) thread?',
+    opts: [
+      'A single OS thread manages all Java processes in user-space.',
+      'Java threads are kernel-level threads mapped 1:1 to physical OS threads via Java Native Interface (JNI) calls, allowing true parallel execution on multi-core processors.',
+      'Java threads are purely virtual and have no relationship to OS threads.',
+      'Java threads are mapped 1000:1 to a single kernel thread to save memory.'
+    ],
+    correct: 1,
+    concept: 'In standard HotSpot JVM implementations, a Java thread is a thin wrapper around a native OS thread. When you call thread.start(), the JVM invokes JNI to spin up a physical kernel thread. This provides robust OS-level thread scheduling and execution but makes threads expensive to create.',
+    why: 'Classic Java threads are kernel threads. This means they are managed by the host OS scheduler, enabling true hardware-level parallelism.'
+  },
+  {
+    topic: 'Process vs Thread (Java)',
+    q: 'What are Java 21 "Virtual Threads", and what performance bottleneck do they resolve compared to traditional platform threads?',
+    opts: [
+      'Virtual threads are threads that execute entirely inside the browser\'s JavaScript environment.',
+      'Virtual threads are lightweight, JVM-managed threads that are not tied 1:1 to OS threads. Instead, thousands of virtual threads are multiplexed over a few OS platform threads, resolving the thread-exhaustion bottleneck for highly concurrent, blocking I/O-bound workloads.',
+      'Virtual threads are static threads designed only to run database queries.',
+      'They are used to completely replace the JVM\'s Garbage Collector.'
+    ],
+    correct: 1,
+    concept: 'Traditional platform threads are expensive, consuming ~1MB of memory and requiring OS context switches. Virtual threads (Project Loom) are cheap, consuming bytes of memory. When a virtual thread blocks on I/O, the JVM unmounts it from the carrier OS thread, allowing another virtual thread to run, enabling massive scalability.',
+    why: 'Virtual Threads (Project Loom) solve the thread-per-request I/O scaling limit. By multiplexing JVM threads over carrier OS threads, Java can scale to millions of concurrent tasks.'
+  },
+  {
+    topic: 'Process vs Thread (Java)',
+    q: 'What critical mistake occurs if a developer invokes the run() method directly on a Thread object instead of calling start()?',
+    opts: [
+      'It triggers a compiler error because run() is a private method.',
+      'No new thread is created; the run() method is executed synchronously as a standard method call inside the current calling thread, completely defeating the purpose of multithreading.',
+      'The program enters an infinite deadlock loop immediately.',
+      'The thread runs on a different JVM process on another computer.'
+    ],
+    correct: 1,
+    concept: 'Calling thread.start() registers the thread with the OS scheduler to begin asynchronous execution in a new thread context, which eventually calls run(). Calling run() directly simply executes the code sequentially in the current thread stack.',
+    why: 'Calling run() directly is just a synchronous method call. To spawn a new thread, start() must be invoked to trigger JVM bootstrap sequences.'
+  },
+  // ── 8. SYNCHRONIZATION & DEADLOCK (3) ──
+  {
+    topic: 'Synchronization & Deadlock',
+    q: 'How does Java implement mutual exclusion under the hood when using the synchronized keyword, and why is a synchronized block generally preferred over a synchronized method?',
+    opts: [
+      'By disabling the CPU\'s multi-core capabilities.',
+      'Every Java object has an intrinsic lock (monitor). synchronized grabs this monitor; a synchronized block is preferred because it allows locking on a specific, fine-grained object rather than the entire "this" instance, minimizing the critical section and reducing thread blocking.',
+      'By converting instance variables into static arrays.',
+      'There is no difference; both compiled codes lock the entire JVM globally.'
+    ],
+    correct: 1,
+    concept: 'Synchronizing a whole method locks the entire instance (this), preventing other threads from calling any other synchronized methods on that instance. Synchronized blocks allow targeted locking on dedicated private lock objects, reducing scope and lock contention.',
+    why: 'Lock granularity is key. Synchronized methods lock "this" completely. Synchronized blocks allow dedicated, fine-grained monitors to protect only the critical lines.'
+  },
+  {
+    topic: 'Synchronization & Deadlock',
+    q: 'What guarantee does the volatile keyword provide in Java, and why is it insufficient for operations like count++?',
+    opts: [
+      'volatile guarantees that a variable is stored in the database cache.',
+      'It guarantees memory visibility (all threads read the absolute latest value directly from main memory instead of local CPU register caches); it is insufficient for count++ because visibility does not guarantee atomicity for compound (Read-Modify-Write) operations.',
+      'volatile makes any variable completely immutable.',
+      'It forces the variable to be managed by the stack instead of the heap.'
+    ],
+    correct: 1,
+    concept: 'volatile ensures write-visibility across threads by enforcing memory barriers, preventing CPU caching. However, count++ is non-atomic (it compiles to separate read, add, and write steps). If two threads execute volatile count++, they can still interleave and overwrite increments. Atomic variables (like AtomicInteger) are needed.',
+    why: 'volatile = Visibility only. It does not provide Atomicity. Compound operations like count++ require synchronization or Atomic classes.'
+  },
+  {
+    topic: 'Synchronization & Deadlock',
+    q: 'Why MUST object.wait() always be called inside a loop checking the condition (e.g. while (!condition) lock.wait();) instead of a simple if block?',
+    opts: [
+      'Because if blocks are not allowed inside synchronized statements.',
+      'To guard against "Spurious Wakeups"—where a thread can wake up from a waiting state without any thread calling notify(), which would cause it to proceed with invalid state if checked only once in an if block.',
+      'To force the CPU to run the thread at maximum clock speed.',
+      'Because the compiler automatically renames the loop to increase security.'
+    ],
+    correct: 1,
+    concept: 'A waiting thread can be woken up by OS-level signals or scheduling quirks without an explicit notification (Spurious Wakeup). If checked via if, the thread would wake, assume the condition was met, and proceed, corrupting program state. A while loop forces the thread to re-verify the condition upon waking.',
+    why: 'Spurious wakeups can wake threads randomly. A "while" loop forces the thread to re-evaluate the wake condition, preventing corrupted states.'
+  },
+  // ── 9. JAVA PROGRAM EXECUTION (3) ──
+  {
+    topic: 'Java Program Execution',
+    q: 'Explain the ClassLoader Delegation Model and the sequence of classloaders searched when loading a class in the JVM.',
+    opts: [
+      'Classes are loaded from the hard drive directly into the CPU registers.',
+      'When a classloader receives a request to load a class, it always delegates the request to its parent loader first (Application → Extension → Bootstrap). Only if the parent loader fails to find the class, the current classloader attempts to load it itself, preventing duplicate classes and protecting core APIs.',
+      'The child classloader loads everything first and then informs the parent.',
+      'Classes are loaded by a single global loader that disables all namespaces.'
+    ],
+    correct: 1,
+    concept: 'Parent-first delegation maintains core security. If a user attempts to load a malicious custom java.lang.Object, the Application classloader delegates up to the Bootstrap loader, which loads the trusted core class first, ignoring the malicious definition.',
+    why: 'The parent-first delegation prevents duplicate class definition conflicts and protects core system classes from being hijacked.'
+  },
+  {
+    topic: 'Java Program Execution',
+    q: 'What is the purpose of the Bytecode Verifier phase in the JVM execution engine, and why is it crucial for security?',
+    opts: [
+      'It translates bytecode into HTML files before running.',
+      'It acts as a gatekeeper that inspects compiled .class files to ensure they conform to JVM specification rules, do not violate access permissions (e.g., accessing private fields), and do not cause stack overflows or type safety violations before execution.',
+      'It encrypts bytecode to prevent developers from reading it.',
+      'It is used to check the developer\'s software license key.'
+    ],
+    correct: 1,
+    concept: 'The Bytecode Verifier ensures that loaded classes (even those fetched over a network) are structurally safe. It verifies type safety, registers bounds, and stack structures, preventing malicious code from executing invalid instructions that could bypass security or crash the JVM.',
+    why: 'Verification is Java\'s security barrier. It checks that the class file was not tampered with, verifying type conversions, stack bounds, and accesses.'
+  },
+  {
+    topic: 'Java Program Execution',
+    q: 'How do the Interpreter and the JIT (Just-In-Time) compiler collaborate to execute Java programs, and why does this cause a "warm-up" phase?',
+    opts: [
+      'The interpreter executes static methods, while JIT executes instance methods.',
+      'The JVM initially uses the Interpreter to run bytecode immediately (no startup delay); over time, it profiles the code to identify "hot spots" (frequently executed methods), compiling them into native machine instructions via the JIT compiler, which requires a warm-up period to optimize.',
+      'The JIT compiler runs first and then passes machine code to the interpreter.',
+      'They run on separate computers connected via a network socket.'
+    ],
+    correct: 1,
+    concept: 'Interpreting bytecode is slow because instructions are evaluated sequentially. To speed this up, the JVM monitors execution. Once a method or loop threshold is crossed, the JIT compiles the bytecode to native machine instructions, storing it in the Code Cache. The program "warms up" as more hot code is natively compiled.',
+    why: 'Interpreter = Immediate startup but slow. JIT = Delayed compilation but native speed. The warm-up phase is the JIT profiling and compiling hot methods.'
+  },
+  // ── 10. STRING VS STRINGBUILDER VS STRINGBUFFER (3) ──
+  {
+    topic: 'String vs StringBuilder vs StringBuffer',
+    q: 'Why is the String class immutable in Java, and what architectural advantages does this provide?',
+    opts: [
+      'To prevent the string from being used in loop blocks.',
+      'Security, Thread-Safety (can be shared across threads without synchronization), String Pooling (saving significant memory), and caching of the String\'s hashCode (making them highly efficient as keys in HashMaps).',
+      'To force developers to allocate all strings on the stack.',
+      'Immutability is an accidental feature that has no practical advantages.'
+    ],
+    correct: 1,
+    concept: 'Strings are the most heavily used objects. Immutability allows safe caching of hashes (crucial for HashMap lookups), enables the String Pool to share string literal references, prevents threads from modifying shared strings, and protects secure operations (like loading file paths or database URIs).',
+    why: 'String immutability is an intentional security and memory optimization. It enables the String Pool, thread-safety, and secure hashing.'
+  },
+  {
+    topic: 'String vs StringBuilder vs StringBuffer',
+    q: 'What is the precise architectural difference between StringBuilder and StringBuffer in Java, and when should you choose each?',
+    opts: [
+      'StringBuilder is only for numerical strings; StringBuffer is for alphabetic strings.',
+      'Both are mutable buffers, but StringBuilder is unsynchronized and not thread-safe (making it faster, best for local thread operations); StringBuffer is fully synchronized and thread-safe (making it slower due to lock overhead).',
+      'StringBuilder allocates memory on the stack; StringBuffer allocates on the heap.',
+      'There is no difference; StringBuffer was completely deleted in Java 11.'
+    ],
+    correct: 1,
+    concept: 'Both maintain a resizable internal character array. However, every method in StringBuffer is marked synchronized to secure access in concurrent environments. StringBuilder has no synchronization, eliminating lock overhead, making it the preferred choice for string assembly within a single thread.',
+    why: 'Synchronization overhead is expensive. Use StringBuilder for local execution (99% of cases); use StringBuffer only if building shared strings concurrently.'
+  },
+  {
+    topic: 'String vs StringBuilder vs StringBuffer',
+    q: 'In Java 9, how was the String class optimized internally to reduce memory footprint, and what was changed?',
+    opts: [
+      'By compressing strings into a single global ZIP file.',
+      'By replacing the internal character array (char[]) with a byte array (byte[]) alongside an encoding-coder flag; if a string contains only Latin-1 characters, it consumes 1 byte per character instead of 2, halving String memory usage.',
+      'By moving all strings out of the JVM heap onto the hard drive.',
+      'By converting all strings to numeric hash values immediately.'
+    ],
+    correct: 1,
+    concept: 'Prior to Java 9, each character in a String consumed 2 bytes (UTF-16 char[]). Since most strings in typical applications contain only basic alphanumeric characters, Java 9 introduced "Compact Strings," which use a byte[] array. For Latin-1 characters, it stores them as single-byte values, halving memory consumption for the vast majority of string allocations.',
+    why: 'Compact Strings (Java 9) replaced char[] with byte[]. This halves the memory overhead of basic latin strings, which make up most typical String objects.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Spectacular! You have complete mastery of Java Core and JVM architecture. You successfully navigated intermediate bytecodes, concurrent hash maps, generational hypothesis collectors, virtual threads, and String optimizations. You are 100% ready!';
+  else if (pct >= 55) para = 'Great job! You have a solid grasp of Java fundamentals with a few minor gaps in low-level memory layout (like PermGen/Metaspace) or concurrent locking structures. Review the marked topics below.';
+  else para = 'You should spend more time reinforcing classloader delegation, the equals/hashCode contracts, and JVM memory areas before looking into concurrent scaling models. Focus on basic lifecycle rules first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Java Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06598cd380d913b',t:'MTc4MDU2MjA1MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -3,7 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Computer Networks — Interview Mastery Notes</title>
+    <title>Computer Networks Interview Questions | PrepSphere</title>
+    <meta name="description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
+    <meta name="keywords" content="computer networks interview questions, networking interview preparation, OSI model, TCP UDP, HTTP, DNS, TLS, load balancer, WebSockets" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://theprepsphere.in/03-Computer-Networks.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Computer Networks Interview Questions | PrepSphere" />
+    <meta property="og:description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
+    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://theprepsphere.in/03-Computer-Networks.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Computer Networks Interview Questions | PrepSphere" />
+    <meta name="twitter:description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
+    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "Computer Networks Interview Questions",
+  "description": "Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow.",
+  "url": "https://theprepsphere.in/03-Computer-Networks.html",
+  "image": "https://theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation notes",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://theprepsphere.in"
+  }
+}
+    </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -111,7 +142,125 @@ body.focus-mode .main{max-width:1050px}
   .nav-brand{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.nav-progress{max-width:42px;flex:0 0 42px}
 }
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:99px}
-</style>
+
+      /* Code block readability override: keep code structured, not paragraph-wrapped. */
+      .code-wrap,
+      .code-block {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .code-wrap > .code-block,
+      .code-block,
+      pre,
+      pre.code-block,
+      .code-wrap pre,
+      .code-block pre {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        tab-size: 4;
+        -webkit-overflow-scrolling: touch;
+        font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace !important;
+        line-height: 1.72;
+      }
+      .code-wrap > .code-block span,
+      .code-block span,
+      .code-block code,
+      pre code,
+      pre span,
+      pre.code-block span,
+      .code-wrap pre span,
+      .code-block pre span {
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar,
+      pre::-webkit-scrollbar,
+      pre.code-block::-webkit-scrollbar,
+      .code-wrap pre::-webkit-scrollbar,
+      .code-block pre::-webkit-scrollbar {
+        height: 9px;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar-thumb,
+      pre::-webkit-scrollbar-thumb,
+      pre.code-block::-webkit-scrollbar-thumb,
+      .code-wrap pre::-webkit-scrollbar-thumb,
+      .code-block pre::-webkit-scrollbar-thumb {
+        background: rgba(245, 166, 35, 0.35);
+        border-radius: 999px;
+      }
+      @media (max-width: 700px) {
+        .code-wrap > .code-block,
+        .code-block,
+        pre,
+        pre.code-block,
+        .code-wrap pre,
+        .code-block pre {
+          font-size: 12.5px;
+          line-height: 1.65;
+          padding: 1rem;
+        }
+      }
+      .practice-cta {
+        margin: 3rem 0 0;
+        padding: 1.35rem 1.5rem;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--gold);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .practice-cta h2 {
+        margin: 0 0 0.35rem;
+        font-size: 1.15rem;
+        color: var(--text);
+      }
+      .practice-cta p {
+        margin: 0;
+        color: var(--text2);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .practice-cta .practice-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0.75rem 1.15rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(245, 166, 35, 0.28);
+      }
+      .practice-cta .practice-btn:hover {
+        transform: translateY(-1px);
+      }
+      @media (max-width: 700px) {
+        .practice-cta {
+          align-items: stretch;
+          flex-direction: column;
+          padding: 1.15rem;
+        }
+        .practice-cta .practice-btn {
+          width: 100%;
+        }
+      }
+    </style>
 </head>
 <body>
 
@@ -683,6 +832,15 @@ body.focus-mode .main{max-width:1050px}
   <div class="edge"><h4>Competitive Edge</h4><p>When you answer this, draw the flow on a whiteboard. Start with "There are roughly 10 steps" and walk through each. Mention performance optimizations at each step: DNS prefetch, TCP fast open, TLS 1.3 0-RTT, HTTP/2 multiplexing, CDN caching, browser cache, service workers. This shows you don't just know the theory — you think about real-world performance.</p></div>
 </div></section>
 
+
+
+        <section class="practice-cta" aria-labelledby="practice-title">
+          <div>
+            <h2 id="practice-title">Ready to test Networks?</h2>
+            <p>Practice protocols, layers, and browser-flow questions in quiz mode.</p>
+          </div>
+          <a class="practice-btn" href="Quiz/03-Computer-Networks.html">Start practice</a>
+        </section>
 </main>
 </div>
 

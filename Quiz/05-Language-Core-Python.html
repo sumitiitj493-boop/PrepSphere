@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Core Interview Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../05-Language-Core-Python.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">PYTHON CORE</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">Python Core <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 rigorous systems-level Python core questions. Master CPython bytecode execution, GIL bottlenecks, refcounting, cyclic GC sweeps, memory allocations, and generator pipelines.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">GIL (GLOBAL INTERPRETER LOCK)</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'GIL (Global Interpreter Lock)', 'Multithreading vs Multiprocessing', 'Mutable vs Immutable Objects', 'is vs ==',
+  'Deep Copy vs Shallow Copy', 'Python Memory Management', 'How Python Code Executes', 'List vs Tuple',
+  'Generators & Memory Efficiency', 'Interpreter vs Compiler in Python'
+];
+const Q = [
+  // ── 1. GIL (3) ──
+  {
+    topic: 'GIL (Global Interpreter Lock)',
+    q: 'Why does CPython utilize the Global Interpreter Lock (GIL), and what is the underlying thread-safety issue it resolves?',
+    opts: [
+      'To speed up the compilation of Python code into native machine code.',
+      'Because CPython\'s reference counting memory management is not thread-safe; without the GIL locking bytecode execution to a single thread, concurrent reference counter updates would corrupt object states.',
+      'To force all threads to execute in parallel on separate CPU cores automatically.',
+      'To encrypt local variable names inside the stack.'
+    ],
+    correct: 1,
+    concept: 'CPython tracks memory using reference counting. Incrementing/decrementing reference counters concurrently from multiple threads without locks creates race conditions, leading to reference count corruption and memory leaks or premature deallocations. The GIL resolves this simply by ensuring only one thread can hold the lock and execute Python bytecode at any given moment.',
+    why: 'The interviewer is testing your understanding of Python internals. The GIL is a mutex protecting reference counting counters. Making refcount updates thread-safe at a granular level would add immense locking overhead to single-threaded code.'
+  },
+  {
+    topic: 'GIL (Global Interpreter Lock)',
+    q: 'Under the CPython GIL, why do multi-threaded programs show a massive speedup for I/O-bound tasks but zero speedup (or even slowdown) for CPU-bound tasks?',
+    opts: [
+      'Because I/O-bound tasks run on the GPU, bypassing the CPU completely.',
+      'Because the GIL is automatically released during I/O blockages (like network or disk wait), allowing other threads to take turns. CPU-bound tasks continuously hold the GIL, causing threads to constantly battle over a single CPU core, creating context-switch overhead.',
+      'Because the GIL is only active for database write queries.',
+      'Because CPython does not allow starting threads during CPU calculations.'
+    ],
+    correct: 1,
+    concept: 'During blocking I/O waits, the executing thread releases the GIL, allowing another thread to execute bytecode. For CPU-bound tasks, there are no I/O blocks, so threads continuously compete for the single lock, generating heavy lock contention, frequent preemptions, and context-switching overhead without any parallel execution.',
+    why: 'CPython threads are concurrent (take turns) but not parallel. For I/O-bound tasks, threads overlap their wait times while the GIL is released. For CPU-bound tasks, the GIL bottleneck makes threads slower than single-threaded runs.'
+  },
+  {
+    topic: 'GIL (Global Interpreter Lock)',
+    q: 'What major architectural shift is being introduced in Python 3.13 under PEP 703 regarding the GIL?',
+    opts: [
+      'Python 3.13 completely deletes threads, forcing developers to use asyncio only.',
+      'It introduces an experimental "free-threaded" build mode (--disable-gil) that allows CPython to run without the Global Interpreter Lock, enabling true multi-core parallel thread execution.',
+      'It compiles Python code directly into native C code at runtime.',
+      'It moves the GIL from the interpreter level down to the operating system level.'
+    ],
+    correct: 1,
+    concept: 'PEP 703 specifies a roadmap to support running CPython without the GIL (free-threaded Python). It achieves thread safety by replacing the global lock with thread-safe reference counting (biased reference counting) and fine-grained locks on objects, allowing true multi-core parallelism for multi-threaded Python programs.',
+    why: 'Bringing up PEP 703 and Python 3.13\'s `--disable-gil` experimental free-threaded build is an elite competitive edge. It shows you follow active core developments.'
+  },
+  // ── 2. MULTITHREADING VS MULTIPROCESSING (3) ──
+  {
+    topic: 'Multithreading vs Multiprocessing',
+    q: 'Why does the multiprocessing module bypass the GIL to achieve true multi-core parallel execution, and what is the trade-off compared to the threading module?',
+    opts: [
+      'multiprocessing disables all variables to bypass the GIL.',
+      'Each child process spawned by multiprocessing gets its own independent Python interpreter and private virtual memory space (along with its own separate GIL), enabling true parallel execution; the trade-off is higher memory overhead and the need for Inter-Process Communication (IPC) via pickling (serialization).',
+      'multiprocessing runs entirely on the stack, making it faster to create than threads.',
+      'Processes share variables directly without any locking overhead.'
+    ],
+    correct: 1,
+    concept: 'Because processes do not share memory, they do not compete for the same GIL. This enables parallel execution. The trade-off is process creation overhead (fork/spawn) and the need to serialize (pickle) data when communicating between processes (e.g., via Pipes or Queues).',
+    why: 'Processes scale horizontally because they do not share the interpreter state or lock. The trade-off is higher creation cost and the need to serialize/deserialize data for communication.'
+  },
+  {
+    topic: 'Multithreading vs Multiprocessing',
+    q: 'Why must CPython multiprocessing code on Windows be wrapped inside an "if __name__ == \'__main__\':" block, and what error occurs if you omit it?',
+    opts: [
+      'To prevent the code from compiling into an intermediate .class file.',
+      'Because Windows does not support fork() and must use the "spawn" start method, which re-imports the main module in each child process. Omitting the block causes an infinite loop of child process spawning, eventually crashing the OS.',
+      'It is a aesthetic convention that has no functional purpose.',
+      'To force the child processes to run on the GPU.'
+    ],
+    correct: 1,
+    concept: 'On Unix-like systems, fork() clones the process memory immediately. On Windows, spawn starts a fresh Python process and re-runs the source file to recreate variables. If there is no if __name__ == \'__main__\' guard, the child process will execute the spawning code again, launching another process in an infinite recursion.',
+    why: 'This is a legendary Windows-specific multiprocessing trap. Spawn requires re-importing the file; without the main guard, child processes recursively spawn sub-processes, crashing the system.'
+  },
+  {
+    topic: 'Multithreading vs Multiprocessing',
+    q: 'How does asyncio achieve high concurrency without using multiple threads or multiple processes?',
+    opts: [
+      'By executing code in a separate compiled C extension.',
+      'By running on a single thread and using an Event Loop alongside non-blocking coroutines; when a coroutine awaits an I/O operation, it yields control back to the event loop, which schedules other tasks in the meantime.',
+      'By converting all function parameters to static references.',
+      'By running the entire program on the database server.'
+    ],
+    correct: 1,
+    concept: 'asyncio is single-threaded, single-process concurrency (cooperative multitasking). It uses an event loop to manage coroutines. When a coroutine blocks (awaits), it cooperatively yields control back to the loop, allowing other coroutines to execute, completely eliminating thread switching overhead.',
+    why: 'asyncio provides cooperative concurrency. It excels at massive I/O scale (handling 10,000+ sockets) where thread allocation and context switching overheads would destroy server performance.'
+  },
+  // ── 3. MUTABLE VS IMMUTABLE OBJECTS (3) ──
+  {
+    topic: 'Mutable vs Immutable Objects',
+    q: 'Why can immutable objects (like int, str, tuple) be used as keys in Python dictionaries or elements in sets, while mutable objects (like list, dict, set) cannot?',
+    opts: [
+      'Because mutable objects are too large to fit in dictionary buckets.',
+      'Immutable objects are "hashable" because their values cannot change, ensuring their hash value remains constant; mutable objects can change their values in-place, which would mutate their hash value and break lookup routing inside hash tables.',
+      'Because the dictionary class compiles mutable keys into static references.',
+      'Only float values can be used as keys in dictionaries.'
+    ],
+    correct: 1,
+    concept: 'Python dictionaries and sets are implemented as hash tables. Hash tables route objects to buckets based on a hash code (hash(obj)). If an object is mutable, modifying its values would change its hash code, making it unfindable in its original bucket and corrupting the table.',
+    why: 'Hash table keys must be hashable. Hashability requires that the object\'s hash value never changes during its lifetime. Mutable objects can change in-place, making them unhashable.'
+  },
+  {
+    topic: 'Mutable vs Immutable Objects',
+    q: 'Consider the function definition: def append_to(element, target=[]): target.append(element); return target. Why is using [] as a default argument considered a dangerous trap in Python?',
+    opts: [
+      'It triggers a syntax error on modern interpreters.',
+      'The default list is instantiated exactly once when the function is defined, not when it is called; consequently, subsequent function calls without a custom argument will share and append to the exact same list instance in memory.',
+      'It forces the compiler to convert all elements to strings.',
+      'The list is automatically deleted immediately after the first function call.'
+    ],
+    correct: 1,
+    concept: 'In Python, default arguments are evaluated once when the function is parsed (definition time). If you use a mutable object like a list [] or dict {} as a default, all calls to that function share that single object. The correct pattern is to use target=None and initialize target = [] inside the function.',
+    why: 'This is a classic Python gotcha. Default parameters are evaluated ONCE at function definition time. Using mutable defaults causes state leakage across independent function calls.'
+  },
+  {
+    topic: 'Mutable vs Immutable Objects',
+    q: 'A tuple is defined as: my_tuple = (1, 2, [3, 4]). Is this tuple fully immutable, and can it be used as a key in a Python dictionary?',
+    opts: [
+      'Yes; tuples are always immutable and hashable, so it can be a dictionary key.',
+      'No; while the tuple itself cannot be resized or have its references swapped, the list inside is mutable and can be modified. Because it contains an unhashable mutable list, the tuple is unhashable and throws a TypeError if used as a dictionary key.',
+      'The list inside is automatically converted to an immutable tuple during assignment.',
+      'The tuple will trigger a syntax error during parsing.'
+    ],
+    correct: 1,
+    concept: 'A tuple\'s immutability only guarantees that its immediate container references cannot be changed. If the tuple contains a reference to a mutable object (like a list), that nested list can still be modified in-place. Because the tuple\'s state is no longer strictly frozen, it fails hashability checks and cannot be a dict key.',
+    why: 'A tuple is only as hashable as its contents. If a tuple contains a mutable member, it is unhashable, preventing it from being used as a dictionary key.'
+  },
+  // ── 4. IS VS == (3) ──
+  {
+    topic: 'is vs ==',
+    q: 'What is the precise functional difference between the == operator and the is operator in Python?',
+    opts: [
+      'is compares values; == compares data types.',
+      '== checks for value equality (whether the objects contain equivalent data, calling __eq__()); is checks for object identity (whether they reference the exact same memory address, comparing id()).',
+      'They are completely identical and compiled to the same machine code.',
+      'is is only used to check variables allocated on the stack.'
+    ],
+    correct: 1,
+    concept: '== evaluates value equality. Two separate list objects [1, 2, 3] contain identical values, so list1 == list2 is True. However, they live at different physical addresses, so list1 is list2 is False. is checks reference identity.',
+    why: 'Value equality (==, checks __eq__) vs. Object identity (is, checks memory id/pointer addresses) are completely distinct operations.'
+  },
+  {
+    topic: 'is vs ==',
+    q: 'Consider the statements: a = 256; b = 256; c = 257; d = 257;. Why does a is b evaluate to True while c is d can evaluate to False in CPython?',
+    opts: [
+      'By default, 256 is stored as a static integer, whereas 257 is dynamic.',
+      'To optimize memory, CPython pre-allocates and caches integer objects in the range [-5, 256]; any integer assignment in this range reuses the same cached object reference. Numbers outside this range are instantiated as new, separate objects.',
+      'The compiler converts 257 into a float value at runtime.',
+      'It is a bug in Python\'s mathematical engine that was resolved in Python 3.'
+    ],
+    correct: 1,
+    concept: 'Integer caching in CPython reuses objects in the range [-5, 256]. This is an implementation optimization to speed up small arithmetic. Since 256 is in the cache, a and b reference the same physical object. 257 is outside, so c and d point to separate objects.',
+    why: 'Small integer caching is an implementation detail. Integers from -5 to 256 are cached. Outside this range, the "is" comparison is highly volatile and not guaranteed to be True.'
+  },
+  {
+    topic: 'is vs ==',
+    q: 'Why does PEP 8 explicitly mandate using "if x is None:" instead of "if x == None:"?',
+    opts: [
+      'Because == is not supported for None objects.',
+      'is is faster and safer; == calls the object\'s custom __eq__() method, which can be overridden by a user-defined class to return misleading results, whereas is checks identity directly at the system level.',
+      'is automatically converts x to a string before comparing.',
+      'To prevent memory leaks on the stack.'
+    ],
+    correct: 1,
+    concept: 'is compares the memory ID directly (which is extremely fast and cannot be hijacked). The == operator triggers the __eq__ method of the left-hand operand. If a class overrides __eq__ to always return True, calling x == None would return True even if x is not None.',
+    why: 'PEP 8 guidelines protect against hijacked operators. __eq__ can be overridden to lie; "is" is a raw pointer address check that cannot be overridden.'
+  },
+  // ── 5. DEEP COPY VS SHALLOW COPY (3) ──
+  {
+    topic: 'Deep Copy vs Shallow Copy',
+    q: 'If you perform a "Shallow Copy" on a nested list like original = [[1, 2], [3, 4]], what is duplicated, and what is shared with the cloned list?',
+    opts: [
+      'Both the outer list and the inner lists are copied recursively, creating fully independent objects.',
+      'The outer list is duplicated (allocated at a new address), but the inner elements are still references pointing to the original nested lists; modifying clone[0][0] will modify original[0][0].',
+      'The outer list remains shared, but the inner elements are copied.',
+      'Nothing is copied; both variables point to the exact same outer list.'
+    ],
+    correct: 1,
+    concept: 'A shallow copy only duplicates the top-level container. The elements inside the new container are copied as raw references. If those elements are mutable nested structures (like lists), the original and copy continue to share those same inner objects.',
+    why: 'Shallow copy allocates a new outer container but keeps references to the same inner items. Modifying nested mutable objects affects both original and copy.'
+  },
+  {
+    topic: 'Deep Copy vs Shallow Copy',
+    q: 'How does copy.deepcopy() handle nested objects, and what does it do under the hood to ensure full independence?',
+    opts: [
+      'By converting the nested structure into a single string flat file.',
+      'It traverses the object tree recursively, duplicating every encountered container and object to construct a completely independent copy; modifying any nested value in the deep copy has zero effect on the original.',
+      'By moving all nested lists to the stack memory.',
+      'It disables the garbage collector during the copy phase.'
+    ],
+    correct: 1,
+    concept: 'deepcopy recursively traverses the object hierarchy, cloning every container and its elements at all levels. It also maintains a memo dictionary during the copy to track already-copied objects, preventing infinite loops if circular references exist in the object graph.',
+    why: 'Deepcopy is recursive. It maps and copies all child containers to completely isolate memory, utilizing a memo map to safely terminate circular graphs.'
+  },
+  {
+    topic: 'Deep Copy vs Shallow Copy',
+    q: 'An engineer creates a copy of a list using slicing: new_list = old_list[:]. What type of copy was performed, and are nested objects safe from mutation sharing?',
+    opts: [
+      'A deep copy; all nested objects are safe.',
+      'A shallow copy; nested objects are NOT safe because the slice operator only duplicates the top-level list, leaving any inner nested mutable elements shared between both lists.',
+      'It is not a copy; it simply creates an alias variable.',
+      'It triggers a syntax error on modern Python versions.'
+    ],
+    correct: 1,
+    concept: 'Slicing [:] is a shorthand for performing a shallow copy of a list. While the top-level list is a separate object, any nested lists or dicts inside are still shared references, meaning mutations on those nested elements will reflect in both copies.',
+    why: 'Slicing `[:]` is a top-level shallow copy. It is fast and safe for 1D primitive arrays, but fails to isolate nested lists or dictionaries.'
+  },
+  // ── 6. PYTHON MEMORY MANAGEMENT (3) ──
+  {
+    topic: 'Python Memory Management',
+    q: 'What is Python\'s primary memory management garbage collection mechanism, and how does it determine when an object can be freed?',
+    opts: [
+      'Tracing Mark-and-Sweep that runs once every hour.',
+      'Reference Counting; every object tracks how many variables or containers reference it. When this counter (ob_refcnt) drops to zero, Python immediately reclaims the object\'s memory.',
+      'By running a background thread that randomly deletes large heap objects.',
+      'By forcing the operating system to clear memory pages.'
+    ],
+    correct: 1,
+    concept: 'Python\'s primary GC is deterministic reference counting. The moment an object\'s reference count hits 0 (e.g., when a variable goes out of scope or is reassigned), its memory is freed instantly without waiting for a garbage collection sweep.',
+    why: 'CPython uses Reference Counting. Memory deallocation is immediate and deterministic when references hit 0. Tracing GC is only a backup for cycles.'
+  },
+  {
+    topic: 'Python Memory Management',
+    q: 'Why is CPython\'s Reference Counting insufficient on its own for memory safety, and how does the cyclic Garbage Collector solve this?',
+    opts: [
+      'Reference counting is too slow; the cyclic collector is used to speed up operations.',
+      'Reference counting cannot detect and free circular references (where objects reference each other in a closed loop, maintaining reference counts >= 1); the cyclic GC runs periodically to scan for, isolate, and clean up these unreachable reference cycles.',
+      'The cyclic GC is only used to manage stack frames.',
+      'The cyclic collector moves all variables to the global thread database.'
+    ],
+    correct: 1,
+    concept: 'Isolated cycles of objects (e.g., A references B and B references A) have reference counts of at least 1, even if they are completely unreachable from the global scope. The generational cyclic GC (managing Gen 0, Gen 1, Gen 2) runs in the background to detect these isolated subgraphs and reclaim them.',
+    why: 'Circular references bypass refcount reclamation. Python\'s generational cyclic GC scans container objects in the background to detect and destroy isolated cycles.'
+  },
+  {
+    topic: 'Python Memory Management',
+    q: 'How does declaring __slots__ inside a Python class definition optimize memory usage when instantiating thousands of instances?',
+    opts: [
+      'By converting all class properties to static integers.',
+      'By preventing the creation of a dynamic dictionary (__dict__) for each instance, instead allocating a fixed-size, array-like structure for properties, reducing per-object memory overhead significantly.',
+      'By forcing the objects to be allocated on the stack instead of the heap.',
+      'By automatically enabling thread compression.'
+    ],
+    correct: 1,
+    concept: 'By default, Python objects store their attributes in a dynamic dictionary (__dict__), which has significant memory overhead to allow dynamic attribute additions. Declaring __slots__ reserves a fixed-size array-like footprint for a set of specified attributes, optimizing memory footprints at scale.',
+    why: 'Using `__slots__` strips away the dynamic hash-table dictionary of instances, replacing it with a fixed array of pointers. This saves massive memory at scale.'
+  },
+  // ── 7. HOW PYTHON CODE EXECUTES (3) ──
+  {
+    topic: 'How Python Code Executes',
+    q: 'Trace the chronological sequence of stages when a Python file (.py) is executed by CPython.',
+    opts: [
+      'Source (.py) → Machine Code → Linker → Executable',
+      'Source (.py) → Tokenizer (lexical analysis) → Parser (Abstract Syntax Tree) → Compiler (creates bytecode) → CPython VM (interprets bytecode one instruction at a time).',
+      'Source (.py) → Preprocessor → Linker → VM',
+      'The code is directly run on the CPU without any intermediate steps.'
+    ],
+    correct: 1,
+    concept: 'CPython is a bytecode compiler and virtual machine interpreter. Source code is tokenized, parsed into an AST, compiled to platform-neutral bytecode, and then executed line-by-line inside the virtual machine.',
+    why: 'Python is a compilation-interpretation hybrid. Source -> Tokens -> AST -> Bytecode -> VM Execution loop.'
+  },
+  {
+    topic: 'How Python Code Executes',
+    q: 'What is the purpose of the __pycache__ directory and its compiled .pyc files?',
+    opts: [
+      'They are database files that store user-input history.',
+      'They store compiled Python bytecode; on subsequent runs, Python checks file sizes and modification timestamps to skip the tokenizing, parsing, and compiling phases, loading bytecode directly to accelerate startup.',
+      'They are temporary files that are deleted immediately when execution begins.',
+      'They are used to encrypt the source code.'
+    ],
+    correct: 1,
+    concept: 'Compilation to bytecode takes time. CPython caches this bytecode in .pyc files inside the __pycache__ directory. If the source .py file\'s modification time (mtime) and size match the cache, Python loads the bytecode directly, speeding up application startup.',
+    why: 'Caching bytecode (.pyc) avoids parsing the code on every run, dramatically speeding up initialization for heavy, multi-module frameworks.'
+  },
+  {
+    topic: 'How Python Code Executes',
+    q: 'Why is the standard CPython interpreter often slower than the PyPy implementation for CPU-bound code?',
+    opts: [
+      'Because CPython disables multi-threading completely.',
+      'Because CPython is a pure interpreter that evaluates bytecode sequentially in a giant loop, whereas PyPy utilizes a JIT (Just-In-Time) compiler that profiles execution to compile hot code paths directly into native machine code at runtime.',
+      'CPython runs on the hard drive, while PyPy runs in RAM.',
+      'JIT compilation is only used to manage database queries.'
+    ],
+    correct: 1,
+    concept: 'CPython interprets bytecode one instruction at a time in its main evaluation loop. PyPy is an alternative Python VM that integrates a JIT compiler. By analyzing running loops and hot spots, PyPy compiles bytecode directly to native machine code on-the-fly, giving a massive speed boost to CPU-bound algorithms.',
+    why: 'CPython lacks a JIT; it interprets bytecode line-by-line in a massive C loop. PyPy tracks hotspots and compiles them into native binary machine-code at runtime.'
+  },
+  // ── 8. LIST VS TUPLE (3) ──
+  {
+    topic: 'List vs Tuple',
+    q: 'Why do tuples consume less memory and compile faster than equivalent list objects in Python?',
+    opts: [
+      'By default, tuples are stored as binary numbers.',
+      'Because tuples are immutable and have a fixed size, allowing CPython to allocate exact-fit memory and perform compile-time optimizations (like constant folding/pre-allocation). Lists are mutable and must dynamically over-allocate memory to support efficient O(1) appends.',
+      'Tuples bypass the heap and are stored entirely on the stack.',
+      'Tuples are processed on the GPU.'
+    ],
+    correct: 1,
+    concept: 'Lists are dynamic arrays. To make append() run in O(1) amortized time, lists over-allocate internal slots. If you append to a full list, it doubles in size. Tuples are immutable and fixed-size, meaning CPython can allocate the exact space needed with zero padding, reducing memory overhead.',
+    why: 'Lists dynamically over-allocate array slots to support fast appends. Tuples are fixed-size, requiring exact memory allocations and zero buffering.'
+  },
+  {
+    topic: 'List vs Tuple',
+    q: 'An engineer writes the statement: my_data = (10). What is the type of my_data, and how do you define a tuple containing exactly one element?',
+    opts: [
+      'It is a tuple; no modifications are needed.',
+      'It is an integer (int); Python treats parentheses as mathematical grouping. To define a single-element tuple, you must include a trailing comma: my_data = (10,).',
+      'It triggers a compiler error.',
+      'It is a list of one element.'
+    ],
+    correct: 1,
+    concept: 'Parentheses are used for mathematical groupings. Thus, (10) evaluates simply as the integer 10. To create a single-element tuple, the trailing comma is syntactically mandatory: (10,).',
+    why: 'Parentheses alone do not make a tuple; they represent mathematical operators. To declare a single-item tuple, the trailing comma is mandatory.'
+  },
+  {
+    topic: 'List vs Tuple',
+    q: 'What occurs during the Python statement a, b, c = 1, 2, 3, and how is it related to tuples?',
+    opts: [
+      'It creates a list and extracts elements using index pointers.',
+      'It performs tuple packing on the right side (creating an implicit tuple (1, 2, 3)) and tuple unpacking on the left side, assigning the corresponding values to a, b, and c sequentially.',
+      'It compiles the variables into a single dictionary.',
+      'It triggers a runtime type error unless types are declared.'
+    ],
+    correct: 1,
+    concept: 'Multiple assignments in Python leverage implicit tuples. The comma-separated values on the right are packed into a tuple. The left side then unpacks the tuple, distributing references to the corresponding variable names.',
+    why: 'Pythonic multiple assignments are based on implicit tuple packing and unpacking operations, creating clean destructured variables.'
+  },
+  // ── 9. GENERATORS & MEMORY EFFICIENCY (3) ──
+  {
+    topic: 'Generators & Memory Efficiency',
+    q: 'How do generators achieve extreme memory efficiency when processing large datasets, and what does the yield keyword do?',
+    opts: [
+      'By compressing data into binary chunks on disk.',
+      'By utilizing "lazy evaluation" to produce values one at a time on-demand; the yield keyword pauses the function\'s execution, saves its entire local state (variables, instruction pointer), and hands back the value, resuming from that exact spot on the next request.',
+      'By running the loop in parallel threads.',
+      'Generators bypass the heap entirely.'
+    ],
+    correct: 1,
+    concept: 'Traditional functions compile their return values all at once, loading the complete list in memory. Generators use yield to yield elements lazily. Only one item exists in memory at any moment, enabling programs to process infinite streams or gigabyte-scale logs without RAM exhaustion.',
+    why: 'Generators are lazy. yield suspends execution state, returning single items sequentially on-demand. Memory consumption remains O(1) regardless of dataset bounds.'
+  },
+  {
+    topic: 'Generators & Memory Efficiency',
+    q: 'What is the memory allocation difference between x_list = [x**2 for x in range(1000000)] and x_gen = (x**2 for x in range(1000000))?',
+    opts: [
+      'x_list is slower to iterate but uses less memory than x_gen.',
+      'x_list instantly instantiates and populates a 1-million-element list in memory (~8MB); x_gen allocates a tiny generator object (~120 bytes) that computes each square lazily as you loop over it.',
+      'x_gen is converted to a static tuple at compile-time.',
+      'They have identical memory profiles.'
+    ],
+    correct: 1,
+    concept: 'List comprehensions [] are eager, constructing the complete list in memory immediately. Generator expressions () are lazy, returning a lightweight iterator object that only computes values on-the-fly, consuming a tiny, constant memory footprint regardless of bounds.',
+    why: 'List comprehension [] is eager and allocate the full array. Generator expression () is lazy and return an iterator with zero upfront array allocation.'
+  },
+  {
+    topic: 'Generators & Memory Efficiency',
+    q: 'What happens if you attempt to iterate over an exhausted generator a second time?',
+    opts: [
+      'It restarts from the beginning automatically.',
+      'It returns nothing immediately (yields empty) because a generator can only be traversed once; once exhausted, it raises StopIteration internally, and you must instantiate a new generator to traverse the data again.',
+      'It throws a runtime ConcurrentModificationException.',
+      'It runs the loop in reverse order.'
+    ],
+    correct: 1,
+    concept: 'Generators are one-way streams. They do not store their computed values. Once a generator has run to completion, it is exhausted. Subsequent loops over it yield nothing immediately, and calling next() throws StopIteration.',
+    why: 'Generators have no memory cache. Once consumed, they raise StopIteration forever. If you need a second pass, you must create a new generator instance.'
+  },
+  // ── 10. INTERPRETER VS COMPILER IN PYTHON (3) ──
+  {
+    topic: 'Interpreter vs Compiler in Python',
+    q: 'Why is classifying Python as a "pure interpreter" technically incorrect?',
+    opts: [
+      'Because Python is converted to C++ before running.',
+      'Because Python is a hybrid bytecode-compiled and VM-interpreted language; it compiles source code (.py) into intermediate bytecode (.pyc) first, and then interprets that bytecode line-by-line inside the CPython Virtual Machine.',
+      'Because Python does not support comments or variables.',
+      'Because all Python code must be statically linked before execution.'
+    ],
+    correct: 1,
+    concept: 'A pure interpreter parses and executes source lines directly. Python compiled languages translate source code into bytecode first, ensuring syntax correctness. Only then does the VM interpret this intermediate instruction set, which is why Python is a hybrid.',
+    why: 'Python is hybrid. It has a distinct compilation phase (.py -> .pyc bytecode) and an evaluation phase (interpreting bytecode inside the CPython VM).'
+  },
+  {
+    topic: 'Interpreter vs Compiler in Python',
+    q: 'If Python is interpreted line-by-line, why do you get a SyntaxError immediately before any code has actually run, while a NameError only appears when that specific line is reached?',
+    opts: [
+      'Syntax errors are checked by the OS, while name errors are checked by the database.',
+      'Because Python compiles the entire file to bytecode before execution begins, catching all syntactic violations at compile-time; NameErrors are reference lookup failures that can only be resolved during runtime execution.',
+      'Compiler optimizations disable name checks to increase speed.',
+      'Syntax errors are only thrown for global functions.'
+    ],
+    correct: 1,
+    concept: 'The compilation phase (source -> AST -> bytecode) processes the entire file. If there is a syntax error, the compiler catches it and halts before any instructions run. Variable lookups and semantic rules (like NameError or TypeError) are checked dynamically as the interpreter runs individual bytecode frames.',
+    why: 'Syntax checks happen at compile-time over the whole file. Semantic evaluations (like looking up variable names) happen dynamically at runtime.'
+  },
+  {
+    topic: 'Interpreter vs Compiler in Python',
+    q: 'How does the PyPy implementation achieve massive speedups over the standard CPython implementation for CPU-bound programs?',
+    opts: [
+      'By running the entire program in raw C assembly.',
+      'By implementing a JIT (Just-In-Time) compiler that profiles the code at runtime, identifying heavily executed loops and compiling those hot bytecode blocks into native CPU machine instructions on-the-fly.',
+      'By disabling the cyclic garbage collector.',
+      'By moving all local variables to the global namespace.'
+    ],
+    correct: 1,
+    concept: 'PyPy uses tracing JIT compilation. While CPython interprets every instruction, PyPy watches the execution patterns. When it detects a "hot" loop, it compiles those specific pathways to native machine instructions, enabling Python algorithms to execute at near-native speeds.',
+    why: 'PyPy integrates JIT compilation. It compiles hot bytecode pathways to native machine code on the fly, delivering immense speed boosts to CPU-bound code.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Incredible! You have complete mastery over Python Core and CPython interpreter internals. You successfully navigated the GIL, memory allocator pools, circular reference GCs, generator pipelines, and hybrid compile-interpret models. Outstanding!';
+  else if (pct >= 55) para = 'Great job! You have a solid grasp of Python fundamentals with a few minor gaps in low-level memory allocation structures (like pymalloc pools) or custom copy parameters. Review the marked topics below.';
+  else para = 'You should spend more time reinforcing bytecode compilation, mutable vs. immutable scopes, and reference counting before looking into parallel scaling libraries. Focus on core execution steps first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Python Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065c8a87c197f47',t:'MTc4MDU2NDAxMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

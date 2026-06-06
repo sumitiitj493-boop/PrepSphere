@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ Language Core Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../05-Language-Core-CPP.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">C++ CORE</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">C++ Core <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 rigorous C++ compiler and memory-level questions. Master stack layouts, dynamic binding vtables, move semantics, smart pointer controls, and object lifecycles.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">STACK VS HEAP</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Stack vs Heap', 'Polymorphism', 'Compilation', 'VTable',
+  'Copy Depth', 'Copy/Move', 'Smart Ptr', 'Process/Thread',
+  'Mem Issues', 'malloc vs new'
+];
+const Q = [
+  // ── 1. STACK VS HEAP (3) ──
+  {
+    topic: 'Stack vs Heap',
+    q: 'Why is stack memory allocation significantly faster than heap memory allocation at the machine instruction level, and what are the structural features of stack memory?',
+    opts: [
+      'Stack allocation requires scanning free list tables to find the best block.',
+      'Stack allocation is performed by adjusting the stack pointer register (RSP/ESP) in a single CPU instruction (LIFO contiguous memory), and variables are automatically cleaned up when the function frame is popped.',
+      'Stack memory resides on a separate physical RAM chip that has zero latency.',
+      'Stack allocation compiles into global static variables.'
+    ],
+    correct: 1,
+    concept: 'Stack allocation is incredibly fast because it uses a contiguous block of memory managed directly by the CPU\'s stack pointer register (RSP on x86-64). Allocating space is a simple register subtraction/addition. Heap allocation requires searching through free-lists, managing page maps, and handling fragmentation, which is slow and requires locking in multi-threaded programs.',
+    why: 'The interviewer is looking for register-level understanding. Mentioning RSP/ESP and the fact that stack allocation is an O(1) single-instruction pointer adjustment demonstrates deep systems knowledge.'
+  },
+  {
+    topic: 'Stack vs Heap',
+    q: 'Consider the C++ function: int* getValue() { int val = 42; return &val; }. What happens when the caller dereferences the returned pointer, and why?',
+    opts: [
+      'It is perfectly safe and returns 42 because stack memory is persistent.',
+      'It causes undefined behavior because the stack frame of getValue() is popped on return, meaning the pointer is now "dangling" and references a deallocated stack region that can be overwritten by subsequent function calls.',
+      'A compiler error occurs because C++ does not allow returning addresses.',
+      'It triggers an automatic garbage collection cycle to keep the variable alive.'
+    ],
+    correct: 1,
+    concept: 'Variables declared inside a function without dynamic keywords are automatic (on the stack). When a function returns, its stack frame is popped, and its memory is marked as free. Returning a pointer or reference to a local variable leaves you with a "dangling pointer". Accessing it is Undefined Behavior (UB), which can lead to random values or segfaults.',
+    why: 'This is a classic C++ systems error. The compiler pops the stack frame immediately on function exit, making any references to its internal variables completely invalid.'
+  },
+  {
+    topic: 'Stack vs Heap',
+    q: 'In a multi-threaded C++ application, how are the stack and heap partitioned across separate execution threads?',
+    opts: [
+      'All threads share the exact same stack and heap globally.',
+      'Each thread gets its own private, isolated stack (thread-local), but all threads within the process share the same global heap memory.',
+      'Each thread gets its own private stack and private heap, making inter-thread communication impossible.',
+      'Threads have no stacks; they allocate local variables directly on the shared CPU register cache.'
+    ],
+    correct: 1,
+    concept: 'Every thread has its own private execution stack to manage its function call frames, parameters, and local variables. However, all threads of a process share the same global heap address space, which is why sharing heap objects across threads is easy but requires synchronization (like mutexes) to avoid race conditions.',
+    why: 'The interviewer wants to see if you understand thread memory boundaries. Stacks are isolated/thread-local; heap is global/shared.'
+  },
+  // ── 2. POLYMORPHISM (3) ──
+  {
+    topic: 'Polymorphism',
+    q: 'What is the primary difference in execution cost and mechanics between compile-time (static) and runtime (dynamic) polymorphism in C++?',
+    opts: [
+      'Dynamic polymorphism is resolved at compile time, while static polymorphism is resolved at runtime.',
+      'Static polymorphism (overloading, templates) is resolved during compilation with zero runtime overhead; Dynamic polymorphism (virtual functions) is resolved at runtime through pointer indirection via a vtable, making it slightly slower and preventing certain compiler inlining optimizations.',
+      'Static polymorphism uses more heap memory than dynamic polymorphism.',
+      'Dynamic polymorphism compiles into assembly, whereas static polymorphism is interpreted.'
+    ],
+    correct: 1,
+    concept: 'Static polymorphism is resolved at compile time using early binding (e.g. template instantiation, overload resolution), which allows full compiler inlining. Dynamic polymorphism is late-bound, using a runtime vtable lookup which introduces pointer indirection (vptr -> vtable -> function) and usually prevents inlining, adding a tiny execution overhead.',
+    why: 'The core difference is early binding (zero cost, compile-time) vs. late binding (vtable lookup cost, runtime).'
+  },
+  {
+    topic: 'Polymorphism',
+    q: 'How does the Curiously Recurring Template Pattern (CRTP) achieve polymorphic behavior without incurring the runtime overhead of virtual function pointer dereferencing?',
+    opts: [
+      'By converting virtual functions to static functions at runtime.',
+      'By making the derived class inherit from a template base class with the derived class itself as a template parameter (e.g. class Derived : public Base<Derived>), enabling the compiler to resolve polymorphic calls statically during compilation.',
+      'By disabling the compiler\'s link stage to force inline execution of all methods.',
+      'By allocating all derived classes in a contiguous heap buffer.'
+    ],
+    correct: 1,
+    concept: 'CRTP is a static polymorphism technique. The base template class casts its "this" pointer to the template parameter class type: static_cast<Derived*>(this)->implementation(). Because the template parameter is known at compile-time, the compiler binds the call directly, completely avoiding vtable/vptr memory and latency overhead.',
+    why: 'CRTP is highly valued in high-performance contexts (HFT, game engines) as a "zero-cost" alternative to virtual functions, providing class-interface reuse without vtable indirection.'
+  },
+  {
+    topic: 'Polymorphism',
+    q: 'Which of the following correctly describes the signature rules for method overloading and method overriding?',
+    opts: [
+      'Overloading requires matching signatures in parent-child classes; Overriding requires unique signatures in the same class.',
+      'Overloading occurs in the same scope/class and requires different parameter lists (changing only the return type is a compilation error); Overriding occurs in parent-child classes and requires identical signatures and virtual functions in the base class.',
+      'Overloading is resolved using the virtual table at runtime.',
+      'Overriding can only be applied to static class functions.'
+    ],
+    correct: 1,
+    concept: 'Overloading is same-scope, same name, but unique parameter types (signatures). Changing only the return type is an error because the compiler matches calls solely by parameters. Overriding is a runtime polymorphic concept where a child class replaces a parent class virtual function with an identical signature.',
+    why: 'Do not confuse overloading (same class, different params, static binding) with overriding (base/derived classes, same params, dynamic binding).'
+  },
+  // ── 3. COMPILATION (3) ──
+  {
+    topic: 'Compilation',
+    q: 'During the C++ preprocessing stage, what operations are performed on the source code, and what is generated before actual compilation?',
+    opts: [
+      'Machine code is generated directly into a .o object file.',
+      'The preprocessor expands macros (#define), resolves header file inclusions (#include), evaluates conditional compilation directives (#ifdef), and strips comments, outputting an expanded translation unit.',
+      'The linker resolves symbols across multiple .cpp files.',
+      'The code is parsed to generate an Abstract Syntax Tree (AST).'
+    ],
+    correct: 1,
+    concept: 'The preprocessor is a text-manipulation stage that runs before the compiler. It processes all directives starting with "#", copying headers, expanding macros, and stripping comments, producing a single, flat, expanded source stream (translation unit) ready for parsing.',
+    why: 'The preprocessor only performs text substitution; it knows nothing about types, scope, or C++ syntax rules.'
+  },
+  {
+    topic: 'Compilation',
+    q: 'What is the precise role of the "Assembler" stage compared to the "Linker" stage in the C++ build pipeline?',
+    opts: [
+      'The assembler resolves templates, while the linker translates assembly to machine code.',
+      'The assembler translates the assembly code (.s) produced by the compiler into binary machine code object files (.o/.obj); the Linker combines these separate object files and external libraries, resolving symbol references to produce the final executable.',
+      'The assembler parses header files; the linker performs macro expansions.',
+      'The assembler is used only for dynamic linking at runtime.'
+    ],
+    correct: 1,
+    concept: 'The compilation pipeline runs as: Source (.cpp) -> Preprocessor (.i) -> Compiler (.s assembly) -> Assembler (.o/.obj binary object) -> Linker (Executable). The Assembler handles translating instructions to CPU-level machine code, while the Linker takes all independent binary files and joins their cross-references and functions into a single binary.',
+    why: 'The compiler outputs assembly (.s). The assembler translates assembly to binary machine-code object files (.o). The linker resolves symbol references and combines objects into the final executable.'
+  },
+  {
+    topic: 'Compilation',
+    q: 'You get a build error: "undefined reference to Calculator::add(int, int)". What is the root cause of this error, and which build stage threw it?',
+    opts: [
+      'A compiler syntax error caused by forgetting a semicolon at the end of a class definition.',
+      'A Linker error; the compiler successfully compiled the files because the function was declared (header included), but the linker could not find the physical binary definition (the compiled .cpp containing the function was not linked).',
+      'A preprocessor error caused by missing a #define macro.',
+      'A runtime segmentation fault caused by a null pointer.'
+    ],
+    correct: 1,
+    concept: '"Undefined reference" is a Linker error. It means compilation succeeded because headers declared the function (the compiler trusted it would exist), but when the Linker tried to bind all object files together, it could not find any binary object containing the actual compiled definition of that function.',
+    why: 'The compiler only checks declarations. The linker checks definitions. If a declaration is available but the definition is missing from the linking files, the linker throws "undefined reference".'
+  },
+  // ── 4. VTABLE (3) ──
+  {
+    topic: 'VTable',
+    q: 'How does the compiler implement runtime virtual dispatch in memory, and what is the exact per-object and per-class memory overhead?',
+    opts: [
+      'By copying all virtual function source code into each object instance (massive overhead).',
+      'By creating one VTable (array of function pointers) per class with virtual functions, and injecting a hidden pointer (vptr) pointing to this VTable into each object instance, adding sizeof(pointer) (8 bytes on 64-bit systems) to the object\'s size.',
+      'By disabling the stack and forcing all variables onto the heap.',
+      'There is zero memory overhead because virtual functions are completely optimized out at compile-time.'
+    ],
+    correct: 1,
+    concept: 'The compiler creates a static Virtual Table (vtable) once per class containing virtual functions. Each class instance gets a hidden member pointer, `vptr`, which points to this vtable. Calling a virtual function dereferences the vptr to find the vtable and jumps to the function pointer at the correct index.',
+    why: 'VTable is a per-class structure. vptr is a per-object structure. In 64-bit systems, vptr adds 8 bytes to the class instance footprint.'
+  },
+  {
+    topic: 'VTable',
+    q: 'Why must a base class destructor be marked virtual if you intend to delete a derived class object through a base class pointer?',
+    opts: [
+      'Without it, the compiler will refuse to compile the derived class.',
+      'Without a virtual destructor, deleting the object through a base pointer causes undefined behavior—typically, only the base class destructor is invoked, and the derived class\'s destructor is skipped, leading to memory leaks and resource corruption.',
+      'Because virtual destructors automatically disable all heap allocations.',
+      'To speed up the linking phase of compilation.'
+    ],
+    correct: 1,
+    concept: 'If the base destructor is not virtual, the compiler statically binds the delete call to the base class destructor. When deleting a derived object via a base pointer, only the base destructor runs, completely skipping the derived class destructor. Marking the base destructor virtual ensures dynamic dispatch, invoking the derived destructor first.',
+    why: 'Always declare base destructors virtual when using inheritance. Without it, deleting derived objects via base pointers skips derived destructors, causing leaks and corruption.'
+  },
+  {
+    topic: 'VTable',
+    q: 'What is "Object Slicing" in C++, and why does it break runtime virtual polymorphic dispatch?',
+    opts: [
+      'Object slicing is when a compiler splits a large class into multiple threads.',
+      'It occurs when a derived class object is assigned by value to a base class object (e.g. Base b = derivedObj;); the derived portion of the object is chopped off, the vptr is reassigned to the Base vtable, and polymorphism is completely lost.',
+      'A runtime crash caused by dereferencing a void pointer.',
+      'The process of casting a float to an integer.'
+    ],
+    correct: 1,
+    concept: 'Polymorphism requires pointers or references. If you assign a derived object to a base object by value, the compiler copies only the base portion of the derived object into the new base object. The base object\'s vptr points to the Base vtable, slicing away the derived state and behavior.',
+    why: 'Object slicing occurs during by-value assignments. To maintain polymorphism, you must always pass and reference derived objects via pointers (Base*) or references (Base&).'
+  },
+  // ── 5. COPY DEPTH (3) ──
+  {
+    topic: 'Copy Depth',
+    q: 'What is the primary hazard of relying on the compiler\'s default-generated copy constructor in a class that manages raw pointer resources on the heap?',
+    opts: [
+      'The program will fail to compile because raw pointers cannot be copied.',
+      'The default constructor performs a shallow copy, copying pointer addresses directly. Both objects now point to the exact same heap memory, leading to a double-free crash when both destructors try to delete the same address.',
+      'It automatically leaks the heap memory by setting the pointer to NULL.',
+      'The compiler converts the pointers to static references, causing a linker error.'
+    ],
+    correct: 1,
+    concept: 'Compiler-generated copy constructors perform a member-by-member copy (shallow copy). If your class owns heap memory, copying the object creates a second instance with the same pointer value. When either object goes out of scope, its destructor deletes the shared memory, leaving the other with a dangling pointer that crashes on cleanup (double free).',
+    why: 'Shallow copy copies pointers. Deep copy copies data. For raw pointer management, shallow copying is a catastrophic double-free risk.'
+  },
+  {
+    topic: 'Copy Depth',
+    q: 'How should a secure, custom deep-copy copy constructor be structured for a class containing a raw heap pointer member char* name?',
+    opts: [
+      'By copying the address: name = other.name;',
+      'By allocating new memory and copying the actual string data: name = new char[strlen(other.name) + 1]; strcpy(name, other.name);',
+      'By calling std::move() on the pointer.',
+      'By using free(name) before copying.'
+    ],
+    correct: 1,
+    concept: 'To deep copy resources, you must manually allocate independent memory for the target object matching the size of the source object\'s payload, and then copy the actual raw contents over to make the objects completely independent.',
+    why: 'Deep copy requires: (1) Allocate new heap memory, (2) Copy the underlying data from source to target. This isolates the instances completely.'
+  },
+  {
+    topic: 'Copy Depth',
+    q: 'What does the C++ "Rule of Three" dictate, and why?',
+    opts: [
+      'A class should have at most three member variables, three constructors, and three methods.',
+      'If a class requires a custom Destructor, Copy Constructor, or Copy Assignment Operator, it almost certainly requires all three to manage dynamic resource lifecycle and copying safely.',
+      'The compilation process must be completed in exactly three steps.',
+      'No class can inherit from more than three parents.'
+    ],
+    correct: 1,
+    concept: 'The Rule of Three states that if a class manages dynamic resources and needs a custom destructor to free them, it also needs a custom copy constructor and copy assignment operator. Without them, compiler-generated defaults will perform shallow copies, leading to pointer aliasing and double-free crashes.',
+    why: 'The Rule of Three is a resource-management guideline. Destructor + Copy Constructor + Copy Assignment Operator are codependent for resource-managing classes.'
+  },
+  // ── 6. COPY/MOVE (3) ──
+  {
+    topic: 'Copy/Move',
+    q: 'How does a Move Constructor (C++11) improve performance compared to a Copy Constructor when dealing with temporary objects?',
+    opts: [
+      'It executes copy operations in parallel using threads.',
+      'Instead of allocating new memory and duplicating massive payloads, it "steals" the resource pointers directly from the source (temporary/rvalue) object, reassigns them to the target, and sets the source pointers to nullptr to prevent deletion on destruction.',
+      'It converts heap memory allocations into stack allocations.',
+      'It bypasses compiling the class methods.'
+    ],
+    correct: 1,
+    concept: 'Move constructors accept rvalue references (&&). Since the source object is a temporary scheduled for destruction, the target steals its resource pointers directly (shallow pointer swap) and nullifies the source\'s pointers, avoiding slow heap allocations and deep copies.',
+    why: 'Moving is an O(1) pointer swap. Copying is an O(N) allocation and memory copy. Moving is highly efficient for temporary objects.'
+  },
+  {
+    topic: 'Copy/Move',
+    q: 'What is the precise role of std::move(), and what does it actually execute under the hood?',
+    opts: [
+      'It physically copies the memory blocks to a new register address.',
+      'It does not move anything at all; it is simply a static cast that converts an lvalue expression into an rvalue reference, telling the compiler that the object can be safely "moved" (stolen) by a move constructor or assignment.',
+      'It triggers an immediate thread switch in the CPU.',
+      'It frees the target pointer and returns a void pointer.'
+    ],
+    correct: 1,
+    concept: '`std::move()` does not move data, generate code, or allocate memory. It is purely a compile-time cast (`static_cast<T&&>(var)`) that converts an lvalue into an rvalue reference, allowing the compiler to select move constructor/assignment over copy constructor/assignment.',
+    why: 'std::move() is just a compile-time type-cast. The actual resource-stealing logic resides inside the move constructor or move assignment operator.'
+  },
+  {
+    topic: 'Copy/Move',
+    q: 'Under what circumstances does the compiler perform Return Value Optimization (RVO), and what is the performance impact?',
+    opts: [
+      'When a function returns by pointer, RVO converts it to a reference.',
+      'When a function returns an object by value, the compiler constructs the return value directly in the storage area allocated for the caller\'s target variable, completely bypassing both the copy and move constructors.',
+      'When the program is compiled with dynamic linking.',
+      'RVO automatically compresses the executable.'
+    ],
+    correct: 1,
+    concept: 'RVO is a compiler optimization technique. When returning a local object by value, the compiler constructs the object directly inside the caller\'s destination frame, eliding (skipping) both the copy and move constructors entirely. Under C++17, RVO is mandatory in certain scenarios.',
+    why: 'RVO (copy elision) is faster than even a move constructor. The compiler constructs the returned object directly inside the destination variable, executing zero copies and zero moves.'
+  },
+  // ── 7. SMART PTR (3) ──
+  {
+    topic: 'Smart Ptr',
+    q: 'Match these three C++ smart pointers to their ownership mechanics: (1) Single owner, zero overhead; (2) Shared owner, ref-counted; (3) Observer, non-owning.',
+    opts: [
+      '(1) shared_ptr, (2) unique_ptr, (3) weak_ptr',
+      '(1) unique_ptr, (2) shared_ptr, (3) weak_ptr',
+      '(1) weak_ptr, (2) shared_ptr, (3) unique_ptr',
+      '(1) unique_ptr, (2) weak_ptr, (3) shared_ptr'
+    ],
+    correct: 1,
+    concept: '`std::unique_ptr` manages a resource exclusively (non-copyable, only movable). `std::shared_ptr` shares ownership, using atomic reference counting to destroy the resource when the count hits zero. `std::weak_ptr` acts as a non-owning observer of a `shared_ptr`, preventing circular dependency memory leaks.',
+    why: 'Unique = Sole owner (no runtime cost). Shared = Co-owners (ref-counted). Weak = Observer (breaks cycles, lock to use).'
+  },
+  {
+    topic: 'Smart Ptr',
+    q: 'Class A holds a std::shared_ptr<B>, and Class B holds a std::shared_ptr<A>. What critical issue does this circular dependency cause, and how do you resolve it?',
+    opts: [
+      'It causes a compilation error because circular pointers are illegal.',
+      'It causes a memory leak because the reference count of both objects can never drop to 0, preventing their destructors from ever running. It is resolved by changing one of the shared pointers to a std::weak_ptr.',
+      'It causes a stack overflow instantly during allocation.',
+      'It is resolved by using malloc inside Class A.'
+    ],
+    correct: 1,
+    concept: 'If two objects hold `shared_ptr` references to each other, they form a reference cycle. Their reference counts can never reach zero, meaning they will never be destroyed, creating a permanent memory leak. Breaking the cycle with `weak_ptr` avoids reference count increments.',
+    why: 'Circular shared references keep reference counts at >= 1 forever. Breaking the loop using std::weak_ptr resolves the leak since weak references do not increment the count.'
+  },
+  {
+    topic: 'Smart Ptr',
+    q: 'Why is using std::make_shared<T>() highly preferred over writing std::shared_ptr<T>(new T())?',
+    opts: [
+      'make_shared is compatible with raw C code, whereas new is not.',
+      'It performs a single heap allocation for both the object itself and the internal shared_ptr control block (instead of two separate allocations), improving memory cache locality and guaranteeing exception safety.',
+      'It automatically disables all multi-threading locks.',
+      'It is only used to allocate static arrays.'
+    ],
+    correct: 1,
+    concept: 'Using `new` inside `shared_ptr` constructor triggers two allocations: one for the object and one for the control block. `std::make_shared` allocates a single contiguous block for both. This reduces allocation overhead, improves CPU cache locality, and is exception-safe.',
+    why: 'make_shared is faster and safer. It allocates the object and control block in a single contiguous memory block, preventing leaks if exceptions occur before construction completes.'
+  },
+  // ── 8. PROCESS/THREAD (3) ──
+  {
+    topic: 'Process/Thread',
+    q: 'Why are processes considered "crash-isolated" compared to threads, and what is the resource allocation difference?',
+    opts: [
+      'Processes run on different physical CPU chips, whereas threads run on the same core.',
+      'The OS allocates unique virtual address spaces, file descriptors, and security tokens to each Process, isolating them; Threads share the same process memory, meaning any fatal thread crash (e.g. memory corruption) compromises the shared heap, crashing the entire process.',
+      'Processes have no access to the heap, while threads share the heap exclusively.',
+      'Threads are always compiled, while processes are compiled at runtime.'
+    ],
+    correct: 1,
+    concept: 'Processes are independent execution units with fully isolated virtual memory spaces. A crash in one process cannot affect another. Threads within the same process share the same memory space (heap, global variables). Consequently, a fatal crash in one thread (like a null dereference) corrupts the shared memory and kills the entire process.',
+    why: 'Processes are protected by page table isolation. Threads share the same address space, meaning a crash in one thread kills all roommates in that process.'
+  },
+  {
+    topic: 'Process/Thread',
+    q: 'Why is communication between threads significantly faster than communication between processes, and what is the trade-off?',
+    opts: [
+      'Threads communicate via high-speed hardware radio chips.',
+      'Threads share the same heap memory, enabling instantaneous read/write communication of shared variables (no OS context overhead), but this requires careful synchronization (mutexes, locks) to prevent race conditions. Processes must use slower OS-level IPC (pipes, sockets, shared memory).',
+      'Process communication does not require any CPU instructions.',
+      'There is no trade-off; thread communication has zero concurrency risks.'
+    ],
+    correct: 1,
+    concept: 'Threads within a process share the same address space. They can share data instantly simply by reading and writing shared variables, avoiding OS context-switching. However, this ease of sharing introduces critical synchronization challenges like race conditions, requiring locks (mutexes) to secure access.',
+    why: 'Threads share heap space, enabling fast memory-sharing. The trade-off is the extreme complexity of protecting critical sections using synchronization tools.'
+  },
+  {
+    topic: 'Process/Thread',
+    q: 'In a C++ program, what occurs if you declare a massive local array inside a function (e.g. double data[2000000];) compared to allocating it dynamically on the heap?',
+    opts: [
+      'The local array is automatically moved to the heap by the compiler.',
+      'It causes a Stack Overflow crash at runtime because the array exceeds the thread\'s limited stack size (typically 1-8 MB), whereas allocating it on the heap (new or unique_ptr) can scale up to the physical memory limits of virtual storage.',
+      'It is slower to read local array values than heap values.',
+      'The local array triggers a compilation error on modern compilers.'
+    ],
+    correct: 1,
+    concept: 'Stack space is fast but highly limited (typically 1MB to 8MB per thread). Declaring a large object or array locally on the stack will exhaust this space, triggering a Stack Overflow (SIGSEGV). Large allocations must always be handled dynamically on the heap.',
+    why: 'The stack has a rigid, tiny limit. Megabyte-scale arrays must never be allocated as local automatic variables; always allocate them dynamically on the heap.'
+  },
+  // ── 9. MEM ISSUES (3) ──
+  {
+    topic: 'Mem Issues',
+    q: 'Why are memory leaks considered relatively harmless in short-lived CLI utilities, but catastrophic in long-running backend server programs?',
+    opts: [
+      'Backend servers have much smaller memory allocations than CLI tools.',
+      'In short-lived tools, the OS immediately reclaims all allocated heap memory when the process terminates; in long-running servers, memory leaks accumulate continuously over weeks, gradually exhausting physical RAM and eventually triggering the OS OOM (Out Of Memory) killer.',
+      'CLI tools automatically compress memory on exit.',
+      'Backend servers disable swap space on disk.'
+    ],
+    correct: 1,
+    concept: 'When a process terminates, the OS destroys its page directory and reclaims its entire physical memory footprint. For CLI tools that run for seconds, minor leaks are recovered quickly. In servers running 24/7, leaks compound over time, slowly eating RAM until the machine runs out of memory, triggering OOM crashes.',
+    why: 'OS reclaims all memory when a process terminates. But for servers running 24/7, even a minor leak will slowly compound, leading to physical memory exhaustion.'
+  },
+  {
+    topic: 'Mem Issues',
+    q: 'Which of the following operations is guaranteed to trigger a hardware trap resulting in a Segmentation Fault (SIGSEGV) in C++?',
+    opts: [
+      'Dividing an integer by zero.',
+      'Dereferencing a NULL pointer, accessing memory that has already been deleted (dangling pointer), or writing beyond array bounds into protected OS memory.',
+      'Creating a loop that runs more than 1,000 times.',
+      'Failing to declare a virtual destructor in a base class.'
+    ],
+    correct: 1,
+    concept: 'A Segmentation Fault (SIGSEGV) is triggered by the MMU hardware when a program attempts to access a virtual memory address that is not mapped in its page tables, or accesses memory with invalid permissions (e.g. writing to a read-only code page). Dereferencing NULL (0x0) or accessing freed memory (dangling pointers) are classic segfault causes.',
+    why: 'SIGSEGV is a hardware memory violation. Dereferencing invalid, protected, or null pointers alerts the MMU, forcing the OS to terminate the program.'
+  },
+  {
+    topic: 'Mem Issues',
+    q: 'How do Valgrind and AddressSanitizer (ASan) help developers locate memory leaks and segmentation faults?',
+    opts: [
+      'By rewriting the code to run in Java automatically.',
+      'Valgrind runs the binary inside a virtual CPU to track all allocations and check for leaks at runtime; AddressSanitizer compiles lightweight instrumentations directly into the binary to catch out-of-bound errors and use-after-free bugs with minimal performance overhead.',
+      'They compile the code directly onto the GPU.',
+      'They are only used to check syntax errors before compiling.'
+    ],
+    correct: 1,
+    concept: 'Valgrind uses dynamic binary instrumentation, simulating a CPU to trace every memory access and identify leaks (slow, but deep). AddressSanitizer (ASan) is a compiler-based tool that inserts redzones around variables, detecting out-of-bounds access and use-after-free bugs with very low overhead (only 1.5-2x slowdown).',
+    why: 'Valgrind is an instruction simulator (slow, no compile needed). ASan is compile-time instrumentation (fast, excellent for testing).'
+  },
+  // ── 10. MALLOC VS NEW (3) ──
+  {
+    topic: 'malloc vs new',
+    q: 'What is the primary difference between using malloc/free and new/delete when instantiating C++ objects on the heap?',
+    opts: [
+      'malloc is faster because it does not allocate memory on the heap.',
+      'malloc only allocates raw byte storage without executing object constructors, and free deallocates storage without executing destructors; new allocates memory AND invokes constructors, while delete invokes destructors AND frees memory.',
+      'new returns a void pointer that requires explicit casting.',
+      'There is no difference; they are synonymous operators in C++.'
+    ],
+    correct: 1,
+    concept: '`malloc`/`free` are legacy C functions that only allocate and release raw bytes. They do not know about objects, constructors, or destructors. `new`/`delete` are C++ operators that automatically handle both memory allocation and object construction/destruction lifecycle loops.',
+    why: 'Never use malloc/free for C++ classes. malloc only allocates bytes, completely skipping constructors, which leaves class members (like std::string) as uninitialized garbage.'
+  },
+  {
+    topic: 'malloc vs new',
+    q: 'How do malloc and new signal to the application that the system has run out of heap memory?',
+    opts: [
+      'Both return NULL.',
+      'malloc returns a null pointer (NULL/nullptr); new throws a std::bad_alloc exception (unless the std::nothrow variant is explicitly used, which returns nullptr).',
+      'Both crash the program immediately with no way to handle the error.',
+      'new automatically reboots the computer.'
+    ],
+    correct: 1,
+    concept: '`malloc` returns `NULL` on failure, requiring manual checks. Standard C++ `new` never returns `nullptr` on failure; instead, it throws a `std::bad_alloc` exception, which must be handled with a try-catch block. The exception is `new(std::nothrow)`, which mimics `malloc` by returning `nullptr`.',
+    why: 'malloc returns NULL. new throws std::bad_alloc. Checking "if (ptr == nullptr)" after standard new is useless because new throws on failure.'
+  },
+  {
+    topic: 'malloc vs new',
+    q: 'What critical issue occurs if you allocate an array using new[] but release it using standard delete instead of delete[]?',
+    opts: [
+      'Nothing; the compiler automatically corrects the operator at runtime.',
+      'It triggers undefined behavior—typically, only the destructor of the first object in the array is executed, while the destructors of the remaining objects are skipped, leading to memory leaks and resource corruption.',
+      'The compiler converts the array to a static reference.',
+      'It causes a compilation error immediately.'
+    ],
+    correct: 1,
+    concept: 'When you allocate an array using `new[]`, the compiler stores the array size in a hidden cookie just before the allocated memory. `delete[]` reads this size cookie to invoke destructors on all elements. Standard `delete` expects a single object and misses the other destructors, causing undefined behavior.',
+    why: 'Pair new[] with delete[]. Standard delete on an array only invokes the first destructor, leaving the rest un-destructed, resulting in undefined behavior and leaks.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Excellent! You have shown a deep, native-level understanding of C++ Core. You successfully navigated complex stack/heap memory models, compilation stages, vtables, move semantics, and allocator controls. You are ready to ace any C++ loop!';
+  else if (pct >= 55) para = 'Solid effort! You have a good handle on C++ basics, but there are a few gaps regarding modern move constructors, vtable layouts, or memory leak exceptions. Study the flagged topics below.';
+  else para = 'You should spend more time reinforcing compiler phases, the Rule of Three/Five, and memory management before diving into complex applications. Focus on pointers and constructor lifecycles first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'C++ Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065916e1d732d42',t:'MTc4MDU2MTc0OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

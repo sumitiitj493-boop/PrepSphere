@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OS Interview Mastery Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../04-Operating-System.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">OS</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">OS <span>Interview</span> Mastery</div>
+    <div class="intro-sub">30 engineering-level operating system questions covering scheduling mechanics, multi-core synchronization, virtual memory translations, and hardware interfaces.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">PROCESS VS THREAD</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Process vs Thread', 'Context Switching', 'Multithreading', 'Scheduling Algorithms',
+  'Deadlock', 'Starvation', 'Race Condition', 'Mutex',
+  'Semaphore', 'Paging', 'Segmentation', 'Virtual Memory',
+  'Heap vs Stack', 'Memory Allocation', 'Garbage Collection'
+];
+const Q = [
+  // ── 1. PROCESS VS THREAD (2) ──
+  {
+    topic: 'Process vs Thread',
+    q: 'If a multi-threaded process running on a modern operating system encounters a Segmentation Fault in one of its worker threads, what is the immediate consequence for the other threads in that process, and why?',
+    opts: [
+      'Only the failing thread is terminated; other threads continue running normally because threads are isolated by default.',
+      'The entire process terminates, killing all other threads, because they share the same address space, security context, and file descriptor mappings.',
+      'The OS automatically clones the failing thread to restart it from its last registered instruction state.',
+      'Other threads pause and wait for a manual garbage collection cycle to clean up the crashed thread\'s stack.'
+    ],
+    correct: 1,
+    concept: 'Threads of the same process share the same address space (heap, code, static data) and system resources. Since there is no memory isolation between them, a fatal instruction violation (like a Segmentation Fault) in one thread corrupts or compromises the shared state, forcing the OS to terminate the entire process.',
+    why: 'The interviewer is testing your understanding of shared fate. Threads share memory, files, and state. If one thread crashes fatally, the entire process is terminated. Only processes offer crash-safety isolation.'
+  },
+  {
+    topic: 'Process vs Thread',
+    q: 'How does the Linux kernel internally represent processes and threads, and why is thread context switching faster than process context switching?',
+    opts: [
+      'Linux uses distinct PCB structures for processes and TCB structures for threads, preventing any architectural overlap.',
+      'Linux represents both as "tasks" using the same task_struct; thread switching is faster because they share memory mappings, removing the need to switch page directory pointers or flush the Translation Lookaside Buffer (TLB).',
+      'Linux schedules threads entirely in user-space, avoiding kernel-space switches.',
+      'Linux compiles threads into physical hardware instructions before executing a switch.'
+    ],
+    correct: 1,
+    concept: 'In Linux, processes and threads are both represented internally as Lightweight Processes (LWPs) using the same `task_struct`. When switching threads within the same process, the virtual memory mappings remain identical, avoiding the expensive overhead of switching page tables (CR3 register) and flushing the TLB cache.',
+    why: 'What the interviewer wants to hear is task_struct and the TLB flush avoidance. Threads share page tables, so thread switching is highly efficient, whereas process switching forces a cold TLB cache.'
+  },
+  // ── 2. CONTEXT SWITCHING (2) ──
+  {
+    topic: 'Context Switching',
+    q: 'While saving and restoring CPU registers takes a fraction of a microsecond, what is the primary hidden cost of a process context switch that causes a much larger performance degradation?',
+    opts: [
+      'The time spent encrypting the Process Control Block (PCB).',
+      'Cache pollution (cache misses), where the CPU caches (L1/L2/L3) and Translation Lookaside Buffer (TLB) are filled with the previous process\'s working data, forcing the new process to fetch data from slow main memory.',
+      'The mechanical latency of seeking to the process\'s disk sectors on the drive.',
+      'The overhead of re-verifying the binary\'s SSL signatures.'
+    ],
+    correct: 1,
+    concept: 'The true performance bottleneck of a context switch is Cache Pollution. When a new process is scheduled, the CPU\'s hardware caches contain the previous process\'s instructions and data. The new process experiences a surge of cache and TLB misses as it repopulates the caches with its own working set from RAM.',
+    why: 'Don\'t fall into the trap of saying register swapping is slow. The real killer is cache pollution and TLB misses. The new process runs on "cold" caches.'
+  },
+  {
+    topic: 'Context Switching',
+    q: 'What differentiates a Voluntary context switch from an Involuntary context switch in operating system scheduling telemetry?',
+    opts: [
+      'Voluntary switches are triggered by user click events; Involuntary are caused by power variations.',
+      'Voluntary switches occur when a process yields the CPU because it must block (e.g. waiting for I/O, locks, or sleeping); Involuntary switches occur when the scheduler forcefully preempts a task (e.g. time slice expiration or high-priority interrupts).',
+      'Voluntary switches are managed by user libraries; Involuntary are managed by database drivers.',
+      'Voluntary switches bypass the Process Control Block (PCB) register-saving phase.'
+    ],
+    correct: 1,
+    concept: 'Voluntary switches occur when code calls blocking operations (e.g., read disk, wait on mutex, or sleep), relinquishing the CPU. Involuntary switches occur when a running process is preempted by the kernel scheduler, either because its time quantum (time slice) expired or a higher-priority task became runnable.',
+    why: 'The interviewer wants to see if you understand scheduling triggers. Voluntary is self-blocking (I/O, locks); Involuntary is preemption (timer slice run out, priority interrupts).'
+  },
+  // ── 3. MULTITHREADING (2) ──
+  {
+    topic: 'Multithreading',
+    q: 'A system is running a multithreaded application on a single-core CPU using time-slicing. How should you classify the execution of these threads?',
+    opts: [
+      'They are executing in Parallel but not Concurrently.',
+      'They are executing Concurrently (dealing with multiple tasks over interleaved time periods) but not in Parallel (which requires multiple physical CPU cores executing instructions simultaneously).',
+      'They are neither Concurrent nor Parallel because single-core CPUs only support one thread per session.',
+      'They are executing both in Parallel and Concurrently.'
+    ],
+    correct: 1,
+    concept: 'Concurrency is about structure (interleaving execution of multiple tasks to make progress over time). Parallelism is about physical execution (doing multiple things at the exact same physical instant). A single-core CPU can achieve concurrency via time-slicing, but never physical parallelism.',
+    why: 'The interviewer is testing your fundamental understanding of Concurrency vs Parallelism. Concurrency is about design/structure; Parallelism is about hardware execution.'
+  },
+  {
+    topic: 'Multithreading',
+    q: 'According to Amdahl\'s Law, if 20% of an application\'s execution is strictly sequential (cannot be parallelized), what is the maximum theoretical speedup of this application even if you run it on an infinite number of CPU cores?',
+    opts: [
+      'An infinite speedup, since core count scales exponentially.',
+      'A maximum speedup of 5x.',
+      'A maximum speedup of 1.25x.',
+      'There is no speedup because the sequential code disables all other cores.'
+    ],
+    correct: 1,
+    concept: 'Amdahl\'s Law states that Speedup = 1 / ((1 - P) + (P / S)), where P is the parallelizable fraction and S is the speedup factor. As S (number of cores) approaches infinity, the term P/S approaches 0. The max speedup is bounded by 1 / (1 - P). If 20% is sequential (1 - P = 0.2), the maximum speedup is 1 / 0.2 = 5x.',
+    why: 'Amdahl\'s Law shows that sequential code segments form a rigid bottleneck. If 20% of your code must run in sequence, you can never speed up the process by more than 5x, regardless of core count.'
+  },
+  // ── 4. SCHEDULING ALGORITHMS (2) ──
+  {
+    topic: 'Scheduling Algorithms',
+    q: 'Which CPU scheduling algorithms are susceptible to the "Convoy Effect" and "Starvation" respectively?',
+    opts: [
+      'Round Robin causes Convoy Effect; First-Come, First-Served causes Starvation.',
+      'First-Come, First-Served (FCFS) causes the Convoy Effect (short jobs stuck behind a massive CPU-bound job); Shortest Job First (SJF) and Priority scheduling cause Starvation (long or low-priority processes are neglected indefinitely).',
+      'Multi-Level Feedback Queue causes both; Round Robin is immune to both but consumes too much memory.',
+      'Priority scheduling causes Convoy Effect; FCFS causes Starvation.'
+    ],
+    correct: 1,
+    concept: 'The Convoy Effect occurs in FCFS when a long, non-preemptive CPU-bound process blocks several short, interactive processes behind it. Starvation occurs in SJF or Priority scheduling because short or high-priority tasks constantly arrive, preempting and indefinitely delaying longer or lower-priority tasks.',
+    why: 'Mapping scheduling flaws to their algorithms is essential. FCFS = Convoy Effect; SJF/Priority = Starvation. Round Robin is inherently starvation-free.'
+  },
+  {
+    topic: 'Scheduling Algorithms',
+    q: 'How does a Multi-Level Feedback Queue (MLFQ) scheduler adaptively determine a process\'s priority without having advance knowledge of its CPU burst behavior?',
+    opts: [
+      'By inspecting the executable file extensions and headers.',
+      'By starting all new tasks in the highest-priority queue with a short time quantum; if a task uses its entire quantum without blocking, it is demoted to a lower-priority queue with a larger quantum. If it blocks for I/O, it remains in a high-priority queue.',
+      'By using random priority numbers that rotate every 10 milliseconds.',
+      'By forcing the user to declare the thread type in the terminal commands.'
+    ],
+    correct: 1,
+    concept: 'MLFQ dynamically learns process behavior. New processes start at the top queue (high priority, short time slice). If a task is CPU-bound and exhausts its slice, the scheduler demotes it to a lower queue with a larger slice. Interactive, I/O-bound tasks execute brief bursts and remain in high-priority queues, preserving system responsiveness.',
+    why: 'MLFQ is the standard model in modern operating systems. It penalizes CPU-heavy processes by lowering their priority while rewarding interactive, short-burst tasks.'
+  },
+  // ── 5. DEADLOCK (2) ──
+  {
+    topic: 'Deadlock',
+    q: 'Which of the following describes a deadlock prevention strategy that specifically targets the "Circular Wait" condition of the four Coffman conditions?',
+    opts: [
+      'Allowing the OS to forcefully preempt resources held by a waiting process.',
+      'Imposing a strict global ordering on all resource acquisitions (e.g., locks must always be acquired in ascending order of resource IDs), making cycle formation mathematically impossible.',
+      'Disabling mutual exclusion so all threads can access files simultaneously.',
+      'Requiring processes to declare and request all needed resources at program startup.'
+    ],
+    correct: 1,
+    concept: 'Circular Wait is prevented by ensuring that resources are always acquired in a linear, predictable order. If all threads agree to lock resource Ra before Rb, they can never block each other in a loop.',
+    why: 'To prevent deadlock, you must break at least one of the 4 Coffman conditions. Establishing a strict, global lock ordering is the most effective way to eliminate Circular Wait.'
+  },
+  {
+    topic: 'Deadlock',
+    q: 'Why do relational database engines actively detect and resolve deadlocks (e.g., by rolling back a transaction), while general-purpose Operating Systems typically ignore them (the Ostrich Algorithm)?',
+    opts: [
+      'Operating systems do not support thread synchronization tools like mutexes or semaphores.',
+      'Database transactions are designed to be rollback-safe via write-ahead and undo logs; arbitrary OS processes have side effects (e.g., network writes, file changes) that make arbitrary termination and rollback extremely destructive or impossible.',
+      'Database servers have much faster physical CPUs than general OS host machines.',
+      'The SQL standard forbids the Ostrich Algorithm.'
+    ],
+    correct: 1,
+    concept: 'Relational databases are built with ACID transactional engines, allowing them to abort a transaction, rollback its state, and retry safely. General-purpose operating systems cannot easily rollback arbitrary software processes that have written to standard output, sockets, or physical drives, making OS-level automated rollback dangerous.',
+    why: 'The interviewer is looking for this distinction. Database transactions are designed to be rolled back safely. Arbitrary OS processes are not, making OS deadlock recovery via automated termination highly risky.'
+  },
+  // ── 6. STARVATION (2) ──
+  {
+    topic: 'Starvation',
+    q: 'What is the difference between a process experiencing Starvation and a process in a state of Deadlock?',
+    opts: [
+      'Deadlock affects CPU-bound processes; Starvation affects memory-bound processes.',
+      'In Deadlock, processes are actively blocked waiting for resources held by one another, and none can proceed. In Starvation, the process is perfectly READY and runnable but is unfairly ignored by the scheduler in favor of other tasks.',
+      'Starvation is resolved by restarting the system; Deadlock resolves itself automatically after 30 seconds.',
+      'They are identical terms, but Starvation is used in Windows and Deadlock is used in Linux.'
+    ],
+    correct: 1,
+    concept: 'Deadlocked processes are in a blocked state and cannot run even if the CPU is completely idle. Starved processes are ready and waiting to execute in the scheduler\'s queue, but are constantly bypassed because of scheduling rules.',
+    why: 'Deadlock = stuck/blocked in a dependency loop. Starvation = ready to run, but perpetually ignored due to scheduling unfairness.'
+  },
+  {
+    topic: 'Starvation',
+    q: 'How does the "Aging" technique solve starvation in Priority-based scheduling systems?',
+    opts: [
+      'By terminating processes that have been running for more than 5 minutes.',
+      'By gradually increasing the priority of processes that wait in the ready queue for long durations, ensuring they eventually gain a high enough priority to preempt other tasks and execute.',
+      'By moving old processes to the swap space on disk.',
+      'By compiling the ready queue into a binary search tree.'
+    ],
+    correct: 1,
+    concept: 'Aging is a dynamic scheduling technique. By periodically incrementing the priority of waiting processes, the kernel guarantees that even the lowest-priority process will eventually accumulate enough priority to reach the head of the execution queue.',
+    why: 'Aging guarantees bounded waiting time. It is the classic solution to starvation in non-fair scheduling designs.'
+  },
+  // ── 7. RACE CONDITION (2) ──
+  {
+    topic: 'Race Condition',
+    q: 'Why is a simple line of code like counter++ unsafe when executed by multiple concurrent threads without synchronization?',
+    opts: [
+      'Because the ++ operator is not supported by standard multi-core CPU architectures.',
+      'Because counter++ is not atomic; it compiles to three separate CPU instructions (Read-Modify-Write). If threads interleave between these steps, they can read stale values and overwrite each other\'s increments, causing data loss.',
+      'Because the compiler converts all addition operations to float values.',
+      'Because it causes the stack to overflow instantly.'
+    ],
+    correct: 1,
+    concept: 'At the assembly level, `counter++` is executed as: (1) load value from memory to register, (2) increment register, (3) store register value back to memory. If Thread A loads "50" and is preempted, and Thread B loads "50", both will write back "51", missing one of the increments.',
+    why: 'This is the classic race condition illustration. The interviewer wants to hear that a single high-level line of code translates to multiple non-atomic assembly instructions.'
+  },
+  {
+    topic: 'Race Condition',
+    q: 'What is a "Time-of-Check to Time-of-Use" (TOCTOU) race condition in systems programming?',
+    opts: [
+      'A bug caused by system clocks running at different speeds on multiple CPU cores.',
+      'A security vulnerability where a program checks a state (e.g. file access permissions) and then uses that resource, but an attacker modifies the resource in the brief interval between the check and the use, bypassing the security rules.',
+      'An error caused by using the wrong time zone configuration in the OS.',
+      'A race condition that only occurs when using the atomic library.'
+    ],
+    correct: 1,
+    concept: 'TOCTOU is a class of race conditions. A check is performed (`access("/etc/file", W_OK)`), verifying permissions. Before the file is actually opened (`open("/etc/file")`), an attacker swaps the file with a symlink to a sensitive system file, tricking the privileged program into writing unauthorized data.',
+    why: 'TOCTOU is a highly valued security-oriented race condition topic. It shows you understand the chronological gap between condition checks and actual resource executions.'
+  },
+  // ── 8. MUTEX (2) ──
+  {
+    topic: 'Mutex',
+    q: 'What is the defining mechanical property of a Mutex (Mutual Exclusion) that distinguishes it from a Binary Semaphore?',
+    opts: [
+      'Mutexes can only be implemented in hardware.',
+      'Ownership: a Mutex has a strict owner concept—only the exact thread that acquired (locked) the mutex is allowed to release (unlock) it. A binary semaphore has no owner; any thread can signal it to release waiters.',
+      'Mutexes allow up to five concurrent locks, while semaphores allow only one.',
+      'Mutexes are non-blocking, while semaphores always put threads to sleep.'
+    ],
+    correct: 1,
+    concept: 'Mutexes are locking mechanisms designed to protect critical sections, enforcing ownership. If Thread A holds a mutex, Thread B cannot unlock it. Semaphores are signaling tools; they track counts, and any thread can call post() / signal() to increment the semaphore and wake up a waiter.',
+    why: 'This is one of the most common OS questions. Mutex = Ownership (only locker can unlock); Binary Semaphore = Signaling (any thread can trigger it).'
+  },
+  {
+    topic: 'Mutex',
+    q: 'Under what conditions should a systems architect choose a Spinlock over a Mutex for thread synchronization?',
+    opts: [
+      'When threads need to sleep for long periods to conserve battery.',
+      'When the critical section is extremely short and the thread is expected to acquire the lock quickly, avoiding the expensive overhead of context-switching the thread to sleep and waking it up.',
+      'When running code on a single-core CPU.',
+      'When the critical section involves heavy network disk I/O.'
+    ],
+    correct: 1,
+    concept: 'Spinlocks use busy-waiting (looping in CPU instructions) to wait for a lock. This avoids the latency of putting a thread to sleep (which requires a context switch). However, spinlocks waste CPU cycles, so they are only appropriate for ultra-short waits in multi-core environments (and are banned on single-core systems where busy-waiting prevents the lock holder from running).',
+    why: 'Spinlocks keep the CPU core actively spinning. This is highly efficient for extremely brief holds (like kernel-space table changes) because it avoids the microsecond latency of thread suspension/scheduler loops.'
+  },
+  // ── 9. SEMAPHORE (2) ──
+  {
+    topic: 'Semaphore',
+    q: 'A counting semaphore is initialized with a value of 3. Five threads consecutively execute wait() (P/down) on this semaphore. What happens to the fourth and fifth threads?',
+    opts: [
+      'They fail with a compilation error.',
+      'They are put to sleep (blocked) in the semaphore\'s wait queue because the counter has reached 0, and they will remain blocked until other threads call signal() (V/up) to increment the counter.',
+      'They bypass the check because semaphores are non-blocking.',
+      'The semaphore value automatically increases to accommodate them.'
+    ],
+    correct: 1,
+    concept: 'A counting semaphore controls access to a finite pool of resources. Each wait() decrements the counter. Once the counter hits 0, any subsequent wait() operations block the calling thread, putting it into a waiting queue until a resource is returned via signal().',
+    why: 'This tests the counting mechanic. If counter is 3, only 3 threads can pass. Remaining threads are queued and put to sleep.'
+  },
+  {
+    topic: 'Semaphore',
+    q: 'In a classic bounded-buffer Producer-Consumer implementation, how are semaphores typically used to coordinate access?',
+    opts: [
+      'A single mutex is used to count empty slots.',
+      'Two counting semaphores (empty initialized to buffer size, full initialized to 0) are used to track slot counts and block the producer if the buffer is full, or block the consumer if the buffer is empty, alongside a mutex to protect the critical buffer write section.',
+      'The system uses the Ostrich Algorithm to ignore any buffer limits.',
+      'The consumer must poll the producer\'s stack memory directly.'
+    ],
+    correct: 1,
+    concept: 'The producer waits on empty (to ensure there is a slot to write) and signals full (notifying the consumer). The consumer waits on full (to ensure there is a product to read) and signals empty. This dual-semaphore model prevents overflows and underflows elegantly.',
+    why: 'This classic synchronization layout uses semaphores for state signaling (full/empty boundaries) and a mutex for mutual exclusion during raw queue writes.'
+  },
+  // ── 10. PAGING (2) ──
+  {
+    topic: 'Paging',
+    q: 'How does the Memory Management Unit (MMU) translate a logical address generated by the CPU into a physical RAM address using a Page Table?',
+    opts: [
+      'By dividing the address by the total size of RAM.',
+      'By splitting the logical address into a Page Number and an Offset. It looks up the Page Number in the process\'s Page Table to find the physical Frame Number, then combines this Frame Number with the original, unmodified Offset to locate the exact physical byte.',
+      'By converting the logical address to a binary search tree.',
+      'By using the static linker to assign hardcoded hardware offsets during compilation.'
+    ],
+    correct: 1,
+    concept: 'Paging separates logical views from physical layouts. Page sizes and Frame sizes are identical (typically 4KB). The offset represents the position within that page, which matches the offset within the physical frame. Only the base page address is translated.',
+    why: 'Address translation mechanics are fundamental. The key point is that the logical offset maps directly to the physical offset without change; only the page index is translated to a physical frame index via the table lookup.'
+  },
+  {
+    topic: 'Paging',
+    q: 'What is the purpose of the Translation Lookaside Buffer (TLB) in CPU memory management, and what is the penalty of a TLB miss?',
+    opts: [
+      'The TLB is a disk cache; a miss forces the CPU to read from the SSD.',
+      'The TLB is a small, ultra-fast hardware cache of recent virtual-to-physical address mappings; on a TLB miss, the MMU must perform a slow "page table walk" in main memory (requiring multiple additional RAM accesses) to resolve the address before updating the TLB.',
+      'The TLB is used to speed up compile-time template expansions.',
+      'A TLB miss triggers an immediate segmentation fault, terminating the process.'
+    ],
+    correct: 1,
+    concept: 'Reading from physical RAM is slow. Since the page table resides in RAM, accessing it for every single virtual instruction would double memory latency. The TLB caches these translations. A TLB miss incurs the overhead of traversing multi-level page tables in RAM (page walk) before the actual data access can occur.',
+    why: 'A TLB is a vital memory acceleration cache. Hits resolve address translation in hardware instantaneously; misses force a high-latency RAM traversal (page walk).'
+  },
+  // ── 11. SEGMENTATION (2) ──
+  {
+    topic: 'Segmentation',
+    q: 'What is the conceptual difference between Paging and Segmentation in memory management?',
+    opts: [
+      'Paging divides memory into variable-sized chunks; Segmentation uses fixed-sized blocks.',
+      'Paging divides memory blindly into fixed-size physical blocks (transparent to the programmer, preventing external fragmentation); Segmentation divides memory into variable-size logical segments based on the program\'s structure (code, stack, heap, visible to compile-time definitions, but prone to external fragmentation).',
+      'Paging is managed by the browser; Segmentation is managed by the hard drive.',
+      'There is no difference; they are synonymous terms for the same hardware mechanism.'
+    ],
+    correct: 1,
+    concept: 'Paging is a physical allocation strategy (chopping code into identical blocks, e.g. 4KB). Segmentation is a logical categorization strategy, splitting the program according to human structures (e.g. stack, global variables, code routines).',
+    why: 'Paging is fixed-size/programmer-transparent (avoids external fragmentation). Segmentation is variable-size/programmer-visible (prone to external fragmentation).'
+  },
+  {
+    topic: 'Segmentation',
+    q: 'How does a Segment Table enforce memory protection, and what triggers a "Segmentation Fault" (segfault) under this system?',
+    opts: [
+      'By checking if the user is logged in as an administrator.',
+      'Each segment table entry contains a Base Address and a Limit (size). The hardware checks if the logical offset of a memory request is less than the Limit; if the offset exceeds the Limit, a boundary violation occurs, triggering a hardware trap that the OS handles by throwing a Segmentation Fault.',
+      'By forcing all stack segments to compile to read-only sectors.',
+      'By encrypting segment pointers using AES keys.'
+    ],
+    correct: 1,
+    concept: 'Segmentation tables define bounds for each logical chunk. If a program attempts to read or write an address past the declared limit of a segment (e.g. accessing indices beyond array allocation bounds in a data segment), the MMU hardware immediately catches this boundary violation, halting the thread with a segfault.',
+    why: 'A segfault represents a boundary violation. The segment table restricts offsets to be strictly less than the declared Limit value.'
+  },
+  // ── 12. VIRTUAL MEMORY (2) ──
+  {
+    topic: 'Virtual Memory',
+    q: 'In Unix-like operating systems, how does Copy-On-Write (COW) optimize the performance of the fork() system call?',
+    opts: [
+      'By immediately copying all stack and heap allocations to a backup disk.',
+      'By avoiding copying the parent\'s physical memory pages to the child; instead, both processes share the same physical pages marked as read-only. Only when either process attempts to write to a page, the OS intercepts the write trap, copies that specific page to a new physical frame, updates their page table, and executes the write.',
+      'By disabling virtual memory during thread creation.',
+      'By automatically executing child processes on the GPU.'
+    ],
+    correct: 1,
+    concept: 'fork() duplicates a process. Copying megabytes of RAM is expensive. COW makes this instant by sharing memory pages. Pages are copied lazily on-demand only when modified, which is highly efficient since many child processes immediately call exec() to load a new program, discarding their inherited memory.',
+    why: 'COW is a massive optimization. It allows fork() to run instantly, sharing memory pages as read-only until a modification forces a physical page duplication.'
+  },
+  {
+    topic: 'Virtual Memory',
+    q: 'What is "Thrashing" in a virtual memory system, and how can the operating system resolve it?',
+    opts: [
+      'Thrashing is the physical vibration of the hard disk during write operations; resolved by slowing down the disk rotation.',
+      'Thrashing occurs when the collective working set of active processes exceeds physical RAM, causing the OS to spend more time swapping pages in and out of disk than executing instructions; resolved by reducing the degree of multiprogramming (suspending processes) or adding RAM.',
+      'Thrashing is when the CPU runs too hot; resolved by enabling liquid cooling.',
+      'Thrashing is a compile-time loop error; resolved by code optimization.'
+    ],
+    correct: 1,
+    concept: 'If processes do not have their actively used pages (working set) in RAM, every memory access triggers a high-latency page fault. The disk becomes a bottleneck as pages are constantly read and evicted, dropping CPU utilization to near-zero.',
+    why: 'Thrashing represents thrashing on disk I/O. The system is so busy writing and reading page files that actual process instruction execution drops to near zero. Fix: reduce process counts or add RAM.'
+  },
+  // ── 13. HEAP VS STACK (2) ──
+  {
+    topic: 'Heap vs Stack',
+    q: 'Why is memory allocation on the Stack significantly faster than allocation on the Heap?',
+    opts: [
+      'Stack memory resides in the CPU\'s registers, whereas heap memory is on the SSD.',
+      'Stack allocation is a simple pointer addition/subtraction operation on the Stack Pointer register (LIFO allocation); Heap allocation requires complex bookkeeping algorithms to search, split, or merge free lists of fragmented memory blocks, often involving system calls.',
+      'Stack allocation is handled at compile-time, meaning it consumes zero CPU cycles at runtime.',
+      'The heap is slower because it is written entirely in Java.'
+    ],
+    correct: 1,
+    concept: 'Stack frames are pushed and popped in continuous memory. Allocation is just subtracting bytes from the stack pointer register. Heap memory is non-contiguous and dynamically sized, requiring allocators to search free lists (using first-fit, buddy, etc.), manage fragmentations, and coordinate thread safety.',
+    why: 'Stack allocation is simple LIFO register manipulation (moving the ESP/RSP pointer). Heap allocation requires complex searching of fragmented tables and mutex/thread locking.'
+  },
+  {
+    topic: 'Heap vs Stack',
+    q: 'What specific items are stored inside a thread\'s private Stack Frame when a function is invoked?',
+    opts: [
+      'Global variables, dynamic allocations, and file descriptors.',
+      'Function parameters, local variables declared inside the function, the return address (where to jump back after execution), and saved CPU register states.',
+      'The process control block and the page table directory pointer.',
+      'Only the source code instructions of the calling function.'
+    ],
+    correct: 1,
+    concept: 'Each function call allocates an isolated block of memory on the stack (a Stack Frame) to manage execution. This houses parameters, local automatic variables, caller context (registers to restore), and the instruction return address.',
+    why: 'The Stack Frame maintains scope and calling trace. It isolates local automatic values, keeps parameter copies, and holds the return address so the program knows where to continue after returning.'
+  },
+  // ── 14. MEMORY ALLOCATION (2) ──
+  {
+    topic: 'Memory Allocation',
+    q: 'What is the difference between Internal Fragmentation and External Fragmentation in physical memory allocation?',
+    opts: [
+      'Internal fragmentation affects the stack; external fragmentation affects the heap.',
+      'Internal fragmentation occurs when memory is wasted inside an allocated block (e.g., allocating a 128-byte block to hold a 70-byte variable); External fragmentation occurs when free memory exists in small, non-contiguous holes between allocated blocks, making it impossible to allocate a large contiguous request.',
+      'Internal fragmentation is caused by compilers; external fragmentation is caused by routers.',
+      'They are identical concepts, but internal is for paging and external is for virtual memory.'
+    ],
+    correct: 1,
+    concept: 'Internal fragmentation is the consequence of fixed-size allocations (e.g., paging frames). The extra space allocated but unused is wasted. External fragmentation occurs with variable-sized allocations (e.g., segmentation, raw heap blocks) where memory is freed non-sequentially, creating a checkerboard of small holes.',
+    why: 'Internal fragmentation = wasted memory INSIDE allocated frames (e.g., sizing class over-allocation). External fragmentation = wasted memory slots BETWEEN allocated frames (contiguous space unavailable).'
+  },
+  {
+    topic: 'Memory Allocation',
+    q: 'Why do modern high-performance memory allocators like jemalloc and tcmalloc perform significantly better in multi-threaded environments than traditional glibc malloc?',
+    opts: [
+      'They bypass physical RAM, writing dynamic allocations directly to CPU caches.',
+      'They utilize thread-local caches and segmented buckets (size classes) to allow threads to allocate and free memory independently without constantly acquiring global locks, eliminating multi-threaded lock contention.',
+      'They compile dynamic objects into static pointers at compile-time.',
+      'They force the operating system to run entirely in single-threaded mode.'
+    ],
+    correct: 1,
+    concept: 'Traditional allocators use a single global heap lock to guarantee thread safety, creating massive lock contention in highly concurrent applications. Allocators like tcmalloc (Thread-Caching Malloc) give each thread its own small thread-local arena/cache, only hitting global locks when their local cache is empty.',
+    why: 'Thread-local caches are the key to concurrent allocation speed. Giving each thread a private heap arena removes global lock bottlenecks.'
+  },
+  // ── 15. GARBAGE COLLECTION (2) ──
+  {
+    topic: 'Garbage Collection',
+    q: 'What is the primary limitation of the Reference Counting garbage collection algorithm, and how do languages like Java or Go solve it?',
+    opts: [
+      'It is too slow because it always stops the program for several hours.',
+      'Reference counting cannot handle circular references (e.g., Object A references B, and B references A, keeping their reference counts at 1 even when both are unreachable); Java and Go utilize Tracing garbage collectors (like Mark-and-Sweep) that start from execution "roots" to find reachability.',
+      'Reference counting is only supported on 32-bit processors.',
+      'Tracing collectors do not support heap memory.'
+    ],
+    correct: 1,
+    concept: 'In reference counting, when an object loses all references, it is freed instantly. However, if two garbage objects point to each other, they form an isolated cycle with non-zero counts. Tracing GC starts from execution roots (stack frames, global scopes) and sweeps away everything that cannot be reached, resolving cycles.',
+    why: 'Circular references are the fatal flaw of simple reference counting. Tracing GC starting from roots (Mark-and-Sweep) easily bypasses isolated cycles.'
+  },
+  {
+    topic: 'Garbage Collection',
+    q: 'On what foundational observation is Generational Garbage Collection based, and how does it optimize heap cleanups?',
+    opts: [
+      'Older objects are smaller than newer objects.',
+      'The "Weak Generational Hypothesis"—which states that most allocated objects die young (have very short lifespans); it optimizes cleanups by dividing the heap into generations (e.g., Eden/Young vs. Old) and collecting the young generation frequently while sweeping the old generation rarely.',
+      'Objects get larger as they survive garbage collection sweeps.',
+      'Computers degrade physically over time, requiring faster collection cycles.'
+    ],
+    correct: 1,
+    concept: 'Most objects (like temp variables, loop scopes) are short-lived. By isolating young objects in a specific nursery heap zone, the GC can perform rapid, lightweight collections (minor collections) over small memory spaces, only promoting long-surviving objects to the older, larger heap spaces.',
+    why: 'Weak Generational Hypothesis: "Most objects die young." Grouping young objects into localized nursery blocks allows the collector to sweep away garbage rapidly without scanning the entire heap.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Incredible! You have complete mastery over Operating System concepts. From low-level memory layout, page walks, and CPU scheduling limits to multi-core lock contention and concurrency algorithms, you own the systems loop!';
+  else if (pct >= 55) para = 'Great effort! You have a solid grasp of OS scheduling and synchronization, with a few gaps in memory virtualization translations or fragmentation parameters. Review the marked topics below.';
+  else para = 'The low-level mechanics require more study. Focus heavily on tracing memory paging walks, race condition timelines, and thread context switching structures before diving into complex system design pools.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Operating System Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a06581fb79c07fc8',t:'MTc4MDU2MTExNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

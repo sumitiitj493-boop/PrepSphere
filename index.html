@@ -3,19 +3,46 @@
   <head>
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>PrepSphere | Interview Preparation Notes and Practice</title>
+    <meta name="description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
+    <meta name="keywords" content="interview preparation, placement preparation, software engineering interviews, computer science notes, coding interview preparation, PrepSphere" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://theprepsphere.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PrepSphere | Interview Preparation Notes and Practice" />
+    <meta property="og:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
+    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://theprepsphere.in/" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PrepSphere | Interview Preparation Notes and Practice" />
+    <meta name="twitter:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
+    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "PrepSphere",
-  "url": "https://theprepsphere.in",
-  "logo": "https://theprepsphere.in/logo.png"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "PrepSphere",
+      "url": "https://theprepsphere.in",
+      "logo": "https://theprepsphere.in/logo.png"
+    },
+    {
+      "@type": "WebSite",
+      "name": "PrepSphere",
+      "url": "https://theprepsphere.in",
+      "description": "PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "PrepSphere"
+      }
+    }
+  ]
 }
     </script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>PrepSphere • Interview Universe</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap");
@@ -397,34 +424,37 @@
         z-index: 10;
         background: var(--glass);
         border: 1px solid rgba(245, 160, 30, 0.22);
-        border-radius: 18px;
-        padding: 16px 14px;
-        min-width: 152px;
+        border-radius: 20px;
+        padding: 20px 18px;
+        min-width: 182px;
+        max-height: min(620px, calc(100vh - 120px));
+        overflow-y: auto;
         box-shadow:
           0 20px 80px rgba(0, 0, 0, 0.6),
           inset 0 1px 0 rgba(255, 255, 255, 0.04);
       }
       #sidebar .sb-head {
         font-size: 8px;
-        letter-spacing: 5px;
+        letter-spacing: 6px;
         color: rgba(255, 255, 255, 0.2);
         text-transform: uppercase;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 13px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
       .sb-item {
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 11px;
         font-family: "Syne", sans-serif;
-        font-size: 10.5px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        color: rgba(255, 255, 255, 0.5);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.35px;
+        color: rgba(255, 255, 255, 0.64);
         cursor: pointer;
-        padding: 5px 4px;
-        border-radius: 8px;
+        min-height: 31px;
+        padding: 6px 8px;
+        border-radius: 10px;
         transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
@@ -432,14 +462,14 @@
       .sb-item:hover {
         color: #fff;
         background: rgba(255, 255, 255, 0.06);
-        padding-left: 8px;
+        padding-left: 12px;
       }
       .sb-item:hover .sb-dot {
         transform: scale(1.4);
       }
       .sb-dot {
-        width: 7px;
-        height: 7px;
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
         flex-shrink: 0;
         transition: transform 0.2s;

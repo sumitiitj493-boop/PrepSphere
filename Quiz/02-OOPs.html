@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOPs Interview Mastery Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../02-OOPs.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">OOPs</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">OOPs <span>Interview</span> Mastery</div>
+    <div class="intro-sub">30 targeted questions covering core Object-Oriented design, principles, memory management, and patterns. Code cleanly, scale infinitely, and pass senior architect loops.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">FOUR PILLARS OF OOP</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Four Pillars of OOP', 'Runtime vs Compile Poly', 'Overloading vs Overriding',
+  'Interface vs Abstract', 'Association, Aggregation...', 'SOLID Principles',
+  'Constructor Chaining', 'Deep vs Shallow Copy', 'Static vs Instance',
+  'Access Modifiers', 'Diamond Problem', 'Dependency Injection',
+  'Cohesion vs Coupling', 'Immutable Objects', 'Design Patterns'
+];
+const Q = [
+  // ── 1. FOUR PILLARS OF OOP (2) ──
+  {
+    topic: 'Four Pillars of OOP',
+    q: 'A class hides its private variables and exposes validated access through getters and setters, while also defining a public abstract interface for high-level operations. What is the fundamental difference between these two practices in software design?',
+    opts: [
+      'Encapsulation is a design concept for reducing complexity; Abstraction is an implementation technique for access control.',
+      'Encapsulation is about bundling data and hiding state implementation details; Abstraction is about hiding complexity by showing only essential conceptual features.',
+      'Abstraction requires private variables, whereas Encapsulation can only be achieved using abstract classes or interfaces.',
+      'They are identical concepts, but Abstraction is used in C++ and Encapsulation is used in Java.'
+    ],
+    correct: 1,
+    concept: 'Encapsulation is an implementation technique focused on bundling data and methods to protect state (data hiding) through access modifiers like private/protected. Abstraction is a higher-level design concept focused on reducing complexity by separating WHAT an object does from HOW it does it (e.g. abstract classes and interfaces).',
+    why: 'Encapsulation hides state; Abstraction hides complexity. Bundling + Hiding = Encapsulation. Essential Interface = Abstraction. The interviewer wants to make sure you do not confuse data-hiding with conceptual simplification.'
+  },
+  {
+    topic: 'Four Pillars of OOP',
+    q: 'You have a base class pointer Shape* s pointing to a derived class Circle. When s->area() is called, the system dynamically invokes the Circle::area() method at runtime. Which two pillars of OOP are directly working in unison to enable this behavior?',
+    opts: [
+      'Encapsulation and Abstraction',
+      'Inheritance and Polymorphism',
+      'Abstraction and Encapsulation',
+      'Association and Aggregation'
+    ],
+    correct: 1,
+    concept: 'Runtime polymorphism relies entirely on Inheritance to establish the parent-child relationship (Circle IS-A Shape) and virtual function tables to execute dynamic dispatch (Polymorphism) through a base class pointer or reference.',
+    why: 'Without inheritance, there is no subtyping interface relationship. Without polymorphism, the pointer type would statically determine the method called, invoking the base Shape::area() instead of the derived Circle::area().'
+  },
+  // ── 2. RUNTIME VS COMPILE POLY (2) ──
+  {
+    topic: 'Runtime vs Compile Poly',
+    q: 'In C++, what is the internal mechanical difference between compile-time (static) polymorphism and runtime (dynamic) polymorphism?',
+    opts: [
+      'Static polymorphism uses virtual functions, while dynamic polymorphism uses templated classes.',
+      'Static polymorphism is bound early during compilation based on static type signatures; Dynamic polymorphism relies on late binding at runtime using a hidden pointer (vptr) to an array of function pointers (vtable).',
+      'Static polymorphism is slower because it compiles more code; Dynamic polymorphism runs faster due to vtable pre-allocations.',
+      'Static polymorphism uses heap memory; Dynamic polymorphism operates entirely on the stack.'
+    ],
+    correct: 1,
+    concept: 'Static polymorphism is resolved at compile time via early binding (overloading, templates), creating no runtime overhead. Dynamic polymorphism uses late binding (vtable/vptr indirection) at runtime, which incurs a tiny performance cost (one pointer dereference per virtual call) but allows immense runtime flexibility.',
+    why: 'What the interviewer is looking for is a clear explanation of vptr and vtable. Static is early-bound, dynamic is late-bound via vtable pointer dereferencing.'
+  },
+  {
+    topic: 'Runtime vs Compile Poly',
+    q: 'A high-frequency trading platform wants to achieve polymorphic behavior across different trading strategies but cannot afford the latency of virtual function pointer dereferencing (vtable lookup). What pattern should they employ?',
+    opts: [
+      'The Strategy pattern with virtual interfaces',
+      'The Curiously Recurring Template Pattern (CRTP) to achieve static polymorphism at compile time',
+      'The Factory pattern with dynamic casting',
+      'Runtime Dependency Injection using shared pointers'
+    ],
+    correct: 1,
+    concept: 'CRTP (Curiously Recurring Template Pattern) involves a derived class inheriting from a template base class with itself as the template argument: class Derived : public Base<Derived>. This lets the compiler resolve method calls at compile time using templates, eliminating vtable lookup overhead entirely.',
+    why: 'CRTP provides "zero-cost" static polymorphism. It is highly valued in high-performance computing, HFT, and template-heavy libraries where vtable lookups can break CPU cache lines.'
+  },
+  // ── 3. OVERLOADING VS OVERRIDING (2) ──
+  {
+    topic: 'Overloading vs Overriding',
+    q: 'Which of the following is a VALID rule when comparing Method Overloading and Method Overriding?',
+    opts: [
+      'Overloading can be achieved by changing ONLY the return type of a function in the same class.',
+      'Overriding must occur within the same class, while Overloading requires a parent-child relationship.',
+      'Overloading is resolved at compile-time and requires different parameter lists; Overriding is resolved at runtime and requires identical parameter lists and virtual functions in the base class.',
+      'Static methods can be overridden to participate in runtime polymorphic dispatch.'
+    ],
+    correct: 2,
+    concept: 'Overloading operates within the same scope/class, needing unique parameter signatures (return type alone is not enough). Overriding requires inheritance, matching signatures, and dynamic dispatch keywords (like virtual in C++ or implicit in Java/C#).',
+    why: 'Changing only the return type in overloading yields a compiler collision because the compiler cannot determine the target function purely from call-site assignment. Overriding requires an identical interface signature in a derived class.'
+  },
+  {
+    topic: 'Overloading vs Overriding',
+    q: 'You define a static method static void display() in class Parent, and a matching static void display() in class Child : public Parent. What happens when you invoke Parent* p = new Child(); p->display();?',
+    opts: [
+      'The child class\'s display() is called because of runtime overriding.',
+      'A compilation error occurs because static methods cannot have the same name.',
+      'The parent class\'s display() is called because static methods are bound statically to the reference type (compile-time) and are "hidden", not overridden.',
+      'The program crashes because of a null pointer dereference.'
+    ],
+    correct: 2,
+    concept: 'Static methods belong to the class, not the instance. They are resolved at compile time based on the reference type (Parent*), not the actual instance type (Child). This is known as method hiding, not overriding; no runtime polymorphism occurs.',
+    why: 'The interviewer wants to see if you understand that static methods have no "this" pointer, no vtable entries, and are bound purely at compile-time based on the pointer/reference variable\'s static type.'
+  },
+  // ── 4. INTERFACE VS ABSTRACT (2) ──
+  {
+    topic: 'Interface vs Abstract',
+    q: 'What is the fundamental difference between an Abstract Class and an Interface (Pure Abstract Class in C++)?',
+    opts: [
+      'Abstract classes cannot have constructors, while interfaces must have constructors.',
+      'Abstract classes are used to model unrelated behaviors, while interfaces model tight "IS-A" relationships.',
+      'Abstract classes can maintain state (member variables) and provide concrete method implementations; Interfaces only define behavior contracts (all methods pure virtual) and typically contain no instance data.',
+      'C++ supports interfaces natively using the "interface" keyword, avoiding abstract classes.'
+    ],
+    correct: 2,
+    concept: 'Abstract classes represent a partial implementation with shared state and code, modeling a tight "IS-A" relationship. Interfaces represent a pure behavioral contract with zero implementation details, safe from the diamond problem under multiple inheritance, and are used for unrelated classes that share capabilities ("CAN-DO" behaviors).',
+    why: 'Abstract classes have state and constructors to initialize that state. Interfaces are stateless blueprints. In C++, interfaces are modeled using pure abstract classes containing only public pure virtual functions and a virtual destructor.'
+  },
+  {
+    topic: 'Interface vs Abstract',
+    q: 'Why is multiple inheritance safe and common when using Interfaces (pure abstract classes) but highly discouraged and risky when inheriting from multiple concrete classes with data members?',
+    opts: [
+      'Pure virtual classes do not compile, so they cannot cause issues at runtime.',
+      'Pure abstract classes have no data members or concrete method bodies, avoiding state duplication or method signature ambiguities (Diamond Problem).',
+      'Interfaces automatically disable the virtual method table, reducing memory consumption.',
+      'Multiple inheritance of concrete classes is blocked by the compiler in C++.'
+    ],
+    correct: 1,
+    concept: 'Without data members or concrete method implementations, interfaces have nothing to duplicate or cause ambiguity during multiple inheritance. They only supply function signatures, completely removing the risk of the Diamond Problem.',
+    why: 'The Diamond Problem arises when duplicate physical copies of base data exist, or when identical method implementations collide. Pure interfaces have no state and no implementations, eliminating these conflicts.'
+  },
+  // ── 5. ASSOCIATION, AGGREGATION, COMPOSITION (2) ──
+  {
+    topic: 'Association, Aggregation...',
+    q: 'A University class contains a list of Department instances. When the University object is destroyed, all its Department objects are also immediately destroyed. However, Professor objects associated with these departments continue to exist independently in the system. What are these two relationships respectively?',
+    opts: [
+      'University-Department is Aggregation; Department-Professor is Composition.',
+      'University-Department is Composition; Department-Professor is Aggregation.',
+      'Both are plain Associations; lifetime coupling is not a factor in object-oriented design.',
+      'University-Department is Inheritance; Department-Professor is Dependency Injection.'
+    ],
+    correct: 1,
+    concept: 'Composition is a strong "HAS-A" relationship with co-dependent lifetimes (University owns Departments; they die together). Aggregation is a weak "HAS-A" relationship where components have independent lifetimes (Departments reference Professors, but professors can outlive the department).',
+    why: 'The core distinction is lifetime ownership. Composition = child lifetime is managed and bounded by parent. Aggregation = child exists independently; parent only holds a pointer/reference.'
+  },
+  {
+    topic: 'Association, Aggregation...',
+    q: 'How is the structural difference between Aggregation and Composition typically represented in C++ code?',
+    opts: [
+      'Aggregation uses global variables; Composition uses class-level constants.',
+      'Aggregation is implemented using virtual inheritance; Composition is implemented using multiple inheritance.',
+      'Aggregation stores components as raw/smart pointers passed from outside, leaving cleanup to the caller; Composition stores components by value or owns their lifetime (using unique_ptr) created inside.',
+      'Aggregation requires template classes, while Composition only works with primitive types.'
+    ],
+    correct: 2,
+    concept: 'In Aggregation, objects are passed in (weak coupling via references or pointers). In Composition, the parent creates, manages, and destroys the child directly (strong coupling, stored by value or via owning smart pointers like std::unique_ptr).',
+    why: 'Code structure reveals ownership. Pointers/references passed into constructors with no delete responsibility denote Aggregation. Direct member variables or smart pointers allocated inside the parent class denote Composition.'
+  },
+  // ── 6. SOLID PRINCIPLES (2) ──
+  {
+    topic: 'SOLID Principles',
+    q: 'A class Square inherits from Rectangle. In Square, setting the width also updates the height to keep them equal. Why does this design violate the Liskov Substitution Principle (LSP)?',
+    opts: [
+      'Square is not a real-world rectangle, breaking mathematical reality.',
+      'Clients expecting a Rectangle might set width to 5 and height to 10 and assert the area is 50, which fails under Square, violating the guarantee that a subclass must behave like its parent without surprises.',
+      'Square uses more memory than Rectangle, violating resource constraints.',
+      'Square should use multiple inheritance instead of single inheritance.'
+    ],
+    correct: 1,
+    concept: 'LSP guarantees that a subclass must be substitutable for its superclass without breaking client invariants. If subclass overrides break base invariants (e.g., width and height can vary independently in a Rectangle), client code written for the base class will break.',
+    why: 'The classic Square-Rectangle dilemma illustrates that conceptual "IS-A" relationships in the real world do not always map to behavioral "IS-A" relationships in OOP. If subclasses change parent constraints, LSP is violated.'
+  },
+  {
+    topic: 'SOLID Principles',
+    q: 'Match these definitions to their SOLID principles: (1) Depend on abstractions, not concretions; (2) Open for extension, closed for modification; (3) Many specific interfaces are better than one fat interface.',
+    opts: [
+      '(1) Single Responsibility, (2) Liskov Substitution, (3) Interface Segregation',
+      '(1) Dependency Inversion, (2) Open-Closed, (3) Interface Segregation',
+      '(1) Open-Closed, (2) Dependency Inversion, (3) Single Responsibility',
+      '(1) Dependency Inversion, (2) Interface Segregation, (3) Liskov Substitution'
+    ],
+    correct: 1,
+    concept: 'D (Dependency Inversion) promotes programming to interfaces. O (Open-Closed) allows adding features by extending classes, not changing tested code. I (Interface Segregation) prevents bloated interfaces that force classes to implement unused methods.',
+    why: 'These three principles form the bedrock of decoupled, extensible code. The interviewer wants to verify that you know both the definitions and their architectural values.'
+  },
+  // ── 7. CONSTRUCTOR CHAINING (2) ──
+  {
+    topic: 'Constructor Chaining',
+    q: 'In C++11, how is constructor delegation (chaining within the same class) written, and what is a crucial rule regarding it?',
+    opts: [
+      'You call the other constructor inside the constructor body: ClassName() { ClassName(args); }.',
+      'You call the other constructor in the member initializer list: ClassName() : ClassName(args) {}. No other member initializers are allowed in that delegating constructor\'s initializer list.',
+      'You must call it using the this pointer: this->ClassName(args).',
+      'Constructor delegation is not supported in C++; it only exists in Java using this().'
+    ],
+    correct: 1,
+    concept: 'In C++11, constructor delegation occurs in the member initializer list. If a constructor delegates to another constructor, it cannot initialize other member variables in its initializer list (they must be initialized by the target constructor or inside the delegating constructor\'s body).',
+    why: 'Calling a constructor inside the body of another constructor simply creates a temporary, unnamed object that is immediately destroyed, leaving the actual instance uninitialized. Delegation must be handled in the initializer list.'
+  },
+  {
+    topic: 'Constructor Chaining',
+    q: 'Given: class Test { int y; int x; public: Test(int val) : x(val), y(x + 1) {} };. What is the danger in this constructor?',
+    opts: [
+      'There is no danger; x is initialized first, then y is computed cleanly.',
+      'It will cause a compiler error because you cannot use x to initialize y.',
+      'In C++, member variables are initialized in their DECLARATION order (y then x), not their initializer list order. y will read garbage from the uninitialized x, causing undefined behavior.',
+      'Variables must be initialized in alphabetical order.'
+    ],
+    correct: 2,
+    concept: 'Member variables are initialized strictly in the order they are declared in the class definition. Since y is declared before x in the class layout, y is initialized first using the uninitialized value of x, leading to critical bugs.',
+    why: 'This is a favorite trick question in C++ interviews. The order in the member initializer list is completely ignored by the compiler; class declaration order is the sole authority.'
+  },
+  // ── 8. DEEP VS SHALLOW COPY (2) ──
+  {
+    topic: 'Deep vs Shallow Copy',
+    q: 'A class contains a raw pointer member char* name allocated on the heap. If you do not write a copy constructor, what happens when you copy an object of this class, and why is it dangerous?',
+    opts: [
+      'The compiler prevents copying, throwing a compilation error.',
+      'A deep copy is automatically made by the compiler, which is perfectly safe.',
+      'A default shallow copy is performed, copying the pointer address. Both objects now point to the same heap memory. When one is destroyed, its destructor frees the memory, leaving the other with a dangling pointer that causes a double free crash.',
+      'The name pointer is set to NULL in the cloned object.'
+    ],
+    correct: 2,
+    concept: 'Default copy operations do a shallow (memberwise) copy. For resource-owning classes (with raw pointers), this causes shared ownership conflicts, memory corruption, and double frees on destruction.',
+    why: 'The interviewer wants to test your understanding of memory safety. A shallow copy copies pointers, not pointing values. When the first copy dies, the memory is deleted. The second copy is left with a dangling pointer.'
+  },
+  {
+    topic: 'Deep vs Shallow Copy',
+    q: 'What is the "Rule of Three" in C++, and how does the "Rule of Five" expand it in modern C++11?',
+    opts: [
+      'Rule of Three: Write exactly three classes per namespace. Rule of Five: Use five design patterns.',
+      'Rule of Three: If you define a destructor, copy constructor, or copy assignment operator, you should define all three. Rule of Five adds: Move constructor and Move assignment operator to support efficient resource transfer.',
+      'Rule of Three relates to inheritance levels. Rule of Five relates to virtual inheritance.',
+      'Rule of Three requires having at least three virtual functions in every abstract class.'
+    ],
+    correct: 1,
+    concept: 'If a class manages dynamic resources, it must manage its lifecycle. Rule of 3 (Destructor, Copy Constructor, Copy Assignment) ensures safe copying. Rule of 5 (adding Move Constructor, Move Assignment) adds optimization for temporary objects (rvalue references) to transfer resources instead of copying.',
+    why: 'Rule of 5 enables move semantics, preventing deep-copy operations on temporary variables, saving memory allocations, and maximizing CPU performance.'
+  },
+  // ── 9. STATIC VS INSTANCE (2) ──
+  {
+    topic: 'Static vs Instance',
+    q: 'Why can a static member method in a class NOT access instance member variables or call instance methods directly?',
+    opts: [
+      'Static methods are stored in read-only code segments where instance variables are out of scope.',
+      'Static methods belong to the class itself and do not receive an implicit "this" pointer pointing to a specific object instance.',
+      'The compiler blocks access because static methods run on a separate background thread.',
+      'Static methods can access instance members, but only if they are marked public.'
+    ],
+    correct: 1,
+    concept: 'Static methods are class-level functions. They have no "this" pointer, so there is no instance context to resolve which object\'s instance variable is being accessed.',
+    why: 'The interviewer is testing your fundamental understanding of the execution context of class members. Static = Class scope, Instance = Object scope. Without a "this" context, static code cannot address instance state.'
+  },
+  {
+    topic: 'Static vs Instance',
+    q: 'In C++, you declare a static variable inside a class: class User { static int count; };. Why does the linker throw an error if you do not define it outside the class?',
+    opts: [
+      'Static variables must be declared in separate header files.',
+      'The declaration inside the class only tells the compiler about the variable\'s existence, but does not allocate memory. It must be defined and initialized once globally outside the class to allocate actual storage.',
+      'All static variables are treated as thread-local and must be registered with the OS.',
+      'C++ classes are immutable by default, requiring global initialization.'
+    ],
+    correct: 1,
+    concept: 'Class-level static variable declarations are non-defining declarations. Memory must be allocated exactly once in a single compilation unit, typically in a .cpp file (int User::count = 0;), otherwise an "undefined reference" linker error occurs.',
+    why: 'Linkers require physical storage declarations to resolve references. A static declaration in a class template/header is just a blueprint; the actual definition must allocate memory in one object file.'
+  },
+  // ── 10. ACCESS MODIFIERS (2) ──
+  {
+    topic: 'Access Modifiers',
+    q: 'What is the precise difference between private and protected access specifiers in object-oriented classes?',
+    opts: [
+      'Private members are invisible to everyone; Protected members can be accessed by any class in the same file.',
+      'Private members are only accessible within the class they are declared; Protected members are accessible within the declaring class AND by any derived (derived/child) classes.',
+      'Private is for variables; Protected is only for member functions.',
+      'Protected members are accessible by external client code, whereas Private members are not.'
+    ],
+    correct: 1,
+    concept: 'private enforces strict encapsulation within the class itself. protected extends this access to subclasses (derived classes) to facilitate inheritance, while still hiding the state from public client code.',
+    why: 'This is the core access control distinction that enables safe inheritance structures. Protected opens access down the class hierarchy chain, but keeps it closed to public users.'
+  },
+  {
+    topic: 'Access Modifiers',
+    q: 'In C++, what are the default access levels of class vs struct, and what does the friend specifier achieve?',
+    opts: [
+      'class defaults to protected, struct defaults to public; friend allows global access to all classes.',
+      'class defaults to private, struct defaults to public; the friend keyword allows a designated external function or class to access its private and protected members.',
+      'class defaults to public, struct defaults to private; friend allows multiple inheritance of structs.',
+      'Both default to private; friend is used to implement virtual destructor systems.'
+    ],
+    correct: 1,
+    concept: 'class defaults to private inheritance and private members. struct defaults to public. A friend declaration inside a class bypasses access controls, granting complete private/protected visibility to a designated class or function.',
+    why: 'Structs are classes with public defaults for backward compatibility with C. Friends bypass encapsulation deliberately, useful for overloaded operators like << or tightly coupled helper classes.'
+  },
+  // ── 11. DIAMOND PROBLEM (2) ──
+  {
+    topic: 'Diamond Problem',
+    q: 'Explain the mechanical cause of the "Diamond Problem" in multiple inheritance.',
+    opts: [
+      'The compiler crashes because a class cannot inherit from more than one parent.',
+      'If class D inherits from B and C, which both inherit from A, class D receives two separate physical copies of A\'s member variables, leading to compiler ambiguity when D tries to access a member of A.',
+      'It occurs when an interface inherits from a concrete class.',
+      'It is a runtime memory leak caused by virtual destructors.'
+    ],
+    correct: 1,
+    concept: 'The Diamond Problem is a structural ambiguity where the path from the derived class D to its base ancestor A is split. D contains duplicate subobjects of A, creating reference ambiguity for members of A.',
+    why: 'Having duplicate ancestor state in memory creates naming collisions and semantic conflicts (which version of A\'s variables are we updating?).'
+  },
+  {
+    topic: 'Diamond Problem',
+    q: 'How does C++ solve the Diamond Problem, and what does it do under the hood?',
+    opts: [
+      'C++ bans multiple inheritance completely, matching Java.',
+      'By using the virtual keyword in inheritance (class B : virtual public A), which forces B and C to share a single virtual base subobject of A, resolving any duplicate-state ambiguities.',
+      'By compiling D into separate namespaces for B and C.',
+      'By automatically renaming the variables inside class C to prevent collisions.'
+    ],
+    correct: 1,
+    concept: 'Virtual inheritance instructs the compiler to allocate only a single shared instance of the virtual base class within the final derived class layout, resolving any reference ambiguities.',
+    why: 'Virtual base classes are initialized directly by the most derived constructor (D), bypassing B and C\'s direct base initialization paths to ensure a single, clean state.'
+  },
+  // ── 12. DEPENDENCY INJECTION (2) ──
+  {
+    topic: 'Dependency Injection',
+    q: 'Why is hardcoding a dependency inside a class constructor (e.g., db = new MySQLDatabase()) considered bad practice, and how does Dependency Injection (DI) fix this?',
+    opts: [
+      'It uses too much memory. DI moves the dependency to a background thread to improve performance.',
+      'It tightly couples the class to a specific database implementation, making it impossible to swap databases (e.g., to PostgreSQL) or inject mock objects for testing. DI passes the dependency (implementing an interface) from the outside.',
+      'Hardcoded dependencies cannot be compiled in C++.',
+      'DI makes the class immutable, which is always desirable.'
+    ],
+    correct: 1,
+    concept: 'DI is the application of the Dependency Inversion Principle. By accepting dependencies as parameters of an abstract type (interfaces/references), classes are decoupled from specific concrete implementations, facilitating testing (mocking) and extensibility.',
+    why: 'Hardcoding "new" expressions makes unit testing impossible because you cannot isolate the class from its concrete dependencies (e.g., your tests would always require a running MySQL database).'
+  },
+  {
+    topic: 'Dependency Injection',
+    q: 'What is the practical difference between Constructor Injection and Setter Injection?',
+    opts: [
+      'Constructor injection is done at compile-time; Setter injection is done at runtime.',
+      'Constructor injection is for optional dependencies; Setter injection is mandatory.',
+      'Constructor injection ensures the object is created in a valid state with all required dependencies populated upfront; Setter injection allows dependencies to be optional, changed, or hot-swapped after object instantiation.',
+      'Setter injection is faster because it bypasses the virtual method table.'
+    ],
+    correct: 2,
+    concept: 'Constructor injection forces dependency safety upon creation (strong invariants). Setter injection offers flexibility for runtime reconfiguration or optional overrides.',
+    why: 'Interviewer takeaway: Use Constructor Injection for mandatory dependencies to prevent partially-constructed "broken" states. Use Setter Injection for optional configuration or strategies.'
+  },
+  // ── 13. COHESION VS COUPLING (2) ──
+  {
+    topic: 'Cohesion vs Coupling',
+    q: 'What is the ideal relationship between Cohesion and Coupling in scalable software architecture?',
+    opts: [
+      'Low Cohesion, High Coupling — classes should do many unrelated things and depend heavily on other classes.',
+      'High Cohesion, Low Coupling — each class has a single, highly focused responsibility, and classes have minimal, interface-driven dependencies on one another.',
+      'High Cohesion, High Coupling — to maximize speed, classes should be extremely dependent and packed together.',
+      'Cohesion and Coupling are trade-offs; you cannot have high cohesion and low coupling at the same time.'
+    ],
+    correct: 1,
+    concept: 'High cohesion implies a class has one well-defined job (SRP), making it easy to understand and maintain. Low coupling implies minimal, abstracted dependencies between classes, making changes localized and preventing ripple effects.',
+    why: 'This is the golden rule of software architecture. High cohesion + Low coupling makes code robust to changes, highly testable, and reusable.'
+  },
+  {
+    topic: 'Cohesion vs Coupling',
+    q: 'Which of the following code snippets violates the Law of Demeter (Principle of Least Knowledge), leading to high coupling?',
+    opts: [
+      'order.calculateTotal();',
+      'user.getProfile().getAddress().getCity().zipCode();',
+      'database.save(record);',
+      'service.process(new Request());'
+    ],
+    correct: 1,
+    concept: 'The Law of Demeter states that a method of an object should only invoke methods of its immediate neighbors, not traverse deep object graphs ("only talk to your friends, don\'t talk to strangers"). Chains like a.getB().getC().doSomething() create tight coupling across multiple layers.',
+    why: 'If the structure of Address or City changes, the User client code breaks. The chain of dot access indicates a violation, exposing too many internal design details.'
+  },
+  // ── 14. IMMUTABLE OBJECTS (2) ──
+  {
+    topic: 'Immutable Objects',
+    q: 'How do you design a class to be truly IMMUTABLE?',
+    opts: [
+      'Make the class static and all methods static.',
+      'Mark all member variables private, omit setter methods, declare variables const (or final), initialize all state inside the constructor initializer list, and return copies (or new instances) instead of modifying internal state.',
+      'Implement a virtual destructor and inherit from an interface.',
+      'Store all state in global thread-safe variables.'
+    ],
+    correct: 1,
+    concept: 'Immutable objects cannot have their state modified once created. They are constructed fully, have read-only views, and any "mutations" must return a brand new instance of the class containing the modified values.',
+    why: 'Immutability guarantees thread safety without mutexes, simplifies state tracing, and protects hash-map keys from mutating. It is a highly-favored senior system design pattern.'
+  },
+  {
+    topic: 'Immutable Objects',
+    q: 'You make a class immutable by marking all member variables const. One member is a pointer int* data. Why is this class still vulnerable to state modification, and how do you fix it?',
+    opts: [
+      'It is not vulnerable; const pointers can never be dereferenced.',
+      'The pointer itself is const, but the memory it points to can still be modified (*data = 5). To fix this, you must store a copy of the pointer\'s data inside the class, mark the pointer as const int* const data, or return a deep copy in getters.',
+      'You must make the class a friend of the main function to prevent changes.',
+      'Pointers cannot be used inside immutable classes.'
+    ],
+    correct: 1,
+    concept: 'A const pointer (int* const) prevents changing where the pointer points, but does not prevent changing the data at that memory address. True immutability requires a pointer to const data (const int* const) or avoiding pointer-based shared state entirely.',
+    why: 'The compiler does not propagate constness transitively through pointer members. You must explicitly declare the data pointed to as const, or use safe deep-copy techniques.'
+  },
+  // ── 15. DESIGN PATTERNS (2) ──
+  {
+    topic: 'Design Patterns',
+    q: 'A system implements a thread-safe Singleton Logger in C++11 using the local static variable pattern (Meyers Singleton): static Logger& getInstance() { static Logger instance; return instance; }. Why is this pattern preferred over manual double-checked locking?',
+    opts: [
+      'It is faster because it compiles directly to machine assembly.',
+      'C++11 guarantees that local static variable initialization is thread-safe by default, eliminating manual mutex locking overhead and double-checked locking bugs.',
+      'It moves the logger instance to the GPU.',
+      'It disables the copy constructor automatically.'
+    ],
+    correct: 1,
+    concept: 'Static local variable initialization is guaranteed thread-safe by the C++11 standard (§6.7). It uses compiler-inserted atomic checks, making it simple, robust, and highly efficient.',
+    why: 'Meyers Singleton is the elegant standard in modern C++. It avoids complex double-checked locking patterns which are notoriously hard to implement correctly without memory barriers.'
+  },
+  {
+    topic: 'Design Patterns',
+    q: 'Your application needs to support multiple payment processors (PayPal, Stripe, GooglePay) and switch between them dynamically at runtime based on user preference. Additionally, you want to instantiate these payment processors without exposing the complex object creation logic. Which patterns should you combine?',
+    opts: [
+      'Singleton pattern for payment, and Diamond problem for inheritance.',
+      'Strategy pattern to encapsulate the interchangeable payment algorithms, and Factory pattern to encapsulate the instantiation logic of the payment objects.',
+      'Observer pattern for security, and Adapter pattern for variable names.',
+      'Dependency Injection only; design patterns are unnecessary if DI is active.'
+    ],
+    correct: 1,
+    concept: 'The Strategy pattern handles interchangeable algorithms (interchangeable payment executors). The Factory pattern decouples object instantiation, separating client code from the specific types being created.',
+    why: 'Combining patterns is a hallmark of strong architecture. Factory delivers the strategy instance; Strategy executes the dynamic behavior. They work in perfect harmony.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'You have a spectacular handle on Object-Oriented design, principles, memory paradigms, and architectural patterns. The concepts are thoroughly internalized. You think like a software architect!';
+  else if (pct >= 55) para = 'Solid foundation with some structural or C++ memory model gaps. Review the specific concepts below — focus heavily on deep copying, coupling metrics, and structural patterns.';
+  else para = 'The core mechanisms need more reinforcement before high-level patterns click. Focus on understanding pointers/ownership, SOLID rules, and polymorphism internals first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'OOPs Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0656a398a1893d3',t:'MTc4MDU2MDE0Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

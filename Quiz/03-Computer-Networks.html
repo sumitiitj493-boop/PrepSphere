@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Networks Interview Prep Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../03-Computer-Networks.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">NETWORKS</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">Networks <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 rigorous, core networking questions covering everything from TCP handshakes and packet encapsulation to CDN infrastructure, TLS cryptosystems, and how google.com loads.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">TCP VS UDP</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'TCP vs UDP', 'OSI Model', 'TCP/IP Model', '3-Way Handshake',
+  '4-Way Termination', 'HTTP vs HTTPS', 'DNS Working', 'Load Balancer',
+  'Reverse Proxy', 'SSL/TLS', 'Cookies vs Sessions', 'REST APIs',
+  'WebSocket', 'CDN', 'Browser Opens Google'
+];
+const Q = [
+  // ── 1. TCP VS UDP (2) ──
+  {
+    topic: 'TCP vs UDP',
+    q: 'Why does TCP require sequence numbers and acknowledgements, whereas UDP does not?',
+    opts: [
+      'To allow intermediate routers to verify routing rules and filter packets more quickly.',
+      'TCP guarantees reliable, in-order packet delivery by assigning sequence numbers to track packets and using ACKs for retransmission of lost segments. UDP is connectionless and prioritizes speed over reliability, accepting packet loss.',
+      'UDP uses physical MAC addresses, whereas TCP operates entirely on virtual hostnames, which requires a dynamic indexing mechanism.',
+      'To encrypt the packet payload before sending it to the physical layer.'
+    ],
+    correct: 1,
+    concept: 'TCP uses sequence numbers to order packets that arrive out-of-sequence, detect dropped segments, and retransmit them using acknowledgements (ACKs). UDP is stateless and lightweight; it simply fires datagrams without tracking their arrival or ordering.',
+    why: 'The interviewer wants to make sure you understand the core mechanics of reliability. TCP guarantees packet order and delivery using sequence numbers and ACKs. UDP has zero tracking overhead.'
+  },
+  {
+    topic: 'TCP vs UDP',
+    q: 'Why does the modern HTTP/3 (QUIC) protocol run on top of UDP instead of TCP, and how does it still achieve reliable delivery?',
+    opts: [
+      'UDP is faster because it automatically disables firewalls and operates entirely in kernel-space.',
+      'QUIC builds connection-migration, multiplexing, and reliability directly into the application layer on top of UDP, completely bypassing TCP\'s handshake latency and Head-of-Line blocking.',
+      'TCP has been officially deprecated by the IETF for all secure web traffic.',
+      'UDP supports larger packet sizes natively, avoiding IP-level packet fragmentation.'
+    ],
+    correct: 1,
+    concept: 'QUIC runs over UDP because TCP is hardcoded into OS kernels, making it slow to upgrade. By building on UDP, QUIC can implement its own advanced multiplexing (preventing Head-of-Line blocking where a single dropped packet stalls other independent streams) and fast 0-RTT/1-RTT connection setup at the application layer.',
+    why: 'Bringing up HTTP/3 (QUIC) is a major competitive edge. The key is that QUIC solves TCP\'s architectural limitations (like Head-of-Line blocking and handshake latency) by engineering a custom reliability layer on top of the raw, stateless UDP.'
+  },
+  // ── 2. OSI MODEL (2) ──
+  {
+    topic: 'OSI Model',
+    q: 'An engineer examines a network packet and extracts three distinct addresses: (1) a MAC address, (2) an IP address, and (3) a Port number. At which layers of the OSI model do these three identifiers operate respectively?',
+    opts: [
+      '(1) Physical, (2) Data Link, (3) Transport',
+      '(1) Data Link, (2) Network, (3) Transport',
+      '(1) Network, (2) Transport, (3) Session',
+      '(1) Data Link, (2) Transport, (3) Application'
+    ],
+    correct: 1,
+    concept: 'MAC addresses operate at Layer 2 (Data Link) to route frames within a local network (e.g. switch). IP addresses operate at Layer 3 (Network) to route packets across separate networks (e.g. router). Port numbers operate at Layer 4 (Transport) to direct segments to specific application processes (sockets).',
+    why: 'This cleanly maps identifiers to the OSI stack. Layer 2 is local physical addressing (MAC), Layer 3 is logical global addressing (IP), and Layer 4 is software process multiplexing (Ports).'
+  },
+  {
+    topic: 'OSI Model',
+    q: 'As raw application data moves DOWN the sender\'s OSI stack, what is the correct order of data units created at each layer?',
+    opts: [
+      'Bits (Physical) → Frames (Data Link) → Packets (Network) → Segments (Transport)',
+      'Segments/Datagrams (Transport) → Packets (Network) → Frames (Data Link) → Bits (Physical)',
+      'Packets (Network) → Segments (Transport) → Frames (Data Link) → Bits (Physical)',
+      'Payloads (Application) → Hashes (Presentation) → Sockets (Session) → Segments (Transport)'
+    ],
+    correct: 1,
+    concept: 'Data encapsulation is the descending process. The Transport layer encapsulates application data into Segments (TCP) or Datagrams (UDP). The Network layer encapsulates these into Packets. The Data Link layer wraps packets into Frames. Finally, the Physical layer transmits them as raw electrical/optical Bits.',
+    why: 'The interviewer is testing your grasp of OSI encapsulation. Data moves DOWN (encapsulates, adding headers), and receiver decapsulates moving UP (stripping headers).'
+  },
+  // ── 3. TCP/IP MODEL (2) ──
+  {
+    topic: 'TCP/IP Model',
+    q: 'How does the layer structure of the practical TCP/IP model differ fundamentally from the classical 7-layer OSI reference model?',
+    opts: [
+      'TCP/IP is a 7-layer model designed specifically for high-speed fiber routing.',
+      'TCP/IP is a practical 4-layer model that collapses the OSI Session, Presentation, and Application layers into a single Application layer, and merges the OSI Physical and Data Link layers into a single Network Access layer.',
+      'TCP/IP has no Network layer, routing data entirely through the Transport layer.',
+      'The OSI model was built specifically for wireless networks, whereas TCP/IP is for wired connections.'
+    ],
+    correct: 1,
+    concept: 'The TCP/IP model contains 4 layers: Network Access, Internet, Transport, and Application. It is the pragmatic, implemented protocol stack of the internet, whereas OSI was designed later as a highly-stratified theoretical reference framework.',
+    why: 'The TCP/IP model simplifies OSI. It merges the software layers (5, 6, 7) into a single Application layer and physical hardware links (1, 2) into a single Network Access layer.'
+  },
+  {
+    topic: 'TCP/IP Model',
+    q: 'Which TCP/IP layer is responsible for translating hostnames to IP addresses (DNS) and managing end-user presentation formatting, and what is its associated data unit?',
+    opts: [
+      'Internet layer — Packet',
+      'Transport layer — Segment',
+      'Application layer — Data/Message',
+      'Network Access layer — Frame'
+    ],
+    correct: 2,
+    concept: 'In the TCP/IP model, DNS, HTTP, encryption (SSL/TLS), and representation are all encapsulated within the topmost Application layer. The corresponding data unit at this layer is raw application Data or a Message.',
+    why: 'Since TCP/IP merges OSI layers 5, 6, and 7, everything from security handshakes to hostname translation is an Application layer concern, carrying Data or Messages.'
+  },
+  // ── 4. 3-WAY HANDSHAKE (2) ──
+  {
+    topic: '3-Way Handshake',
+    q: 'During step 2 of the TCP 3-Way Handshake, the server replies to the client. If the client\'s initial sequence number was seq = 1000, what are the sequence (seq) and acknowledgement (ack) values sent by the server?',
+    opts: [
+      'seq = 1000 and ack = 1000',
+      'seq = y (a random sequence number picked by the server) and ack = 1001 (acknowledging the client\'s SYN)',
+      'seq = 1001 and ack = y',
+      'seq = 1000 and ack = 1001'
+    ],
+    correct: 1,
+    concept: 'During step 2, the server generates its own random Initial Sequence Number (ISN) `y`. It also acknowledges the client\'s SYN by sending an `ack` equal to the client\'s sequence number plus one (`ack = x + 1` = 1001).',
+    why: 'This verifies sequence synchronization. The server\'s response must contain its own unique sequence `y` and acknowledge the client\'s SYN (indicating it expects `x + 1` next).'
+  },
+  {
+    topic: '3-Way Handshake',
+    q: 'An attacker floods a server with millions of TCP SYN packets but never sends the final ACK, filling the server\'s half-open connection table and causing a DoS. What defense mechanism allows the server to handle this attack statelessly?',
+    opts: [
+      'Port Knocking to filter IP ranges.',
+      'SYN Cookies — the server encodes connection state into the sequence number (seq = y) of the SYN-ACK, allocating no local memory until the client returns a valid ACK.',
+      'Dynamic DNS re-routing.',
+      'Automatically switching port 80 requests to port 443.'
+    ],
+    correct: 1,
+    concept: 'SYN Cookies protect against SYN flood attacks. Instead of keeping a connection queue entry in RAM upon receiving a SYN, the server creates a cryptographic hash (cookie) containing connection parameters, sets it as the SYN-ACK sequence number `y`, and discards all local handshake state. If a client responds with a valid ACK (having `ack = y + 1`), the server re-computes the hash to prove its validity and allocates memory.',
+    why: 'SYN cookies are the standard industry mitigation for SYN floods. The interviewer wants to see if you understand how to prevent resource exhaustion during connection setup.'
+  },
+  // ── 5. 4-WAY TERMINATION (2) ──
+  {
+    topic: '4-Way Termination',
+    q: 'Why does TCP connection termination require four steps (FIN → ACK → FIN → ACK) instead of a simple three-way exchange?',
+    opts: [
+      'The fourth packet is a dummy packet to reset the physical layer of the router.',
+      'Because TCP is full-duplex; each direction of the connection must be closed independently. When one side sends a FIN and gets an ACK, it is "half-closed" and can still receive data from the other side until the other side sends its own FIN.',
+      'Because the client and server must perform a double-checked decryption routine before closure.',
+      'To allow the DNS server to update its global records before connection teardown.'
+    ],
+    correct: 1,
+    concept: 'TCP is full-duplex. When a host sends a FIN, it only indicates it has no more data to send. It can still read incoming data. The connection remains half-open until the other host also decides to close its outbound stream by sending its own FIN and receiving an ACK.',
+    why: 'A 4-way close represents asymmetric stream termination. Each stream direction must be closed independently with its own FIN-ACK exchange.'
+  },
+  {
+    topic: '4-Way Termination',
+    q: 'When restarting a backend web server, you frequently encounter the error "Address already in use". Which TCP state and timer cause this temporary blockage?',
+    opts: [
+      'SYN_RECV state during a slow start timeout.',
+      'TIME_WAIT state (lasting 2 × Maximum Segment Lifetime), which keeps the port active to ensure any late, stray packets on the network are received and discarded rather than corrupting a new connection on the same port.',
+      'CLOSE_WAIT state caused by a memory leak in the database driver.',
+      'LISTEN state locking the port globally.'
+    ],
+    correct: 1,
+    concept: 'After sending the final ACK to close a connection, the terminating host enters the TIME_WAIT state for 2*MSL (often 60-120 seconds). This ensures any delayed or duplicated packets in the network are captured and discarded, preventing them from corrupting subsequent connections on that same IP and port.',
+    why: 'This is a highly practical system engineer question. The server port is locked in TIME_WAIT, which is why developers encounter "Address already in use" during hot-reloads.'
+  },
+  // ── 6. HTTP VS HTTPS (2) ──
+  {
+    topic: 'HTTP vs HTTPS',
+    q: 'How does HTTPS leverage both asymmetric and symmetric encryption to secure data transmission efficiently?',
+    opts: [
+      'It uses symmetric encryption for the handshake (fast) and asymmetric encryption for the payload (highly secure).',
+      'It uses asymmetric encryption (RSA/ECDSA) during the handshake to securely exchange a session key, then switches to symmetric encryption (AES) using that shared session key to encrypt the actual payload data.',
+      'It uses asymmetric encryption for static files (HTML/CSS) and symmetric encryption for dynamic API calls.',
+      'Asymmetric encryption is used on port 80, and symmetric encryption is used on port 443.'
+    ],
+    correct: 1,
+    concept: 'Asymmetric encryption (public/private key) is computationally expensive but allows secure key exchange without a pre-shared secret. Symmetric encryption is extremely fast and secure once a shared secret is known. HTTPS combines both: asymmetric encryption secures the key exchange, and symmetric encryption protects the bulk of the data.',
+    why: 'The interviewer is checking if you understand why we do not use asymmetric encryption for the entire connection — it is simply too CPU-intensive.'
+  },
+  {
+    topic: 'HTTP vs HTTPS',
+    q: 'Which security guarantees does HTTPS provide, and what mechanism delivers the "authentication" guarantee?',
+    opts: [
+      'Eavesdropping protection; delivered by client cookies.',
+      'Confidentiality (encryption), Integrity (tampering detection), and Authentication (provided by SSL/TLS certificates signed by trusted Certificate Authorities).',
+      'Idempotency; delivered by the HTTP POST method.',
+      'Zero latency; delivered by bypassing the DNS lookup phase.'
+    ],
+    correct: 1,
+    concept: 'HTTPS uses TLS to secure communication. Confidentiality is achieved via payload encryption, Integrity is achieved via cryptographic checksums/MACs, and Authentication is verified using SSL/TLS certificates signed by third-party Root Certificate Authorities (CAs).',
+    why: 'HTTPS protects against eavesdropping, tampering, and impersonation. Certificates prove the identity of the server, preventing Man-in-the-Middle (MitM) attacks.'
+  },
+  // ── 7. DNS WORKING (2) ──
+  {
+    topic: 'DNS Working',
+    q: 'DNS primarily uses UDP port 53 for queries. Under what specific circumstances does DNS fall back to using TCP port 53?',
+    opts: [
+      'Whenever the client is accessing an HTTPS website.',
+      'When the DNS response size exceeds 512 bytes (or EDNS0 limits), which typically occurs during DNSSEC security queries or massive Zone Transfers.',
+      'When a mobile device switches from Wi-Fi to cellular data.',
+      'If the DNS root server is located in a different country.'
+    ],
+    correct: 1,
+    concept: 'DNS queries/responses are small, fitting into a single UDP packet to minimize latency. If the response exceeds 512 bytes (or larger negotiated EDNS0 limits), the DNS server sets the truncation bit (TC), telling the client to retry the request over a reliable TCP connection.',
+    why: 'Understanding DNS transport protocols is a classic interview differentiator. Speed = UDP, heavy payloads/zone transfers/security DNSSEC = TCP.'
+  },
+  {
+    topic: 'DNS Working',
+    q: 'During a DNS lookup, what is the role difference between the Recursive Resolver (usually your ISP or Google 8.8.8.8) and the Authoritative Nameserver?',
+    opts: [
+      'The recursive resolver holds the final master record; the authoritative nameserver caches it.',
+      'The recursive resolver does the legwork of querying Root, TLD, and Authoritative servers sequentially on the client\'s behalf; the Authoritative nameserver is the ultimate source of truth that actually holds and returns the IP mapping for the specific domain.',
+      'The recursive resolver operates at the Data Link layer; the authoritative server operates at the Transport layer.',
+      'There is no difference; they are redundant systems.'
+    ],
+    correct: 1,
+    concept: 'The Recursive Resolver acts as the intermediary. It queries Root nameservers, TLD nameservers (.com), and finally reaches the Authoritative nameserver, which is the official host holding the domain\'s DNS records and returning the actual IP.',
+    why: 'The resolver handles recursion for the client (which has a simple stub resolver), traversing the hierarchical DNS tree to fetch the authoritative answer.'
+  },
+  // ── 8. LOAD BALANCER (2) ──
+  {
+    topic: 'Load Balancer',
+    q: 'What is the technical routing distinction between a Layer 4 (L4) and a Layer 7 (L7) Load Balancer?',
+    opts: [
+      'L4 balances database traffic; L7 balances email traffic.',
+      'L4 routes traffic based on network and transport layer headers (IP and Port) without inspecting the application payload; L7 operates at the application layer, parsing HTTP headers, URLs, cookies, and payloads to make smart routing decisions.',
+      'L4 load balancers are always software-based; L7 are always hardware-based.',
+      'L4 load balancers encrypt data; L7 decrypts data.'
+    ],
+    correct: 1,
+    concept: 'L4 operates at the transport layer (TCP/UDP), routing packets purely on IP and Port headers without opening the packet payload (extremely fast). L7 operates at the application layer (HTTP/HTTPS), parsing headers, URLs (e.g., routing /api to one cluster, /images to another), cookies, and payloads, requiring connection termination (slower, but highly intelligent).',
+    why: 'AWS ALB (Application Load Balancer) is L7, and NLB (Network Load Balancer) is L4. Knowing L4 is fast/stateless and L7 is smart/stateful is essential.'
+  },
+  {
+    topic: 'Load Balancer',
+    q: 'If your backend servers store user session data in their local memory, which load balancing algorithm or feature is mandatory, and why is this problematic for horizontal scaling?',
+    opts: [
+      'Round Robin; it forces all servers to share memory automatically.',
+      'IP Hash (Sticky Sessions / Session Affinity); it ensures a client\'s requests are always routed to the same physical server. This is problematic because it creates uneven traffic distribution and if that server crashes, the user\'s session is lost.',
+      'Weighted least connections; because it requires custom database configurations.',
+      'Anycast routing; because it disables CDN edge caching.'
+    ],
+    correct: 1,
+    concept: 'Session affinity (sticky sessions) binds a user session to a single server instance. If that instance fails, the session is lost. It also disrupts balance efficiency. Modern architectures use stateless backend servers that store session data in a shared distributed cache (like Redis).',
+    why: 'The interviewer wants to see if you understand horizontal scaling. Sticky sessions are an anti-pattern. You should advocate for stateless servers with externalized session storage (like Redis).'
+  },
+  // ── 9. REVERSE PROXY (2) ──
+  {
+    topic: 'Reverse Proxy',
+    q: 'What is the core structural difference in objective between a Forward Proxy and a Reverse Proxy?',
+    opts: [
+      'Forward proxies run on Linux; Reverse proxies run on Windows.',
+      'A Forward Proxy sits in front of CLIENTS to intercept, filter, or anonymize their outbound internet requests; a Reverse Proxy sits in front of SERVERS to intercept inbound internet requests, protecting and managing the backend infrastructure.',
+      'Forward proxies only handle HTTP; Reverse proxies only handle HTTPS.',
+      'Forward proxies are used inside the data center; Reverse proxies are used in local offices.'
+    ],
+    correct: 1,
+    concept: 'A forward proxy represents clients (e.g., VPNs, school/corporate web filters protecting outbound requests). A reverse proxy represents servers (e.g., Nginx, HAProxy, Cloudflare protecting inbound requests, hiding backend IPs, routing traffic, and handling caching).',
+    why: 'Many candidates mix these up. Forward = Client agent. Reverse = Server agent.'
+  },
+  {
+    topic: 'Reverse Proxy',
+    q: 'Why is "SSL/TLS Termination" frequently handled at the Reverse Proxy level rather than on individual backend application servers?',
+    opts: [
+      'Because individual application servers are physically unable to compile encryption code.',
+      'It unburdens backend servers from CPU-heavy cryptographic handshakes and symmetric decryption, allowing backends to focus on business logic while simplifying SSL certificate renewal to a single centralized proxy.',
+      'It automatically speeds up database queries.',
+      'It is a security regulation that forbids backend servers from seeing raw encryption keys.'
+    ],
+    correct: 1,
+    concept: 'Cryptographic handshakes and payload decryption require significant CPU power. Offloading this tasks to dedicated reverse proxies allows backend servers to run in fast, plain HTTP over secure private subnets, while centralization simplifies SSL certificate management (e.g., Let\'s Encrypt).',
+    why: 'Handling SSL at the proxy level is an essential web architecture pattern. It simplifies backend scaling and makes certificate renewals a single-node operation.'
+  },
+  // ── 10. SSL/TLS (2) ──
+  {
+    topic: 'SSL/TLS',
+    q: 'During a TLS 1.2 handshake, how is the "pre-master secret" securely transmitted from the client to the server?',
+    opts: [
+      'It is sent as plaintext across port 443.',
+      'The client encrypts the pre-master secret using the server\'s public key (found in the verified SSL certificate). Only the server, possessing the matching private key, can decrypt it.',
+      'It is computed dynamically using the DNS nameserver record.',
+      'The server sends its private key to the client to decrypt it on the client side.'
+    ],
+    correct: 1,
+    concept: 'In asymmetric key exchange (like RSA), the client generates a random pre-master secret and encrypts it with the server\'s public key. The server decrypts it with its private key. Both parties then use this pre-master secret along with client/server randoms to derive the symmetric session keys.',
+    why: 'The interviewer is testing your understanding of PKI (Public Key Infrastructure). The public key encrypts; only the holder of the corresponding private key can decrypt.'
+  },
+  {
+    topic: 'SSL/TLS',
+    q: 'How did TLS 1.3 improve on TLS 1.2 regarding handshake performance and latency?',
+    opts: [
+      'It disabled asymmetric encryption entirely to achieve zero latency.',
+      'It reduced the handshake from a 2-RTT (Round Trip Time) process to a 1-RTT process, and introduced 0-RTT for resuming clients by allowing early application data to be sent inside the initial client handshake packet.',
+      'It switched the default port of HTTPS to port 80 to avoid network congestion.',
+      'It deprecated TCP, forcing all connections to run over UDP without handshakes.'
+    ],
+    correct: 1,
+    concept: 'TLS 1.3 simplifies the cryptographic negotiation. While TLS 1.2 required 2 round trips (2-RTT) to establish keys, TLS 1.3 completes this in 1-RTT. For returning clients, 0-RTT allows transmitting encrypted application data (like an HTTP GET) in the first flight of packets.',
+    why: 'Highlighting TLS 1.3 latency improvements (1-RTT standard, 0-RTT resumption) is a strong security and performance competitive edge.'
+  },
+  // ── 11. COOKIES VS SESSIONS (2) ──
+  {
+    topic: 'Cookies vs Sessions',
+    q: 'What are the scaling and security trade-offs of using client-side Cookies vs. server-side Sessions?',
+    opts: [
+      'Cookies are server-side and slow; Sessions are client-side and insecure.',
+      'Cookies are client-side, making them vulnerable to tampering/theft but highly scalable (stateless server); Sessions are server-side, making them secure, but they require memory/DB storage, limiting horizontal server scalability unless a centralized store (like Redis) is used.',
+      'Cookies can store gigabytes of data; Sessions are capped at 4KB.',
+      'Sessions do not support encryption, whereas Cookies are always encrypted.'
+    ],
+    correct: 1,
+    concept: 'Cookies are stored on the browser and sent with every request, reducing server-side state but risking client-side modification or theft. Sessions keep user state on the server (highly secure), but require memory or database queries, creating scaling bottlenecks unless a shared Redis session store is established.',
+    why: 'Understanding authentication scalability is a core engineering concept. Cookies scale easily but carry security risks; sessions are secure but require shared session stores to scale out.'
+  },
+  {
+    topic: 'Cookies vs Sessions',
+    q: 'How do server-side Sessions work in tandem with client-side Cookies for user authentication?',
+    opts: [
+      'The server saves the user\'s password in a cookie and compares it on every request.',
+      'The server generates a session record and sends the unique session ID to the client via a Set-Cookie header. The browser automatically appends this cookie on subsequent requests, allowing the server to look up the session data.',
+      'Cookies are compiled into the DNS record of the application.',
+      'The client encrypts the entire server database inside a local storage token.'
+    ],
+    correct: 1,
+    concept: 'When a session is created, the server stores user profile data on its side and issues a Session ID. This ID is set as a cookie on the client browser. For every subsequent request, the browser sends that cookie back, and the server queries its memory/database to identify the user.',
+    why: 'This details the classic session-cookie loop. It establishes state over the stateless HTTP protocol using a unique identifier.'
+  },
+  // ── 12. REST APIS (2) ──
+  {
+    topic: 'REST APIs',
+    q: 'In RESTful API design, why is PUT considered idempotent while POST is not?',
+    opts: [
+      'Because POST requests are always encrypted, while PUT requests are plaintext.',
+      'Because calling PUT multiple times with the same payload updates the target resource to the same state (same outcome); calling POST multiple times creates a new resource each time (e.g., duplicate orders or users).',
+      'PUT is only supported in HTTP/3, while POST works in all versions.',
+      'POST requests are processed on the database, while PUT is processed in the browser cache.'
+    ],
+    correct: 1,
+    concept: 'Idempotency means that making multiple identical requests has the same effect as making a single request. PUT completely replaces a resource at a specific URI; repeating the exact same PUT request leaves the resource in the same state. POST creates a new sub-resource under a collection URI; repeating it creates duplicates.',
+    why: 'This is a high-frequency REST design question. PUT replaces/updates a specific address; POST creates a new record, meaning duplicates are created if executed repeatedly.'
+  },
+  {
+    topic: 'REST APIs',
+    q: 'An API returns a 401 Unauthorized status code. What does a 4xx category status code signify compared to 5xx, and how does 401 differ from 403 Forbidden?',
+    opts: [
+      '4xx indicates a server-side crash; 5xx indicates a client-side routing mistake.',
+      '4xx indicates client-side errors (your mistake); 5xx indicates server-side errors (server crashed). 401 means the client lacks valid authentication; 403 means the client is authenticated but does not have permission to access the resource.',
+      '4xx status codes are handled by the load balancer; 5xx are handled by the database.',
+      '401 is for desktop browsers; 403 is for mobile apps.'
+    ],
+    correct: 1,
+    concept: '4xx errors indicate client errors (bad formats, lack of auth, invalid paths). 5xx indicates server failures (exceptions, crashes, database dropouts). `401` means "who are you?" (you must authenticate). `403` means "I know who you are, but you don\'t have admin permissions" (unauthorized).',
+    why: 'The interviewer is verifying your understanding of HTTP status codes. Knowing client vs server classifications and the exact difference between 401 and 403 is expected of any professional developer.'
+  },
+  // ── 13. WEBSOCKET (2) ──
+  {
+    topic: 'WebSocket',
+    q: 'How does a WebSocket connection get established, and how does its communication model differ from traditional HTTP Keep-Alive?',
+    opts: [
+      'It connects via a separate UDP port, bypassing TCP.',
+      'It begins as an HTTP request containing an "Upgrade: websocket" header. Once the server accepts with a 101 status code, the connection upgrades to a persistent, full-duplex TCP socket, allowing both sides to send data at any time without HTTP headers.',
+      'It requires the client to poll the server every 10 milliseconds.',
+      'It uses a specialized HTML iframe to load data in the background.'
+    ],
+    correct: 1,
+    concept: 'WebSocket starts as a standard HTTP/HTTPS connection and negotiates an "Upgrade" handshake. Once established, HTTP is dropped, and communication happens as raw frame segments over a single long-lived TCP socket, providing full-duplex real-time communication with minimal overhead.',
+    why: 'WebSockets eliminate the massive packet header overhead of HTTP, enabling extremely fast real-time push/pull streams (like chat and stock tickers).'
+  },
+  {
+    topic: 'WebSocket',
+    q: 'For an application that only needs to display a live stock ticker (data flows purely from server to client), would you choose WebSocket or Server-Sent Events (SSE), and why?',
+    opts: [
+      'WebSocket; because SSE is not supported in modern web browsers.',
+      'SSE; because it is a simpler, one-way (server-to-client) push protocol over standard HTTP with automatic reconnection, avoiding the bidirectional overhead and complex firewall configuration of WebSockets.',
+      'WebSocket; because it completely disables browser cookies to increase speed.',
+      'SSE; because it allows the client to write directly to the server\'s database.'
+    ],
+    correct: 1,
+    concept: 'Server-Sent Events (SSE) provide a lightweight, HTTP-based push system. Unlike WebSockets, which establish an entirely new bidirectional protocol, SSE operates over standard HTTP connections (using Text/Event-Stream), automatically handles reconnection, and traverses firewalls and proxies easily.',
+    why: 'Demonstrating that you can select SSE over WebSockets for unidirectional streams shows that you avoid over-engineering. WebSockets are for bidirectional gaming/chat; SSE is perfect for read-only tickers/feeds.'
+  },
+  // ── 14. CDN (2) ──
+  {
+    topic: 'CDN',
+    q: 'How does a Content Delivery Network (CDN) minimize latency for global web users, and how does it handle a Cache Miss?',
+    opts: [
+      'By compressing all files into a single ZIP archive on the client\'s device.',
+      'By caching assets on edge servers close to the user\'s geographic location (using Anycast/GeoDNS). On a Cache Miss, the edge server fetches the asset from the origin server, caches it locally for future hits, and returns it to the user.',
+      'By compiling JS code directly into the router\'s firmware.',
+      'By replicating the entire database onto every client\'s browser.'
+    ],
+    correct: 1,
+    concept: 'CDNs cache static and dynamic assets across a global network of Edge servers. Anycast DNS routes client requests to the nearest Point of Presence (PoP). On a cache miss, the edge node fetches the asset from the parent server (Origin), stores it locally, and serves it.',
+    why: 'CDN fundamentals center on bringing static data closer to the edge. The flow of Cache Hit vs Cache Miss is critical for infrastructure routing.'
+  },
+  {
+    topic: 'CDN',
+    q: 'What is the most effective cache invalidation strategy for static assets (like CSS/JS) to achieve infinite caching lifetimes while allowing instant updates during deployments?',
+    opts: [
+      'Manually purging the CDN cache via an API on every page visit.',
+      'Setting a very low TTL (e.g., 1 second) on all assets.',
+      'Using versioned URLs or cache-busting hashes (e.g., main.abc123f.js). If the file changes, the hash changes, creating a unique URL that forces a CDN cache miss while allowing unchanged files to be cached forever.',
+      'Disabling the CDN cache completely during business hours.'
+    ],
+    correct: 2,
+    concept: 'By baking unique compilation hashes into static filenames (cache busting), you can tell the CDN and browser to cache the file "forever" (e.g., 1 year). If you deploy an update, the hash changes, resulting in a brand new URL that bypasses the cached entries immediately.',
+    why: 'Cache invalidation is a major system challenge. Versioned URL hashing is the absolute gold standard in web development, combining infinite caching performance with zero-delay deployments.'
+  },
+  // ── 15. BROWSER OPENS GOOGLE (2) ──
+  {
+    topic: 'Browser Opens Google',
+    q: 'When the browser makes requests for sub-resources (images, scripts, styles) after loading Google\'s main HTML, how does HTTP/2 improve on HTTP/1.1\'s performance?',
+    opts: [
+      'HTTP/2 disables cookies to make packets smaller.',
+      'HTTP/2 allows multiplexing — sending multiple requests and receiving responses in parallel over a single TCP connection, eliminating the head-of-line blocking issue of HTTP/1.1 where resources had to wait in line.',
+      'HTTP/2 runs over UDP, bypassing the TCP handshake entirely.',
+      'HTTP/2 requires the browser to parse CSS before downloading HTML.'
+    ],
+    correct: 1,
+    concept: 'HTTP/1.1 suffered from Head-of-Line (HoL) blocking, where slow resources blocked subsequent requests on a connection, forcing browsers to open up to 6 separate parallel TCP connections. HTTP/2 introduces binary framing and multiplexing, allowing unlimited parallel request/response streams over a single shared TCP connection.',
+    why: 'Multiplexing is the key feature of HTTP/2. Knowing how it resolves HTTP/1.1 transport blocks is an essential high-performance web question.'
+  },
+  {
+    topic: 'Browser Opens Google',
+    q: 'After receiving the HTML response from the server, what sequence of operations does the browser perform to display the pixels of Google\'s search page on your screen?',
+    opts: [
+      'It compresses the HTML, saves it to a cookie, and sends it back to the DNS.',
+      'It parses HTML to build the DOM tree, parses CSS to build the CSSOM tree, combines them into a Render Tree, performs Layout (calculating element positions), Paints (draws vector shapes), and Composites (layers pixels on the GPU).',
+      'It translates HTML directly into database SQL queries.',
+      'It blocks all rendering until every single image on the page is fully downloaded.'
+    ],
+    correct: 1,
+    concept: 'The Critical Rendering Path dictates browser rendering: HTML parsing yields the DOM; CSS parsing yields the CSSOM. The browser combines these into the Render Tree (visible elements), executes Layout (calculating sizes and positions), Paints (drawing raster pixels), and Composites (organizing layers via the GPU for display).',
+    why: 'This question tests your end-to-end web engineering mastery. Understanding DOM, CSSOM, Render Tree, Layout, Paint, and Compositing is how you diagnose front-end performance bottlenecks.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Incredible job! You have a highly rigorous and complete understanding of computer networks. You mastered everything from low-level segment synchronization and cryptography to high-level application routing and infrastructure caching.';
+  else if (pct >= 55) para = 'Great effort! You have a solid foundational grasp of computer networks with some gaps in modern web architectures or protocol implementations. Review the specific concepts flagged below.';
+  else para = 'The core protocol mechanics need more study. Focus on tracing TCP connection loops, TLS handshakes, and DNS resolution flows before moving to web infrastructure optimizations.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Networking Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065711ced25182b',t:'MTc4MDU2MDQyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

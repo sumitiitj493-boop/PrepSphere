@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Core Interview Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../07-Linux.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">LINUX</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">Linux Core <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 rigorous kernel, command-line, and production-level debugging questions. Master process states, inode structures, virtual memory page caches, and network sockets.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">COMMAND EXECUTION</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Command Execution', 'Process vs Thread', 'Zombie Process', 'Daemon Process',
+  'Inodes & Links', 'Permissions & chmod', 'kill vs kill -9', 'File Utilities & Redirection',
+  'Pipe |', 'Memory & Swap', 'OOM Killer', 'Network Protocols',
+  'SSH & Tunneling', 'Cron Jobs', 'Production Debug'
+];
+const Q = [
+  // ── 1. COMMAND EXECUTION (2) ──
+  {
+    topic: 'Command Execution',
+    q: 'When you type an external command like "ls -la" and hit Enter, what chronological sequence of system calls does the parent shell perform to execute the binary and return you to the prompt?',
+    opts: [
+      'exec() → fork() → exit()',
+      'The shell performs a PATH lookup → invokes fork() to clone itself → the child process calls exec() to replace its memory with the ls binary → the parent shell calls wait() to pause until the child completes and exits.',
+      'The shell writes the command to /dev/null → copies the binary to stack memory → executes a thread switch.',
+      'read() → pipe() → kill()'
+    ],
+    correct: 1,
+    concept: 'When executing external binaries, the shell uses the fork-exec pattern. It forks a child, the child replaces its image with the executable via exec(), and the parent shell calls wait() to block until the child finishes, at which point control is returned to the user.',
+    why: 'The fork-exec-wait cycle is the architectural foundation of process creation and execution in Linux shells. It isolates the executing binary from the parent command-line wrapper.'
+  },
+  {
+    topic: 'Command Execution',
+    q: 'Why does a command like "cd /home/user" execute successfully without calling fork(), while "ls" must fork a new process?',
+    opts: [
+      'Because cd is a compiled C binary that runs directly on the CPU registers.',
+      'Because cd is a shell "built-in" command; changing the working directory modifies the shell\'s own process state, which must occur within the parent process itself, whereas external commands like ls exist as separate binaries in PATH and require a new process boundary.',
+      'Because cd runs exclusively on the heap, avoiding the stack-fork process.',
+      'Because cd is executed by the kernel directly at boot time.'
+    ],
+    correct: 1,
+    concept: 'Built-ins (like cd, echo, export) must run inside the shell\'s own process because they modify the environment of the current shell. If cd were to fork a child process, the child would change its working directory and immediately exit, leaving the parent shell\'s working directory completely unchanged.',
+    why: 'Shell built-in commands modify the state of the active shell process. Forking a child would isolate these changes, rendering the command useless to the parent terminal session.'
+  },
+  // ── 2. PROCESS VS THREAD (2) ──
+  {
+    topic: 'Process vs Thread',
+    q: 'How does the Linux kernel internally represent processes and threads, and which system call manages their creation?',
+    opts: [
+      'Linux represents processes with a PCB class and threads with a TCB class, using fork() for processes and thread_create() for threads.',
+      'Linux represents both as "tasks" using the same task_struct (treating threads as lightweight processes); both are created using the clone() system call, with different sharing flags (like CLONE_VM, CLONE_FS, CLONE_FILES) determining what resources are shared.',
+      'Linux executes threads strictly in user-space to bypass kernel overhead.',
+      'Linux uses the exec() system call to clone thread memory.'
+    ],
+    correct: 1,
+    concept: 'Under the hood, Linux treats processes and threads similarly. Both are schedulable tasks represented by task_struct. The clone() system call is the unified interface: if flags like CLONE_VM (share virtual memory) are set, it creates a thread (LWP); if not, it copies resources, creating a child process.',
+    why: 'Linux does not distinguish between threads and processes at the task schedule level. Both are task_struct records generated via clone(), making threads simply lightweight processes that share memory mappings.'
+  },
+  {
+    topic: 'Process vs Thread',
+    q: 'In a multi-threaded Linux application, what happens to the process if one thread dereferences a null pointer, causing a SIGSEGV?',
+    opts: [
+      'Only the failing thread is terminated; other threads continue running because threads have isolated stacks.',
+      'The entire process is terminated, killing all other threads, because threads share the same virtual address space, memory mappings, and file descriptors.',
+      'The kernel automatically restarts the crashed thread in a background daemon.',
+      'The thread enters a zombie state and waits for the parent thread to call wait().'
+    ],
+    correct: 1,
+    concept: 'Because threads share the same virtual address space, heap, and resource state of the process, any fatal exception (like SIGSEGV/segfault) in a single thread compromises the memory safety of the entire shared environment. The kernel must terminate the entire process.',
+    why: 'The shared-memory model of threads implies a shared fate. Any memory violation (SIGSEGV) in a thread compromises the shared heap address space, forcing the kernel to crash the entire process.'
+  },
+  // ── 3. ZOMBIE PROCESS (2) ──
+  {
+    topic: 'Zombie Process',
+    q: 'What is a "Zombie" process in Linux, and why does it continue to occupy a slot in the system\'s process table after it has finished running?',
+    opts: [
+      'A process that is executing in an infinite loop, consuming 100% CPU.',
+      'A dead child process whose exit status has not yet been collected by its parent process via the wait() or waitpid() system calls; the kernel retains its PID and metadata in the process table to hand over to the parent.',
+      'A process that has been suspended using the SIGSTOP signal.',
+      'A background process that has detached from the terminal session.'
+    ],
+    correct: 1,
+    concept: 'When a process terminates, the kernel reclaims its memory and files, but holds a small record (including PID, exit status, resource usage) in the process table. Until the parent process reads this exit status using wait(), the process remains a "zombie" (state Z).',
+    why: 'Zombies occupy no CPU or memory, but they preserve their process table slots. The entry is kept so the parent can read the exit code via wait(), completing the lifecycle.'
+  },
+  {
+    topic: 'Zombie Process',
+    q: 'You have a parent process that constantly spawns children but never calls wait(), creating thousands of zombie processes. How do you resolve this, and why is it dangerous?',
+    opts: [
+      'By executing kill -9 on the zombies; dangerous because it leaks heap memory.',
+      'Zombies cannot be killed directly because they are already dead; you must kill the parent process, causing the orphans to be adopted by init/systemd (PID 1), which automatically reaps them. This is dangerous because a build-up of zombies exhausts the system\'s finite PID slots, preventing new processes from launching.',
+      'By increasing the size of the swap space.',
+      'By running updatedb to clear the file caches.'
+    ],
+    correct: 1,
+    concept: 'Since zombie processes are already terminated, sending kill -9 (SIGKILL) to them has no effect. The only way to clean them up is to make their parent reap them. If the parent is dead or killed, the zombies become orphans. In Linux, PID 1 (init or systemd) adopts all orphans and reaps them immediately. If left unchecked, zombies can exhaust the OS\'s PID limit, blocking new process creation.',
+    why: 'You cannot kill what is already dead. Reaping zombies requires killing the parent so PID 1 (systemd) can adopt and clean them, avoiding system-wide PID exhaustion.'
+  },
+  // ── 4. DAEMON PROCESS (2) ──
+  {
+    topic: 'Daemon Process',
+    q: 'What sequence of steps does a standard Linux process perform to detach itself from the terminal and run as a background Daemon?',
+    opts: [
+      'By writing its PID directly to the /var/log/syslog file.',
+      'By calling fork() and letting the parent exit (running the child in background) → calling setsid() to create a new session and detach from the controlling terminal → changing directory to / → redirecting stdin/stdout/stderr to /dev/null.',
+      'By executing the command with & at the end of the line.',
+      'By compiling the program using static linking and executing it in swap space.'
+    ],
+    correct: 1,
+    concept: 'A proper daemon must detach completely from any controlling terminal. Forking and exiting the parent frees the child from the terminal group. Calling setsid() creates a new session, ensuring it can never acquire a controlling TTY. Redirecting standard descriptors to /dev/null or logs ensures no terminal I/O blockages occur.',
+    why: 'The bootstrap sequence guarantees isolation. setsid() detaches the process from any controlling session, and directory re-mapping (to /) prevents blocking filesystem unmounts.'
+  },
+  {
+    topic: 'Daemon Process',
+    q: 'What is the functional difference between a true Daemon process and a standard background process launched with an ampersand (command &)?',
+    opts: [
+      'Background jobs run faster because they use more CPU cores.',
+      'A background job (&) is still tied to the current shell\'s controlling terminal session; if you close the terminal, the shell sends a SIGHUP signal that kills the background process. A true daemon has detached from the terminal via setsid(), allowing it to run continuously.',
+      'Background jobs cannot write to files.',
+      'Daemons only run during the system boot sequence.'
+    ],
+    correct: 1,
+    concept: 'Running command & only tells the shell not to block. The process remains a child of the shell and inherits the controlling terminal. When the terminal session terminates, the parent shell propagates SIGHUP to all children. To keep a background job alive, you must use tools like nohup, disown, or build it as a proper detached daemon.',
+    why: 'Background jobs (`&`) inherit the parent shell\'s controlling TTY. If the terminal exits, they receive SIGHUP and die. True daemons bypass this via session detachment.'
+  },
+  // ── 5. INODES & LINKS (2) ──
+  {
+    topic: 'Inodes & Links',
+    q: 'At the inode level, what is the exact structural difference between a Hard Link and a Soft Link (Symlink)?',
+    opts: [
+      'Hard links are stored on the hard drive; soft links are stored in RAM.',
+      'A Hard Link is a directory entry pointing directly to the original file\'s inode (both share the same inode number and data block); a Soft Link is a separate file with its own inode that contains the text path string to the target file.',
+      'Hard links are for directories only; soft links are for files.',
+      'Soft links can only be created by the root user.'
+    ],
+    correct: 1,
+    concept: 'Every file name is just a link to an inode. A hard link creates a second name pointing to the exact same inode. If you delete the "original" filename, the inode reference count drops by 1, but the file data is still accessible via the hard link. A symlink is a separate file containing the path to the target. If the target is deleted, the symlink becomes a broken/dangling pointer.',
+    why: 'Hard links point directly to the physical inode block. Soft links (symlinks) are pointers to path strings. Deleting the target breaks the symlink, but leaves the hard link fully functional.'
+  },
+  {
+    topic: 'Inodes & Links',
+    q: 'Why can hard links NOT cross different filesystems (e.g. from an ext4 drive to a mounted NFS drive) or point to directories, while soft links can do both?',
+    opts: [
+      'Because hard links are too large for network directories.',
+      'Because inode numbers are only unique within a specific filesystem (another filesystem could use the same inode number for a different file). Pointing hard links to directories is blocked to prevent circular directory loops. Soft links avoid this because they store path strings, not raw inode numbers.',
+      'Because soft links are managed by the hardware.',
+      'Hard links require continuous encryption across filesystems.'
+    ],
+    correct: 1,
+    concept: 'Inode numbers are local to a specific filesystem partition. Creating a hard link across filesystems would lead to duplicate inode mapping conflicts. Additionally, allowing hard links to directories would break the hierarchical tree structure of filesystems, creating infinite circular routing loops during traversals.',
+    why: 'Inodes are partition-local metrics. Hard links cannot cross partitions because inode mappings overlap across drives. Soft links bypass this limitation by working with raw path strings.'
+  },
+  // ── 6. PERMISSIONS & CHMOD (2) ──
+  {
+    topic: 'Permissions & chmod',
+    q: 'Explain the octal values behind "chmod 755" permissions, and what the "execute" (x) bit achieves on a Directory?',
+    opts: [
+      '755 means the file is cloned 7 times.',
+      'Each digit is a sum of Read(4), Write(2), and Execute(1). 755 gives the owner rwx (7), the group r-x (5), and others r-x (5). On a directory, the execute bit allows users to "traverse" (cd into) the directory and access files inside.',
+      '755 grants the file access to port 755 on the network.',
+      'Execute bit on a directory compiles all files inside automatically.'
+    ],
+    correct: 1,
+    concept: 'Permissions are grouped into Owner, Group, and Others. The octal values represent binary bits: R=4, W=2, X=1. For directories, the execute bit is required to traverse or access files inside. Without it, you cannot cd into the directory or access its content, even if you have read permissions on files inside.',
+    why: 'The directory execute bit is the "traverse" gate. Without it, the directory cannot be entered (`cd`) or queried for internal file operations, even if read (`r`) is active.'
+  },
+  {
+    topic: 'Permissions & chmod',
+    q: 'What is the purpose of the "Sticky Bit" (chmod +t) on public directories like /tmp, and what does it enforce?',
+    opts: [
+      'It forces files to remain cached in RAM.',
+      'It enforces a security rule where any user can write files to the directory, but only the file\'s owner (or root) is allowed to delete or rename their own files, preventing users from deleting other users\' temporary files.',
+      'It prevents any files from being modified after creation.',
+      'It automatically backs up the directory to the swap partition.'
+    ],
+    correct: 1,
+    concept: 'In a standard directory, if a user has write permission, they can delete any file inside, regardless of who owns it. The Sticky Bit restricts file deletion and renaming to the file\'s owner or root, keeping shared directories secure.',
+    why: 'The sticky bit (+t) on shared directories secures user files. It restricts delete and rename permissions strictly to the owner of the specific file, preventing cross-user deletions.'
+  },
+  // ── 7. KILL VS KILL -9 (2) ──
+  {
+    topic: 'kill vs kill -9',
+    q: 'What is the mechanical difference between "kill <PID>" (SIGTERM) and "kill -9 <PID>" (SIGKILL) regarding how the target process handles them?',
+    opts: [
+      'SIGTERM is handled by the BIOS; SIGKILL is handled by the shell.',
+      'SIGTERM (15) is a polite termination request sent to the process, allowing it to catch the signal, flush logs, save state, and exit cleanly; SIGKILL (9) is handled directly by the kernel, terminating the process instantly without giving it a chance to clean up or run signal handlers.',
+      'SIGKILL can be caught and ignored by the process, while SIGTERM cannot.',
+      'SIGTERM is for thread pools; SIGKILL is for processes.'
+    ],
+    correct: 1,
+    concept: 'SIGTERM (Signal 15) is the standard termination signal. Well-written applications capture this signal, allowing them to release resources cleanly. SIGKILL (Signal 9) bypasses the process completely. The kernel terminates the task immediately. SIGKILL cannot be captured, blocked, or ignored.',
+    why: 'SIGTERM is graceful (catchable, allows process-side cleanup). SIGKILL is forceful (un-catchable, handled directly by the kernel, terminating execution immediately).'
+  },
+  {
+    topic: 'kill vs kill -9',
+    q: 'If you run "kill -9" on a Zombie process, why does the process still remain in the process table?',
+    opts: [
+      'Because the zombie process has a higher priority than the kernel.',
+      'Because the zombie process is already dead and has no execution context to receive or process any signals; its entry remains in the process table until its parent process reaps its exit status.',
+      'Because kill -9 only works on active network connections.',
+      'Because zombies are stored in the read-only segment of memory.'
+    ],
+    correct: 1,
+    concept: 'Since a zombie process is already terminated, it has no running code, registers, or signal queues. Sending SIGKILL to a zombie does nothing. The only way to clean up its process table slot is for the parent to call wait(), or to terminate the parent to let PID 1 reap it.',
+    why: 'Zombies are already dead. You cannot send a signal to a process without an active execution context. The table slot persists until the parent collects the exit metadata.'
+  },
+  // ── 8. FILE UTILITIES & REDIRECTION (2) ──
+  {
+    topic: 'File Utilities & Redirection',
+    q: 'Match these three Linux utilities to their file-searching purposes: (1) Search inside file contents; (2) Search for files in real-time by properties; (3) Search for files using a pre-indexed database.',
+    opts: [
+      '(1) find, (2) grep, (3) locate',
+      '(1) grep, (2) find, (3) locate',
+      '(1) locate, (2) find, (3) grep',
+      '(1) grep, (2) locate, (3) find'
+    ],
+    correct: 1,
+    concept: 'grep scans text inside files. find walks the directory tree in real-time to locate files matching metadata (names, sizes, modification dates). locate queries a pre-compiled database of file names, returning instant but potentially stale results.',
+    why: 'This matches tools to objectives. grep search text; find matches files via live metadata scans; locate references pre-built indexes.'
+  },
+  {
+    topic: 'File Utilities & Redirection',
+    q: 'Explain the mechanics of the command "command > log.txt 2>&1" in Linux.',
+    opts: [
+      'It duplicates the command to run on two different CPU cores.',
+      'It redirects standard output (file descriptor 1) to log.txt, and then redirects standard error (file descriptor 2) to the exact same destination as standard output, merging both output and error streams into the same file.',
+      'It runs the command in the background and sends the PID to log.txt.',
+      'It limits the file size of log.txt to 2 megabytes.'
+    ],
+    correct: 1,
+    concept: 'Linux uses file descriptors: 0 is stdin, 1 is stdout, 2 is stderr. > redirects stdout. 2>&1 directs stderr to where stdout is currently pointing. This merges both standard output and error logs into a single target file.',
+    why: 'The redirection sequence maps stdout to a file and merges stderr (descriptor 2) into the active descriptor 1 pointer, consolidating logs.'
+  },
+  // ── 9. PIPE | (2) ──
+  {
+    topic: 'Pipe |',
+    q: 'How does the Linux Pipe operator (command1 | command2) connect processes under the hood, and how is data buffered?',
+    opts: [
+      'By writing command1\'s output to a temporary file on disk, which command2 reads sequentially.',
+      'By setting up a unidirectional in-memory ring buffer in the kernel; command1 writes to the buffer and command2 reads from it concurrently. If the buffer fills up, command1 blocks until command2 reads and empties space.',
+      'By running both commands in the same thread to share their stacks.',
+      'By executing the commands sequentially after saving inputs in swap space.'
+    ],
+    correct: 1,
+    concept: 'Pipes are a form of kernel-managed Inter-Process Communication (IPC). The shell launches both commands concurrently. It connects the stdout file descriptor of the first command to the stdin of the second using an in-memory buffer (typically 64KB).',
+    why: 'Pipes are concurrent, in-memory IPC channels. They stream data from producer to consumer via kernel ring buffers without writing to disk.'
+  },
+  {
+    topic: 'Pipe |',
+    q: 'What does the "tee" utility do when placed inside a pipeline chain?',
+    opts: [
+      'It compiles the pipeline into a single binary executable.',
+      'It splits the standard input stream, writing it to one or more files while simultaneously passing it through standard output to the next command in the pipeline.',
+      'It halts the pipeline if an error occurs.',
+      'It encrypts the stdout stream before transmitting it.'
+    ],
+    correct: 1,
+    concept: 'The tee command is named after a T-splitter pipe. It captures stdin, writes a copy to physical files on disk, and passes the unmodified stream along stdout to the next command in the pipeline.',
+    why: 'tee splits data streams. It writes a persistent copy to disk files while passing the stream downstream for further pipeline filtering.'
+  },
+  // ── 10. MEMORY & SWAP (2) ──
+  {
+    topic: 'Memory & Swap',
+    q: 'What is "Swap Thrashing" on a Linux server, and which telemetry metric in vmstat indicates that the system is thrashing?',
+    opts: [
+      'Swap Thrashing is a disk health check.',
+      'It occurs when RAM is full and the kernel continuously swaps memory pages in and out of disk, causing disk I/O to bottleneck and system responsiveness to tank; indicated by non-zero values in the "si" (swap-in) and "so" (swap-out) columns of vmstat.',
+      'It is when swap space is completely deleted by the user.',
+      'Indicated by high CPU idle percentage.'
+    ],
+    correct: 1,
+    concept: 'When active memory demands exceed physical RAM, the system must continuously move pages between RAM and swap space (disk). Because disk I/O is slow, the CPU is stalled waiting for memory pages. This state of constant swapping is called thrashing, visible in vmstat as high rates of swap-in (si) and swap-out (so).',
+    why: 'Swap thrashing degrades performance via disk-wait blocks. It is diagnosed by checking vmstat\'s `si` and `so` columns for continuous page swapping.'
+  },
+  {
+    topic: 'Memory & Swap',
+    q: 'What does the Linux kernel parameter "vm.swappiness" control, and what is the trade-off of setting it to a low value (like 10)?',
+    opts: [
+      'It controls the maximum file size of the swap partition.',
+      'It controls how aggressively the kernel swaps active memory pages to disk; setting it to a low value (like 10) tells the kernel to avoid swapping and keep active data in physical RAM as long as possible, optimizing latency but risking Out-Of-Memory crashes if RAM runs out.',
+      'It controls how often the swap file is defragmented.',
+      'Setting it to a low value disables virtual memory completely.'
+    ],
+    correct: 1,
+    concept: 'swappiness values range from 0 to 100. High values aggressively swap inactive pages to disk to maximize page cache space in RAM. Low values tell the kernel to keep pages in physical RAM, avoiding disk I/O latency, making it the preferred choice for performance-sensitive servers.',
+    why: 'Swappiness scales from 0 (avoid swap) to 100 (aggressive swap). Setting it low keeps working sets in fast physical RAM, reducing I/O wait latencies.'
+  },
+  // ── 11. OOM KILLER (2) ──
+  {
+    topic: 'OOM Killer',
+    q: 'You run "free -h" on a healthy production server and notice that "free" memory is only 5%, but the "available" column shows 65%. Is this server in trouble, and why?',
+    opts: [
+      'Yes; the server is nearly out of memory and will crash immediately.',
+      'No; Linux aggressively uses idle RAM for Page Caching (disk read/write caches) to boost speed. This cached memory is listed under "buff/cache" and is immediately reclaimable, meaning the "available" column is the true measure of allocatable RAM.',
+      'Yes; but only if the swap partition is completely empty.',
+      'No; because the swap space is automatically compressed on the fly.'
+    ],
+    correct: 1,
+    concept: '"Free" memory is raw, untouched RAM. "Available" memory is the actual memory that can be allocated to processes without swapping. This includes "free" RAM plus the portion of the page cache and buffer memory that the kernel can reclaim instantly on-demand.',
+    why: 'This is the classic free memory trap. Linux utilizes idle RAM for filesystem caching. The "available" metric reveals true allocation room.'
+  },
+  {
+    topic: 'OOM Killer',
+    q: 'What is the role of the Linux OOM Killer, and how can you protect a critical process (like a database engine) from being terminated during RAM exhaustion?',
+    opts: [
+      'By compiling the process with special administrative permissions.',
+      'The OOM Killer terminates high-consuming, low-priority processes to prevent kernel panic during RAM exhaustion; you can protect a process by adjusting its /proc/<PID>/oom_score_adj toward -1000, making it virtually unkillable.',
+      'By moving the process\'s stack memory onto the swap partition permanently.',
+      'The OOM Killer can only be disabled by upgrading the hardware.'
+    ],
+    correct: 1,
+    concept: 'The Out-Of-Memory (OOM) Killer uses scoring calculations based on memory usage percentages and process priorities to select a "victim" task. System administrators can configure process priority adjustments via oom_score_adj (-1000 to +1000) to protect vital infrastructure.',
+    why: 'The OOM score selects termination targets. Adjusting a process\'s `oom_score_adj` to -1000 shields critical database engines from memory cleanup sweeps.'
+  },
+  // ── 12. NETWORK PROTOCOLS (2) ──
+  {
+    topic: 'Network Protocols',
+    q: 'What are the exact TCP flags exchanged during the 3-Way Handshake, and which socket state is visible on the server before the handshake completes?',
+    opts: [
+      'PING → PONG → ACK; socket state is LISTEN.',
+      'SYN (Client) → SYN-ACK (Server) → ACK (Client); before the final ACK is received, the server\'s socket remains in the SYN_RECV (half-open) state.',
+      'FIN → FIN-ACK → ACK; socket state is CLOSE_WAIT.',
+      'CONNECT → ACCEPT → READY; socket state is ESTABLISHED.'
+    ],
+    correct: 1,
+    concept: 'The client initiates a connection with SYN. The server responds with SYN-ACK. While waiting for the client\'s final ACK, the server allocates resources in its half-open connection queue, visible in networking tools as the SYN_RECV state.',
+    why: 'SYN -> SYN-ACK -> ACK establishes connections. Before the final ACK completes, the socket is bound to the half-open queue as `SYN_RECV`.'
+  },
+  {
+    topic: 'Network Protocols',
+    q: 'Why is the modern "ss" command highly preferred over the legacy "netstat" command for checking connection states on high-traffic servers?',
+    opts: [
+      'ss encrypts network packets, whereas netstat does not.',
+      'ss fetches socket statistics directly from the kernel\'s netlink interface; legacy netstat parses the /proc/net/tcp file line-by-line, causing significant CPU bottlenecks and slow responses on busy servers.',
+      'ss only checks UDP connections, making it more secure.',
+      'netstat has been completely deleted from all Linux kernels.'
+    ],
+    correct: 1,
+    concept: 'netstat reads and parses textual files in /proc, which can be extremely slow and resource-heavy on servers with thousands of concurrent connections. The modern ss utility communicates directly with the kernel\'s internal socket subsystems, delivering instant diagnostics with near-zero overhead.',
+    why: 'Performance differences are massive. `ss` uses netlink system maps; legacy `netstat` parses large textual `/proc` logs, stalling high-traffic diagnostic actions.'
+  },
+  // ── 13. SSH & TUNNELING (2) ──
+  {
+    topic: 'SSH & Tunneling',
+    q: 'How does SSH Key-Based Authentication verify your identity without ever transmitting your private key across the network?',
+    opts: [
+      'By sending the private key in an encrypted ZIP file.',
+      'The server generates a random challenge, encrypts it using your public key (stored in authorized_keys), and sends it; your client decrypts it using your private key and returns the result. This proves possession of the private key without exposing it.',
+      'By matching the MD5 hash of your password on the server.',
+      'The private key is compiled into the DNS records of the host.'
+    ],
+    correct: 1,
+    concept: 'SSH utilizes asymmetric cryptography. The server encrypts a challenge with the public key. Only the matching private key on the client\'s machine can decrypt this challenge, proving ownership cryptographically without ever transferring the private key.',
+    why: 'Key-based auth relies on asymmetric challenges. The public key encrypts; successful decryption proves possession of the private key without exposing it.'
+  },
+  {
+    topic: 'SSH & Tunneling',
+    q: 'What does the command "ssh -L 8080:localhost:80 user@server" achieve?',
+    opts: [
+      'It changes the SSH listening port on the server to 8080.',
+      'It sets up a Local Port Forwarding tunnel, forwarding all traffic sent to port 8080 on your local machine over the secure SSH connection to port 80 on the remote server.',
+      'It downloads the server\'s database to your local drive.',
+      'It runs the command as a daemon on the remote server.'
+    ],
+    correct: 1,
+    concept: 'Local Port Forwarding (-L) maps a local port through an encrypted SSH tunnel to a target port on the remote network, allowing you to securely access remote-only resources as if they were running locally.',
+    why: 'The local port flag (`-L`) redirects connections. Local requests to port 8880 stream over the encrypted SSH link directly to the remote server\'s port 80.'
+  },
+  // ── 14. CRON JOBS (2) ──
+  {
+    topic: 'Cron Jobs',
+    q: 'What is the chronological schedule defined by the crontab expression: "30 2 * * 1 /scripts/backup.sh"?',
+    opts: [
+      'Every 30 minutes for 2 hours on the first day of the month.',
+      'At exactly 2:30 AM on every Monday (weekday 1).',
+      'At 2:30 PM on the first day of the year.',
+      'Every 30 seconds on the second day of the month.'
+    ],
+    correct: 1,
+    concept: 'The crontab layout is defined as: MINUTE HOUR DAY_OF_MONTH MONTH DAY_OF_WEEK command. In this expression, 30 is the minute, 2 is the hour (2 AM), * means every day/month, and 1 represents Monday.',
+    why: 'Reading cron schedules follows positional mapping. `30 2 * * 1` translates to minute 30, hour 2, and weekday 1 (Monday).'
+  },
+  {
+    topic: 'Cron Jobs',
+    q: 'Why do shell scripts that run perfectly when executed manually in your terminal frequently fail when scheduled as Cron Jobs, and how do you prevent this?',
+    opts: [
+      'Because cron jobs do not support executing shell commands.',
+      'Because cron runs with a minimal, restricted PATH environment variable by default, meaning command aliases and binary paths are missing; you must prevent this by using absolute paths for all commands inside the script.',
+      'Because cron runs scripts entirely inside the swap partition.',
+      'Because cron jobs require a constant internet connection to run.'
+    ],
+    correct: 1,
+    concept: 'Cron does not load your shell profile. Consequently, it has a very basic PATH. If your script relies on customized command paths, it will throw "command not found" errors. Always define explicit environment paths or use absolute binary paths in cron scripts.',
+    why: 'Cron lacks interactive shell environmental maps (like `.bashrc`). Always declare absolute command paths (`/usr/bin/tar`) to prevent "command not found" crashes.'
+  },
+  // ── 15. PRODUCTION DEBUG (2) ──
+  {
+    topic: 'Production Debug',
+    q: 'You are alerted that a production web service is down. What is the correct order of operations to diagnose the root cause systematically?',
+    opts: [
+      'Restart the database → check logs → check CPU → test ping.',
+      'Check connectivity (ping/curl) → attempt SSH (verify OS is alive) → check process status (systemctl/ps) → inspect application and error logs (tail/journalctl) → check system resources (CPU, RAM, disk space, inodes) → locate and patch the bug.',
+      'Immediately restart the physical server to clear memory caches.',
+      'Compile the logs into a zip file and email them to the team.'
+    ],
+    correct: 1,
+    concept: 'Diagnosing outages requires a systematic, layered approach (from network up to application). Testing network ping/curl rules out DNS and firewall blocks. Connecting via SSH rules out OS-level crashes. Checking process lists verifies if the app has terminated. Inspecting logs reveals runtime exceptions or crashes.',
+    why: 'Debugging requires O(N) layered thinking. Check connectivity -> verify TTY access -> validate running status -> read logs -> monitor physical resources. This avoids premature reboots.'
+  },
+  {
+    topic: 'Production Debug',
+    q: 'A server is refusing to write logs or accept file uploads. "df -h" shows 50GB of free disk space, but the application throws "No space left on device". What is the root cause, and how do you detect it?',
+    opts: [
+      'The swap partition is corrupted; detected using free -h.',
+      'Inode exhaustion, where the filesystem has run out of allocated metadata index slots due to millions of tiny files; detected by running df -i to check inode capacity.',
+      'The CPU is overheating, blocking disk writes; detected using top.',
+      'The file descriptors have been encrypted by the kernel.'
+    ],
+    correct: 1,
+    concept: 'Filesystems allocate a fixed count of inodes at creation. Each file or directory requires exactly one inode. If a system generates millions of microscopic files (e.g. temporary session files or log segments), it can exhaust all available inodes, making it impossible to write new files even if there is plenty of physical disk space left. Use df -i to verify.',
+    why: 'Inodes represent filesystem indexing capacity. When exhausted (diagnosed via `df -i`), file creation halts with "No space left" errors, even if physical storage blocks show gigabytes of free space.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Incredible! You have complete, native-level mastery over Linux Core and systems administration. You successfully navigated kernel-level scheduling, process hierarchies, inode allocation ceilings, swap thrashing vmstats, and complex production diagnostics. Exceptional work!';
+  else if (pct >= 55) para = 'Great job! You have a strong core system understanding with some minor gaps in low-level signals (like SIGCHLD) or specific off-heap tracking metrics (like inode exhausting). Review the marked topics below.';
+  else para = 'You should spend more time reinforcing basic file descriptors, the fork-exec sequence, and permission bits before diving into system-level production debugging. Focus on core terminal pipelines first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Linux Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065d8ad2d6f7ab9',t:'MTc4MDU2NDY2Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

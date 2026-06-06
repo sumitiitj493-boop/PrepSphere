@@ -3,7 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Java Core — Interview Prep Notes</title>
+    <title>Java Interview Questions | PrepSphere</title>
+    <meta name="description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
+    <meta name="keywords" content="Java interview questions, core Java interview preparation, JVM, collections, garbage collection, multithreading, Java memory model" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://theprepsphere.in/05-Language-Core-Java.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Java Interview Questions | PrepSphere" />
+    <meta property="og:description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
+    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://theprepsphere.in/05-Language-Core-Java.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Java Interview Questions | PrepSphere" />
+    <meta name="twitter:description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
+    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "Java Interview Questions",
+  "description": "Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts.",
+  "url": "https://theprepsphere.in/05-Language-Core-Java.html",
+  "image": "https://theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation notes",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://theprepsphere.in"
+  }
+}
+    </script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Fira+Code:wght@400;500&family=Lato:wght@300;400;700&display=swap");
 
@@ -964,6 +995,124 @@
         }
         .jump-btn {
           padding: 10px 16px;
+        }
+      }
+    
+      /* Code block readability override: keep code structured, not paragraph-wrapped. */
+      .code-wrap,
+      .code-block {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .code-wrap > .code-block,
+      .code-block,
+      pre,
+      pre.code-block,
+      .code-wrap pre,
+      .code-block pre {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        tab-size: 4;
+        -webkit-overflow-scrolling: touch;
+        font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace !important;
+        line-height: 1.72;
+      }
+      .code-wrap > .code-block span,
+      .code-block span,
+      .code-block code,
+      pre code,
+      pre span,
+      pre.code-block span,
+      .code-wrap pre span,
+      .code-block pre span {
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar,
+      pre::-webkit-scrollbar,
+      pre.code-block::-webkit-scrollbar,
+      .code-wrap pre::-webkit-scrollbar,
+      .code-block pre::-webkit-scrollbar {
+        height: 9px;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar-thumb,
+      pre::-webkit-scrollbar-thumb,
+      pre.code-block::-webkit-scrollbar-thumb,
+      .code-wrap pre::-webkit-scrollbar-thumb,
+      .code-block pre::-webkit-scrollbar-thumb {
+        background: rgba(245, 166, 35, 0.35);
+        border-radius: 999px;
+      }
+      @media (max-width: 700px) {
+        .code-wrap > .code-block,
+        .code-block,
+        pre,
+        pre.code-block,
+        .code-wrap pre,
+        .code-block pre {
+          font-size: 12.5px;
+          line-height: 1.65;
+          padding: 1rem;
+        }
+      }
+      .practice-cta {
+        margin: 3rem 0 0;
+        padding: 1.35rem 1.5rem;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--gold);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .practice-cta h2 {
+        margin: 0 0 0.35rem;
+        font-size: 1.15rem;
+        color: var(--text);
+      }
+      .practice-cta p {
+        margin: 0;
+        color: var(--text2);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .practice-cta .practice-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0.75rem 1.15rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(245, 166, 35, 0.28);
+      }
+      .practice-cta .practice-btn:hover {
+        transform: translateY(-1px);
+      }
+      @media (max-width: 700px) {
+        .practice-cta {
+          align-items: stretch;
+          flex-direction: column;
+          padding: 1.15rem;
+        }
+        .practice-cta .practice-btn {
+          width: 100%;
         }
       }
     </style>
@@ -3548,7 +3697,16 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
         >
           ☕ You now know Java Core better than 90% of candidates. Go get it.
         </div>
-      </main>
+      
+
+        <section class="practice-cta" aria-labelledby="practice-title">
+          <div>
+            <h2 id="practice-title">Ready to test Java Core?</h2>
+            <p>Review JVM, OOP, collections, and concurrency through targeted questions.</p>
+          </div>
+          <a class="practice-btn" href="Quiz/05-Language-Core-Java.html">Start practice</a>
+        </section>
+</main>
     </div>
 
     <button

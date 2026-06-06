@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Interview Mastery Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../09-SQL.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">SQL MASTER</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">SQL <span>Interview</span> Mastery</div>
+    <div class="intro-sub">30 engineering-level relational queries and database architecture questions. Master offsets, window aggregations, self-joins, normal forms, and transaction ACID states.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">NTH & 2ND HIGHEST SALARY</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Nth & 2nd Highest Salary', 'Duplicate Records', 'Departmental Aggregations', 'Self Joins & Relations',
+  'Group Filtering & NULLs', 'DELETE, TRUNCATE, DROP', 'WHERE vs. HAVING', 'Relational Joins',
+  'Database Normalization', 'PRIMARY vs. FOREIGN Keys', 'Indexing Internals', 'UNION vs. UNION ALL',
+  'ACID Transactions', 'Clustered vs. Non-Clustered', 'Subqueries vs. Correlated'
+];
+const Q = [
+  // ── 1. NTH & 2ND HIGHEST SALARY (2) ──
+  {
+    topic: 'Nth & 2nd Highest Salary',
+    q: 'Which SQL query correctly finds the 3rd highest unique salary from an Employee table while safely handling duplicate values?',
+    opts: [
+      'SELECT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 3;',
+      'SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 1 OFFSET 2;',
+      'SELECT DISTINCT salary FROM Employee ORDER BY salary DESC LIMIT 3 OFFSET 1;',
+      'SELECT salary FROM Employee GROUP BY salary ORDER BY salary DESC LIMIT 2 OFFSET 1;'
+    ],
+    correct: 1,
+    concept: 'To find the Nth highest unique salary, we must deduplicate the list using DISTINCT first. The OFFSET is N-1 (which is 2 for N=3), and LIMIT 1 restricts the output to the single target record. If DISTINCT is omitted, duplicate top salaries will throw off the offset position, yielding an incorrect rank.',
+    why: 'The correct query matches `OFFSET 2` (N-1) alongside `DISTINCT` or `GROUP BY` deduplication. Option B is the syntactically elegant and mathematically accurate way to implement this offset logic.'
+  },
+  {
+    topic: 'Nth & 2nd Highest Salary',
+    q: 'Why is DENSE_RANK() preferred over RANK() and ROW_NUMBER() when writing a query to find the Nth highest salary in a partitioned database?',
+    opts: [
+      'DENSE_RANK() is much faster to execute because it bypasses the physical sorting phase of the query planner.',
+      'DENSE_RANK() assigns identical ranks to matching values and increments by exactly 1 for the next rank, preventing gaps.',
+      'DENSE_RANK() automatically filters out NULL values and scales the index to the maximum partition size.',
+      'DENSE_RANK() allows using the WHERE clause inside the main query without needing a nested subquery wrapper.'
+    ],
+    correct: 1,
+    concept: 'DENSE_RANK() handles ties by assigning the same rank to identical values and incrementing by 1 for the next unique value (e.g. 100, 100, 90 gets ranks 1, 1, 2). RANK() leaves gaps after ties (ranks 1, 1, 3). ROW_NUMBER() blindly assigns a unique sequential index to each row (ranks 1, 2, 3), making it useless for duplicates.',
+    why: 'DENSE_RANK() prevents gaps in rankings. If multiple employees share the highest salary, the next unique salary is ranked exactly 2, whereas RANK() would skip to rank 3.'
+  },
+  // ── 2. DUPLICATE RECORDS (2) ──
+  {
+    topic: 'Duplicate Records',
+    q: 'How do you find all duplicate email entries in a Users table and see exactly how many times each duplicate email appears?',
+    opts: [
+      'SELECT email, COUNT(*) FROM Users WHERE COUNT(*) > 1 GROUP BY email;',
+      'SELECT email, COUNT(*) FROM Users GROUP BY email HAVING COUNT(*) > 1;',
+      'SELECT email, SUM(1) FROM Users GROUP BY email WHERE COUNT(email) > 1;',
+      'SELECT DISTINCT email, COUNT(*) FROM Users GROUP BY email HAVING count > 1;'
+    ],
+    correct: 1,
+    concept: 'To find duplicates, we use GROUP BY to aggregate rows by the target column, and then apply HAVING to filter groups that occur more than once. The WHERE clause cannot be used here because it filters rows before aggregation and cannot evaluate aggregate functions like COUNT(*).',
+    why: 'HAVING is applied after GROUP BY, enabling aggregate filters. Option B is the textbook SQL way to evaluate duplicates by clustering records and filtering groups with a count greater than 1.'
+  },
+  {
+    topic: 'Duplicate Records',
+    q: 'You need to delete duplicate rows from an Employee table based on the "email" column, keeping only the row with the lowest "id". Which query achieves this safely in a SQL standard environment?',
+    opts: [
+      'DELETE FROM Employee WHERE id IN (SELECT MIN(id) FROM Employee GROUP BY email);',
+      'DELETE e1 FROM Employee e1 INNER JOIN Employee e2 ON e1.email = e2.email WHERE e1.id > e2.id;',
+      'DELETE FROM Employee e1 USING Employee e2 WHERE e1.email = e2.email AND e1.id < e2.id;',
+      'DELETE FROM Employee WHERE email IN (SELECT email FROM Employee GROUP BY email HAVING COUNT(*) > 1);'
+    ],
+    correct: 1,
+    concept: 'Using a self-join allows comparing rows of the same table. Joining on identical emails and filtering for `e1.id > e2.id` matches all duplicate records except the one with the absolute minimum ID (the earliest record). Deleting `e1` removes the duplicates while keeping the original safe.',
+    why: 'Self-joins compare records within the same table. By deleting `e1` where `e1.id > e2.id` on matching emails, we safely prune all duplicate rows while preserving the lowest ID.'
+  },
+  // ── 3. DEPARTMENTAL AGGREGATIONS (2) ──
+  {
+    topic: 'Departmental Aggregations',
+    q: 'Which query correctly retrieves the full employee details (name, salary, department_id) for the highest-paid employees in each department, handling ties?',
+    opts: [
+      'SELECT name, MAX(salary), department_id FROM Employee GROUP BY department_id;',
+      'SELECT name, salary, department_id FROM Employee WHERE (department_id, salary) IN (SELECT department_id, MAX(salary) FROM Employee GROUP BY department_id);',
+      'SELECT name, salary, department_id FROM Employee WHERE salary > (SELECT MAX(salary) FROM Employee GROUP BY department_id);',
+      'SELECT DISTINCT name, salary, department_id FROM Employee e1 INNER JOIN Employee e2 ON e1.salary = MAX(e2.salary);'
+    ],
+    correct: 1,
+    concept: 'Simply grouping by department and selecting MAX(salary) with the name returns mismatched results because non-aggregated columns in SELECT (like name) are chosen arbitrarily by some SQL engines. We must use a subquery with a tuple comparison `(department_id, salary) IN (...)` to match the exact department-max pairs.',
+    why: 'Tuple comparison `(department, salary) IN (...)` ensures we match the correct employee name with their department\'s maximum salary, naturally handling ties if multiple employees share the peak.'
+  },
+  {
+    topic: 'Departmental Aggregations',
+    q: 'How does the performance of finding employees earning above their department\'s average salary differ between a Correlated Subquery and a Window Function?',
+    opts: [
+      'The correlated subquery is faster because it parses the where constraints directly at compile-time.',
+      'The window function is faster (O(n)) because it computes the average once per partition; the correlated subquery is slower (O(n²)) because it runs for every row.',
+      'They perform identically because database compilers convert all window functions into correlated subqueries.',
+      'The correlated subquery is faster because it avoids allocating memory for a separate partition index.'
+    ],
+    correct: 1,
+    concept: 'A correlated subquery executes the inner query once for every single row in the outer query, resulting in quadratic O(n^2) complexity. A window function (`AVG(salary) OVER (PARTITION BY department_id)`) processes the partitions sequentially, computing the averages in a single O(n) pass, yielding far superior performance.',
+    why: 'Window functions are optimized for partitioned calculations. They execute in a single pass over sorted memory, whereas correlated subqueries force row-by-row re-evaluation.'
+  },
+  // ── 4. SELF JOINS & RELATIONS (2) ──
+  {
+    topic: 'Self Joins & Relations',
+    q: 'You need to find pairs of employees who share the exact same salary. Which query achieves this without returning redundant duplicate pairs or matching an employee to themselves?',
+    opts: [
+      'SELECT e1.name, e2.name FROM Employee e1 INNER JOIN Employee e2 ON e1.salary = e2.salary;',
+      'SELECT e1.name, e2.name FROM Employee e1 INNER JOIN Employee e2 ON e1.salary = e2.salary AND e1.id < e2.id;',
+      'SELECT e1.name, e2.name FROM Employee e1 INNER JOIN Employee e2 ON e1.salary = e2.salary AND e1.id != e2.id;',
+      'SELECT DISTINCT e1.name, e2.name FROM Employee e1, Employee e2 WHERE e1.salary = e2.salary;'
+    ],
+    correct: 1,
+    concept: 'To avoid matching an employee with themselves, we must exclude `e1.id = e2.id`. To prevent returning both "Alice-Bob" and "Bob-Alice" as redundant duplicate pairs, we use a strict inequality operator like `e1.id < e2.id`. This ensures each unique pair is evaluated and printed exactly once.',
+    why: 'Using the strict inequality `e1.id < e2.id` serves two purposes: it prevents self-matching and eliminates redundant reverse pairs (Alice/Bob and Bob/Alice), returning a clean, unique dataset.'
+  },
+  {
+    topic: 'Self Joins & Relations',
+    q: 'You have an Employee table with a self-referencing "manager_id" column pointing to the employee "id". Which join should you use to retrieve a list of all employees and their manager names, including the CEO (who has no manager)?',
+    opts: [
+      'INNER JOIN the Employee table to itself on manager_id = id.',
+      'LEFT JOIN the Employee table (as e) to itself (as m) on e.manager_id = m.id.',
+      'CROSS JOIN the Employee table to itself on manager_id.',
+      'RIGHT JOIN the Employee table (as e) to itself (as m) on e.id = m.manager_id.'
+    ],
+    correct: 1,
+    concept: 'A LEFT JOIN from employees (e) to managers (m) preserves all rows from the left table (employees). If an employee has no manager (like a CEO with a NULL manager_id), the left join still returns their name with a NULL manager field. An INNER JOIN would completely omit the CEO from the results.',
+    why: 'LEFT JOIN is mandatory to preserve unmatched left-side records. Since the CEO has a NULL `manager_id`, an INNER JOIN would omit them, whereas a LEFT JOIN correctly displays their record with a NULL manager.'
+  },
+  // ── 5. GROUP FILTERING & NULLS (2) ──
+  {
+    topic: 'Group Filtering & NULLs',
+    q: 'Which query correctly finds all department IDs that employ 5 or more active employees?',
+    opts: [
+      'SELECT department_id FROM Employee WHERE COUNT(id) >= 5 GROUP BY department_id;',
+      'SELECT department_id FROM Employee GROUP BY department_id HAVING COUNT(*) >= 5;',
+      'SELECT department_id FROM Employee GROUP BY department_id WHERE COUNT(id) >= 5;',
+      'SELECT DISTINCT department_id FROM Employee WHERE COUNT(*) >= 5 GROUP BY department_id;'
+    ],
+    correct: 1,
+    concept: 'The WHERE clause cannot evaluate aggregate functions like `COUNT(*)` because it filters rows before any grouping occurs. To filter aggregated groups, the filter must run after grouping using the `HAVING` clause.',
+    why: 'Aggregates require HAVING. Option B correctly groups the employee records by their department and applies the threshold constraint to the generated groups.'
+  },
+  {
+    topic: 'Group Filtering & NULLs',
+    q: 'You have a Customers table and an Orders table. Which query safely find customers who have never placed an order, even if the Orders table contains NULL customer IDs?',
+    opts: [
+      'SELECT name FROM Customers WHERE id NOT IN (SELECT customer_id FROM Orders);',
+      'SELECT name FROM Customers c WHERE NOT EXISTS (SELECT 1 FROM Orders o WHERE o.customer_id = c.id);',
+      'SELECT name FROM Customers c INNER JOIN Orders o ON c.id != o.customer_id;',
+      'SELECT name FROM Customers c LEFT JOIN Orders o ON c.id = o.customer_id WHERE o.customer_id IS NOT NULL;'
+    ],
+    correct: 1,
+    concept: '`NOT IN` fails completely if the subquery returns any NULL values; the entire condition evaluates to NULL (unknown), resulting in zero rows returned. `NOT EXISTS` uses three-valued logic safely, checking for the absence of coordinating rows and handling NULL values correctly without breaking.',
+    why: 'The NOT IN trap with NULLs is a classic SQL challenge. If the subquery contains a NULL, NOT IN returns an empty set. `NOT EXISTS` is null-safe and optimized.'
+  },
+  // ── 6. DELETE, TRUNCATE, DROP (2) ──
+  {
+    topic: 'DELETE, TRUNCATE, DROP',
+    q: 'What is the operational difference between executing a DELETE on a table compared to a TRUNCATE?',
+    opts: [
+      'DELETE is a DDL command that removes table metadata; TRUNCATE is a DML command that clears raw data bytes.',
+      'DELETE is a DML command that removes rows sequentially and logs each deletion (allowing rollback); TRUNCATE is a DDL command that deallocates memory pages (cannot be rolled back in most DBs and is much faster).',
+      'DELETE resets the auto-increment counter to its seed value; TRUNCATE preserves the counter state.',
+      'DELETE automatically drops all associated indexes, whereas TRUNCATE leaves indexes intact.'
+    ],
+    correct: 1,
+    concept: 'DELETE is a Data Manipulation Language (DML) operation that deletes rows one-by-one, firing triggers and logging each row deletion, making it slow but safe for transactions. TRUNCATE is a Data Definition Language (DDL) operation that bypasses logging by deallocating the table\'s data pages directly, making it extremely fast and resetting auto-increment counters.',
+    why: 'This compares logging, transaction boundaries, and counter behaviors. DELETE is row-by-row and logged; TRUNCATE is page deallocation and DDL.'
+  },
+  {
+    topic: 'DELETE, TRUNCATE, DROP',
+    q: 'Which command should you use to completely remove both a table\'s entire data content AND its structural schema definition from the database database?',
+    opts: [
+      'TRUNCATE TABLE Employee;',
+      'DROP TABLE Employee;',
+      'DELETE FROM Employee;',
+      'REMOVE TABLE Employee;'
+    ],
+    correct: 1,
+    concept: '`DELETE` and `TRUNCATE` only remove data rows inside a table, leaving the table\'s structure, columns, constraints, and indexes completely intact. `DROP` is a DDL command that completely deletes the table definition, structural schema, data, and metadata from the database dictionary.',
+    why: 'DROP destroys the container. While DELETE and TRUNCATE clear the contents but preserve the empty table structure, DROP removes the table entirely from the system.'
+  },
+  // ── 7. WHERE VS. HAVING (2) ──
+  {
+    topic: 'WHERE vs. HAVING',
+    q: 'Why can you NOT use an aggregate function like SUM(sales) inside a WHERE clause in a standard SQL SELECT statement?',
+    opts: [
+      'Because aggregate functions can only be executed on integer data types.',
+      'Because the WHERE clause is executed before the GROUP BY phase, meaning individual rows have not yet been grouped or aggregated.',
+      'Because the WHERE clause is executed after the SELECT phase, which restricts access to aggregates.',
+      'Because aggregate functions are only supported inside stored procedures.'
+    ],
+    correct: 1,
+    concept: 'The logical query execution order in SQL is: FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY. Because WHERE runs before GROUP BY, the database is still evaluating raw, individual rows. It cannot evaluate aggregates (which require groups) until the HAVING phase (which runs after grouping).',
+    why: 'This tests the SQL execution order. WHERE runs before GROUP BY, meaning individual rows are filtered before any group aggregates (like SUM or AVG) are computed.'
+  },
+  {
+    topic: 'WHERE vs. HAVING',
+    q: 'In which order of logical execution does a database engine process the clauses in a SELECT query?',
+    opts: [
+      'SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY',
+      'FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY',
+      'FROM → SELECT → WHERE → GROUP BY → HAVING → ORDER BY',
+      'WHERE → FROM → GROUP BY → HAVING → SELECT → ORDER BY'
+    ],
+    correct: 1,
+    concept: 'A database engine executes queries logically in this order: (1) FROM to locate tables, (2) WHERE to filter rows, (3) GROUP BY to cluster rows, (4) HAVING to filter groups, (5) SELECT to extract/alias columns, and (6) ORDER BY to sort the final result set.',
+    why: 'The logical processing sequence is FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY. This explains why column aliases defined in SELECT cannot be referenced in WHERE or HAVING.'
+  },
+  // ── 8. RELATIONAL JOINS (2) ──
+  {
+    topic: 'Relational Joins',
+    q: 'What is the mathematical difference in the result set generated by an INNER JOIN compared to a LEFT JOIN?',
+    opts: [
+      'INNER JOIN returns matching rows from both tables; LEFT JOIN returns all rows from the left table alongside matching rows from the right table (with NULLs for unmatched right-side fields).',
+      'INNER JOIN preserves unmatched left-side rows; LEFT JOIN only returns rows that match on both sides.',
+      'INNER JOIN is a cartesian product of both tables; LEFT JOIN restricts results to matching IDs.',
+      'They produce identical results, but INNER JOIN is executed on the stack and LEFT JOIN runs on the heap.'
+    ],
+    correct: 0,
+    concept: 'An INNER JOIN filters out any rows that do not have a matching key in both tables. A LEFT JOIN preserves every row from the left table, and if a row has no corresponding match in the right table, it populates the right-side columns with NULL values in the result set.',
+    why: 'This is the basic join distinction. INNER JOIN yields only intersecting matches; LEFT JOIN preserves the complete left table, padding unmatched right columns with NULL.'
+  },
+  {
+    topic: 'Relational Joins',
+    q: 'How can you emulate a FULL OUTER JOIN in a database like MySQL that does not natively support the FULL OUTER JOIN keyword?',
+    opts: [
+      'By performing a CROSS JOIN and filtering out all NULL values in the WHERE clause.',
+      'By executing a LEFT JOIN and a RIGHT JOIN, and combining their results using the UNION operator.',
+      'By nesting an INNER JOIN inside a correlated subquery.',
+      'By joining both tables using the ON DELETE CASCADE constraint.'
+    ],
+    correct: 1,
+    concept: 'Since MySQL lacks native FULL OUTER JOIN support, you can emulate it by taking a LEFT JOIN (to get all left rows and matching right) and a RIGHT JOIN (to get all right rows and matching left), and joining both queries with a `UNION`. The `UNION` operator automatically deduplicates identical rows, producing a clean full outer join.',
+    why: 'MySQL FULL OUTER JOIN emulation is a common workaround. Combining a LEFT JOIN and a RIGHT JOIN using `UNION` deduplicates the overlapping records, producing the complete outer set.'
+  },
+  // ── 9. DATABASE NORMALIZATION (2) ──
+  {
+    topic: 'Database Normalization',
+    q: 'A table contains order details: (OrderID, ProductID, ProductName, UnitPrice). The primary key is the composite key (OrderID, ProductID). If ProductName is determined solely by ProductID, which normal form does this table violate?',
+    opts: [
+      'First Normal Form (1NF), because the composite key contains duplicate values.',
+      'Second Normal Form (2NF), because there is a partial dependency where a non-key column (ProductName) depends on only part of the composite primary key.',
+      'Third Normal Form (3NF), because there is a transitive dependency between ProductName and UnitPrice.',
+      'Boyce-Codd Normal Form (BCNF), because the composite key is not a superkey.'
+    ],
+    correct: 1,
+    concept: '2NF requires that the table is in 1NF and contains no partial dependencies—meaning every non-key column must depend on the entire primary key. In this composite key setup, `ProductName` is determined by `ProductID` alone (part of the key), creating a partial dependency that violates 2NF.',
+    why: 'Partial dependency is the hallmark of a 2NF violation. Since ProductName depends only on ProductID (part of the composite key), the table must be split to satisfy 2NF.'
+  },
+  {
+    topic: 'Database Normalization',
+    q: 'Under what condition does a database table satisfy Third Normal Form (3NF) but violate Boyce-Codd Normal Form (BCNF)?',
+    opts: [
+      'When the table contains multi-valued attributes and lacks a primary key constraint.',
+      'When the table has overlapping candidate keys, and a non-superkey attribute functionally determines part of another candidate key.',
+      'When there is a transitive dependency between two non-key columns.',
+      'When the primary key is a UUID rather than an auto-incrementing integer.'
+    ],
+    correct: 1,
+    concept: 'A table is in 3NF if there are no transitive dependencies. However, it can violate BCNF if it has overlapping candidate keys, where a functional dependency X → Y exists such that the determinant X is a key attribute but is not a full superkey itself.',
+    why: 'BCNF is a stricter version of 3NF. The only scenario where a 3NF table violates BCNF is when overlapping candidate keys create functional dependencies whose left-hand side is not a full superkey.'
+  },
+  // ── 10. PRIMARY VS. FOREIGN KEYS (2) ──
+  {
+    topic: 'PRIMARY vs. FOREIGN Keys',
+    q: 'What is the precise structural and nullability difference between a PRIMARY KEY and a FOREIGN KEY in a relational schema?',
+    opts: [
+      'A primary key can contain duplicate values; a foreign key must be completely unique.',
+      'A primary key uniquely identifies rows and cannot contain NULL values; a foreign key links tables, allows duplicate values, and can contain NULLs.',
+      'A table can contain multiple primary keys but only one foreign key constraint.',
+      'Primary keys are checked at compile-time; foreign keys are checked only during runtime transactions.'
+    ],
+    correct: 1,
+    concept: 'A PRIMARY KEY enforces uniqueness and non-nullability (exactly one per table, uniquely identifying rows). A FOREIGN KEY is a referential constraint that points to a primary key in another table. It allows duplicate values (one-to-many relations) and can contain NULLs (representing optional relationships).',
+    why: 'Primary keys are unique and non-null. Foreign keys are relationship pointers that can contain duplicates and NULL values (for optional relationships).'
+  },
+  {
+    topic: 'PRIMARY vs. FOREIGN Keys',
+    q: 'What is the purpose of the "ON DELETE CASCADE" referential integrity constraint on a foreign key?',
+    opts: [
+      'It automatically encrypts the parent row when a child row is deleted.',
+      'It automatically deletes all child rows in the referencing table when the corresponding parent row in the referenced table is deleted.',
+      'It blocks the deletion of a parent row if active child references exist in the referencing table.',
+      'It reassigns the foreign key pointer to the lowest available auto-increment ID.'
+    ],
+    correct: 1,
+    concept: 'ON DELETE CASCADE is a referential integrity rule. When a row in the parent table (e.g. Department) is deleted, the database automatically deletes all rows in the child table (e.g. Employee) that reference that parent ID, preventing orphaned records.',
+    why: 'Cascading deletes maintain integrity automatically. Deleting a parent row triggers the automatic deletion of all dependent child records, avoiding foreign key orphan violations.'
+  },
+  // ── 11. INDEXING INTERNALS (2) ──
+  {
+    topic: 'Indexing Internals',
+    q: 'Why does adding multiple indexes to a database table speed up data retrieval (SELECT) but slow down write operations (INSERT, UPDATE, DELETE)?',
+    opts: [
+      'Because indexes copy the entire table into read-only RAM, reducing write speeds.',
+      'Because indexes speed up lookups using balanced structures (like B-trees) but force the database to update the corresponding index structures on every write.',
+      'Because indexes lock the entire table during write transactions to prevent memory leaks.',
+      'Because write operations must bypass the indexes and write directly to the swap partition.'
+    ],
+    correct: 1,
+    concept: 'Indexes (usually B-trees) speed up queries by providing a sorted pointer map to data blocks, reducing searches from O(n) to O(log n). However, on every write (insert/update/delete), the database must not only update the table blocks but also recalculate and write updates to all associated index trees, increasing write overhead.',
+    why: 'Indices require maintenance. They accelerate read searches via B-trees, but add write overhead because every data modification forces index tree reorganizations.'
+  },
+  {
+    topic: 'Indexing Internals',
+    q: 'If you have a composite index on columns (last_name, first_name), which of the following queries can leverage this index efficiently according to the Leftmost Prefix Rule?',
+    opts: [
+      'SELECT * FROM users WHERE first_name = \'Rahul\';',
+      'SELECT * FROM users WHERE last_name = \'Sharma\' AND first_name = \'Rahul\';',
+      'SELECT * FROM users WHERE first_name = \'Rahul\' OR last_name = \'Sharma\';',
+      'None of the queries can use the index because composite indexes require matching all columns in order.'
+    ],
+    correct: 1,
+    concept: 'The Leftmost Prefix Rule dictates that a composite index on (A, B) can only be used if the query filters on the leftmost column A (or A and B together). It cannot be used if the query filters on B alone. For the index `(last_name, first_name)`, queries filtering on `last_name` (or both) can use it, but a query filtering only on `first_name` cannot.',
+    why: 'Leftmost prefix rule applies. The index on (last_name, first_name) can serve searches on last_name, or last_name + first_name, but is ignored for queries on first_name alone.'
+  },
+  // ── 12. UNION VS. UNION ALL (2) ──
+  {
+    topic: 'UNION vs. UNION ALL',
+    q: 'What is the difference in performance and duplicate handling between UNION and UNION ALL?',
+    opts: [
+      'UNION keeps duplicates and is faster; UNION ALL removes duplicates and is slower.',
+      'UNION removes duplicate rows and is slower (requires sorting and comparing); UNION ALL preserves all rows including duplicates and is faster (directly appends).',
+      'UNION is only for numerical columns; UNION ALL can combine any data types.',
+      'UNION is executed on the client side, while UNION ALL runs on the database server.'
+    ],
+    correct: 1,
+    concept: '`UNION` combines results from two queries and performs an explicit sort and deduplication pass to remove duplicate rows, making it slower. `UNION ALL` simply appends the second result set to the first without checking for duplicates, making it much faster.',
+    why: 'Performance vs. Deduplication. UNION requires sorting and comparing to remove duplicates, whereas UNION ALL simply appends results, maximizing execution speed.'
+  },
+  {
+    topic: 'UNION vs. UNION ALL',
+    q: 'Which of the following is a strict structural requirement when combining two query results using either UNION or UNION ALL?',
+    opts: [
+      'Both queries must reference the exact same physical database tables.',
+      'Both queries must return the same number of columns, and the corresponding columns must have compatible data types.',
+      'The column names in the SELECT clauses of both queries must be completely identical.',
+      'The combined result set must be sorted using an ORDER BY clause in both queries.'
+    ],
+    correct: 1,
+    concept: 'To combine results using UNION/UNION ALL, the select lists of both queries must match in column count. Additionally, the data types of corresponding columns must be compatible (convertible) by the database, though the actual column names can differ (the first query\'s names are used).',
+    why: 'Matching schemas are required. Both queries must align in column count and corresponding data types, ensuring the database engine can map and stack the rows.'
+  },
+  // ── 13. ACID TRANSACTIONS (2) ──
+  {
+    topic: 'ACID Transactions',
+    q: 'How does a relational database implement the "Atomicity" property of ACID during transactions?',
+    opts: [
+      'By encrypting the transaction payload to prevent unauthorized access.',
+      'By using transaction undo logs to rollback all completed actions if any step in the transaction fails, ensuring an all-or-nothing execution.',
+      'By caching the transaction data in RAM until the next system reboot.',
+      'By locking the entire database in single-user mode during write operations.'
+    ],
+    correct: 1,
+    concept: 'Atomicity guarantees that a transaction is all-or-nothing. To implement this, databases record all modifications in an undo log. If the transaction completes successfully, it is committed. If any step fails, the database uses the undo logs to reverse (rollback) all changes, restoring the original state.',
+    why: 'Atomicity relies on rollback logs. If a transaction fails mid-flight, the undo log is replayed to reverse all modifications, guaranteeing all-or-nothing execution.'
+  },
+  {
+    topic: 'ACID Transactions',
+    q: 'Which ACID transaction isolation level is the strongest, completely preventing dirty reads, non-repeatable reads, and phantom reads, and what is its performance trade-off?',
+    opts: [
+      'Read Uncommitted; it is the fastest because it avoids acquiring locks.',
+      'Serializable; it provides maximum isolation but degrades performance by locking resources heavily, forcing concurrent transactions to run sequentially.',
+      'Repeatable Read; it is the default level and has zero performance impact.',
+      'Read Committed; it is the strongest and optimizes write performance automatically.'
+    ],
+    correct: 1,
+    concept: '`Serializable` is the highest isolation level. It prevents all concurrency anomalies (dirty reads, non-repeatable reads, phantom reads) by locking rows/tables extensively, effectively executing transactions sequentially, which significantly reduces concurrency and throughput.',
+    why: 'Serializable is the strongest level. It ensures absolute isolation but introduces heavy lock contention, forcing concurrent transactions to serialize, which lowers throughput.'
+  },
+  // ── 14. CLUSTERED VS. NON-CLUSTERED (2) ──
+  {
+    topic: 'Clustered vs. Non-Clustered',
+    q: 'Why can a database table have exactly ONE clustered index but multiple non-clustered indexes?',
+    opts: [
+      'Because clustered indexes consume too much CPU cache memory to allow duplicates.',
+      'Because a clustered index determines the physical storage order of the rows on disk, and data rows can only be physically sorted in one way.',
+      'Because SQL standards restrict tables to one index per unique primary key.',
+      'Because non-clustered indexes are stored in the metaspace, while clustered indexes are on disk.'
+    ],
+    correct: 1,
+    concept: 'The clustered index is the table itself—the leaf nodes of the B-tree contain the actual physical data rows. Since physical data can only be sorted and stored in one order on disk, there can be only one clustered index. Non-clustered indexes are separate helper structures containing pointers back to the clustered rows.',
+    why: 'Physical storage determines clustered index limits. Data rows can only have one sorted order on disk, restricting tables to exactly one clustered index.'
+  },
+  {
+    topic: 'Clustered vs. Non-Clustered',
+    q: 'In MySQL\'s InnoDB engine, how does the size of a primary key (like a 36-character UUID) affect the memory footprint of secondary (non-clustered) indexes?',
+    opts: [
+      'It has no effect because secondary indexes only store physical disk block pointers.',
+      'It increases the size of all secondary indexes because in InnoDB, every secondary index stores the primary key value as its row pointer.',
+      'It reduces the secondary index footprint by compressing character arrays.',
+      'It disables secondary indexes entirely, forcing full table scans on non-PK queries.'
+    ],
+    correct: 1,
+    concept: 'In InnoDB, the primary key is the clustered index. Every secondary index does not store raw physical disk pointers; instead, it stores the primary key value to locate rows. Consequently, a large primary key (like a UUID) inflates the size of *every* secondary index on that table, consuming more RAM and disk.',
+    why: 'In InnoDB, secondary indexes reference primary keys instead of disk pointers. A bloated primary key (like a UUID) inflates every secondary index on the table.'
+  },
+  // ── 15. SUBQUERIES VS. CORRELATED (2) ──
+  {
+    topic: 'Subqueries vs. Correlated',
+    q: 'What is the operational difference between a Regular Subquery and a Correlated Subquery?',
+    opts: [
+      'A regular subquery is executed on the client side; a correlated subquery runs on the database server.',
+      'A regular subquery runs once independently and passes its result to the outer query; a correlated subquery references columns from the outer query, executing once for every row processed.',
+      'A regular subquery can only return integers; a correlated subquery can return strings and floats.',
+      'They are identical in execution, but correlated subqueries require the virtual keyword.'
+    ],
+    correct: 1,
+    concept: 'A regular subquery is self-contained and executes once, returning a static result set used by the outer query. A correlated subquery references columns from the outer query, meaning it cannot run independently and must be re-evaluated for each candidate row processed by the outer query, which can be very slow.',
+    why: 'Execution frequency is the key difference. Regular subqueries execute once. Correlated subqueries reference the outer scope, forcing row-by-row re-evaluation.'
+  },
+  {
+    topic: 'Subqueries vs. Correlated',
+    q: 'How can you optimize a slow query containing a Correlated Subquery that filters employees earning above their department\'s average?',
+    opts: [
+      'By converting the subquery into a static UNION ALL statement.',
+      'By rewriting the query to use a Window Function with an OVER(PARTITION BY) clause to compute averages in a single pass.',
+      'By disabling the table\'s clustered index before executing the query.',
+      'By wrapping the subquery in a transaction block with Serializable isolation.'
+    ],
+    correct: 1,
+    concept: 'Correlated subqueries that calculate partition aggregates (like department averages) are slow because they run row-by-row. By rewriting the query to use a window function (`AVG(salary) OVER (PARTITION BY department_id)`), the database computes the average once per partition in a single pass, drastically optimizing performance.',
+    why: 'Window functions replace correlated subqueries. They calculate partition aggregates (like averages) in a single pass, avoiding row-by-row re-evaluations.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Incredible! You have complete, production-level mastery of SQL and relational database internals. You successfully navigated offsets, window partitioning, deduplications, normal form criteria, and transaction ACID isolation layers. Superb work!';
+  else if (pct >= 55) para = 'Great job! You have a strong SQL foundation with some minor gaps in low-level transactional isolation rules or index-referencing metrics (like UUID impacts). Review the marked topics below.';
+  else para = 'You should spend more time reinforcing basic SQL execution order, grouping filters, and normalization definitions before writing complex analytical queries. Focus on core syntax rules first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'SQL Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065eb78c8be6e60',t:'MTc4MDU2NTQzNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

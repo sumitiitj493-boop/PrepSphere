@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Interview Prep Quiz</title>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .intro-title span { color: var(--accent); }
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+  .opt.locked { cursor: default; pointer-events: none; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+  .exp-section { margin-bottom: 24px; }
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+  .exp-text.why-text { color: #c8b890; }
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .revisit-section { margin-bottom: 32px; }
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .results-actions { display: flex; gap: 14px; }
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--accent); color: #000; }
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+  .btn-copy:hover { opacity: 0.85; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../08-Git.html">&larr; Notes</a>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">GIT CORE</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 30</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+<div id="main">
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">Git Core <span>Interview</span> Prep</div>
+    <div class="intro-sub">30 high-fidelity questions on version control internals, branching graph models, merge conflicts, and team workflows. Master Directed Acyclic Graphs, head pointers, and history recovery.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">INTRODUCTION & INTERNALS</div>
+      <div class="q-number" id="q-number">Q 01 of 30</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 30</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+</div>
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+<script>
+const GLYPHS = ['A','B','C','D'];
+const TOPICS = [
+  'Introduction & Internals', 'Git vs. GitHub Ecosystem', 'Local/Remote Sync', 'Merge vs. Rebase',
+  'Git Stash & Staging', 'Git Reset vs. Revert', 'Merge Conflicts & Resolution', 'Git Ignore Mechanics',
+  'Git Clone vs. Git Fork', 'Understanding HEAD', 'Detached HEAD State', 'Staging Strategies',
+  'Team Git Workflows', 'Undoing Commits & Push', 'Advanced Debugging'
+];
+const Q = [
+  // ── 1. INTRODUCTION & INTERNALS (2) ──
+  {
+    topic: 'Introduction & Internals',
+    q: 'How does Git structurally represent project history and manage branches in memory under the hood?',
+    opts: [
+      'It creates complete zipped copies of files for each branch, saving them in local relational DB tables.',
+      'It represents commits as nodes in a Directed Acyclic Graph (DAG) and branches as simple, lightweight pointers to specific commit hashes.',
+      'It maintains a sequential flat file list where branches are represented as nested offsets inside the main repository metadata.',
+      'It utilizes dynamic system links to coordinate active branch folders, copying untracked items to the heap on change.'
+    ],
+    correct: 1,
+    concept: 'At its core, Git utilizes a Directed Acyclic Graph (DAG) made of immutable commit objects. A branch is not a folder copy or a complex file partition; it is simply a 41-byte text file containing a 40-character SHA-1/SHA-256 hash pointing to a specific node in the DAG. This makes branch creation an O(1) instant pointer write.',
+    why: 'The interviewer is testing your understanding of Git\'s internal DAG architecture. Describing branches as lightweight pointers to commits rather than heavy file duplication is the correct mental model.'
+  },
+  {
+    topic: 'Introduction & Internals',
+    q: 'What is the physical significance of the hidden ".git" folder located inside your root project directory?',
+    opts: [
+      'It is a temporary folder that holds cache files and can be safely deleted to speed up local execution.',
+      'It IS the actual repository, containing the object database, commit history, refs, configuration, and index state.',
+      'It is a backup directory used only when the local client is disconnected from the central server.',
+      'It stores compiled binary versions of your source code to optimize local terminal command executions.'
+    ],
+    correct: 1,
+    concept: 'The root `.git` directory contains the entire local database of your project, including the object store (commits, trees, blobs), branch/tag refs, the staging index file, and local configuration. The visible files in your directory are simply your active "working copy" extracted from this database.',
+    why: 'All options are equal in length and plausible. The key is that the `.git` directory stores the entire project history. Deleting it destroys all version tracking, leaving only a static working copy.'
+  },
+  // ── 2. GIT VS. GITHUB ECOSYSTEM (2) ──
+  {
+    topic: 'Git vs. GitHub Ecosystem',
+    q: 'Which of the following describes the difference in scope and capability between Git and GitHub?',
+    opts: [
+      'Git is designed only for open-source projects, while GitHub is a commercial tool designed for enterprise source code.',
+      'Git is a local, decentralized command-line tool for version control; GitHub is a cloud platform that hosts Git repositories and adds PRs.',
+      'Git requires a continuous internet connection to make commits; GitHub is a completely offline client management tool.',
+      'Git manages file encryption on your drive, while GitHub converts files to HTML formats for web browser rendering.'
+    ],
+    correct: 1,
+    concept: 'Git is a local command-line version control system that runs offline on your machine. GitHub is a remote hosting platform owned by Microsoft that wraps Git, adding collaboration layers like Pull Requests, issue trackers, CI/CD Actions, and access management.',
+    why: 'This clarifies a common novice mistake. Git is the low-level engine; GitHub is the hosting and collaboration platform built on top of it.'
+  },
+  {
+    topic: 'Git vs. GitHub Ecosystem',
+    q: 'Which of the following operations can be executed entirely offline without any internet connection?',
+    opts: [
+      'git push origin main and git pull origin main',
+      'git commit -m "update" and git log --oneline',
+      'git clone <repository_url> and git remote add',
+      'Opening a Pull Request and triggering a GitHub Action'
+    ],
+    correct: 1,
+    concept: 'Because Git is a distributed version control system, every developer holds a full copy of the project database locally. Operations like committing (`git commit`), viewing logs (`git log`), creating local branches, and checking diffs are completed offline against the local `.git` database.',
+    why: 'This tests the distributed nature of Git. Pulling, pushing, cloning, and web-platform features (PRs, Actions) require network access. Committing and viewing history are local, offline tasks.'
+  },
+  // ── 3. LOCAL/REMOTE SYNC (2) ──
+  {
+    topic: 'Local/Remote Sync',
+    q: 'What is the precise mechanical difference between running "git fetch" and running "git pull"?',
+    opts: [
+      'git fetch is used to upload local commits; git pull is used to download remote files.',
+      'git fetch downloads remote metadata without modifying your working branch; git pull downloads and immediately merges changes.',
+      'git fetch replaces your local changes completely; git pull safely stashes them before downloading.',
+      'git fetch requires administrative write permissions; git pull can be executed by anonymous guest accounts.'
+    ],
+    correct: 1,
+    concept: '`git fetch` communicates with the remote repository to download new commits and refs, updating your local remote-tracking branches (like `origin/main`) without altering your active working copy or branch. `git pull` is a composite command that executes `git fetch` and then immediately runs `git merge` (or `git rebase`) to integrate those changes into your current branch.',
+    why: 'This is a classic synchronisation question. Fetch is non-destructive and only updates remote references. Pull is a fetch-plus-merge shortcut that mutates your working directory.'
+  },
+  {
+    topic: 'Local/Remote Sync',
+    q: 'Why do many senior developers prefer using "git pull --rebase" over a standard "git pull"?',
+    opts: [
+      'Because it is faster and bypasses the network connection phase.',
+      'Because it avoids creating redundant merge commits for every pull, keeping the branch history clean and linear.',
+      'Because it automatically resolves all merge conflicts by choosing the remote version.',
+      'Because it compresses the local commit objects into a single compressed pack file.'
+    ],
+    correct: 1,
+    concept: 'A standard `git pull` fetches and merges, which can generate a noisy "Merge branch..." commit if your local branch has diverged from the remote. `git pull --rebase` fetches the remote commits first, and then replays your unpushed local commits on top of them, preserving a clean, straight line of history.',
+    why: 'Rebasing on pull keeps commit history clean. It replays local commits on top of the fetched remote state, preventing loop-like merge commits.'
+  },
+  // ── 4. MERGE VS. REBASE (2) ──
+  {
+    topic: 'Merge vs. Rebase',
+    q: 'What is the primary difference in history structure and safety between merging and rebasing feature branches?',
+    opts: [
+      'Merge is an offline operation; Rebase requires a continuous connection to the remote server.',
+      'Merge preserves the actual chronological history with a merge commit; Rebase rewrites history to create a linear timeline.',
+      'Merge is only supported on main branches; Rebase is designed only for temporary local feature branches.',
+      'Merge modifies file permissions on conflict; Rebase deletes conflicting lines to bypass errors.'
+    ],
+    correct: 1,
+    concept: '`git merge` is non-destructive; it preserves the historical timeline of both branches and creates a "merge commit" to tie them together. `git rebase` rewrites the commit history by moving the entire set of feature commits to the tip of the target branch, creating a completely linear history with new commit hashes.',
+    why: 'This checks your understanding of history preservation vs. history rewriting. Merging is an additive, safe history operation. Rebasing is a rewriting operation that yields clean timelines.'
+  },
+  {
+    topic: 'Merge vs. Rebase',
+    q: 'What is the "Golden Rule of Rebasing", and what consequence occurs if this rule is violated?',
+    opts: [
+      'Never rebase commits on a local branch; violating it causes local memory leaks.',
+      'Never rebase commits that have already been pushed to a shared public branch; violating it forces teammates into painful merge loops.',
+      'Never rebase unless you are logged in as the repository creator; violating it rejects the push.',
+      'Never rebase more than five commits at a time; violating it corrupts the local object database.'
+    ],
+    correct: 1,
+    concept: 'The golden rule of rebasing is: Never rebase commits that exist on a shared, public branch. Because rebase rewrites commits (creating new hashes for identical changes), anyone working on that same branch will find their local history completely disconnected, resulting in massive conflict and duplicate commit loops upon their next pull.',
+    why: 'This tests teamwork safety. Rebasing unpushed local commits is fine, but rewriting pushed public commits disrupts the team\'s synchronized state.'
+  },
+  // ── 5. GIT STASH & STAGING (2) ──
+  {
+    topic: 'Git Stash & Staging',
+    q: 'What does "git stash" achieve, and when is it most useful in a developer\'s daily workflow?',
+    opts: [
+      'It permanently deletes untracked files to free up disk space.',
+      'It temporarily shelves your uncommitted changes so you can work on another branch, allowing you to restore them later.',
+      'It pushes your uncommitted files to a private backup branch on the remote server.',
+      'It compresses your active directory and exits the terminal session safely.'
+    ],
+    correct: 1,
+    concept: '`git stash` takes your uncommitted modifications (both staged and unstaged files), saves them in a local storage stack, and reverts your working copy to a clean HEAD state. This lets you quickly switch branches to fix bugs or pull remote updates without being blocked by dirty working-copy warnings.',
+    why: 'Stashing is a local, temporary state-saver. It clears your working directory so you can pivot to other tasks, and lets you pop changes back later.'
+  },
+  {
+    topic: 'Git Stash & Staging',
+    q: 'By default, running "git stash" does not include new, untracked files. How do you include them in the stash?',
+    opts: [
+      'By running git stash --force-all before switching.',
+      'By running git stash -u (or --include-untracked) to instruct Git to capture untracked files.',
+      'By setting git config stash.untracked true globally.',
+      'By executing git stash and then manually copying files to a zip directory.'
+    ],
+    correct: 1,
+    concept: 'Standard `git stash` only tracks modified files that are already part of Git\'s index. To stash newly created, untracked files without staging them first, you must append the `-u` (or `--include-untracked`) flag to the stash command.',
+    why: 'This is a common daily workflow trap. Standard stash ignores untracked files. Using `-u` (untracked) or `-a` (all) captures everything.'
+  },
+  // ── 6. GIT RESET VS. REVERT (2) ──
+  {
+    topic: 'Git Reset vs. Revert',
+    q: 'What is the structural difference between using "git reset" and "git revert" to undo a commit?',
+    opts: [
+      'git reset is used to undo file edits; git revert is used to undo branch deletions.',
+      'git reset moves the branch pointer backward (rewriting history); git revert creates a new commit that undoes the targeted changes.',
+      'git reset requires administrative permissions; git revert can be run by anyone.',
+      'git reset deletes the entire local .git directory; git revert only deletes the latest commit.'
+    ],
+    correct: 1,
+    concept: '`git reset` moves the active branch head pointer backward, effectively erasing commits from the current branch history (local use only). `git revert` is an additive operation; it computes the inverse of a past commit and creates a brand-new commit containing those inverse changes, leaving existing history untouched.',
+    why: 'This is a high-frequency interview topic. Reset rewrites pointer history (unsafe for public branches). Revert is additive (safe for public branches).'
+  },
+  {
+    topic: 'Git Reset vs. Revert',
+    q: 'Match these three "git reset" modes to their behaviors on your working copy: (1) --soft, (2) --mixed, (3) --hard.',
+    opts: [
+      '(1) Keep changes in working directory but unstage; (2) Delete all changes; (3) Keep changes staged.',
+      '(1) Keep changes staged; (2) Unstage changes but keep in working directory; (3) Delete all working directory changes.',
+      '(1) Delete all changes; (2) Keep changes staged; (3) Unstage changes.',
+      '(1) Keep changes staged; (2) Delete all changes; (3) Unstage changes but keep in working directory.'
+    ],
+    correct: 1,
+    concept: '`--soft` undoes the commit but leaves your changes staged. `--mixed` (default) undoes the commit and unstages changes, keeping files in your working directory. `--hard` undoes the commit, unstages changes, and completely deletes all changes from your working directory (destructive).',
+    why: 'This tests precise knowledge of reset modes. soft = staged; mixed = working copy; hard = complete deletion.'
+  },
+  // ── 7. MERGE CONFLICTS & RESOLUTION (2) ──
+  {
+    topic: 'Merge Conflicts & Resolution',
+    q: 'What triggers a Merge Conflict in Git during a merge or pull operation?',
+    opts: [
+      'When two developers edit different files inside the same repository simultaneously.',
+      'When two branches modify the exact same lines of the same file in different ways, and Git cannot automatically resolve the changes.',
+      'When a developer attempts to merge a local branch that has not been pushed to the remote server.',
+      'When the file size of a merged asset exceeds the maximum threshold of the index.'
+    ],
+    correct: 1,
+    concept: 'If Branch A and Branch B modify different lines or different files, Git merges them automatically. A conflict is triggered only when changes overlap on the exact same lines of the same file, forcing a developer to evaluate and resolve the logical conflict.',
+    why: 'Git handles non-overlapping changes automatically. Conflicts only occur when edits collide on the same lines, blocking automatic integration.'
+  },
+  {
+    topic: 'Merge Conflicts & Resolution',
+    q: 'After opening a conflicted file and manually resolving the differences between the conflict markers, what are the next steps to finalize the merge?',
+    opts: [
+      'Run git checkout to reset the file, then run git push.',
+      'Run git add <file> to mark the conflict as resolved, then run git commit to complete the merge.',
+      'Delete the conflicted file from disk, then run git pull --force.',
+      'Run git reset --hard to force the merge, then run git remote update.'
+    ],
+    correct: 1,
+    concept: 'To resolve a conflict: (1) edit the file to the desired state and remove all conflict markers, (2) run `git add <file>` to stage the resolved file (telling Git the conflict is resolved), and (3) run `git commit` to write the final merge commit.',
+    why: 'Staging the resolved file tells Git that the conflict is resolved. Committing completes the merge transaction.'
+  },
+  // ── 8. GIT IGNORE MECHANICS (2) ──
+  {
+    topic: 'Git Ignore Mechanics',
+    q: 'A developer adds a pattern like "secrets.env" to their ".gitignore" file, but Git continues to track and commit changes to that file. What is the cause and the correct solution?',
+    opts: [
+      'The .gitignore file is corrupted; solution is to delete and recreate the .git directory.',
+      'The file was already committed and tracked by Git before the pattern was added; solution is to run git rm --cached secrets.env to untrack it.',
+      'The .gitignore file only supports folder patterns; solution is to move the file inside a folder.',
+      'The file is marked as read-only; solution is to change its system permissions first.'
+    ],
+    correct: 1,
+    concept: '`.gitignore` only prevents untracked files from being added to the index. If a file was already tracked (committed), adding it to `.gitignore` has no effect. To stop tracking it, you must remove it from the staging index using `git rm --cached <file>`, keeping the local file on disk while ignoring it in Git.',
+    why: 'This is a very common daily development trap. Files already tracked are ignored by gitignore. You must run `git rm --cached` to stop tracking them.'
+  },
+  {
+    topic: 'Git Ignore Mechanics',
+    q: 'Which of the following files or directories is a prime candidate for inclusion in a project\'s ".gitignore" file?',
+    opts: [
+      'The project\'s main README.md documentation file.',
+      'Environment secret files (.env), massive dynamic dependency folders (node_modules), and compiled binaries or log files.',
+      'The core source code files (.cpp, .java, .py) of the application.',
+      'The .gitignore file itself, to prevent it from being shared with other teammates.'
+    ],
+    correct: 1,
+    concept: 'Files that are machine-specific, auto-generated, bulky dependencies (like `node_modules`), build outputs (like `dist/`), or contain sensitive local credentials (`.env`) should never be committed to shared repositories and must be ignored.',
+    why: 'This checks your configuration maturity. Committing build artifacts, local secrets, or package dependency folders bloats repos and leaks credentials.'
+  },
+  // ── 9. GIT CLONE VS. GIT FORK (2) ──
+  {
+    topic: 'Git Clone vs. Git Fork',
+    q: 'What is the architectural difference between cloning a repository and forking a repository?',
+    opts: [
+      'Cloning is an online task; forking is an offline local backup operation.',
+      'Cloning downloads a copy of a repository to your local machine; Forking creates a server-side copy of the repository in your personal cloud account.',
+      'Cloning is only supported for private repositories, while forking is only for open-source repositories.',
+      'Cloning duplicates files by value; forking duplicates files by reference pointers.'
+    ],
+    correct: 1,
+    concept: '`git clone` is a core Git CLI command that copies a remote repository down to your local drive. Forking is not a Git command; it is a platform-specific feature (on GitHub/GitLab) that duplicates a remote repository to your personal cloud account, allowing you to push changes and open PRs.',
+    why: 'Fork is a server-side platform copy; Clone is a local terminal download. You typically fork a public repo first, and then clone your personal fork.'
+  },
+  {
+    topic: 'Git Clone vs. Git Fork',
+    q: 'In an open-source contribution workflow, what are the roles of the "origin" and "upstream" remotes?',
+    opts: [
+      'origin is for storing master branches; upstream is for storing feature branches.',
+      'origin points to your personal cloned fork on your cloud account; upstream points to the original parent repository from which you forked.',
+      'origin is managed locally; upstream runs entirely on a separate backup drive.',
+      'They are identical names that can be used interchangeably for any remote.'
+    ],
+    correct: 1,
+    concept: 'When contributing to open-source: (1) you fork the main project, (2) you clone your fork locally. The default remote `origin` points to *your* fork (where you have write access). You configure a second remote called `upstream` pointing to the *original* project to pull down the latest official updates.',
+    why: 'This is the standard open-source contribution architecture. `origin` is your fork (read/write); `upstream` is the source of truth (pull-only).'
+  },
+  // ── 10. UNDERSTANDING HEAD (2) ──
+  {
+    topic: 'Understanding HEAD',
+    q: 'What is the role of the "HEAD" pointer in Git, and where is it physically represented inside the repository?',
+    opts: [
+      'It is a physical hardware register on the CPU used to speed up staging.',
+      'It is a pointer reference (stored in .git/HEAD) that tracks your current position on the Git map, usually pointing to the latest commit of your active branch.',
+      'It is a remote repository configuration that stores user access credentials.',
+      'It is a compiled binary file that represents the oldest commit in the repository.'
+    ],
+    correct: 1,
+    concept: 'HEAD is your active position indicator. The `.git/HEAD` file contains a reference to your current branch (e.g. `ref: refs/heads/main`), which in turn points to a commit. When you commit or switch branches, HEAD updates to reflect your new location.',
+    why: 'HEAD tracks your current active branch/commit. It is literally represented as a text file in `.git/HEAD` containing the active ref path.'
+  },
+  {
+    topic: 'Understanding HEAD',
+    q: 'What do the references "HEAD~1" and "HEAD~3" represent in Git command syntax?',
+    opts: [
+      'HEAD~1 represents the first branch; HEAD~3 represents the third branch.',
+      'HEAD~1 represents the direct parent of the current commit; HEAD~3 represents the grandparent\'s parent (three commits back).',
+      'They represent the first and third files staged in the index.',
+      'They represent the maximum number of merge conflicts allowed.'
+    ],
+    correct: 1,
+    concept: 'The tilde `~` operator navigates straight back along the primary parent commit path. `HEAD~1` is the immediate parent of your current commit; `HEAD~n` is $n$ commits back in the ancestry line.',
+    why: 'Tilde navigation goes straight back. `HEAD~1` is the parent commit. This is heavily used to specify parameters for resets and reverts.'
+  },
+  // ── 11. DETACHED HEAD STATE (2) ──
+  {
+    topic: 'Detached HEAD State',
+    q: 'What triggers a "Detached HEAD" state in Git, and what is the underlying structure of this state?',
+    opts: [
+      'It is triggered when you lose internet connection during a push.',
+      'It is triggered when you checkout a specific commit hash or tag directly; HEAD points directly to a commit instead of pointing to a local branch pointer.',
+      'It is triggered when you delete the main branch of your local repository.',
+      'It is a syntax error that occurs when a commit has no author email.'
+    ],
+    correct: 1,
+    concept: 'Normally, HEAD points to a branch pointer, which points to a commit. If you checkout a specific commit SHA or a tag directly (e.g. `git checkout a1b2c3d`), HEAD points directly to that commit. Because there is no active branch pointer in between, you are in a "detached HEAD" state.',
+    why: 'This is a classic Git state question. Detached HEAD means `HEAD -> commit` instead of `HEAD -> branch -> commit`. It is useful for read-only inspections.'
+  },
+  {
+    topic: 'Detached HEAD State',
+    q: 'What is the primary risk of making new commits while in a Detached HEAD state, and how do you save them before switching away?',
+    opts: [
+      'The commits will corrupt the main branch; you save them by formatting your drive.',
+      'The commits are orphaned (dangling) and will eventually be garbage-collected if you switch branches; you save them by creating a branch pointing to your current position.',
+      'The commits are automatically uploaded to public servers; you save them by adding password encryption.',
+      'The commits will have invalid timestamps; you save them by calling git rebase.'
+    ],
+    correct: 1,
+    concept: 'Commits made in detached HEAD are fully functional, but no branch tracks them. If you switch to another branch (e.g. `git checkout main`), the detached commits become dangling/unreachable. To preserve them, you must create a branch before leaving (e.g., `git branch rescue-branch`), anchoring them on the DAG.',
+    why: 'Orphaned commits are vulnerable to garbage collection. To save your work in detached HEAD, you must bind them to a branch pointer before switching.'
+  },
+  // ── 12. STAGING STRATEGIES (2) ──
+  {
+    topic: 'Staging Strategies',
+    q: 'What is the practical safety difference between running "git add ." and running "git add <file>"?',
+    opts: [
+      'git add . can only be executed by administrators.',
+      'git add . stages all modified and untracked files in the current directory, risking staging unwanted log or debug files; git add <file> stages only that specific file path.',
+      'git add . converts files to binary, while git add <file> keeps them as text.',
+      'There is no difference; both execute the exact same staging operations.'
+    ],
+    correct: 1,
+    concept: '`git add .` stages all changes in the current directory and subdirectories. This carries the risk of staging accidental files (like temporary debug configurations or swap files) that are not ignored. Specifying files explicitly via `git add <file>` guarantees clean, targeted commits.',
+    why: 'This is a daily safety question. Adding everything blindly via `.` can pollute commits with local garbage. Selective staging preserves repository hygiene.'
+  },
+  {
+    topic: 'Staging Strategies',
+    q: 'What does the interactive staging flag "git add -p" (patch mode) allow a developer to do?',
+    opts: [
+      'It automatically compresses files into standard pack files.',
+      'It lets you review changes chunk by chunk (hunks), choosing whether to stage, skip, or split specific edits within the same file.',
+      'It automatically resolves all syntax errors before staging.',
+      'It bypasses the staging area entirely and commits directly.'
+    ],
+    correct: 1,
+    concept: '`git add -p` (or `--patch`) splits modifications inside a file into logical "hunks". The CLI asks you whether to stage (`y`), skip (`n`), or split (`s`) each hunk. This lets you write highly cohesive commits even if you made multiple unrelated edits in the same file.',
+    why: 'Patch mode `-p` is an elite staging feature. It lets you stage specific hunks within a file, crafting clean, modular commits.'
+  },
+  // ── 13. TEAM GIT WORKFLOWS (2) ──
+  {
+    topic: 'Team Git Workflows',
+    q: 'What are the core characteristics of the "Trunk-Based Development" workflow compared to the "Git Flow" workflow?',
+    opts: [
+      'Trunk-Based is designed only for offline single-developer projects; Git Flow is for teams.',
+      'Trunk-Based focuses on small, frequent commits directly to the main branch (relying on feature flags); Git Flow uses structured develop, release, and hotfix branches.',
+      'Trunk-Based requires a centralized SVN server; Git Flow is fully distributed.',
+      'Trunk-Based disables pull requests completely to increase merge speeds.'
+    ],
+    correct: 1,
+    concept: 'Trunk-Based Development minimizes long-lived branches. Developers push small, frequent edits to a single central branch ("trunk", usually main) daily, using feature flags to hide incomplete work. Git Flow is a structured, branch-heavy model with persistent `develop`, release, and `hotfix` branches, suited for scheduled releases.',
+    why: 'This compares modern continuous integration (Trunk-Based) with structured release-cycle branching (Git Flow). Knowing both shows architectural depth.'
+  },
+  {
+    topic: 'Team Git Workflows',
+    q: 'In a standard Feature Branch Workflow, what is the purpose of opening a Pull Request (PR) or Merge Request (MR)?',
+    opts: [
+      'To compile the local feature branch into a temporary binary executable.',
+      'To request code review, facilitate team discussion, and trigger automated CI/CD tests before integrating the code into the main branch.',
+      'To notify the operating system that a new process is being launched.',
+      'To download the remote-tracking references to the local machine.'
+    ],
+    correct: 1,
+    concept: 'PRs (GitHub) or MRs (GitLab) are collaborative code gateways. They act as checkpoints, enabling team members to review code, suggest improvements, run automated test suites (CI/CD), and confirm stability before merging into the main branch.',
+    why: 'PRs are checkpoints. They serve as spaces for code review, quality audits, and test verifications before code hits production.'
+  },
+  // ── 14. UNDOING COMMITS & PUSH (2) ──
+  {
+    topic: 'Undoing Commits & Push',
+    q: 'You committed a bug to a local branch but HAVE NOT pushed it yet. Which command undos the commit while keeping all your edits staged in the index?',
+    opts: [
+      'git reset --hard HEAD~1',
+      'git reset --soft HEAD~1',
+      'git revert HEAD',
+      'git checkout HEAD~1'
+    ],
+    correct: 1,
+    concept: 'To undo a local commit while preserving your changes in the staging index (ready to be modified and committed again), use `git reset --soft HEAD~1`. `--mixed` would unstage them, and `--hard` would completely delete the files.',
+    why: 'This tests precise reset modes. `git reset --soft HEAD~1` rolls back the commit but keeps all changes staged in the index, allowing quick corrections.'
+  },
+  {
+    topic: 'Undoing Commits & Push',
+    q: 'You committed a bug to a shared team branch and ALREADY pushed it. Why is "git revert" preferred over "git reset" to undo this change?',
+    opts: [
+      'Because git revert automatically triggers a server reboot.',
+      'Because git revert is an additive operation that creates a new undo commit, preserving shared history without causing timeline synchronization conflicts for teammates.',
+      'Because git reset is blocked by default on all remote platforms.',
+      'Because git revert completely bypasses the merge conflict phase.'
+    ],
+    correct: 1,
+    concept: 'If you use `git reset` on a pushed branch, you must force-push (`git push -f`) to overwrite remote history. Anyone who already pulled the old history will experience synchronization errors. `git revert` adds a new commit, keeping history linear and team pull paths safe.',
+    why: 'Shared history must never be rewritten. Revert is additive and safe. Reset rewrites the graph, forcing disruptive force-pushes on teammates.'
+  },
+  // ── 15. ADVANCED DEBUGGING (2) ──
+  {
+    topic: 'Advanced Debugging',
+    q: 'A code regression is introduced somewhere in a history of 100 commits. How does "git bisect" help you locate the breaking commit efficiently?',
+    opts: [
+      'By searching the commits sequentially from newest to oldest.',
+      'By performing a binary search through the commit range, checking out intermediate commits and asking you to mark them as "good" or "bad" until the exact breaking commit is found.',
+      'By running a static code analysis on the central server.',
+      'By automatically reverting the latest 10 commits to see if the bug disappears.'
+    ],
+    correct: 1,
+    concept: '`git bisect` is an advanced debugging tool. It runs a binary search (O(log n) steps) over a range of commits. You declare a known "good" commit and a "bad" commit. Git checks out the midpoint; you test and declare "good" or "bad". The search bounds shrink until the exact regression commit is isolated.',
+    why: '`git bisect` uses binary search. It reduces a search of 100 commits to about 7 checks, systematically isolating the exact line of code that broke the application.'
+  },
+  {
+    topic: 'Advanced Debugging',
+    q: 'You merge a branch with no conflicts, but the application now fails to compile. What is the most likely cause of this issue, and how do you debug it?',
+    opts: [
+      'The compiler is corrupted; solution is to reinstall the operating system.',
+      'A semantic conflict where changes on both sides were syntactically compatible to Git, but logically incompatible; debug by using git diff to audit changes or git bisect to find the breaking commit.',
+      'The merge commit was too large for the local cache; debug by running git gc.',
+      'The remote-tracking branches were not encrypted; debug by re-cloning.'
+    ],
+    correct: 1,
+    concept: 'Git merges files textually. If Developer A renames a function in File 1, and Developer B invokes the old function name in File 2, Git merges both changes with zero textual conflicts. However, the compiled project fails (semantic conflict). You debug this by examining diffs or running `git bisect`.',
+    why: 'Textual compatibility does not guarantee logical compatibility. These semantic conflicts have no Git markers and must be audited using diffs or bisecting.'
+  }
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+  let para = '';
+  if (pct >= 80) para = 'Excellent job! You have demonstrated exceptional, native-level mastery over Git and collaborative source control architectures. You successfully navigated complex DAG graphs, merge conflicts, history-rewriting rebase boundaries, detached HEAD states, and advanced binary debugging tools. You are ready to lead any team loop!';
+  else if (pct >= 55) para = 'Great effort! You have a solid grasp of basic Git commands and collaboration strategies, with a few gaps in low-level repository structures (like DAG graphs, reflogs) or advanced rollback parameters. Review the marked topics below.';
+  else para = 'You should spend more time reinforcing fundamental Git concepts (like local vs. remote tracking, staging indices, and standard pointer movements) before looking into complex team rebase workflows. Focus on basic commit safety first.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'Git Core Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a065e2bf9b697ec1',t:'MTc4MDU2NTA3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
