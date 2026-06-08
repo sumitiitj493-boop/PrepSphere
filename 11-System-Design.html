@@ -1194,66 +1194,7 @@
         }
       }
       /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
-
-    /* ── READ NEXT ── */
-    .read-next-section {
-      max-width: var(--content-w, 860px);
-      margin: 60px auto 40px;
-      padding: 0 var(--content-pad, 40px);
-    }
-    .read-next-title {
-      font-size: 12px;
-      color: var(--text3);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .read-next-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    .rn-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 22px;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .rn-card:hover {
-      border-color: var(--gold);
-      transform: translateY(-2px);
-    }
-    .rn-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-    }
-    .rn-name {
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .rn-sub {
-      font-size: 11px;
-      color: var(--text3);
-    }
-    .rn-cta {
-      font-size: 12px;
-      color: var(--gold);
-      margin-top: auto;
-    }
-    @media (max-width: 700px) {
-      .read-next-grid { grid-template-columns: 1fr; }
-    }
-
-    </style>
+</style>
   </head>
   <body>
     <nav class="navbar">
@@ -1529,29 +1470,6 @@
             <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>How does DynamoDB offer both?</summary><div class="ans">Each read has ConsistentRead parameter. True = read from leader (strong, higher cost). False = read from any replica (faster, cheaper, ~1s stale). Most apps use eventual for 95% of reads.</div></details><details><summary>Why can't you have all three?</summary><div class="ans">2 servers, cable breaks (P). User writes to Server 1. Should Server 2 return old data (available but inconsistent) or refuse (consistent but unavailable)? Can't have both during partition.</div></details></div>
           </div>
         </section>
-
-    <div class="read-next-section">
-      <div class="read-next-title">Read Next</div>
-      <div class="read-next-grid">
-        
-        <a href="12-DSA-Concepts.html" class="rn-card">
-          <div class="rn-name"><span class="rn-dot" style="background:#e91e63"></span>DSA Concepts</div>
-          <div class="rn-sub">Continue your prep journey</div>
-          <div class="rn-cta">Start reading &rsaquo;</div>
-        </a>
-        <a href="01-DBMS.html" class="rn-card">
-          <div class="rn-name"><span class="rn-dot" style="background:#f5a623"></span>DBMS</div>
-          <div class="rn-sub">Continue your prep journey</div>
-          <div class="rn-cta">Start reading &rsaquo;</div>
-        </a>
-        <a href="02-OOPs.html" class="rn-card">
-          <div class="rn-name"><span class="rn-dot" style="background:#4a90e2"></span>OOPs</div>
-          <div class="rn-sub">Continue your prep journey</div>
-          <div class="rn-cta">Start reading &rsaquo;</div>
-        </a>
-      </div>
-    </div>
-
         <div class="practice-cta">
           <div>
             <h2>Test Your System Design Knowledge</h2>
@@ -1707,32 +1625,6 @@
       });
     
     </script>
-        <div class="quick-jump">
-      <button
-        class="jump-btn"
-        onclick="document.getElementById('qm').classList.toggle('active')"
-      >
-        🌐 Hyperjump
-      </button>
-      <div class="jump-menu" id="qm">
-        <a href="index.html">Home</a>
-        <a href="01-DBMS.html">01. DBMS</a>
-        <a href="02-OOPs.html">02. OOPs</a>
-        <a href="03-Computer-Networks.html">03. Computer Networks</a>
-        <a href="04-Operating-System.html">04. Operating System</a>
-        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
-        <a href="05-Language-Core-Java.html">05. Java Core</a>
-        <a href="05-Language-Core-Python.html">05. Python Core</a>
-        <a href="06-Puzzles.html">06. Puzzles</a>
-        <a href="07-Linux.html">07. Linux</a>
-        <a href="08-Git.html">08. Git</a>
-        <a href="09-SQL.html">09. SQL</a>
-        <a href="10-Projects-Behavioral.html">10. Projects</a>
-        <a href="11-System-Design.html">11. System Design</a>
-        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
-      </div>
-    </div>
-
     <script src="search-index.js"></script>
     <script src="global-search.js"></script>
     <script src="feedback.js?v=4"></script>
