@@ -1,0 +1,21 @@
+{
+  "name": "PrepSphere",
+  "short_name": "PrepSphere",
+  "description": "Interview preparation notes and practice for DBMS, OS, Networks, SQL, OOP, System Design, DSA, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0c14",
+  "theme_color": "#f5a01e",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

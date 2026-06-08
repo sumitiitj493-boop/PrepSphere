@@ -1,0 +1,1718 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DSA Concepts Interview Questions | PrepSphere</title>
+    <meta name="description" content="Master DSA concepts for interviews covering time complexity, arrays, linked lists, trees, graphs, hash tables, sorting, binary search, dynamic programming, recursion and greedy algorithms." />
+    <meta name="keywords" content="DSA interview questions, data structures, algorithms, big O notation, arrays, linked lists, trees, graphs, hash tables, dynamic programming, binary search" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.theprepsphere.in/12-DSA-Concepts.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="DSA Concepts Interview Questions | PrepSphere" />
+    <meta property="og:description" content="Master DSA concepts for interviews covering time complexity, arrays, linked lists, trees, graphs, hash tables, sorting, binary search, dynamic programming, recursion and greedy algorithms." />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/12-DSA-Concepts.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DSA Concepts Interview Questions | PrepSphere" />
+    <meta name="twitter:description" content="Master DSA concepts for interviews covering time complexity, arrays, linked lists, trees, graphs, hash tables, sorting, binary search, dynamic programming, recursion and greedy algorithms." />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "DSA Concepts Interview Questions",
+  "description": "Master DSA concepts for interviews covering time complexity, arrays, linked lists, trees, graphs, hash tables, sorting, binary search, dynamic programming, recursion and greedy algorithms.",
+  "url": "https://www.theprepsphere.in/12-DSA-Concepts.html",
+  "image": "https://www.theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation notes",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://www.theprepsphere.in"
+  }
+}
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1e1e2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 270px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.08);
+        --amberBg: rgba(245, 158, 11, 0.08);
+        --redBg: rgba(239, 68, 68, 0.06);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.06);
+        --cyanBg: rgba(6, 182, 212, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 5px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+      }
+      .topic-header h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.12);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.63rem;
+        padding: 3px 11px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-core {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-important {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .badge-concept {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-practical {
+        background: var(--greenBg);
+        color: var(--green);
+      }
+      .read-time {
+        font-size: 0.73rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .explanation {
+        margin-bottom: 1.5rem;
+      }
+      .explanation p {
+        margin-bottom: 1rem;
+        font-size: 0.94rem;
+      }
+      .explanation strong {
+        color: var(--gold);
+      }
+
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p,
+      .gotcha li {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        font-size: 4.5rem;
+        color: var(--gold);
+        opacity: 0.07;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        vertical-align: top;
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .compare-table code {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .compare-table .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .compare-table .no {
+        color: var(--red);
+        font-weight: 600;
+      }
+
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+      }
+      .cap-diagram {
+        max-width: 720px;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.63rem;
+        font-weight: 800;
+        background: var(--cyanBg);
+        color: var(--cyan);
+        padding: 3px 7px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--cyanBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      .code-wrap {
+        position: relative;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .code-header {
+        background: #2d2d3a;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-lang {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #aaa;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+      .code-block {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 1.2rem 1.5rem;
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        line-height: 1.9;
+      }
+      .code-block .kw {
+        color: #c678dd;
+      }
+      .code-block .fn {
+        color: #61afef;
+      }
+      .code-block .str {
+        color: #98c379;
+      }
+      .code-block .cm {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .code-block .num {
+        color: #d19a66;
+      }
+      .code-block .tbl {
+        color: #e5c07b;
+      }
+
+      .analogy {
+        background: var(--purpleBg);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.3rem;
+        margin: 1rem 0;
+      }
+      .analogy-title {
+        font-size: 0.75rem;
+        color: var(--purple);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.4rem;
+      }
+      .analogy p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          width: min(var(--sidebar-w), 82vw);
+          max-width: 82vw;
+          transform: translateX(0);
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: 0;
+          transform: translateX(-105%);
+        }
+        .main {
+          width: 100%;
+          max-width: 100%;
+          padding: 1.5rem 1rem 7rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .nav-brand {
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-progress {
+          max-width: 42px;
+          flex: 0 0 42px;
+        }
+        .topic-header h1 {
+          font-size: 1.7rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+    
+      /* Code block readability override: keep code structured, not paragraph-wrapped. */
+      .code-wrap,
+      .code-block {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .code-wrap > .code-block,
+      .code-block,
+      pre,
+      pre.code-block,
+      .code-wrap pre,
+      .code-block pre {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        tab-size: 4;
+        -webkit-overflow-scrolling: touch;
+        font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace !important;
+        line-height: 1.72;
+      }
+      .code-wrap > .code-block span,
+      .code-block span,
+      .code-block code,
+      pre code,
+      pre span,
+      pre.code-block span,
+      .code-wrap pre span,
+      .code-block pre span {
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar,
+      pre::-webkit-scrollbar,
+      pre.code-block::-webkit-scrollbar,
+      .code-wrap pre::-webkit-scrollbar,
+      .code-block pre::-webkit-scrollbar {
+        height: 9px;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar-thumb,
+      pre::-webkit-scrollbar-thumb,
+      pre.code-block::-webkit-scrollbar-thumb,
+      .code-wrap pre::-webkit-scrollbar-thumb,
+      .code-block pre::-webkit-scrollbar-thumb {
+        background: rgba(245, 166, 35, 0.35);
+        border-radius: 999px;
+      }
+      @media (max-width: 700px) {
+        .code-wrap > .code-block,
+        .code-block,
+        pre,
+        pre.code-block,
+        .code-wrap pre,
+        .code-block pre {
+          font-size: 12.5px;
+          line-height: 1.65;
+          padding: 1rem;
+        }
+      }
+      .practice-cta {
+        margin: 3rem 0 0;
+        padding: 1.35rem 1.5rem;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--gold);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .practice-cta h2 {
+        margin: 0 0 0.35rem;
+        font-size: 1.15rem;
+        color: var(--text);
+      }
+      .practice-cta p {
+        margin: 0;
+        color: var(--text2);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .practice-cta .practice-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0.75rem 1.15rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(245, 166, 35, 0.28);
+      }
+      .practice-cta .practice-btn:hover {
+        transform: translateY(-1px);
+      }
+      @media (max-width: 700px) {
+        .practice-cta {
+          align-items: stretch;
+          flex-direction: column;
+          padding: 1.15rem;
+        }
+        .practice-cta .practice-btn {
+          width: 100%;
+        }
+      }
+    
+      /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .table-scroll::-webkit-scrollbar { height: 4px; }
+      .table-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      @media (max-width: 700px) {
+        /* ── Better Navbar ── */
+        .navbar {
+          height: 52px;
+          padding: 0 0.65rem;
+          gap: 0.4rem;
+        }
+        .nav-brand {
+          font-size: 0.9rem;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-btns {
+          gap: 0.35rem;
+        }
+        .nav-btns button {
+          padding: 6px 9px;
+          font-size: 0.72rem;
+          min-height: 36px;
+          min-width: 36px;
+          border-radius: 8px;
+        }
+
+        /* ── Main Content ── */
+        .main {
+          padding: 1rem 0.7rem 5.5rem !important;
+        }
+
+        /* ── Concept Cards ── */
+        .concept {
+          border-radius: 12px;
+          margin-bottom: 2rem;
+        }
+        .concept-inner {
+          padding: 1.15rem 0.85rem !important;
+        }
+
+        /* ── Topic Header ── */
+        .topic-header {
+          padding: 0.5rem 0 1.25rem;
+        }
+        .topic-header h1 {
+          font-size: 1.45rem !important;
+          line-height: 1.3;
+        }
+        .topic-header p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Concept Headers ── */
+        .concept-header h2 {
+          font-size: 1.05rem !important;
+          line-height: 1.35;
+        }
+
+        /* ── Tables: Horizontal Scroll ── */
+        .table-scroll {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .compare-table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+
+        /* ── Diagrams & SVGs ── */
+        .diagram-wrap {
+          padding: 0.85rem;
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .diagram-wrap svg {
+          max-width: 100%;
+          height: auto;
+          min-width: auto;
+        }
+
+        /* ── Code Blocks ── */
+        .code-header {
+          padding: 0.4rem 0.75rem;
+        }
+        .copy-btn {
+          padding: 3px 8px;
+          font-size: 0.65rem;
+          min-height: 28px;
+        }
+
+        /* ── Content Blocks ── */
+        .one-liner {
+          padding: 0.85rem 0.95rem;
+          font-size: 0.9rem;
+          border-radius: 0 10px 10px 0;
+        }
+
+        .explanation p {
+          font-size: 0.88rem;
+        }
+
+        .key-points,
+        .gotcha,
+        .edge,
+        .analogy {
+          padding: 0.95rem;
+          border-radius: 10px;
+        }
+
+        .key-points li,
+        .gotcha p,
+        .gotcha li,
+        .edge p,
+        .analogy p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Interview Questions ── */
+        .interview-q summary {
+          padding: 0.7rem 0.85rem;
+          font-size: 0.82rem;
+          min-height: 44px;
+        }
+        .interview-q .ans {
+          padding: 0.8rem 0.85rem;
+          font-size: 0.84rem;
+        }
+
+        /* ── Badges ── */
+        .badge {
+          font-size: 0.55rem;
+          padding: 2px 7px;
+        }
+
+        /* ── Read Time ── */
+        .read-time {
+          font-size: 0.68rem;
+          padding: 3px 8px;
+        }
+
+        /* ── Back to Top ── */
+        .btt {
+          bottom: 1.25rem;
+          right: 1rem;
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+
+        /* ── Sidebar Better Touch ── */
+        .sidebar {
+          padding: 1rem 0.75rem;
+        }
+        .sidebar a {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.78rem;
+        }
+
+        /* ── Practice CTA ── */
+        .practice-cta {
+          padding: 1rem;
+          border-radius: 10px;
+        }
+        .practice-cta h2 {
+          font-size: 1.05rem;
+        }
+        .practice-cta p {
+          font-size: 0.88rem;
+        }
+        .practice-cta .practice-btn {
+          min-height: 46px;
+          font-size: 0.9rem;
+        }
+
+        /* ── General Text ── */
+        .explanation strong,
+        .key-points strong,
+        .gotcha strong,
+        .edge strong {
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 380px) {
+        /* Extra small phones */
+        .main {
+          padding: 0.85rem 0.55rem 5rem !important;
+        }
+        .concept-inner {
+          padding: 1rem 0.7rem !important;
+        }
+        .topic-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .compare-table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .nav-brand {
+          font-size: 0.82rem;
+          max-width: 95px;
+        }
+      }
+      /* ===== END MOBILE ENHANCEMENT ===== */
+
+      /* ===== PREPSPHERE UNIVERSAL SCROLL WRAPPER ===== */
+      .ps-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .ps-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .ps-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      /* Force all tables inside concept cards to be scrollable on mobile */
+      @media (max-width: 700px) {
+        .ps-scroll-wrap {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .ps-scroll-wrap table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .ps-scroll-wrap table th,
+        .ps-scroll-wrap table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+        /* SVG diagrams inside scroll wraps */
+        .ps-scroll-wrap svg {
+          min-width: 400px;
+          max-width: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .ps-scroll-wrap table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .ps-scroll-wrap svg {
+          min-width: 340px;
+        }
+      }
+      /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
+
+    /* ── READ NEXT ── */
+    .read-next-section {
+      max-width: var(--content-w, 860px);
+      margin: 60px auto 40px;
+      padding: 0 var(--content-pad, 40px);
+    }
+    .read-next-title {
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .read-next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .rn-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .rn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .rn-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rn-sub {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .rn-cta {
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    @media (max-width: 700px) {
+      .read-next-grid { grid-template-columns: 1fr; }
+    }
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="nav-brand">DSA Concepts Interview</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#complexity">Time & Space Complexity</a>
+        <a href="#arrays-strings">Arrays & Strings</a>
+        <a href="#linked-lists">Linked Lists</a>
+        <a href="#stacks-queues">Stacks & Queues</a>
+        <a href="#hash-tables">Hash Tables</a>
+        <a href="#trees">Trees & BST</a>
+        <a href="#graphs">Graphs</a>
+        <a href="#sorting">Sorting</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Foundations</div>
+        <a href="#complexity"><span class="num">1</span>Time & Space Complexity</a>
+        <a href="#arrays-strings"><span class="num">2</span>Arrays & Strings</a>
+        <a href="#linked-lists"><span class="num">3</span>Linked Lists</a>
+        <a href="#stacks-queues"><span class="num">4</span>Stacks & Queues</a>
+        <a href="#hash-tables"><span class="num">5</span>Hash Tables</a>
+        <a href="#trees"><span class="num">6</span>Trees & BST</a>
+        <div class="sidebar-title">Advanced</div>
+        <a href="#graphs"><span class="num">8</span>Graphs</a>
+        <a href="#sorting"><span class="num">9</span>Sorting</a>
+        <a href="#binary-search"><span class="num">10</span>Binary Search</a>
+        <a href="#dp"><span class="num">11</span>Dynamic Programming</a>
+        <a href="#recursion"><span class="num">12</span>Recursion & Backtracking</a>
+        <a href="#greedy"><span class="num">13</span>Greedy Algorithms</a>
+      </aside>
+      <main class="main">
+        <div class="topic-header">
+          <h1>DSA Concepts</h1>
+          <p>
+            12 Core Data Structure & Algorithm Concepts &mdash; The foundation of EVERY coding interview. Not coding problems, but the deep understanding that makes you solve any problem they throw at you.
+          </p>
+        </div>
+
+        <section class="concept" id="complexity">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Time & Space Complexity</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Every algorithm has a cost. Big-O measures worst-case growth as input grows. This is the FIRST thing interviewers evaluate in any coding question.</div>
+            <div class="explanation"><p><strong>Big-O measures growth rate, not exact time.</strong> O(n) = input doubles, time doubles. O(n&sup2;) = input doubles, time quadruples.</p>
+<p><strong>Common Complexities (fastest to slowest):</strong></p>
+<p>O(1) &mdash; Constant: hash table lookup. Works for 10 items or 10 billion.</p>
+<p>O(log n) &mdash; Logarithmic: binary search. Each step eliminates half.</p>
+<p>O(n) &mdash; Linear: scanning an array. Each element visited once.</p>
+<p>O(n log n) &mdash; Linearithmic: merge sort, quicksort average. Best for comparison sorting.</p>
+<p>O(n&sup2;) &mdash; Quadratic: nested loops. Bubble sort. Avoid for large inputs.</p>
+<p>O(2&#8319;) &mdash; Exponential: recursive Fibonacci without memoization.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>O(1) ideal, O(log n) excellent, O(n) acceptable, O(n log n) typical for sorting, O(n&sup2;) and above = red flag</li><li><strong>Space complexity matters too:</strong> O(n) extra space = array/hashmap proportional to input</li><li>Drop constants and lower-order terms: O(3n&sup2; + 5n + 100) = O(n&sup2;)</li><li>Amortized analysis: some operations expensive occasionally (array resize) but O(1) on average</li><li>Time-space tradeoff: hash table = O(n) space for O(1) lookup. Often worth it</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Master Theorem</strong> for divide-and-conquer: T(n) = aT(n/b) + O(n^d). a = subproblems, b = input shrink factor, d = work per level. This lets you analyze merge sort O(n log n), binary search O(log n) without drawing recursion trees.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Complexity of checking array duplicates?</summary><div class="ans">Brute force nested loops: O(n&sup2;). HashSet: O(n) time, O(n) space. Sort then check adjacent: O(n log n) time, O(1) space.</div></details><details><summary>Why drop constants?</summary><div class="ans">Growth rate matters as n grows to infinity. For n=1 million, O(2n) and O(n) both process ~million items. The constant is noise vs O(n) vs O(n&sup2;) difference.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="arrays-strings">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Arrays & Strings</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Arrays: contiguous memory, O(1) access by index. Strings: arrays of characters. Most common data structures in interviews &mdash; 60%+ of LeetCode involves them.</div>
+            <div class="explanation"><p><strong>Array:</strong> Access by index O(1). Search unsorted O(n). Search sorted (binary search) O(log n). Insert at end (amortized) O(1). Insert at beginning O(n).</p>
+<p><strong>Strings:</strong> Immutable in Java/Python. Every modification creates new object. Use StringBuilder (Java) or list join (Python) for repeated concatenation.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Two-pointer:</strong> Start and end pointers. O(n) palindrome check, reverse, pair sum in sorted array</li><li><strong>Sliding window:</strong> Window slides over array. Perfect for subarray/substring problems (max sum, longest substring)</li><li><strong>Prefix sum:</strong> Precompute cumulative sums for O(1) range queries. Build once, query many</li><li>Strings immutable in Java/Python &mdash; StringBuilder or join() for efficiency</li><li><strong>Hash map for counting:</strong> Character frequencies in O(n). Anagram, frequency problems</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know the <strong>sliding window template</strong>: (1) Expand right pointer, (2) When window invalid, shrink from left, (3) Track max/min valid window. Solves: longest substring without repeating chars, minimum window substring, max sum subarray of size K. The #1 array/string pattern.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Two strings anagrams?</summary><div class="ans">Sort both and compare: O(n log n). Count character frequencies: O(n). Interview wants hash map approach.</div></details><details><summary>Rotate array by K positions?</summary><div class="ans">Three reversals: reverse entire array, reverse first K, reverse remaining. O(n) time, O(1) space.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="linked-lists">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Linked Lists</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Nodes pointing to next. No contiguous memory needed. O(1) insert/delete at known position. But no random access &mdash; must traverse from head.</div>
+            <div class="explanation"><p><strong>Array vs Linked List:</strong> Array O(1) access, O(n) insert/delete. Linked List O(n) access, O(1) insert/delete if you have the pointer.</p>
+<p><strong>Singly:</strong> Node &rarr; next. Forward only. <strong>Doubly:</strong> Node &rarr; next AND prev. Both directions. Used in LRU cache, browser history.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Fast &amp; slow pointer:</strong> Detect cycles, find middle. Fast 2 steps, slow 1. Meet = cycle</li><li><strong>Dummy head:</strong> Fake head node simplifies insertion/deletion edge cases</li><li><strong>Reverse linked list:</strong> Core pattern. Three pointers: prev, current, next</li><li>Linked lists excel for frequent insertions/deletions in middle</li><li>Always draw it out &mdash; pointer manipulation easier to reason visually</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Floyd Cycle Detection</strong>. Fast pointer 2x speed. If cycle exists, they meet (faster laps slower). To find cycle START: after meeting, reset one pointer to head, move both at same speed &mdash; they meet at cycle start. Asked ALL the time.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Merge two sorted linked lists?</summary><div class="ans">Dummy head + two pointers. Compare heads, attach smaller, advance. O(n+m) time, O(1) space.</div></details><details><summary>Linked list palindrome?</summary><div class="ans">Find middle with slow/fast pointer &rarr; reverse second half &rarr; compare &rarr; restore. O(n) time, O(1) space.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="stacks-queues">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Stacks & Queues</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Stack = LIFO (last in, first out). Queue = FIFO (first in, first out). Simple but powerful &mdash; used in recursion, BFS, parsing, scheduling.</div>
+            <div class="explanation"><p><strong>Stack:</strong> push/pop/peek all O(1). Undo/redo, function call stack, expression evaluation, backtracking.</p>
+<p><strong>Queue:</strong> enqueue/dequeue/peek all O(1). BFS, task scheduling, message processing.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Stack for balanced parentheses: push opening, pop on closing. Empty at end = balanced</li><li><strong>Monotonic stack:</strong> Increasing/decreasing order. Next greater element, largest rectangle in histogram</li><li><strong>Queue for BFS:</strong> Process nodes level by level</li><li><strong>Deque:</strong> Insert/delete both ends. Sliding window maximum</li><li>Implement stack using queues or queue using stacks &mdash; classic question</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>monotonic stack</strong> pattern. Maintain stack where elements always increase/decrease. When new element violates order, pop and process. Solves: Next Greater Element, Largest Rectangle in Histogram, Daily Temperatures.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Queue using two stacks?</summary><div class="ans">Stack A for enqueue, Stack B for dequeue. Dequeue: if B empty, pop all from A to B (reverses order), pop B. Amortized O(1).</div></details><details><summary>Min element in stack O(1)?</summary><div class="ans">Auxiliary stack tracking minimum. Push current min alongside each element. Pop both. O(n) space.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="hash-tables">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Hash Tables / HashMaps</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Maps keys to values in O(1) average time. Most used data structure in practice. Python dict, Java HashMap, JS Object, Go map &mdash; all hash tables.</div>
+            <div class="explanation"><p><strong>How:</strong> Hash function converts key &rarr; integer &rarr; array index. Store value there. Collisions handled by chaining (linked list per bucket) or open addressing (find next empty slot).</p>
+<p><strong>Load factor:</strong> n/size. Exceeds 0.75 &rarr; resize 2x and rehash. O(n) resize but amortized O(1).</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>O(1) average insert/lookup/delete. O(n) worst case (all keys collide)</li><li>Good hash: fast, uniform distribution, deterministic</li><li>Use cases: counting, two-sum, caching, grouping, deduplication</li><li>If problem says find pairs, count occurrences, check exists &mdash; think hash map</li><li>Python dict, Java HashMap, JS Map, Go map, C++ unordered_map</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know why <strong>Java 8 HashMap uses Red-Black Trees</strong> for long collision chains. When bucket linked list exceeds 8 entries, converts to balanced BST. Worst-case O(log n) instead of O(n). Shows deep understanding that impresses interviewers.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Design a hash table from scratch?</summary><div class="ans">Array of buckets + hash function. Hash key % capacity &rarr; index. Chaining for collisions. Resize at load factor threshold. Rehash all entries.</div></details><details><summary>What makes a good hash function?</summary><div class="ans">Deterministic, uniform distribution, fast, avalanche effect (small input change = different hash). Java String: s[0]*31^(n-1) + s[1]*31^(n-2) + ...</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="trees">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Trees &amp; Binary Search Trees</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Hierarchical data: root at top, branches down. BST: left &lt; parent &lt; right. Enables O(log n) search when balanced.</div>
+            <div class="explanation"><p><strong>Types:</strong></p>
+<p><strong>Binary Tree:</strong> 0-2 children per node. General.</p>
+<p><strong>BST:</strong> Left &lt; Node &lt; Right. O(log n) search if balanced.</p>
+<p><strong>Complete Binary Tree:</strong> All levels full except last, filled left to right. Heaps.</p>
+<p><strong>AVL/Red-Black:</strong> Self-balancing BSTs. O(log n) guaranteed. Java TreeMap, C++ std::map.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>In-order traversal of BST = sorted order. Left &rarr; Node &rarr; Right</li><li>Pre-order: Node, Left, Right (serialization). Post-order: Left, Right, Node (deletion)</li><li><strong>BFS (level-order):</strong> Queue. Level by level. Shortest path unweighted</li><li><strong>DFS:</strong> Stack/recursion. Deep first. Backtracking, path finding</li><li>Check valid BST: each node in range (min, max). Root: (-inf, +inf). Recursive. Very common interview Q</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Lowest Common Ancestor</strong>. BST: if both targets &lt; node go left, both &gt; go right, else current = LCA. O(log n). Binary tree: recurse both sides, if both return non-null = current is LCA.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>LCA in BST?</summary><div class="ans">Both targets &lt; node &rarr; go left. Both &gt; node &rarr; go right. Else current node is LCA. O(log n).</div></details><details><summary>Diameter of binary tree?</summary><div class="ans">Longest path between any two nodes. For each node: diameter through it = left_height + right_height. Track max. O(n) post-order.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="graphs">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Graphs</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Nodes connected by edges. Social networks, maps, web pages, dependencies &mdash; all graphs. Common at Google, Meta, Amazon interviews.</div>
+            <div class="explanation"><p><strong>Adjacency List:</strong> Each node stores its neighbors. O(V+E) space. Most common.</p>
+<p><strong>Adjacency Matrix:</strong> 2D array. O(V&sup2;) space. Fast lookup but wasteful for sparse graphs.</p>
+<p><strong>BFS:</strong> Queue, level by level. Shortest path unweighted. O(V+E).</p>
+<p><strong>DFS:</strong> Stack/recursion, deep first. Cycles, topo sort, components. O(V+E).</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>BFS = shortest path unweighted. First reach = shortest distance</li><li>DFS = cycle detection, topological sort, connected components</li><li><strong>Topological Sort:</strong> For DAGs. DFS + stack or Kahn algorithm (BFS + in-degree)</li><li><strong>Dijkstra:</strong> Shortest weighted path. Min-heap. O((V+E) log V). No negative weights</li><li>Common: island counting, clone graph, course schedule (topo sort)</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>when to use BFS vs DFS</strong>. BFS: shortest path, level-order processing, finding minimum steps. DFS: exploring all paths, cycle detection, backtracking, topological sort. Most interview graph problems are either BFS or DFS with a twist.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Cycle in directed graph?</summary><div class="ans">DFS with 3 states: white (unvisited), gray (in current path), black (done). Gray encountered = cycle. Or Kahn: count nodes with in-degree 0, remove. If count not equal total = cycle.</div></details><details><summary>Connected components in undirected graph?</summary><div class="ans">BFS/DFS from every unvisited node. Each traversal covers one component. Count starts. O(V+E).</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="sorting">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Sorting Algorithms</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Arranging elements in order. Merge sort and quicksort are most important &mdash; they represent divide-and-conquer and appear in many interview solutions.</div>
+            <div class="explanation"><p><strong>Merge Sort:</strong> Divide in half, sort, merge. O(n log n) always. Stable. O(n) extra space.</p>
+<p><strong>Quicksort:</strong> Pivot, partition, recurse. Average O(n log n). In-place. Worst O(n&sup2;).</p>
+<p><strong>Heap Sort:</strong> Build max-heap, extract max repeatedly. O(n log n). In-place. Unstable.</p>
+<p><strong>Counting Sort:</strong> Count occurrences, rebuild. O(n+k). Integers in small range only.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Merge sort: guaranteed O(n log n). Used externally, for merging sorted arrays. Java TimSort base</li><li>Quicksort: O(n log n) average, faster in practice (cache locality). C qsort, Java primitive sort</li><li>You rarely implement sort from scratch, but DO implement merge and partition logic</li><li>Stable: equal elements keep original order. Merge sort = stable. Quicksort = unstable</li><li>Python sort = TimSort (merge+insertion). Java = TimSort objects, dual-pivot quicksort primitives</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Quickselect</strong> &mdash; find Kth smallest in O(n) average. Like quicksort but only recurse into partition containing K. Much faster than sorting entire array. Powers find median and top K problems.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>When counting sort?</summary><div class="ans">Sorting integers in known small range (ages 0-120, scores 0-100). O(n+k) where k = range. When k much less than n, faster than comparison sorts.</div></details><details><summary>Merge two sorted arrays?</summary><div class="ans">Two pointers. Compare, take smaller, advance. O(n+m). Core of merge sort merge step.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="binary-search">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Binary Search</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">Find target in sorted array in O(log n). 1 billion elements = only 30 comparisons. Simple concept but tricky to implement &mdash; off-by-one errors are common.</div>
+            <div class="explanation"><p>low=0, high=n-1. While low &le; high: mid = low + (high-low)/2. Target = mid? Found. &lt; mid? Search left. &gt; mid? Search right.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Works ONLY on sorted arrays. Not sorted? Sort first O(n log n) or use hash O(n)</li><li>mid = low + (high-low)/2 avoids integer overflow</li><li>Binary search works on ANY monotonic function, not just arrays</li><li>Lower bound: first position for target. Upper bound: last. Both O(log n)</li><li>Variations: rotated sorted array, first/last occurrence, matrix search</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>binary search on answer</strong>. If problem is is X possible? where answer is monotonic (NO below threshold, YES above), binary search the threshold. Solves minimum speed to finish, minimum capacity to ship, split array largest sum. Turns O(n&sup2;) into O(n log max).</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Search in rotated sorted array?</summary><div class="ans">One half always sorted. Check if target in sorted half &rarr; search there. Else search unsorted half. O(log n). Meta favorite.</div></details><details><summary>First occurrence of target with duplicates?</summary><div class="ans">Binary search, but when found save position and search left for earlier. O(log n).</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="dp">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Dynamic Programming</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Break into overlapping subproblems, solve each once, store results. If optimal X depends on optimal smaller Xs &mdash; probably DP. Most feared topic but follows patterns.</div>
+            <div class="explanation"><p><strong>Top-down (Memoization):</strong> Recursive + cache. Natural to write. Stack overflow risk.</p>
+<p><strong>Bottom-up (Tabulation):</strong> Iterative from base cases. More efficient. Usually space-optimizable.</p>
+<p><strong>Fibonacci:</strong> fib(n) = fib(n-1)+fib(n-2). Without memo: O(2&#8319;). With: O(n).</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Identify DP: (1) Overlapping subproblems, (2) Optimal substructure</li><li>Top-down = recursive + cache. Bottom-up = iterative table. Usually bottom-up more efficient</li><li>1D DP: Fibonacci, climbing stairs, house robber, coin change, LIS</li><li>2D DP: Grid paths, LCS, edit distance, knapsack</li><li>Space optimization: if dp[i] depends only on dp[i-1] and dp[i-2], need just 2 variables</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>DP patterns</strong>: (1) Linear: dp[i] = best up to i (stairs, robber), (2) Grid: dp[i][j] = best path to (i,j), (3) String: dp[i][j] = best for substrings (LCS, edit distance), (4) Knapsack: dp[i][w] = best value with first i items weight w. Most DP fits these.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Coin change?</summary><div class="ans">dp[amount] = min coins. dp[0]=0. For each amount 1..target, each coin: dp[amt] = min(dp[amt], dp[amt-coin]+1). O(amount x coins).</div></details><details><summary>Longest Common Subsequence?</summary><div class="ans">dp[i][j] = LCS of first i of s1 and first j of s2. If s1[i-1]==s2[j-1]: dp[i][j]=dp[i-1][j-1]+1. Else max(dp[i-1][j], dp[i][j-1]). O(m x n).</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="recursion">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Recursion &amp; Backtracking</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Function calls itself with smaller input. Backtracking = recursion + undo choices at dead ends. Permutations, combinations, puzzles, path-finding.</div>
+            <div class="explanation"><p><strong>Recursion needs:</strong> (1) Base case, (2) Recursive case, (3) Progress toward base.</p>
+<p><strong>Backtracking:</strong> Make choice &rarr; recurse &rarr; undo choice. Solution found? Return. Dead end? Backtrack.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Every recursion MUST have a base case or stack overflow</li><li>Backtracking = try all possibilities, abandon impossible paths</li><li>Classic: permutations, combinations, N-Queens, Sudoku, word search</li><li>Usually exponential: O(n!) or O(2&#8319;). Exploring all possibilities</li><li>Optimize: prune branches early if current path cannot lead to solution</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>backtracking vs DP</strong>. Problem asks for ALL solutions (all permutations, all boards) = backtracking. COUNT or BEST solution = DP. Backtracking explores all, DP avoids redundant work.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Generate all permutations?</summary><div class="ans">Swap each element to first position, recurse on remaining, swap back. O(n!).</div></details><details><summary>N-Queens?</summary><div class="ans">Place queens row by row. Try each column. Check safe (no queen same column/diagonal). Safe? Place, recurse. No valid column? Backtrack. All rows filled = solution.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="greedy">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Greedy Algorithms</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="read-time">3 min</span>
+            </div>
+            <div class="one-liner">Make locally optimal choice at each step. Does not always work &mdash; but when it does, simplest and fastest. Key is PROVING local optimal leads to global optimal.</div>
+            <div class="explanation"><p><strong>When greedy works:</strong> (1) Greedy choice property, (2) Optimal substructure.</p>
+<p><strong>Classic:</strong> Activity selection (pick compatible), Huffman (merge smallest), Dijkstra (closest), Fractional knapsack (best ratio).</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Greedy is fast but not always correct. Must prove it works for specific problem</li><li>Activity selection: sort by end time, pick non-overlapping. O(n log n)</li><li>Fractional knapsack: sort by value/weight, take best ratio. O(n log n)</li><li>Huffman: repeatedly merge least frequent chars. Optimal prefix code</li><li>0-1 knapsack is NOT greedy &mdash; needs DP. Fractional knapsack IS greedy</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>greedy vs DP for knapsack</strong>. Fractional (can take fractions) = greedy works. 0-1 (whole item or nothing) = greedy FAILS, need DP. Interviewers test this distinction.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>When does greedy fail?</summary><div class="ans">Coin change with arbitrary denominations. Coins [1,3,4], target 6. Greedy: 4+1+1=3 coins. Optimal: 3+3=2 coins. That is why coin change needs DP.</div></details><details><summary>How to prove greedy works?</summary><div class="ans">Exchange argument: show any optimal solution can be transformed into greedy solution without making it worse. If greedy = as good as optimal, greedy IS optimal.</div></details></div>
+          </div>
+        </section>
+
+    <div class="read-next-section">
+      <div class="read-next-title">Read Next</div>
+      <div class="read-next-grid">
+        
+        <a href="01-DBMS.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#f5a623"></span>DBMS</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="02-OOPs.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#4a90e2"></span>OOPs</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="03-Computer-Networks.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#e74c3c"></span>Computer Networks</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
+        <div class="practice-cta">
+          <div>
+            <h2>Test Your DSA Knowledge</h2>
+            <p>Practice questions covering all core data structures and algorithms.</p>
+          </div>
+          <a href="Quiz/12-DSA-Concepts.html" class="practice-btn">Practice Quiz &rarr;</a>
+        </div>
+      </main>
+    </div>
+    <button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+    <script>
+    
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        const btn = document.getElementById("focusBtn");
+        const isMobile = window.innerWidth <= 900;
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle(
+          "focus-mode",
+          sb.classList.contains("hidden"),
+        );
+        btn.textContent = isMobile
+          ? sb.classList.contains("hidden")
+            ? "Menu"
+            : "Close"
+          : sb.classList.contains("hidden")
+            ? "Expand"
+            : "Focus";
+      }
+
+      (function initMobileSidebar() {
+        const sb = document.getElementById("sidebar");
+        const btn = document.getElementById("focusBtn");
+        let wasMobile;
+        function sync() {
+          const isMobile = window.innerWidth <= 900;
+          if (isMobile === wasMobile) return;
+          wasMobile = isMobile;
+          if (isMobile) {
+            sb.classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            btn.textContent = "Menu";
+          } else {
+            sb.classList.remove("hidden");
+            document.body.classList.remove("focus-mode");
+            btn.textContent = "Focus";
+          }
+        }
+        sync();
+        window.addEventListener("resize", sync);
+      })();
+
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      function copyCode(btn) {
+        const code = btn
+          .closest(".code-wrap")
+          .querySelector(".code-block").innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Menu";
+          }
+        });
+      });
+
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    
+    </script>
+        <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
+      </div>
+    </div>
+
+    <script src="search-index.js"></script>
+    <script src="global-search.js"></script>
+    <script src="feedback.js?v=4"></script>
+  </body>
+</html>

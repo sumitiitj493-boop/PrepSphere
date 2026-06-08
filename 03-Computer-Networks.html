@@ -7,31 +7,31 @@
     <meta name="description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
     <meta name="keywords" content="computer networks interview questions, networking interview preparation, OSI model, TCP UDP, HTTP, DNS, TLS, load balancer, WebSockets" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://theprepsphere.in/03-Computer-Networks.html" />
+    <link rel="canonical" href="https://www.theprepsphere.in/03-Computer-Networks.html" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Computer Networks Interview Questions | PrepSphere" />
     <meta property="og:description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
-    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
-    <meta property="og:url" content="https://theprepsphere.in/03-Computer-Networks.html" />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/03-Computer-Networks.html" />
     <meta property="og:site_name" content="PrepSphere" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Computer Networks Interview Questions | PrepSphere" />
     <meta name="twitter:description" content="Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow." />
-    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LearningResource",
   "name": "Computer Networks Interview Questions",
   "description": "Prepare computer networks interview questions covering OSI, TCP vs UDP, HTTP, DNS, TLS, routing, load balancers, WebSockets, and browser request flow.",
-  "url": "https://theprepsphere.in/03-Computer-Networks.html",
-  "image": "https://theprepsphere.in/logo.png",
+  "url": "https://www.theprepsphere.in/03-Computer-Networks.html",
+  "image": "https://www.theprepsphere.in/logo.png",
   "learningResourceType": "Interview preparation notes",
   "educationalLevel": "Undergraduate and software engineering interview preparation",
   "provider": {
     "@type": "Organization",
     "name": "PrepSphere",
-    "url": "https://theprepsphere.in"
+    "url": "https://www.theprepsphere.in"
   }
 }
     </script>
@@ -260,6 +260,332 @@ body.focus-mode .main{max-width:1050px}
           width: 100%;
         }
       }
+    
+      /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .table-scroll::-webkit-scrollbar { height: 4px; }
+      .table-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      @media (max-width: 700px) {
+        /* ── Better Navbar ── */
+        .navbar {
+          height: 52px;
+          padding: 0 0.65rem;
+          gap: 0.4rem;
+        }
+        .nav-brand {
+          font-size: 0.9rem;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-btns {
+          gap: 0.35rem;
+        }
+        .nav-btns button {
+          padding: 6px 9px;
+          font-size: 0.72rem;
+          min-height: 36px;
+          min-width: 36px;
+          border-radius: 8px;
+        }
+
+        /* ── Main Content ── */
+        .main {
+          padding: 1rem 0.7rem 5.5rem !important;
+        }
+
+        /* ── Concept Cards ── */
+        .concept {
+          border-radius: 12px;
+          margin-bottom: 2rem;
+        }
+        .concept-inner {
+          padding: 1.15rem 0.85rem !important;
+        }
+
+        /* ── Topic Header ── */
+        .topic-header {
+          padding: 0.5rem 0 1.25rem;
+        }
+        .topic-header h1 {
+          font-size: 1.45rem !important;
+          line-height: 1.3;
+        }
+        .topic-header p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Concept Headers ── */
+        .concept-header h2 {
+          font-size: 1.05rem !important;
+          line-height: 1.35;
+        }
+
+        /* ── Tables: Horizontal Scroll ── */
+        .table-scroll {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .compare-table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+
+        /* ── Diagrams & SVGs ── */
+        .diagram-wrap {
+          padding: 0.85rem;
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .diagram-wrap svg {
+          max-width: 100%;
+          height: auto;
+          min-width: auto;
+        }
+
+        /* ── Code Blocks ── */
+        .code-header {
+          padding: 0.4rem 0.75rem;
+        }
+        .copy-btn {
+          padding: 3px 8px;
+          font-size: 0.65rem;
+          min-height: 28px;
+        }
+
+        /* ── Content Blocks ── */
+        .one-liner {
+          padding: 0.85rem 0.95rem;
+          font-size: 0.9rem;
+          border-radius: 0 10px 10px 0;
+        }
+
+        .explanation p {
+          font-size: 0.88rem;
+        }
+
+        .key-points,
+        .gotcha,
+        .edge,
+        .analogy {
+          padding: 0.95rem;
+          border-radius: 10px;
+        }
+
+        .key-points li,
+        .gotcha p,
+        .gotcha li,
+        .edge p,
+        .analogy p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Interview Questions ── */
+        .interview-q summary {
+          padding: 0.7rem 0.85rem;
+          font-size: 0.82rem;
+          min-height: 44px;
+        }
+        .interview-q .ans {
+          padding: 0.8rem 0.85rem;
+          font-size: 0.84rem;
+        }
+
+        /* ── Badges ── */
+        .badge {
+          font-size: 0.55rem;
+          padding: 2px 7px;
+        }
+
+        /* ── Read Time ── */
+        .read-time {
+          font-size: 0.68rem;
+          padding: 3px 8px;
+        }
+
+        /* ── Back to Top ── */
+        .btt {
+          bottom: 1.25rem;
+          right: 1rem;
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+
+        /* ── Sidebar Better Touch ── */
+        .sidebar {
+          padding: 1rem 0.75rem;
+        }
+        .sidebar a {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.78rem;
+        }
+
+        /* ── Practice CTA ── */
+        .practice-cta {
+          padding: 1rem;
+          border-radius: 10px;
+        }
+        .practice-cta h2 {
+          font-size: 1.05rem;
+        }
+        .practice-cta p {
+          font-size: 0.88rem;
+        }
+        .practice-cta .practice-btn {
+          min-height: 46px;
+          font-size: 0.9rem;
+        }
+
+        /* ── General Text ── */
+        .explanation strong,
+        .key-points strong,
+        .gotcha strong,
+        .edge strong {
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 380px) {
+        /* Extra small phones */
+        .main {
+          padding: 0.85rem 0.55rem 5rem !important;
+        }
+        .concept-inner {
+          padding: 1rem 0.7rem !important;
+        }
+        .topic-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .compare-table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .nav-brand {
+          font-size: 0.82rem;
+          max-width: 95px;
+        }
+      }
+      /* ===== END MOBILE ENHANCEMENT ===== */
+
+      /* ===== PREPSPHERE UNIVERSAL SCROLL WRAPPER ===== */
+      .ps-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .ps-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .ps-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      /* Force all tables inside concept cards to be scrollable on mobile */
+      @media (max-width: 700px) {
+        .ps-scroll-wrap {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .ps-scroll-wrap table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .ps-scroll-wrap table th,
+        .ps-scroll-wrap table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+        /* SVG diagrams inside scroll wraps */
+        .ps-scroll-wrap svg {
+          min-width: 400px;
+          max-width: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .ps-scroll-wrap table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .ps-scroll-wrap svg {
+          min-width: 340px;
+        }
+      }
+      /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
+
+    /* ── READ NEXT ── */
+    .read-next-section {
+      max-width: var(--content-w, 860px);
+      margin: 60px auto 40px;
+      padding: 0 var(--content-pad, 40px);
+    }
+    .read-next-title {
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .read-next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .rn-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .rn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .rn-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rn-sub {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .rn-cta {
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    @media (max-width: 700px) {
+      .read-next-grid { grid-template-columns: 1fr; }
+    }
+
     </style>
 </head>
 <body>
@@ -313,7 +639,7 @@ body.focus-mode .main{max-width:1050px}
     <p><strong>TCP (Transmission Control Protocol):</strong> Before sending data, it sets up a connection (3-way handshake). Every packet is numbered and acknowledged. If a packet is lost, it's retransmitted. Data arrives in order. Think of it as a registered letter — you know it arrived.</p>
     <p><strong>UDP (User Datagram Protocol):</strong> No connection setup. Just fire packets and hope they arrive. No ordering, no retransmission, no acknowledgement. Think of it as throwing a paper airplane — fast, but no guarantee. Perfect when speed matters more than reliability (video calls, gaming, DNS).</p>
   </div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>Aspect</th><th>TCP</th><th>UDP</th></tr>
     <tr><td><strong>Connection</strong></td><td>Connection-oriented (handshake)</td><td>Connectionless</td></tr>
     <tr><td><strong>Reliability</strong></td><td class="y">Guaranteed delivery + ACK</td><td class="nr">No guarantee</td></tr>
@@ -322,7 +648,7 @@ body.focus-mode .main{max-width:1050px}
     <tr><td><strong>Flow Control</strong></td><td class="y">Yes (sliding window)</td><td class="nr">No</td></tr>
     <tr><td><strong>Header Size</strong></td><td>20-60 bytes</td><td>8 bytes</td></tr>
     <tr><td><strong>Use Cases</strong></td><td>HTTP, FTP, Email, SSH</td><td>DNS, Video, Gaming, VoIP</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>Key Interview Points</h4><ul>
     <li>TCP uses <strong>sequence numbers</strong> to order packets and detect loss</li>
     <li>TCP has <strong>congestion control</strong> (slow start, congestion avoidance) — prevents flooding the network</li>
@@ -339,7 +665,7 @@ body.focus-mode .main{max-width:1050px}
   <div class="one">7 layers of networking: Physical → Data Link → Network → Transport → Session → Presentation → Application. Each layer handles a specific job and talks to layers above and below it.</div>
 
   <div class="dw">
-    <svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+    <div class="ps-scroll-wrap"><svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
       <!-- Layer 7 -->
       <rect x="120" y="10" width="360" height="36" rx="6" fill="rgba(239,68,68,.12)" stroke="#ef4444" stroke-width="1.5"/>
       <text x="150" y="33" font-weight="bold" font-size="11" fill="#ef4444">7</text>
@@ -388,7 +714,7 @@ body.focus-mode .main{max-width:1050px}
       <text x="60" y="200" text-anchor="middle" font-size="9" opacity=".4">Hardware</text>
       <text x="60" y="217" text-anchor="middle" font-size="9" opacity=".4">Layers</text>
       <line x1="95" y1="130" x2="105" y2="130" stroke="var(--gold)" stroke-width="1" opacity=".3"/>
-    </svg>
+    </svg></div>
     <p class="dl">Mnemonic: "Please Do Not Throw Sausage Pizza Away" (bottom to top)</p>
   </div>
 
@@ -406,13 +732,13 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="tcpip"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>TCP/IP Model</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
   <div class="one">The practical model that the real internet uses. 4 layers: Network Access → Internet → Transport → Application. Maps to OSI but combines some layers. This is what actually runs.</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>TCP/IP Layer</th><th>OSI Equivalent</th><th>Protocols</th><th>Data Unit</th></tr>
     <tr><td><strong>Application</strong></td><td>Layers 5, 6, 7</td><td>HTTP, DNS, FTP, SMTP</td><td>Data/Message</td></tr>
     <tr><td><strong>Transport</strong></td><td>Layer 4</td><td>TCP, UDP</td><td>Segment/Datagram</td></tr>
     <tr><td><strong>Internet</strong></td><td>Layer 3</td><td>IP, ICMP, ARP</td><td>Packet</td></tr>
     <tr><td><strong>Network Access</strong></td><td>Layers 1, 2</td><td>Ethernet, WiFi</td><td>Frame</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>Key Difference from OSI</h4><ul>
     <li>TCP/IP is practical (implemented). OSI is theoretical (reference).</li>
     <li>TCP/IP merges Session + Presentation + Application into one layer.</li>
@@ -427,7 +753,7 @@ body.focus-mode .main{max-width:1050px}
   <div class="one">TCP connection setup in 3 steps: SYN → SYN-ACK → ACK. Client says "Hey, let's talk" (SYN), server says "Sure, I'm ready too" (SYN-ACK), client says "Great, let's go" (ACK). Now the connection is established.</div>
 
   <div class="dw">
-    <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
+    <div class="ps-scroll-wrap"><svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg">
       <!-- Client and Server lines -->
       <line x1="100" y1="30" x2="100" y2="220" stroke="var(--blue)" stroke-width="2"/>
       <line x1="380" y1="30" x2="380" y2="220" stroke="var(--green)" stroke-width="2"/>
@@ -461,7 +787,7 @@ body.focus-mode .main{max-width:1050px}
         <marker id="aGr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#10b981"/></marker>
         <marker id="aBl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3b82f6"/></marker>
       </defs>
-    </svg>
+    </svg></div>
     <p class="dl">Both sides exchange sequence numbers so they can track data later.</p>
   </div>
 
@@ -480,7 +806,7 @@ body.focus-mode .main{max-width:1050px}
   <div class="one">TCP closes connection in 4 steps: FIN → ACK → FIN → ACK. Each side must independently say "I'm done sending." It's 4 steps (not 3) because each direction closes separately — TCP is full-duplex.</div>
 
   <div class="dw">
-    <svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+    <div class="ps-scroll-wrap"><svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
       <line x1="100" y1="30" x2="100" y2="260" stroke="var(--blue)" stroke-width="2"/>
       <line x1="380" y1="30" x2="380" y2="260" stroke="var(--green)" stroke-width="2"/>
 
@@ -509,7 +835,7 @@ body.focus-mode .main{max-width:1050px}
       <text x="240" y="225" text-anchor="middle" font-weight="bold" font-size="10" fill="var(--blue)">4. ACK</text>
 
       <text x="240" y="270" text-anchor="middle" font-size="10" font-weight="bold" fill="var(--red)">✓ CONNECTION CLOSED</text>
-    </svg>
+    </svg></div>
     <p class="dl">4 steps because each side closes independently. Server may still send data between steps 2 and 3 (half-close).</p>
   </div>
   <div class="kp"><h4>Key Points</h4><ul>
@@ -523,7 +849,7 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="http"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>HTTP vs HTTPS</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
   <div class="one">HTTP sends data in plaintext — anyone can read it. HTTPS = HTTP + TLS encryption — data is encrypted in transit. HTTPS uses port 443, HTTP uses port 80. No HTTPS = no modern web (browsers mark HTTP as "Not Secure").</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>Aspect</th><th>HTTP</th><th>HTTPS</th></tr>
     <tr><td><strong>Encryption</strong></td><td class="nr">None — plaintext</td><td class="y">TLS/SSL encrypted</td></tr>
     <tr><td><strong>Port</strong></td><td>80</td><td>443</td></tr>
@@ -531,7 +857,7 @@ body.focus-mode .main{max-width:1050px}
     <tr><td><strong>Speed</strong></td><td>Slightly faster</td><td>TLS handshake adds ~1 RTT</td></tr>
     <tr><td><strong>SEO</strong></td><td>Penalized</td><td class="y">Google ranks higher</td></tr>
     <tr><td><strong>URL</strong></td><td>http://</td><td>https:// (lock icon)</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>What HTTPS Protects Against</h4><ul>
     <li><strong>Eavesdropping:</strong> Can't read data in transit (encryption)</li>
     <li><strong>Tampering:</strong> Can't modify data without detection (integrity)</li>
@@ -548,7 +874,7 @@ body.focus-mode .main{max-width:1050px}
   </div>
 
   <div class="dw">
-    <svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
+    <div class="ps-scroll-wrap"><svg viewBox="0 0 580 200" xmlns="http://www.w3.org/2000/svg">
       <!-- Browser -->
       <rect x="10" y="80" width="70" height="40" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
       <text x="45" y="105" text-anchor="middle" font-weight="bold" font-size="9">Browser</text>
@@ -597,7 +923,7 @@ body.focus-mode .main{max-width:1050px}
         <marker id="aBl2" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5" fill="#3b82f6"/></marker>
         <marker id="aBl3" markerWidth="7" markerHeight="5" refX="0" refY="2.5" orient="auto"><path d="M7,0 L0,2.5 L7,5" fill="#3b82f6"/></marker>
       </defs>
-    </svg>
+    </svg></div>
     <p class="dl">Recursive resolver does the heavy lifting — queries Root → TLD → Authoritative on your behalf.</p>
   </div>
 
@@ -628,13 +954,13 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="rp"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>Reverse Proxy</h2><span class="badge b3">Concept</span><span class="rt">3 min</span></div>
   <div class="one">Sits in front of backend servers and forwards client requests to them. Client talks to proxy, proxy talks to server. Client never knows the real server. Used for: load balancing, caching, SSL termination, security.</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>Aspect</th><th>Forward Proxy</th><th>Reverse Proxy</th></tr>
     <tr><td><strong>Sits in front of</strong></td><td>Clients</td><td>Servers</td></tr>
     <tr><td><strong>Hides</strong></td><td>Client identity from server</td><td>Server identity from client</td></tr>
     <tr><td><strong>Use case</strong></td><td>VPN, anonymity, content filtering</td><td>Load balancing, caching, SSL, security</td></tr>
     <tr><td><strong>Example</strong></td><td>VPN service, corporate proxy</td><td>Nginx, HAProxy, Cloudflare</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>Why Use Reverse Proxy</h4><ul>
     <li><strong>SSL Termination:</strong> Handle HTTPS at proxy, send plain HTTP to backend (faster for backends).</li>
     <li><strong>Caching:</strong> Cache responses to reduce backend load.</li>
@@ -663,14 +989,14 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="cookies"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>Cookies vs Sessions</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
   <div class="one">Cookies are stored on the CLIENT (browser). Sessions are stored on the SERVER. Cookie = your movie ticket stub (you carry it). Session = restaurant reservation (restaurant remembers you by your reservation number).</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>Aspect</th><th>Cookies</th><th>Sessions</th></tr>
     <tr><td><strong>Storage</strong></td><td>Client-side (browser)</td><td>Server-side (memory/DB/Redis)</td></tr>
     <tr><td><strong>Size Limit</strong></td><td>~4KB per cookie</td><td>No practical limit</td></tr>
     <tr><td><strong>Security</strong></td><td>Less secure (user can modify)</td><td>More secure (server-controlled)</td></tr>
     <tr><td><strong>Expiry</strong></td><td>Set by Expires/Max-Age</td><td>Server decides (timeout)</td></tr>
     <tr><td><strong>Scalability</strong></td><td class="y">Stateless (scales easily)</td><td>Requires shared session store</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>How They Work Together</h4><ul>
     <li>Server creates session → generates session ID → stores data server-side.</li>
     <li>Session ID sent to client as a cookie (<code>Set-Cookie: sessionId=abc123</code>).</li>
@@ -683,14 +1009,14 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="rest"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>REST APIs</h2><span class="badge b1">Core</span><span class="badge b4">Practical</span><span class="rt">3 min</span></div>
   <div class="one">REST = Representational State Transfer. An architectural style for designing APIs using standard HTTP methods. Resources identified by URLs, actions by HTTP verbs (GET, POST, PUT, DELETE). Stateless — each request contains all needed info.</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>HTTP Method</th><th>CRUD</th><th>Example</th><th>Idempotent?</th></tr>
     <tr><td><strong>GET</strong></td><td>Read</td><td>GET /users/123</td><td class="y">Yes</td></tr>
     <tr><td><strong>POST</strong></td><td>Create</td><td>POST /users</td><td class="nr">No</td></tr>
     <tr><td><strong>PUT</strong></td><td>Update (full)</td><td>PUT /users/123</td><td class="y">Yes</td></tr>
     <tr><td><strong>PATCH</strong></td><td>Update (partial)</td><td>PATCH /users/123</td><td class="nr">No</td></tr>
     <tr><td><strong>DELETE</strong></td><td>Delete</td><td>DELETE /users/123</td><td class="y">Yes</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>REST Principles</h4><ul>
     <li><strong>Stateless:</strong> Server stores no client state. Each request is independent.</li>
     <li><strong>Resource-based:</strong> URLs represent resources (/users, /orders), not actions.</li>
@@ -704,14 +1030,14 @@ body.focus-mode .main{max-width:1050px}
 <section class="concept" id="ws"><div class="ca"></div><div class="ci">
   <div class="ch"><h2>WebSocket</h2><span class="badge b1">Core</span><span class="rt">3 min</span></div>
   <div class="one">Full-duplex, persistent connection between client and server. Unlike HTTP (request-response), WebSocket lets both sides send messages anytime without polling. Starts as HTTP upgrade, then switches protocol.</div>
-  <table class="ct">
+  <div class="ps-scroll-wrap"><table class="ct">
     <tr><th>Aspect</th><th>HTTP</th><th>WebSocket</th></tr>
     <tr><td><strong>Communication</strong></td><td>Request-Response (half-duplex)</td><td>Full-duplex (both ways anytime)</td></tr>
     <tr><td><strong>Connection</strong></td><td>New connection per request (or keep-alive)</td><td>Persistent single connection</td></tr>
     <tr><td><strong>Overhead</strong></td><td>Headers sent every request</td><td>Minimal after handshake</td></tr>
     <tr><td><strong>Use Case</strong></td><td>REST APIs, web pages</td><td>Chat, live scores, gaming, trading</td></tr>
     <tr><td><strong>Protocol</strong></td><td>http:// or https://</td><td>ws:// or wss://</td></tr>
-  </table>
+  </table></div>
   <div class="kp"><h4>Key Points</h4><ul>
     <li>Starts with HTTP Upgrade request: <code>Connection: Upgrade, Upgrade: websocket</code></li>
     <li>After upgrade, it's a raw TCP connection — no HTTP overhead.</li>
@@ -767,7 +1093,7 @@ body.focus-mode .main{max-width:1050px}
   </div>
 
   <div class="dw">
-    <svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
+    <div class="ps-scroll-wrap"><svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg">
       <rect x="5" y="40" width="72" height="40" rx="6" fill="var(--blueBg)" stroke="var(--blue)" stroke-width="1.5"/>
       <text x="41" y="55" text-anchor="middle" font-weight="bold" font-size="8">URL Parse</text>
       <text x="41" y="68" text-anchor="middle" font-size="7" opacity=".6">+ Check</text>
@@ -811,7 +1137,7 @@ body.focus-mode .main{max-width:1050px}
       <text x="533" y="78" text-anchor="middle" font-size="7" opacity=".6">→ Pixels</text>
 
       <text x="300" y="108" text-anchor="middle" font-size="9" font-weight="bold" fill="var(--gold)">Total: ~200-500ms for first meaningful paint</text>
-    </svg>
+    </svg></div>
     <p class="dl">Each step takes milliseconds. The whole flow completes in under a second for cached resources.</p>
   </div>
 
@@ -834,6 +1160,29 @@ body.focus-mode .main{max-width:1050px}
 
 
 
+
+    <div class="read-next-section">
+      <div class="read-next-title">Read Next</div>
+      <div class="read-next-grid">
+        
+        <a href="04-Operating-System.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#b259f0"></span>Operating System</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="05-Language-Core-CPP.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#3498db"></span>C++ Core</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="01-DBMS.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#f5a623"></span>DBMS</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
         <section class="practice-cta" aria-labelledby="practice-title">
           <div>
             <h2 id="practice-title">Ready to test Networks?</h2>
@@ -850,6 +1199,7 @@ body.focus-mode .main{max-width:1050px}
   <button class="jump-btn" id="jumpBtn" aria-expanded="false">🌐 Hyperjump</button>
   <div class="jump-menu" id="qm">
     <a href="index.html">Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
     <a href="01-DBMS.html">01. DBMS</a>
     <a href="02-OOPs.html">02. OOPs</a>
     <a href="03-Computer-Networks.html">03. Computer Networks</a>
@@ -862,6 +1212,8 @@ body.focus-mode .main{max-width:1050px}
     <a href="08-Git.html">08. Git</a>
     <a href="09-SQL.html">09. SQL</a>
     <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
   </div>
 </div>
 

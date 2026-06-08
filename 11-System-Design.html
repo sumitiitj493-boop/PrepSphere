@@ -1,0 +1,1741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>System Design Interview Questions | PrepSphere</title>
+    <meta name="description" content="Master system design interview questions covering scalability, load balancing, caching, sharding, microservices, API design, message queues, and real-world system design examples for FAANG interviews." />
+    <meta name="keywords" content="system design interview, scalability, load balancer, caching, microservices, API design, sharding, message queues, CAP theorem, consistent hashing, rate limiting, URL shortener" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.theprepsphere.in/11-System-Design.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="System Design Interview Questions | PrepSphere" />
+    <meta property="og:description" content="Master system design interview questions covering scalability, load balancing, caching, sharding, microservices, API design, message queues, and real-world system design examples for FAANG interviews." />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/11-System-Design.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="System Design Interview Questions | PrepSphere" />
+    <meta name="twitter:description" content="Master system design interview questions covering scalability, load balancing, caching, sharding, microservices, API design, message queues, and real-world system design examples for FAANG interviews." />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "System Design Interview Questions",
+  "description": "Master system design interview questions covering scalability, load balancing, caching, sharding, microservices, API design, message queues, and real-world system design examples for FAANG interviews.",
+  "url": "https://www.theprepsphere.in/11-System-Design.html",
+  "image": "https://www.theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation notes",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://www.theprepsphere.in"
+  }
+}
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #f7f8fc;
+        --surface: #fff;
+        --text: #1a1a2e;
+        --text2: #5a5a7a;
+        --border: #e4e6ef;
+        --gold: #f5a623;
+        --gold2: #d4890a;
+        --goldLight: rgba(245, 166, 35, 0.1);
+        --code-bg: #1e1e2e;
+        --card-bg: #fff;
+        --nav-bg: rgba(255, 255, 255, 0.92);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        --green: #10b981;
+        --greenBg: rgba(16, 185, 129, 0.1);
+        --amber: #f59e0b;
+        --amberBg: rgba(245, 158, 11, 0.1);
+        --red: #ef4444;
+        --redBg: rgba(239, 68, 68, 0.08);
+        --blue: #3b82f6;
+        --blueBg: rgba(59, 130, 246, 0.1);
+        --purple: #8b5cf6;
+        --purpleBg: rgba(139, 92, 246, 0.1);
+        --cyan: #06b6d4;
+        --cyanBg: rgba(6, 182, 212, 0.1);
+        --sidebar-w: 270px;
+      }
+      [data-theme="dark"] {
+        --bg: #0a0a0f;
+        --surface: #12121a;
+        --text: #e8e8ed;
+        --text2: #9ca3af;
+        --border: #252530;
+        --card-bg: #16161f;
+        --nav-bg: rgba(10, 10, 15, 0.95);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+        --goldLight: rgba(245, 166, 35, 0.08);
+        --greenBg: rgba(16, 185, 129, 0.08);
+        --amberBg: rgba(245, 158, 11, 0.08);
+        --redBg: rgba(239, 68, 68, 0.06);
+        --blueBg: rgba(59, 130, 246, 0.08);
+        --purpleBg: rgba(139, 92, 246, 0.06);
+        --cyanBg: rgba(6, 182, 212, 0.06);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.75;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+      a {
+        color: var(--gold);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      a:hover {
+        color: var(--gold2);
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--nav-bg);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 60px;
+        gap: 1rem;
+      }
+      .nav-brand {
+        font-weight: 900;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        white-space: nowrap;
+      }
+      .nav-progress {
+        flex: 1;
+        max-width: 180px;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .nav-progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+        border-radius: 99px;
+        transition: width 0.25s;
+      }
+      .nav-links {
+        display: flex;
+        gap: 0.4rem;
+        overflow-x: auto;
+        flex: 1;
+        padding: 0.25rem 0;
+        scrollbar-width: none;
+      }
+      .nav-links::-webkit-scrollbar {
+        display: none;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 5px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        color: var(--text2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-color: var(--gold);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .nav-btns button {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+      }
+      .nav-btns button:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: var(--goldLight);
+      }
+
+      .layout {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        width: var(--sidebar-w);
+        position: sticky;
+        top: 60px;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+        background: var(--surface);
+        padding: 1.5rem 1rem;
+        transition: all 0.3s ease;
+        scrollbar-width: thin;
+      }
+      .sidebar.hidden {
+        margin-left: calc(-1 * var(--sidebar-w));
+        opacity: 0;
+        pointer-events: none;
+      }
+      .sidebar-title {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--gold);
+        margin: 1.2rem 0 0.6rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+      }
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        padding: 7px 10px;
+        border-radius: 8px;
+        color: var(--text2);
+        margin-bottom: 2px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .sidebar a:hover {
+        background: var(--goldLight);
+        color: var(--text);
+        padding-left: 13px;
+      }
+      .sidebar a.active {
+        background: var(--goldLight);
+        color: var(--gold);
+        border-left-color: var(--gold);
+        font-weight: 600;
+      }
+      .sidebar .num {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--gold);
+        background: var(--goldLight);
+        min-width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main {
+        flex: 1;
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem 5rem;
+      }
+      body.focus-mode .main {
+        max-width: 1050px;
+      }
+
+      .topic-header {
+        text-align: center;
+        padding: 1rem 0 2.5rem;
+      }
+      .topic-header h1 {
+        font-size: 2.4rem;
+        font-weight: 900;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+      }
+      .topic-header p {
+        color: var(--text2);
+        font-size: 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .concept {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: all 0.3s;
+      }
+      .concept:hover {
+        box-shadow: 0 8px 32px rgba(245, 166, 35, 0.12);
+        border-color: rgba(245, 166, 35, 0.3);
+      }
+      .concept-accent {
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold), var(--gold2));
+      }
+      .concept-inner {
+        padding: 2rem 2.2rem;
+      }
+      .concept-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .concept-header h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+      }
+      .badge {
+        font-size: 0.63rem;
+        padding: 3px 11px;
+        border-radius: 99px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-core {
+        background: var(--blueBg);
+        color: var(--blue);
+      }
+      .badge-important {
+        background: var(--redBg);
+        color: var(--red);
+      }
+      .badge-concept {
+        background: var(--purpleBg);
+        color: var(--purple);
+      }
+      .badge-practical {
+        background: var(--greenBg);
+        color: var(--green);
+      }
+      .read-time {
+        font-size: 0.73rem;
+        color: var(--text2);
+        margin-left: auto;
+        background: var(--surface);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .one-liner {
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        border-left: 4px solid var(--gold);
+        padding: 1rem 1.3rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .explanation {
+        margin-bottom: 1.5rem;
+      }
+      .explanation p {
+        margin-bottom: 1rem;
+        font-size: 0.94rem;
+      }
+      .explanation strong {
+        color: var(--gold);
+      }
+
+      .key-points {
+        background: var(--goldLight);
+        border: 1px solid rgba(245, 166, 35, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+      }
+      .key-points h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.6rem;
+        font-weight: 800;
+      }
+      .key-points ul {
+        list-style: none;
+      }
+      .key-points li {
+        position: relative;
+        padding-left: 1.4rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .key-points li::before {
+        content: "✦";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.7rem;
+      }
+
+      .gotcha {
+        border: 1px solid var(--red);
+        border-left: 4px solid var(--red);
+        border-radius: 0 12px 12px 0;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: var(--redBg);
+      }
+      .gotcha h4 {
+        color: var(--red);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .gotcha p,
+      .gotcha li {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .edge {
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        background: linear-gradient(135deg, var(--goldLight), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+      .edge::before {
+        content: "★";
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        font-size: 4.5rem;
+        color: var(--gold);
+        opacity: 0.07;
+      }
+      .edge h4 {
+        color: var(--gold);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+      }
+      .edge p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.2rem 0;
+        font-size: 0.85rem;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .compare-table th {
+        background: var(--goldLight);
+        color: var(--gold);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .compare-table td {
+        padding: 10px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        vertical-align: top;
+      }
+      .compare-table tr:hover td {
+        background: var(--goldLight);
+      }
+      .compare-table code {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .compare-table .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .compare-table .no {
+        color: var(--red);
+        font-weight: 600;
+      }
+
+      .diagram-wrap {
+        margin: 1.5rem 0;
+        padding: 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow-x: auto;
+        text-align: center;
+      }
+      .diagram-wrap svg {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+      }
+      .cap-diagram {
+        max-width: 720px;
+      }
+      .diagram-label {
+        font-size: 0.78rem;
+        color: var(--text2);
+        margin-top: 0.8rem;
+        font-style: italic;
+      }
+
+      .interview-q {
+        margin: 1.5rem 0;
+      }
+      .interview-q h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        font-weight: 800;
+      }
+      .interview-q details {
+        margin-bottom: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--surface);
+      }
+      .interview-q summary {
+        padding: 0.8rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        transition: all 0.2s;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .interview-q summary::-webkit-details-marker {
+        display: none;
+      }
+      .interview-q summary::before {
+        content: "Q";
+        font-size: 0.63rem;
+        font-weight: 800;
+        background: var(--cyanBg);
+        color: var(--cyan);
+        padding: 3px 7px;
+        border-radius: 5px;
+      }
+      .interview-q summary:hover {
+        background: var(--cyanBg);
+      }
+      .interview-q .ans {
+        padding: 1rem 1.2rem;
+        font-size: 0.88rem;
+        border-top: 1px solid var(--border);
+        line-height: 1.7;
+      }
+
+      .code-wrap {
+        position: relative;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .code-header {
+        background: #2d2d3a;
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .code-lang {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      .copy-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #aaa;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        background: var(--gold);
+        color: #000;
+        border-color: var(--gold);
+      }
+      .code-block {
+        background: var(--code-bg);
+        color: #e4e4e7;
+        padding: 1.2rem 1.5rem;
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+        line-height: 1.9;
+      }
+      .code-block .kw {
+        color: #c678dd;
+      }
+      .code-block .fn {
+        color: #61afef;
+      }
+      .code-block .str {
+        color: #98c379;
+      }
+      .code-block .cm {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .code-block .num {
+        color: #d19a66;
+      }
+      .code-block .tbl {
+        color: #e5c07b;
+      }
+
+      .analogy {
+        background: var(--purpleBg);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.3rem;
+        margin: 1rem 0;
+      }
+      .analogy-title {
+        font-size: 0.75rem;
+        color: var(--purple);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.4rem;
+      }
+      .analogy p {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .btt {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245, 166, 35, 0.4);
+        display: none;
+        z-index: 99;
+        transition: all 0.2s;
+      }
+      .btt:hover {
+        transform: scale(1.1) translateY(-2px);
+      }
+
+      .quick-jump {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 1100;
+        font-family: "Space Mono", monospace;
+      }
+      .jump-btn {
+        background: var(--surface);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 12px 24px;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        transition: 0.2s;
+      }
+      .jump-btn:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .jump-menu {
+        position: absolute;
+        bottom: 120%;
+        left: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        width: 250px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      }
+      .jump-menu.active {
+        display: flex;
+      }
+      .jump-menu a {
+        color: var(--text);
+        padding: 12px 15px;
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        transition: 0.2s;
+        font-size: 0.9rem;
+      }
+      .jump-menu a:hover {
+        background: rgba(245, 166, 35, 0.08);
+        color: var(--gold);
+        padding-left: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 60px;
+          z-index: 90;
+          width: min(var(--sidebar-w), 82vw);
+          max-width: 82vw;
+          transform: translateX(0);
+          box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .sidebar.hidden {
+          margin-left: 0;
+          transform: translateX(-105%);
+        }
+        .main {
+          width: 100%;
+          max-width: 100%;
+          padding: 1.5rem 1rem 7rem;
+        }
+        .concept-inner {
+          padding: 1.5rem 1.2rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        .nav-brand {
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-progress {
+          max-width: 42px;
+          flex: 0 0 42px;
+        }
+        .topic-header h1 {
+          font-size: 1.7rem;
+        }
+        .concept-header h2 {
+          font-size: 1.15rem;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--gold);
+        border-radius: 99px;
+      }
+    
+      /* Code block readability override: keep code structured, not paragraph-wrapped. */
+      .code-wrap,
+      .code-block {
+        max-width: 100%;
+        min-width: 0;
+      }
+      .code-wrap > .code-block,
+      .code-block,
+      pre,
+      pre.code-block,
+      .code-wrap pre,
+      .code-block pre {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        tab-size: 4;
+        -webkit-overflow-scrolling: touch;
+        font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace !important;
+        line-height: 1.72;
+      }
+      .code-wrap > .code-block span,
+      .code-block span,
+      .code-block code,
+      pre code,
+      pre span,
+      pre.code-block span,
+      .code-wrap pre span,
+      .code-block pre span {
+        white-space: pre !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar,
+      pre::-webkit-scrollbar,
+      pre.code-block::-webkit-scrollbar,
+      .code-wrap pre::-webkit-scrollbar,
+      .code-block pre::-webkit-scrollbar {
+        height: 9px;
+      }
+      .code-wrap > .code-block::-webkit-scrollbar-thumb,
+      pre::-webkit-scrollbar-thumb,
+      pre.code-block::-webkit-scrollbar-thumb,
+      .code-wrap pre::-webkit-scrollbar-thumb,
+      .code-block pre::-webkit-scrollbar-thumb {
+        background: rgba(245, 166, 35, 0.35);
+        border-radius: 999px;
+      }
+      @media (max-width: 700px) {
+        .code-wrap > .code-block,
+        .code-block,
+        pre,
+        pre.code-block,
+        .code-wrap pre,
+        .code-block pre {
+          font-size: 12.5px;
+          line-height: 1.65;
+          padding: 1rem;
+        }
+      }
+      .practice-cta {
+        margin: 3rem 0 0;
+        padding: 1.35rem 1.5rem;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--gold);
+        border-radius: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .practice-cta h2 {
+        margin: 0 0 0.35rem;
+        font-size: 1.15rem;
+        color: var(--text);
+      }
+      .practice-cta p {
+        margin: 0;
+        color: var(--text2);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+      .practice-cta .practice-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0.75rem 1.15rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--gold), var(--gold2));
+        color: #fff;
+        text-decoration: none;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(245, 166, 35, 0.28);
+      }
+      .practice-cta .practice-btn:hover {
+        transform: translateY(-1px);
+      }
+      @media (max-width: 700px) {
+        .practice-cta {
+          align-items: stretch;
+          flex-direction: column;
+          padding: 1.15rem;
+        }
+        .practice-cta .practice-btn {
+          width: 100%;
+        }
+      }
+    
+      /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .table-scroll::-webkit-scrollbar { height: 4px; }
+      .table-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      @media (max-width: 700px) {
+        /* ── Better Navbar ── */
+        .navbar {
+          height: 52px;
+          padding: 0 0.65rem;
+          gap: 0.4rem;
+        }
+        .nav-brand {
+          font-size: 0.9rem;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-btns {
+          gap: 0.35rem;
+        }
+        .nav-btns button {
+          padding: 6px 9px;
+          font-size: 0.72rem;
+          min-height: 36px;
+          min-width: 36px;
+          border-radius: 8px;
+        }
+
+        /* ── Main Content ── */
+        .main {
+          padding: 1rem 0.7rem 5.5rem !important;
+        }
+
+        /* ── Concept Cards ── */
+        .concept {
+          border-radius: 12px;
+          margin-bottom: 2rem;
+        }
+        .concept-inner {
+          padding: 1.15rem 0.85rem !important;
+        }
+
+        /* ── Topic Header ── */
+        .topic-header {
+          padding: 0.5rem 0 1.25rem;
+        }
+        .topic-header h1 {
+          font-size: 1.45rem !important;
+          line-height: 1.3;
+        }
+        .topic-header p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Concept Headers ── */
+        .concept-header h2 {
+          font-size: 1.05rem !important;
+          line-height: 1.35;
+        }
+
+        /* ── Tables: Horizontal Scroll ── */
+        .table-scroll {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .compare-table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+
+        /* ── Diagrams & SVGs ── */
+        .diagram-wrap {
+          padding: 0.85rem;
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .diagram-wrap svg {
+          max-width: 100%;
+          height: auto;
+          min-width: auto;
+        }
+
+        /* ── Code Blocks ── */
+        .code-header {
+          padding: 0.4rem 0.75rem;
+        }
+        .copy-btn {
+          padding: 3px 8px;
+          font-size: 0.65rem;
+          min-height: 28px;
+        }
+
+        /* ── Content Blocks ── */
+        .one-liner {
+          padding: 0.85rem 0.95rem;
+          font-size: 0.9rem;
+          border-radius: 0 10px 10px 0;
+        }
+
+        .explanation p {
+          font-size: 0.88rem;
+        }
+
+        .key-points,
+        .gotcha,
+        .edge,
+        .analogy {
+          padding: 0.95rem;
+          border-radius: 10px;
+        }
+
+        .key-points li,
+        .gotcha p,
+        .gotcha li,
+        .edge p,
+        .analogy p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Interview Questions ── */
+        .interview-q summary {
+          padding: 0.7rem 0.85rem;
+          font-size: 0.82rem;
+          min-height: 44px;
+        }
+        .interview-q .ans {
+          padding: 0.8rem 0.85rem;
+          font-size: 0.84rem;
+        }
+
+        /* ── Badges ── */
+        .badge {
+          font-size: 0.55rem;
+          padding: 2px 7px;
+        }
+
+        /* ── Read Time ── */
+        .read-time {
+          font-size: 0.68rem;
+          padding: 3px 8px;
+        }
+
+        /* ── Back to Top ── */
+        .btt {
+          bottom: 1.25rem;
+          right: 1rem;
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+
+        /* ── Sidebar Better Touch ── */
+        .sidebar {
+          padding: 1rem 0.75rem;
+        }
+        .sidebar a {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.78rem;
+        }
+
+        /* ── Practice CTA ── */
+        .practice-cta {
+          padding: 1rem;
+          border-radius: 10px;
+        }
+        .practice-cta h2 {
+          font-size: 1.05rem;
+        }
+        .practice-cta p {
+          font-size: 0.88rem;
+        }
+        .practice-cta .practice-btn {
+          min-height: 46px;
+          font-size: 0.9rem;
+        }
+
+        /* ── General Text ── */
+        .explanation strong,
+        .key-points strong,
+        .gotcha strong,
+        .edge strong {
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 380px) {
+        /* Extra small phones */
+        .main {
+          padding: 0.85rem 0.55rem 5rem !important;
+        }
+        .concept-inner {
+          padding: 1rem 0.7rem !important;
+        }
+        .topic-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .compare-table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .nav-brand {
+          font-size: 0.82rem;
+          max-width: 95px;
+        }
+      }
+      /* ===== END MOBILE ENHANCEMENT ===== */
+
+      /* ===== PREPSPHERE UNIVERSAL SCROLL WRAPPER ===== */
+      .ps-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .ps-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .ps-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      /* Force all tables inside concept cards to be scrollable on mobile */
+      @media (max-width: 700px) {
+        .ps-scroll-wrap {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .ps-scroll-wrap table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .ps-scroll-wrap table th,
+        .ps-scroll-wrap table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+        /* SVG diagrams inside scroll wraps */
+        .ps-scroll-wrap svg {
+          min-width: 400px;
+          max-width: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .ps-scroll-wrap table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .ps-scroll-wrap svg {
+          min-width: 340px;
+        }
+      }
+      /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
+
+    /* ── READ NEXT ── */
+    .read-next-section {
+      max-width: var(--content-w, 860px);
+      margin: 60px auto 40px;
+      padding: 0 var(--content-pad, 40px);
+    }
+    .read-next-title {
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .read-next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .rn-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .rn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .rn-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rn-sub {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .rn-cta {
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    @media (max-width: 700px) {
+      .read-next-grid { grid-template-columns: 1fr; }
+    }
+
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="nav-brand">System Design Interview</span>
+      <div class="nav-progress">
+        <div class="nav-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="nav-links">
+        <a href="#scalability">Scalability</a>
+        <a href="#load-balancer">Load Balancer</a>
+        <a href="#caching">Caching</a>
+        <a href="#db-scaling">DB Scaling</a>
+        <a href="#consistent-hashing">Consistent Hashing</a>
+        <a href="#message-queues">Message Queues</a>
+        <a href="#microservices">Microservices</a>
+        <a href="#api-design">API Design</a>
+      </div>
+      <div class="nav-btns">
+        <button onclick="toggleFocus()" id="focusBtn">Focus</button>
+        <button onclick="toggleTheme()" id="themeBtn">🌙</button>
+      </div>
+    </nav>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-title">Core Concepts</div>
+        <a href="#scalability"><span class="num">1</span>Scalability</a>
+        <a href="#load-balancer"><span class="num">2</span>Load Balancer</a>
+        <a href="#caching"><span class="num">3</span>Caching</a>
+        <a href="#db-scaling"><span class="num">4</span>DB Scaling</a>
+        <a href="#consistent-hashing"><span class="num">5</span>Consistent Hashing</a>
+        <a href="#message-queues"><span class="num">6</span>Message Queues</a>
+        <div class="sidebar-title">Architecture</div>
+        <a href="#microservices"><span class="num">8</span>Microservices</a>
+        <a href="#api-design"><span class="num">9</span>API Design</a>
+        <a href="#cdn"><span class="num">10</span>CDN</a>
+        <div class="sidebar-title">Practical Design</div>
+        <a href="#url-shortener"><span class="num">11</span>URL Shortener Design</a>
+        <a href="#rate-limiting"><span class="num">12</span>Rate Limiting</a>
+        <a href="#realtime"><span class="num">13</span>Real-Time Systems</a>
+        <a href="#cap-deep"><span class="num">14</span>CAP Theorem</a>
+      </aside>
+      <main class="main">
+        <div class="topic-header">
+          <h1>System Design Concepts</h1>
+          <p>
+            13 Core System Design Concepts — The #1 skill that separates senior from junior engineers. Master these, and you can design any system an interviewer throws at you.
+          </p>
+        </div>
+
+        <section class="concept" id="scalability">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Scalability — Scale Up vs Scale Out</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Scalability means your system can handle growing load. Vertical scaling (scale up) = bigger machine. Horizontal scaling (scale out) = more machines. Every modern system at scale goes horizontal.</div>
+            <div class="explanation"><p><strong>Vertical Scaling (Scale Up):</strong> Add more CPU, RAM, SSD to one server. Simple but has a hard limit — no single machine handles Google-level traffic. Also a single point of failure.</p>
+<p><strong>Horizontal Scaling (Scale Out):</strong> Add more servers behind a load balancer. Each server is cheap/commodity hardware. If one dies, others handle traffic. This is how Netflix, Uber, Amazon scale.</p>
+<p><strong>Why interviews love this:</strong> Every system design question starts with "how would you scale this?" The answer always involves horizontal scaling.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Horizontal scaling is the industry standard for large systems</li><li>Vertical scaling has a ceiling — can't keep buying bigger machines forever</li><li>Horizontal scaling introduces complexity: load balancing, data consistency, distributed logic</li><li>Most systems start vertical, then go horizontal when costs don't justify bigger hardware</li><li>Auto-scaling (AWS ASG, Kubernetes HPA) adds/removes servers based on traffic automatically</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>stateless vs stateful servers</strong>. Stateless servers store no user session data — any server handles any request. Stateful servers store sessions in memory, making horizontal scaling harder. Always store sessions externally (Redis, database) so servers stay stateless and trivially scalable.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>What happens when one server in a horizontally scaled system crashes?</summary><div class="ans">Load balancer detects via health checks, stops sending traffic, distributes load among remaining servers. Auto-scaler spins up a replacement. Users shouldn't notice.</div></details><details><summary>When would you choose vertical over horizontal?</summary><div class="ans">When workload isn't parallelizable (single massive database needing more RAM), or early-stage when one powerful server is cheaper than managing 10 small ones.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="load-balancer">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Load Balancer — Traffic Distribution</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">A load balancer sits between users and servers. It distributes requests so no single server gets overwhelmed. It's the backbone of every scalable system.</div>
+            <div class="explanation"><p><strong>How it works:</strong> Client → Load Balancer → picks a backend server → forwards request → returns response. Client never knows which server handled it.</p>
+<p><strong>Algorithms:</strong></p>
+<p><strong>Round Robin:</strong> Next server in order. Simple, doesn't account for server capacity.</p>
+<p><strong>Least Connections:</strong> Server with fewest active requests. Smart for varying request durations.</p>
+<p><strong>IP Hash:</strong> Hash client IP → always route to same server. Enables sticky sessions.</p>
+<p><strong>Weighted Round Robin:</strong> More powerful servers get proportionally more traffic.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Round Robin is simplest but doesn't adapt to server capacity</li><li>Least Connections is best for varying request durations</li><li>IP Hash enables session affinity (sticky sessions) without external session store</li><li>Health checks: LB pings each server every few seconds, removes unhealthy ones from pool</li><li>Nginx, HAProxy, AWS ALB are the most common load balancers</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Layer 4 vs Layer 7</strong> load balancing. L4 routes based on IP+port — fast but dumb. L7 routes based on URL path, headers, cookies — e.g., /api/* → API servers, /images/* → CDN. Nginx and HAProxy do both. Cloud load balancers (AWS ALB) are Layer 7.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>What if the load balancer itself crashes?</summary><div class="ans">Single LB = single point of failure. Use <strong>multiple LBs in active-passive or active-active</strong> with a virtual IP. Cloud providers (AWS ALB) handle this automatically — they're inherently highly available.</div></details><details><summary>How does health checking work?</summary><div class="ans">LB periodically sends HTTP/TCP probes (e.g., GET /health every 10s). If server fails 3 consecutive checks → marked unhealthy → removed from pool. When it recovers → added back automatically.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="caching">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Caching — Making Things Fast</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Caching stores frequently accessed data in fast RAM instead of slow disk/database. Single biggest performance optimization. Redis responds in &lt;1ms vs 50-100ms for database.</div>
+            <div class="explanation"><p><strong>Cache Hierarchy (fastest to slowest):</strong></p>
+<p><strong>1. Browser Cache:</strong> Static files cached in user's browser. Controlled by Cache-Control headers.</p>
+<p><strong>2. CDN Cache:</strong> Content at edge servers worldwide. User in Mumbai gets content from Mumbai, not US.</p>
+<p><strong>3. Application Cache (Redis/Memcached):</strong> Database results, computed data, sessions in memory. Sub-millisecond reads.</p>
+<p><strong>4. Database Buffer Pool:</strong> Internal database cache. Not user-managed.</p>
+<p><strong>Cache Strategies:</strong></p>
+<p><strong>Cache-Aside (Lazy Loading):</strong> Check cache → miss → fetch DB → store in cache → return. Most common.</p>
+<p><strong>Write-Through:</strong> Write to cache AND DB simultaneously. Always consistent, slower writes.</p>
+<p><strong>Write-Behind:</strong> Write cache immediately, async write DB later. Fast writes, risk of data loss.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Every cache entry needs TTL (Time To Live) — without it, stale data lives forever</li><li>Cache invalidation is one of the hardest problems in computer science</li><li>Redis: supports data structures, persistence, pub/sub. Default choice for most apps</li><li>Memcached: simpler, multithreaded, pure key-value. Good for simple caching</li><li>Cache hit ratio above 90% = your cache is working well</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>cache invalidation strategies</strong>: (1) TTL-based — expire after time, (2) Event-based — publish event on data change, listeners invalidate, (3) Versioned keys — include version in key (user:v3), change version on update. <strong>This is one of the top 3 system design interview topics.</strong></p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>What is cache stampede / thundering herd?</summary><div class="ans">Popular cache key expires → thousands of requests simultaneously hit database. Solutions: (1) Locking — first request locks, others wait, (2) Early expiration — refresh before TTL ends, (3) Never expire — update async on data change.</div></details><details><summary>Redis vs Memcached?</summary><div class="ans">Redis: data structures, persistence, pub/sub, replication. Use when you need features beyond key-value. Memcached: simpler, multithreaded, pure caching. Most new systems use Redis.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="db-scaling">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Database Scaling — Sharding & Replication</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">6 min</span>
+            </div>
+            <div class="one-liner">Single database = bottleneck. Read more efficiently (replication) or split data across machines (sharding). Every large-scale system uses both.</div>
+            <div class="explanation"><p><strong>Replication (Read Scaling):</strong> Copy data to multiple servers. One primary (writes) → many replicas (reads). 90% of queries are reads — handles most load.</p>
+<p><strong>Sharding (Write Scaling):</strong> Split data into chunks across servers. Users A-M → Shard 1, N-Z → Shard 2. Each shard handles its own reads AND writes.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Primary-Replica:</strong> All writes to primary, replicated to replicas asynchronously. Reads from any replica</li><li><strong>Sharding Key:</strong> Field used to split data (user_id, region). Wrong choice = hotspots (uneven data)</li><li><strong>Consistent Hashing:</strong> Distribute data evenly, minimize reshuffling when servers change</li><li><strong>Vertical Partitioning:</strong> Split by columns (profile vs settings). Different from sharding</li><li><strong>Federation:</strong> Split by function — user DB, order DB, payment DB. Each scales independently</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>when NOT to shard</strong>. Premature sharding adds massive complexity (cross-shard queries, transactions, migrations). Start with replication + read replicas + caching. Shard ONLY when write throughput exceeds one primary. Instagram sharded at 1M+ writes/sec. Most apps never need it.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>What happens when a shard goes down?</summary><div class="ans">That shard's data is unavailable. Each shard should have replicas for failover. Application-level retry to backup. This is why sharding complexity isn't worth it until absolutely needed.</div></details><details><summary>How do cross-shard queries work?</summary><div class="ans">Avoid them. Design shard key so related data lives on same shard. If needed: query each shard in parallel, merge results (scatter-gather). Slow — minimize.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="consistent-hashing">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Consistent Hashing</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Distributed hashing that minimizes data movement when servers change. Used by every distributed database (Cassandra, DynamoDB) and cache system.</div>
+            <div class="explanation"><p><strong>The Problem:</strong> Simple hash (hash(key) % N) remaps ~ALL keys when N changes. With 100 servers, adding 1 moves ~99% of data.</p>
+<p><strong>Solution:</strong> Both servers and keys hash onto a ring (0 to 2³²-1). Each key → first server clockwise. When a server joins/leaves, only adjacent keys move. ~K/N keys remap instead of ~all.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Places servers and data on a virtual ring (hash ring)</li><li>Adding server: only keys from its immediate neighbor move</li><li>Removing server: keys go to next server clockwise</li><li><strong>Virtual Nodes (VNodes):</strong> Each physical server maps to multiple ring positions for even distribution</li><li>Used by: DynamoDB, Cassandra, Riak, Akamai CDN, Discord</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>virtual nodes</strong>. Without them, 3 servers can't be evenly utilized. VNodes let powerful servers own more ring segments = more data = more load they can handle. Also ensures better distribution with few physical servers.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Why not hash(key) % number_of_servers?</summary><div class="ans">When server count changes, nearly ALL keys move. Consistent hashing only moves K/N keys. 1M keys, 100 servers: adding one moves ~10K keys instead of ~990K.</div></details><details><summary>How does DynamoDB use this?</summary><div class="ans">DynamoDB partitions data using consistent hashing internally. Each partition handles a hash key range. When you provision more capacity, AWS adds partitions seamlessly.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="message-queues">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Message Queues & Async Processing</h2>
+              <span class="badge badge-important">Important</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">User uploads video → can't wait 10 minutes for processing. Instead: put message on queue, return immediately, workers handle it async. Fundamental to every large-scale system.</div>
+            <div class="explanation"><p><strong>Producer → Queue → Consumer.</strong> Producer creates message, queue stores it, consumer processes it. They never interact directly.</p>
+<p><strong>Examples:</strong> YouTube: upload → queue → transcode → queue → thumbnails → queue → notify. Uber: ride request → queue → match driver. Every notification system: event → queue → email/push/SMS.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Decoupling:</strong> Producer and consumer don't know about each other — just the queue</li><li><strong>Buffering:</strong> Queue absorbs traffic spikes. Consumers process at their own pace</li><li><strong>Reliability:</strong> Messages persist on disk. Consumer crash → message retried by another</li><li><strong>Scaling:</strong> Add more consumers = faster processing. Queue handles distribution</li><li>Popular: RabbitMQ (simple, feature-rich), Kafka (high throughput, streaming), SQS (AWS managed)</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>Kafka vs RabbitMQ</strong>. Kafka is an event streaming platform — messages persist and replay (commit log). Multiple consumers independently read same events. RabbitMQ is traditional queue: message delivered and acknowledged once. Kafka for event sourcing, analytics, audit. RabbitMQ for task queues, notifications.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>What if consumer crashes mid-processing?</summary><div class="ans">Message stays 'in-flight' with visibility timeout. If not acknowledged in time, becomes available for another consumer. 'At-least-once delivery' — may process twice, so consumers must be idempotent.</div></details><details><summary>How to ensure exactly-once processing?</summary><div class="ans">True exactly-once is very hard. Most systems use at-least-once + idempotent consumers. Use unique message IDs, check if already processed before handling.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="microservices">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Microservices vs Monolith</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">Monolith = entire app in one codebase. Microservices = split into independent services, each with own DB, deployed separately. Start monolith, extract services as you scale.</div>
+            <div class="explanation"><p><strong>Monolith:</strong> Simple to build/test/deploy initially. As codebase grows, every change requires full redeploy. One bug can crash everything.</p>
+<p><strong>Microservices:</strong> Each service owns its data, deploys independently. Team A owns payments, Team B owns users. But introduces network calls, distributed consistency, operational complexity.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Start monolith when:</strong> Small team, early stage, validating product-market fit</li><li><strong>Go microservices when:</strong> Multiple teams, different scale needs, independent deployments required</li><li><strong>API Gateway:</strong> Single entry point. Routes to correct service. Handles auth, rate limiting, logging</li><li><strong>Service Discovery:</strong> Services find each other dynamically (Consul, Eureka, K8s DNS)</li><li>The tradeoff: microservices solve organizational scaling by introducing technical complexity</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know the <strong>Strangler Fig Pattern</strong>. Don't rewrite monolith overnight. Build new features as microservices, gradually redirect traffic. Over 12-18 months, monolith shrinks as services are extracted. Amazon did this over ~5 years. This is what interviewers want to hear.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>How do microservices communicate?</summary><div class="ans">Two ways: (1) <strong>Synchronous</strong> — REST/gRPC. Simple but creates coupling and cascading failures. (2) <strong>Asynchronous</strong> — message queues. Decoupled, resilient. Best practice: async for inter-service, sync only for real-time user requests.</div></details><details><summary>How handle distributed transactions?</summary><div class="ans"><strong>Saga Pattern.</strong> Chain local transactions across services. If any step fails, run compensating transactions to undo. Example: create order → charge payment → reserve inventory → if payment fails, cancel order + release inventory.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="api-design">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>API Design — REST & Best Practices</h2>
+              <span class="badge badge-practical">Practical</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">APIs are how services communicate. REST is the standard. Good API design separates junior from senior developers. Every backend interview asks this.</div>
+            <div class="explanation"><p><strong>REST:</strong> Resources are nouns (/users, /orders). HTTP methods are verbs (GET, POST, PUT, PATCH, DELETE). Stateless server.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Plural nouns:</strong> /users (not /user), /users/123 for specific user</li><li><strong>Status codes:</strong> 200=OK, 201=Created, 400=Bad Request, 401=Unauthorized, 403=Forbidden, 404=Not Found, 429=Too Many Requests, 500=Server Error</li><li><strong>Pagination:</strong> Never return all records. Use ?page=1&limit=20 or cursor-based</li><li><strong>Versioning:</strong> /api/v1/users. Breaking changes → new version without breaking old</li><li><strong>Rate Limiting:</strong> Protect API. Return 429 with Retry-After header when limit exceeded</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>idempotency</strong>. Idempotent call = same result no matter how many times called. GET, PUT, DELETE are idempotent. POST is not. For payments, use <strong>idempotency key</strong> in header — same key = return previous result. Stripe does this.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>PUT vs PATCH?</summary><div class="ans">PUT replaces entire resource. PATCH updates only specified fields. PUT {name:'John'} removes all other fields. PATCH {name:'John'} only changes name.</div></details><details><summary>How handle long-running operations?</summary><div class="ans">Return <strong>202 Accepted</strong> with status URL. Client polls until complete. POST /videos → 202 with Location: /videos/123/status → poll until done.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="cdn">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>CDN & Edge Computing</h2>
+              <span class="badge badge-concept">Concept</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">CDN serves static content from servers physically close to users. Reduces latency from 300ms to 30ms. Every high-traffic website uses one.</div>
+            <div class="explanation"><p><strong>How CDN works:</strong> Configure domain → point to CDN provider (Cloudflare, CloudFront) → CDN caches content at edge locations worldwide → users routed to nearest edge.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>Cache HIT:</strong> Edge has content → instant response</li><li><strong>Cache MISS:</strong> Edge fetches from origin → caches → responds. Next user gets hit</li><li><strong>Purge:</strong> Tell CDN to clear stale content. Minutes to propagate globally</li><li><strong>Edge Computing:</strong> Run YOUR code at edge (Cloudflare Workers, Lambda@Edge)</li><li>Popular: Cloudflare (free tier!), AWS CloudFront, Akamai, Fastly</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>cache-busting</strong>. Include hash in filename: main.a3b2c1.js. Deploy new code → hash changes → new URL → CDN treats as new. Old cached version still works. Infinite caching + instant updates.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Should APIs go through CDN?</summary><div class="ans">Yes for GET with public data (product listings). Set short TTL (60s). Skip CDN for personalized/sensitive data. Never cache POST/PUT/DELETE.</div></details><details><summary>CDN vs reverse proxy?</summary><div class="ans">Reverse proxy sits in YOUR datacenter (Nginx). CDN sits in MANY datacenters worldwide. CDN is a distributed reverse proxy network.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="url-shortener">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Design a URL Shortener</h2>
+              <span class="badge badge-practical">Practical</span>
+              <span class="read-time">6 min</span>
+            </div>
+            <div class="one-liner">The most common system design interview question. If you can design this, you understand encoding, databases, caching, analytics, and scaling in one question.</div>
+            <div class="explanation"><p><strong>Requirements:</strong> Long URL → short code (abc123). Visit short URL → redirect to original. Track clicks. Handle 100M+ URLs.</p>
+<p><strong>Generate Short Code:</strong> Auto-increment ID → base62 encode (0-9,a-z,A-Z). ID 1='1', ID 61='Z', ID 1000000='4c92'. 7 chars = 62⁷ = 3.5 trillion unique URLs.</p>
+<p><strong>Storage:</strong> Key-value store (DynamoDB) — short_code is key, long_url is value. Perfect fit.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>301 vs 302:</strong> 301 = permanent (browser caches, no analytics). 302 = temporary (always hits server, track clicks). Most use 302</li><li>Cache short→long mappings in Redis. 90%+ popular URLs from cache, never hit DB</li><li>Analytics: async write click data to queue → process → analytics DB</li><li>100M URLs × 200 bytes = ~20GB. Fits on one machine. Scale reads with caching</li><li>Global latency: CDN/edge for redirects</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Interviewers love <strong>base62 encoding</strong>. Counter → deterministic short codes. 7 chars = 3.5 trillion URLs. For distributed systems, <strong>range-based ID allocation</strong> — each server gets an ID range, eliminating centralized counter bottleneck.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>Custom aliases (user picks their code)?</summary><div class="ans">Check if exists. If yes, reject. Limit to premium users — wastes namespace. Store in same KV store.</div></details><details><summary>Prevent malware/phishing?</summary><div class="ans">Run through: Google Safe Browsing API, phishing DB lookup, rate limit per IP, user reporting. Block flagged at redirect level.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="rate-limiting">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Rate Limiting & Throttling</h2>
+              <span class="badge badge-practical">Practical</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">Controls how many requests a user makes in a time window. Without it, one malicious user sends 1M requests/sec and takes down your system. Every API needs this.</div>
+            <div class="explanation"><p><strong>Algorithms:</strong></p>
+<p><strong>Fixed Window:</strong> Count in fixed time window (100/minute). Allows burst at boundaries.</p>
+<p><strong>Sliding Window:</strong> Track last N seconds continuously. More accurate.</p>
+<p><strong>Token Bucket:</strong> Bucket has N tokens. Each request costs 1. Refills steadily. Allows controlled bursts. Most widely used.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>Token Bucket is the industry standard — AWS, Stripe, GitHub all use it</li><li>Leaky Bucket: constant processing rate. Smooths traffic, no bursts</li><li>Rate limit at: API Gateway, Application level, Infrastructure (Nginx/Cloudflare)</li><li>Return 429 Too Many Requests with Retry-After header</li><li>Implementation: Redis INCR + EXPIRE. O(1) per request</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>distributed rate limiting</strong>. 10 servers can't count independently — user could send 100 to each = 1000 total. Use shared Redis counter. At larger scale, dedicated rate limiting service or Redis Cluster.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>How does Stripe do it?</summary><div class="ans">Token bucket with burst. Different tiers, different limits. Returns RateLimit-Remaining and RateLimit-Reset headers. 429 with clear retry message. Gold standard.</div></details><details><summary>Auth vs unauth rate limiting?</summary><div class="ans">Unauth: by IP (restrictive, 100/hr). Auth: by user ID (generous, 1000/hr). Always both layers — IP as safety net, user as primary.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="realtime">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>Real-Time Systems & WebSockets</h2>
+              <span class="badge badge-practical">Practical</span>
+              <span class="read-time">4 min</span>
+            </div>
+            <div class="one-liner">HTTP is request-response. But chat, live scores, stock tickers need server push. WebSockets provide full-duplex persistent connections for real-time communication.</div>
+            <div class="explanation"><p><strong>Options:</strong></p>
+<p><strong>Polling:</strong> Client asks every N seconds. Wasteful, high latency.</p>
+<p><strong>Long Polling:</strong> Server holds request until data available. Better but HTTP overhead.</p>
+<p><strong>SSE:</strong> One-way server push over HTTP. Simple, auto-reconnect. Client can't send back.</p>
+<p><strong>WebSockets:</strong> Full-duplex persistent TCP. Both sides send anytime. Best for chat, gaming, collaboration.</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li>WebSocket: HTTP Upgrade → WS protocol. No headers after handshake</li><li>Perfect for: chat, live sports, gaming, collaborative editing, stock tickers</li><li>SSE is simpler for one-way push (notifications, feeds) — consider it first</li><li><strong>Scaling:</strong> Each connection holds server memory. Use Redis Pub/Sub between servers</li><li>Socket.io is the most popular WebSocket library with fallbacks</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>horizontal WebSocket scaling</strong>. User A on Server 1, User B on Server 2. A sends to B → Server 1 publishes to <strong>Redis Pub/Sub</strong> → Server 2 receives → delivers to B. This is exactly how Socket.io clustering works.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>SSE vs WebSocket?</summary><div class="ans">SSE for server→client only (live scores, notifications). Simpler, works over HTTP, auto-reconnects. WebSocket when client→server too (chat, gaming). Don't over-engineer.</div></details><details><summary>How does WhatsApp scale connections?</summary><div class="ans">Ejabberd (Erlang-based) + custom modifications. Erlang designed for massive concurrency. Federation of servers, custom binary protocol. Purpose-built real-time infrastructure.</div></details></div>
+          </div>
+        </section>
+        <section class="concept" id="cap-deep">
+          <div class="concept-accent"></div>
+          <div class="concept-inner">
+            <div class="concept-header">
+              <h2>CAP Theorem in Practice</h2>
+              <span class="badge badge-core">Core</span>
+              <span class="read-time">5 min</span>
+            </div>
+            <div class="one-liner">In distributed systems: Consistency, Availability, Partition tolerance — pick 2. Since network partitions WILL happen, you really choose between C and A during partitions. This shapes every database decision.</div>
+            <div class="explanation"><p><strong>C:</strong> Every read returns latest write. All nodes see same data simultaneously.</p>
+<p><strong>A:</strong> Every request gets a response, even if data might be stale.</p>
+<p><strong>P:</strong> System works despite network failures between nodes.</p>
+<p><strong>Reality:</strong> Partitions are inevitable. P is mandatory. Real choice: during partition, prioritize C or A?</p></div>
+            <div class="key-points"><h4>Key Interview Points</h4><ul><li><strong>CP:</strong> MongoDB (default), HBase, Redis Cluster. During partition, reject potentially stale reads</li><li><strong>AP:</strong> Cassandra, DynamoDB, CouchDB. During partition, serve reads even if stale</li><li><strong>CA:</strong> Only in single-node DBs (PostgreSQL, MySQL). No partition = no choice</li><li><strong>Eventual Consistency:</strong> If no new writes, all replicas converge. Usually within milliseconds</li><li>Most modern DBs let you configure per-operation: strong for payments, eventual for likes</li></ul></div>
+            <div class="edge"><h4>Competitive Edge</h4><p>Know <strong>PACELC theorem</strong> — CAP evolution. Adds: during normal operation (no partition), tradeoff is Latency vs Consistency. DynamoDB lets you choose per read: 'consistent read' costs more but always right. 'Eventually consistent' is cheaper but may be stale by milliseconds.</p></div>
+            <div class="interview-q"><h4>Follow-up Questions</h4><details><summary>How does DynamoDB offer both?</summary><div class="ans">Each read has ConsistentRead parameter. True = read from leader (strong, higher cost). False = read from any replica (faster, cheaper, ~1s stale). Most apps use eventual for 95% of reads.</div></details><details><summary>Why can't you have all three?</summary><div class="ans">2 servers, cable breaks (P). User writes to Server 1. Should Server 2 return old data (available but inconsistent) or refuse (consistent but unavailable)? Can't have both during partition.</div></details></div>
+          </div>
+        </section>
+
+    <div class="read-next-section">
+      <div class="read-next-title">Read Next</div>
+      <div class="read-next-grid">
+        
+        <a href="12-DSA-Concepts.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#e91e63"></span>DSA Concepts</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="01-DBMS.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#f5a623"></span>DBMS</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="02-OOPs.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#4a90e2"></span>OOPs</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
+        <div class="practice-cta">
+          <div>
+            <h2>Test Your System Design Knowledge</h2>
+            <p>Practice questions that mirror real FAANG system design interviews.</p>
+          </div>
+          <a href="Quiz/11-System-Design.html" class="practice-btn">Practice Quiz →</a>
+        </div>
+      </main>
+    </div>
+    <button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+    <script>
+    
+      function toggleTheme() {
+        const d = document.documentElement,
+          isDark = d.getAttribute("data-theme") === "dark";
+        d.setAttribute("data-theme", isDark ? "" : "dark");
+        document.getElementById("themeBtn").textContent = isDark ? "🌙" : "☀️";
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+      }
+      (function () {
+        const t = localStorage.getItem("theme");
+        if (t === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.getElementById("themeBtn").textContent = "☀️";
+        }
+      })();
+
+      function toggleFocus() {
+        const sb = document.getElementById("sidebar");
+        const btn = document.getElementById("focusBtn");
+        const isMobile = window.innerWidth <= 900;
+        sb.classList.toggle("hidden");
+        document.body.classList.toggle(
+          "focus-mode",
+          sb.classList.contains("hidden"),
+        );
+        btn.textContent = isMobile
+          ? sb.classList.contains("hidden")
+            ? "Menu"
+            : "Close"
+          : sb.classList.contains("hidden")
+            ? "Expand"
+            : "Focus";
+      }
+
+      (function initMobileSidebar() {
+        const sb = document.getElementById("sidebar");
+        const btn = document.getElementById("focusBtn");
+        let wasMobile;
+        function sync() {
+          const isMobile = window.innerWidth <= 900;
+          if (isMobile === wasMobile) return;
+          wasMobile = isMobile;
+          if (isMobile) {
+            sb.classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            btn.textContent = "Menu";
+          } else {
+            sb.classList.remove("hidden");
+            document.body.classList.remove("focus-mode");
+            btn.textContent = "Focus";
+          }
+        }
+        sync();
+        window.addEventListener("resize", sync);
+      })();
+
+      function updateProgress() {
+        const s = document.documentElement.scrollTop || document.body.scrollTop;
+        const h =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        document.getElementById("progressBar").style.width =
+          (s / h) * 100 + "%";
+      }
+
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function highlightActive() {
+        const sections = document.querySelectorAll(".concept");
+        const sideLinks = document.querySelectorAll(".sidebar a");
+        const navLinks = document.querySelectorAll(".nav-links a");
+        let current = "";
+        sections.forEach((s) => {
+          if (s.getBoundingClientRect().top < 150) current = s.id;
+        });
+        sideLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+        navLinks.forEach((a) =>
+          a.classList.toggle(
+            "active",
+            a.getAttribute("href") === "#" + current,
+          ),
+        );
+      }
+
+      function copyCode(btn) {
+        const code = btn
+          .closest(".code-wrap")
+          .querySelector(".code-block").innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 1500);
+        });
+      }
+
+      window.addEventListener("scroll", function () {
+        document.getElementById("bttBtn").style.display =
+          window.scrollY > 400 ? "block" : "none";
+        updateProgress();
+        highlightActive();
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+          const t = document.querySelector(this.getAttribute("href"));
+          if (t) {
+            window.scrollTo({
+              top: t.getBoundingClientRect().top + window.pageYOffset - 70,
+              behavior: "smooth",
+            });
+          }
+          if (window.innerWidth <= 900) {
+            document.getElementById("sidebar").classList.add("hidden");
+            document.body.classList.add("focus-mode");
+            document.getElementById("focusBtn").textContent = "Menu";
+          }
+        });
+      });
+
+      updateProgress();
+      highlightActive();
+
+      document.addEventListener("click", (e) => {
+        const menu = document.getElementById("qm");
+        const btn = document.querySelector(".jump-btn");
+        if (
+          menu &&
+          btn &&
+          !menu.contains(e.target) &&
+          !btn.contains(e.target) &&
+          menu.classList.contains("active")
+        ) {
+          menu.classList.remove("active");
+        }
+      });
+    
+    </script>
+        <div class="quick-jump">
+      <button
+        class="jump-btn"
+        onclick="document.getElementById('qm').classList.toggle('active')"
+      >
+        🌐 Hyperjump
+      </button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
+      </div>
+    </div>
+
+    <script src="search-index.js"></script>
+    <script src="global-search.js"></script>
+    <script src="feedback.js?v=4"></script>
+  </body>
+</html>

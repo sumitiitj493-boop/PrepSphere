@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Design Interview Quiz</title>
+    <meta name="description" content="Test your System Design knowledge with this interview quiz. Practice questions on Scalability, Load Balancer, Caching, DB Scaling & Sharding, Consistent Hashing, Message Queues, and more." />
+    <meta name="keywords" content="System Design quiz, System Design interview quiz, coding interview quiz, PrepSphere" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.theprepsphere.in/Quiz/11-System-Design.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="System Design Interview Quiz" />
+    <meta property="og:description" content="Test your System Design knowledge with this interview quiz. Practice questions on Scalability, Load Balancer, Caching, DB Scaling & Sharding, Consistent Hashing, Message Queues, and more." />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/Quiz/11-System-Design.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="System Design Interview Quiz" />
+    <meta name="twitter:description" content="Test your System Design knowledge with this interview quiz. Practice questions on Scalability, Load Balancer, Caching, DB Scaling & Sharding, Consistent Hashing, Message Queues, and more." />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "System Design Interview Quiz",
+  "description": "Test your System Design knowledge with this interview quiz.",
+  "url": "https://www.theprepsphere.in/Quiz/11-System-Design.html",
+  "image": "https://www.theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation quiz",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://www.theprepsphere.in"
+  }
+}
+    </script>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .intro-title span { color: var(--accent); }
+
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+
+  .opt.locked { cursor: default; pointer-events: none; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+
+  .exp-section { margin-bottom: 24px; }
+
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+
+  .exp-text.why-text { color: #c8b890; }
+
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .revisit-section { margin-bottom: 32px; }
+
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+
+  .results-actions { display: flex; gap: 14px; }
+
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-retake:hover { background: var(--accent); color: #000; }
+
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+
+  .btn-copy:hover { opacity: 0.85; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../11-System-Design.html">&larr; Notes</a>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">System Design</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 22</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+
+<div id="main">
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">System Design <span>Interview</span> Quiz</div>
+    <div class="intro-sub">22 questions covering every core system design concept. Architecture, trade-offs, and real-world reasoning. No theory dumps — just what interviewers actually ask.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">SCALABILITY</div>
+      <div class="q-number" id="q-number">Q 01 of 22</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 22</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+
+</div>
+
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+
+<script>
+const GLYPHS = ['A','B','C','D'];
+
+const TOPICS = [
+  'Scalability',
+  'Load Balancer',
+  'Caching',
+  'DB Scaling & Sharding',
+  'Consistent Hashing',
+  'Message Queues',
+  'Microservices',
+  'API Design',
+  'CDN',
+  'URL Shortener Design',
+  'Rate Limiting',
+  'Real-Time / WebSockets',
+  'CAP Theorem',
+];
+
+const Q = [
+  {
+    topic: 'Scalability',
+    q: 'A social media app handles 10K concurrent users. Traffic projections show 100x growth in 6 months. The CTO asks whether to scale vertically or horizontally first. What is the right call?',
+    opts: [
+      'Scale vertically first — upgrade the single server to the maximum CPU and RAM available, then plan horizontal scaling',
+      'Scale horizontally first — distribute load across multiple smaller servers behind a load balancer, because vertical scaling has a hard hardware ceiling and a single point of failure',
+      'Scale vertically and horizontally simultaneously — add the largest server available and also add replicas',
+      'Scale horizontally only after the vertical scaling ceiling is reached — this ensures cost efficiency'
+    ],
+    correct: 1,
+    concept: 'Vertical scaling (scaling up) means adding more CPU, RAM, or storage to a single machine. It hits a hard hardware limit, creates a single point of failure, and requires downtime for upgrades. Horizontal scaling (scaling out) means adding more machines. It provides nearly unlimited growth, zero-downtime scaling, and fault tolerance through redundancy. Starting with horizontal scaling early avoids painful migrations later.',
+    why: 'Vertical scaling to the maximum first means the 100x growth will still exceed the single-server ceiling and you will face an emergency migration. Simultaneous scaling is over-engineered at this stage — one strategy should be chosen and executed well. Waiting for the vertical ceiling before horizontal scaling means your migration will be under extreme time pressure when traffic spikes hit.'
+  },
+  {
+    topic: 'Scalability',
+    q: 'What is the fundamental difference between scaling a stateless web tier and scaling a stateful database tier?',
+    opts: [
+      'Stateless tiers require more network bandwidth; stateful tiers require more CPU',
+      'Stateless tiers can be scaled by simply adding more identical instances behind a load balancer, while stateful tiers require data partitioning, replication, and consistency management',
+      'There is no fundamental difference — both are scaled by adding identical instances',
+      'Stateless tiers cannot be horizontally scaled; only stateful tiers can'
+    ],
+    correct: 1,
+    concept: 'Stateless web servers hold no user-specific data between requests. Any server can handle any request, so horizontal scaling is trivial — add instances behind a load balancer. Stateful databases hold the source of truth. Adding more database instances requires deciding how data is split (partitioning/sharding), how copies stay consistent (replication strategy), and how to handle queries that span partitions. This is orders of magnitude more complex.',
+    why: 'Stateless scaling is actually bandwidth-efficient since any server handles any request. The difference is not about CPU vs. bandwidth — it is about data affinity and consistency. Stateless tiers are the easiest to horizontally scale precisely because they have no shared state. Stateful tiers require careful data management strategies.'
+  },
+  {
+    topic: 'Load Balancer',
+    q: 'A system uses round-robin load balancing across 5 servers. Server 3 has twice the CPU capacity of the others. Users on server 3 get fast responses, but users on other servers experience timeouts. What load balancing strategy fixes this?',
+    opts: [
+      'Random load balancing — randomness naturally distributes traffic proportionally to capacity',
+      'Weighted round-robin — assign server 3 twice the weight so it receives proportionally more requests',
+      'IP hash load balancing — hash the client IP to always route to the same server',
+      'Least connections load balancing alone will fix this — no need for weighted algorithms'
+    ],
+    correct: 1,
+    concept: 'Round-robin distributes requests equally regardless of server capacity. When servers have different capacities, equal distribution overloads weaker servers. Weighted round-robin assigns a weight proportional to each server\'s capacity. Server 3 with 2x capacity gets weight 2, others get weight 1. This ensures each server receives traffic proportional to what it can handle.',
+    why: 'Random distribution does not guarantee proportional load — statistical variance causes uneven distribution. IP hash provides session affinity but does not account for server capacity differences. Least connections helps with long-lived connections but does not account for request processing time differences caused by capacity differences.'
+  },
+  {
+    topic: 'Load Balancer',
+    q: 'Why does a load balancer perform health checks, and what happens if a health check fails?',
+    opts: [
+      'Health checks measure server CPU usage — if CPU exceeds 80%, the load balancer sends fewer requests',
+      'Health checks verify that each backend server can respond correctly. If a server fails a health check, the load balancer stops sending traffic to it and redistributes requests to healthy servers',
+      'Health checks are for SSL certificate validation — failed checks mean expired certificates',
+      'Health checks are performed only at startup to verify all servers are online'
+    ],
+    correct: 1,
+    concept: 'Health checks (often HTTP GET /health or TCP connect checks) run periodically against every backend. A healthy server responds with 200 OK. If a server crashes, runs out of memory, or enters a deadlock, the health check fails. The load balancer immediately removes that server from the rotation and distributes traffic to surviving servers. When the server recovers, the health check passes and traffic resumes automatically.',
+    why: 'CPU thresholds are monitoring alerts, not health checks — load balancers test endpoint responsiveness. SSL validation is a separate concern handled by the TLS termination layer. Health checks run continuously, not just at startup, because servers can fail at any time due to memory leaks, deadlocks, disk exhaustion, or network issues.'
+  },
+  {
+    topic: 'Caching',
+    q: 'A product listing page makes 200 database queries per page load to render product details, reviews, and recommendations. The page takes 4 seconds to load. Adding Redis as a cache reduced this to 80ms. What caching strategy was most likely used?',
+    opts: [
+      'Write-through cache — every write goes to both cache and database before returning success',
+      'Cache-aside (lazy loading) — the application checks the cache first, and on a cache miss, queries the database and stores the result in the cache for future requests',
+      'Write-behind cache — writes are batched and sent to the database asynchronously',
+      'Read-through cache with no expiration — cached data never expires and is never refreshed'
+    ],
+    correct: 1,
+    concept: 'Cache-aside is the most common caching pattern. The application code manages the cache. On a read: check cache → if hit, return; if miss, query database → store result in cache → return. This works well for read-heavy workloads like product pages because the first request pays the database cost, but all subsequent requests for the same data are served from cache in microseconds.',
+    why: 'Write-through updates the cache on every write but does not help with read-heavy pages making 200 queries — the initial load still hits the database. Write-behind is about write optimization, not read optimization. Never expiring cache is dangerous for product data that changes (price updates, new reviews). Cache-aside with TTL gives the best balance of freshness and speed.'
+  },
+  {
+    topic: 'Caching',
+    q: 'A popular e-commerce site uses CDN caching for product images. After a product photo update, users still see the old image for hours. What is the root cause and the fix?',
+    opts: [
+      'The CDN is broken — switch to a different CDN provider',
+      'The cache key does not include the image version. The fix is cache busting: append a version hash to the URL (e.g., image.jpg?v=a3f2b1) so the CDN treats it as a new resource',
+      'CDNs cannot cache images — images must be served directly from the origin server',
+      'Increase the TTL (time-to-live) of the cached image so it refreshes more often'
+    ],
+    correct: 1,
+    concept: 'CDNs cache resources based on the URL. If the URL does not change after the image is updated, the CDN continues serving the cached version until the TTL expires. Cache busting solves this by including a content hash or version number in the URL. When the image changes, the hash changes, the URL changes, and the CDN treats it as a new resource that must be fetched from the origin.',
+    why: 'CDNs are working as designed — this is not a provider issue. CDNs excel at caching static assets like images. Decreasing TTL (not increasing) would force more frequent checks but wastes bandwidth and adds latency. Cache busting with versioned URLs is the industry-standard solution because it gives instant updates without wasting CDN capacity.'
+  },
+  {
+    topic: 'DB Scaling',
+    q: 'A database handles 50K reads/second but only 500 writes/second. Queries are becoming slow despite proper indexing. What is the most cost-effective first step?',
+    opts: [
+      'Shard the database immediately across 10 partitions',
+      'Add read replicas — since the workload is read-heavy (100:1 read/write ratio), directing reads to replicas while writes go to the primary will reduce the primary load significantly',
+      'Migrate from SQL to NoSQL because SQL databases cannot handle 50K reads/second',
+      'Add more RAM to the database server (vertical scaling)'
+    ],
+    correct: 1,
+    concept: 'Read replicas are copies of the primary database that serve read queries. With a 100:1 read/write ratio, adding 3-5 read replicas and routing read queries to them can multiply read capacity by 5x with minimal architecture changes. Writes still go to the primary and propagate to replicas asynchronously. This is the simplest and most cost-effective scaling step for read-heavy workloads.',
+    why: 'Sharding is a last-resort scaling step because it introduces cross-shard query complexity, join limitations, and operational overhead. SQL databases routinely handle 50K reads/second with proper indexing and connection pooling. Vertical scaling helps but has a hard ceiling and does not address the fundamental need to distribute read load.'
+  },
+  {
+    topic: 'Consistent Hashing',
+    q: 'Why is consistent hashing used in distributed caches instead of modular hashing (hash(key) % N)?',
+    opts: [
+      'Consistent hashing is faster to compute than modular hashing',
+      'When the number of nodes changes, consistent hashing remaps only K/N keys on average, while modular hashing remaps nearly all keys',
+      'Consistent hashing guarantees zero key movement when nodes are added',
+      'Consistent hashing only works with string keys, while modular hashing only works with numeric keys'
+    ],
+    correct: 1,
+    concept: 'Modular hashing maps each key to hash(key) % N. When N changes (a node joins or leaves), nearly every key\'s assignment changes. In a cache, this means almost all cached data becomes invalid — a thundering herd of cache misses that overwhelms the origin database. Consistent hashing places nodes and keys on a virtual ring. Each key maps to the nearest clockwise node. When one node joins or leaves, only that node\'s keys move — roughly K/N keys instead of K keys.',
+    why: 'Both hash functions are fast to compute — the difference is not speed. Consistent hashing minimizes remapping but does not guarantee zero movement — K/N keys still move. Both work with any key type that can be hashed. The key advantage is stability of key-to-node mapping when the cluster topology changes.'
+  },
+  {
+    topic: 'Message Queues',
+    q: 'An e-commerce site sends order confirmation emails. Currently, the email is sent synchronously during checkout, adding 2-3 seconds to the checkout time. How does a message queue fix this?',
+    opts: [
+      'The message queue sends the email faster than the application can',
+      'The application publishes an "order placed" event to the queue and immediately returns success to the user. A separate worker consumes the event and sends the email asynchronously, decoupling the checkout flow from the email delivery',
+      'The message queue replaces the email service entirely — it sends emails directly to users',
+      'The message queue caches the email content so the user can see a preview before it is sent'
+    ],
+    correct: 1,
+    concept: 'Message queues enable asynchronous processing through producer-consumer decoupling. The checkout service (producer) publishes an event to a queue (e.g., "order_placed" with order details). It immediately returns a success response to the user. An email worker (consumer) picks up the event from the queue and sends the email at its own pace. If the email service is down, the message stays in the queue and is retried — no lost orders.',
+    why: 'The queue does not send emails faster — it changes the timing of when the email work happens. The queue is a transport mechanism, not an email service replacement. Email preview is a UI feature unrelated to queuing. The core value is decoupling: the checkout service does not wait for the email to be sent, and email failures do not block checkouts.'
+  },
+  {
+    topic: 'Message Queues',
+    q: 'What happens to messages in a durable message queue if all consumer workers crash simultaneously?',
+    opts: [
+      'All messages are lost because there are no consumers to receive them',
+      'Messages are persisted to disk by the queue broker. When consumers restart, they pick up where they left off. No messages are lost.',
+      'The queue automatically creates new consumer instances to process the messages',
+      'Messages are returned to the producer with an error code'
+    ],
+    correct: 1,
+    concept: 'A durable message queue (like RabbitMQ with persistent queues, or Kafka with replication) writes messages to disk before acknowledging the producer. Messages survive broker restarts and consumer failures. When consumer workers come back online, they reconnect to the queue and resume processing from the last acknowledged message. This is why message queues are critical for reliable systems — they guarantee delivery even during failures.',
+    why: 'Message loss happens with non-durable queues or in-memory-only configurations, but production systems use durable persistence. Queues do not auto-scale consumers — that is an orchestration concern handled by Kubernetes or similar tools. Messages are not returned to producers — the whole point of a queue is to decouple producers from consumers so producers do not need to know if consumers are online.'
+  },
+  {
+    topic: 'Microservices',
+    q: 'A team migrates from a monolith to 15 microservices. After the migration, a single user request that previously made 1 database call now triggers 8 service-to-service API calls. The request latency increased from 50ms to 400ms. What is the most likely cause and solution?',
+    opts: [
+      'The microservices are incorrectly configured — reducing the number of services will fix the latency',
+      'Chained synchronous API calls between services create serial latency. The solution includes using async messaging for non-critical paths, implementing API gateways for request aggregation, batching service calls, and caching intermediate results',
+      'Microservices always add 8x latency — this is expected and cannot be improved',
+      'The issue is the database — moving to a faster database will solve the latency problem'
+    ],
+    correct: 1,
+    concept: 'In a monolith, a single function call takes microseconds. In microservices, each service-to-service call requires network serialization, HTTP overhead, and deserialization — typically 20-50ms per hop. Eight serial hops = 160-400ms. Solutions: use asynchronous communication (message queues) for operations that do not need immediate results, aggregate related service calls through an API gateway or BFF (Backend For Frontend), cache responses, and use gRPC instead of REST for internal service communication.',
+    why: 'The number of services is not the problem — the communication pattern is. Microservices add overhead per call, but not a fixed 8x multiplier — well-designed service communication patterns minimize hops. The database is the same — the issue is the inter-service network calls adding up in serial.'
+  },
+  {
+    topic: 'API Design',
+    q: 'A REST API endpoint returns user details: GET /users/123. The mobile team needs only the name and avatar, but the endpoint returns 40 fields including address, payment info, and purchase history. What API design pattern solves this?',
+    opts: [
+      'Create a separate endpoint for each field: /users/123/name, /users/123/avatar, etc.',
+      'Use sparse field selection with a query parameter: GET /users/123?fields=name,avatar — this lets each client request only the data it needs without creating endpoint explosion',
+      'Return all 40 fields on every request — mobile clients should filter locally',
+      'Create separate APIs for each platform: /mobile/users/123, /web/users/123'
+    ],
+    correct: 1,
+    concept: 'Sparse field selection (also called field filtering or partial response) is a REST API pattern where the client specifies which fields it wants using a query parameter. The server only serializes and returns those fields. This reduces bandwidth (critical for mobile), lowers serialization cost, and avoids maintaining separate endpoints for each use case. GraphQL takes this further by making field selection a first-class feature.',
+    why: 'Creating per-field endpoints causes endpoint explosion — imagine 40 fields × multiple resources. Returning all fields wastes bandwidth and can expose sensitive data to clients that do not need it. Per-platform APIs duplicate logic and drift apart over time. Sparse field selection is a single, flexible endpoint that serves all clients efficiently.'
+  },
+  {
+    topic: 'API Design',
+    q: 'Why do REST APIs use HTTP status codes instead of returning error details in a 200 OK response body?',
+    opts: [
+      'HTTP status codes are required by the REST specification — you cannot use REST without them',
+      'Status codes provide machine-readable, standardized semantics that middleware, proxies, load balancers, and monitoring systems can understand without parsing the response body',
+      'Status codes are faster to transmit than response body errors',
+      '200 OK with error details is actually the correct approach — status codes are outdated'
+    ],
+    correct: 1,
+    concept: 'HTTP status codes are part of the protocol contract. A 200 means success, 400 means client error, 401 means unauthorized, 500 means server error. This allows infrastructure layers (API gateways, CDN caches, monitoring systems, circuit breakers) to make decisions without parsing response bodies. A load balancer can detect 500 errors and route traffic away from failing services. A monitoring system can track error rates by status code.',
+    why: 'REST is an architectural style, not a strict specification — but using status codes correctly is a universal best practice. Status codes and response body size are both measured in bytes — the difference is semantic clarity. Returning 200 OK with an error body breaks caching, monitoring, and error handling at every infrastructure layer.'
+  },
+  {
+    topic: 'CDN',
+    q: 'An API serves dynamic JSON responses. The team wants to use a CDN to reduce latency. Under what conditions can a CDN cache dynamic API responses?',
+    opts: [
+      'CDNs can only cache static files like images, CSS, and JavaScript — never API responses',
+      'When the API response is the same for all users and changes infrequently, it can be cached at the CDN edge with a short TTL (e.g., 30 seconds) using Cache-Control headers',
+      'CDNs automatically cache all responses regardless of content type — no configuration needed',
+      'API responses can be cached by CDN only if the API uses GraphQL instead of REST'
+    ],
+    correct: 1,
+    concept: 'CDNs cache responses based on Cache-Control headers. Even dynamic content can be cached for short periods. For example, a product catalog API that updates every few minutes can use Cache-Control: max-age=30, s-maxage=30. The CDN caches the response for 30 seconds at each edge location. Users within that window get CDN-speed responses. After 30 seconds, the CDN revalidates with the origin. This is called stale-while-revalidate and dramatically reduces origin load.',
+    why: 'CDNs can cache any HTTP response with appropriate cache headers — including JSON APIs. The CDN does not auto-cache — it requires explicit Cache-Control headers. The protocol (REST, GraphQL, gRPC) does not determine cacheability — the response headers and data characteristics do.'
+  },
+  {
+    topic: 'URL Shortener',
+    q: 'Designing a URL shortener: what data structure enables O(1) redirect lookup while also handling collisions?',
+    opts: [
+      'A sorted array — binary search gives O(log n) lookup and naturally handles collisions by shifting elements',
+      'A hash table mapping short codes to original URLs, with a unique constraint on the short code to detect collisions at insert time',
+      'A binary search tree — tree traversal handles both lookup and collision detection',
+      'A linked list — each node stores a short code and URL, and linear search is fast enough for URL shorteners'
+    ],
+    correct: 1,
+    concept: 'A hash table (or database index) provides O(1) average lookup time for redirect. When generating a short code, the system first checks if the code exists (potential collision). If it does, a new code is generated. The unique constraint on the short code column ensures no two original URLs map to the same short code. In production, this is backed by a database B-tree index, but the algorithmic concept is the same.',
+    why: 'Sorted arrays require O(n) inserts and O(log n) lookups — unnecessary when hash-based lookup exists. BSTs give O(log n) lookup but have overhead compared to hash tables. Linked lists give O(n) lookup, which is unacceptable for a service handling millions of redirects per day.'
+  },
+  {
+    topic: 'Rate Limiting',
+    q: 'An API allows 100 requests per minute per user. After 100 requests, the user gets a 429 status code. What algorithm most accurately enforces this rate limit while being memory-efficient?',
+    opts: [
+      'Fixed window counter — reset the counter every 60 seconds. Simple and memory-efficient but allows burst traffic at window boundaries (up to 200 requests in 2 seconds)',
+      'Sliding window log — store timestamps of every request in a sorted set and count requests within the last 60 seconds. Accurate but memory-intensive for high-volume APIs',
+      'Token bucket — a bucket holds tokens (max 100). Each request consumes a token. Tokens refill at a steady rate. Allows controlled bursts up to the bucket capacity while maintaining the average rate',
+      'Sliding window counter — a hybrid combining fixed window counters from the current and previous windows. More accurate than fixed window with minimal additional memory'
+    ],
+    correct: 2,
+    concept: 'Token bucket is the industry standard for API rate limiting. The bucket starts with 100 tokens. Each request costs 1 token. Tokens refill at ~1.67/second (100/60). This allows bursts up to 100 requests instantly (if the bucket is full), then throttles to the refill rate. It is memory-efficient (one counter per user) and accurately enforces the average rate while allowing reasonable bursts.',
+    why: 'Fixed window is memory-efficient but inaccurate at boundaries (200 requests in 2 seconds at the boundary). Sliding window log is accurate but stores every request timestamp — millions of entries for high-volume APIs. Sliding window counter is a good compromise but does not handle burst semantics as naturally as token bucket.'
+  },
+  {
+    topic: 'Real-Time',
+    q: 'A chat application needs to deliver messages instantly. The current implementation polls the server every 5 seconds using GET requests. What is the most efficient upgrade?',
+    opts: [
+      'Increase polling frequency to every 1 second — faster polling gives near-real-time updates',
+      'Use WebSockets — a persistent full-duplex connection that allows the server to push messages instantly without polling overhead',
+      'Use Server-Sent Events (SSE) — they are always better than WebSockets for chat applications',
+      'Use long polling — the server holds the connection open until a new message arrives, which is the most efficient option'
+    ],
+    correct: 1,
+    concept: 'WebSockets establish a persistent, full-duplex TCP connection. Both client and server can send messages at any time without the overhead of HTTP headers per message. For chat, this means: client sends a message → server receives instantly → server broadcasts to all chat participants instantly. Zero polling overhead, zero header overhead per message after the initial handshake, and sub-100ms message delivery.',
+    why: 'Polling every 1 second means 60 requests/minute per user, each with HTTP headers — massive overhead and still 1 second of latency. SSE is server-to-client only — chat needs client-to-server communication too. Long polling reduces requests but still has HTTP overhead per message and connection management complexity. WebSockets are purpose-built for bidirectional real-time communication.'
+  },
+  {
+    topic: 'CAP Theorem',
+    q: 'During a network partition, a distributed database must choose between consistency and availability. A banking system chooses consistency. What does the user experience?',
+    opts: [
+      'The system continues serving all requests normally — the partition is handled transparently',
+      'During the partition, some or all write operations are rejected or blocked to prevent inconsistent data. The user sees errors like "Service temporarily unavailable" for writes, but reads return the latest committed data',
+      'The system becomes completely unavailable — both reads and writes are rejected',
+      'The system serves stale data from the last known consistent state'
+    ],
+    correct: 1,
+    concept: 'CAP theorem: during a network partition (P), you must choose consistency (C) or availability (A). Choosing consistency means the system refuses operations that could create conflicting data across partitions. Writes are rejected because accepting them on both sides would create inconsistency. Reads may still serve the latest consistent data from the primary partition. This is essential for banking — you would rather reject a transfer than risk double-spending.',
+    why: 'The partition cannot be made transparent — this is the entire point of CAP. Choosing consistency does not mean total unavailability — reads can still be served from the primary partition. Serving stale data would be choosing eventual consistency, not strong consistency. The system deliberately rejects writes to maintain the invariant that every read returns the most recent write.'
+  },
+  {
+    topic: 'CAP Theorem',
+    q: 'A social media feed chooses availability over consistency during a network partition. A user in Partition A likes a post, but a user in Partition B does not see the like. When the partition heals, what happens?',
+    opts: [
+      'The system discards one of the conflicting states arbitrarily',
+      'The system merges the divergent states using conflict resolution strategies (last-write-wins, custom merge logic, or manual resolution). The like count eventually converges to the correct value across all nodes.',
+      'The system crashes and requires manual database restoration',
+      'The like from Partition A is permanently lost because Partition B was the authoritative partition'
+    ],
+    correct: 1,
+    concept: 'When availability is chosen over consistency, each partition accepts writes independently during the partition. When the partition heals, the system must resolve conflicts. Common strategies: last-write-wins (using timestamps), operational transform (merge concurrent edits), CRDTs (conflict-free replicated data types that mathematically converge), or custom application logic. For a social media like count, the merged result would include the like from both partitions.',
+    why: 'Arbitrary discard would lose legitimate user actions — real systems use deterministic merge strategies. Crashing and manual restoration is unacceptable for social media availability SLAs. No partition is "authoritative" in an AP system — that would be choosing consistency. The merge process is designed to preserve all valid operations from both sides.'
+  },
+  {
+    topic: 'Scalability',
+    q: 'What is the difference between horizontal scaling (scaling out) and vertical scaling (scaling up) in terms of fault tolerance?',
+    opts: [
+      'Both provide equal fault tolerance — the difference is only in cost',
+      'Horizontal scaling provides better fault tolerance because if one server fails, others continue serving traffic. Vertical scaling creates a single point of failure — if the one large server goes down, the entire system goes down',
+      'Vertical scaling is more fault-tolerant because a larger server has more redundant components',
+      'Fault tolerance depends only on the database, not on the scaling approach'
+    ],
+    correct: 1,
+    concept: 'Horizontal scaling distributes traffic across multiple independent servers behind a load balancer. If one server fails, the load balancer routes traffic to the remaining servers — the system degrades but stays up. Vertical scaling relies on a single increasingly powerful machine. That machine is a single point of failure — any hardware failure takes down the entire system. This is why production systems use horizontal scaling for critical workloads.',
+    why: 'Fault tolerance is fundamentally different between the two approaches, not equal. Larger servers may have redundant power supplies and RAID disks, but the machine itself is still one failure domain — a kernel panic or datacenter power outage takes down the whole system regardless of internal redundancy. Database fault tolerance is one concern, but the scaling approach determines application-level fault tolerance.'
+  },
+  {
+    topic: 'CAP Theorem',
+    q: 'Why do most NoSQL databases (Cassandra, DynamoDB) choose AP (Availability + Partition tolerance) while most SQL databases (PostgreSQL, MySQL with Galera) choose CP (Consistency + Partition tolerance)?',
+    opts: [
+      'NoSQL databases are technically inferior and cannot guarantee consistency',
+      'NoSQL databases target use cases (social feeds, IoT data, session stores) where availability matters more than immediate consistency. SQL databases target use cases (financial transactions, inventory management) where incorrect data is worse than unavailable data.',
+      'It is a marketing distinction — all databases behave the same way during partitions',
+      'SQL databases cannot achieve high availability because of their table structure'
+    ],
+    correct: 1,
+    concept: 'The CAP choice is driven by use-case requirements, not technical capability. A social media feed showing a like 2 seconds late is acceptable — hence AP. A bank showing an incorrect account balance is not acceptable — hence CP. NoSQL databases like Cassandra are optimized for massive write throughput and always-available operations with eventual consistency. SQL databases with strong consistency guarantees ensure every read returns the latest write, which is essential for financial and inventory operations.',
+    why: 'NoSQL databases absolutely can guarantee consistency (e.g., MongoDB with strong read concern) — it is a configuration choice, not a limitation. The CAP trade-off is real during partitions — you cannot have all three. Table structure has nothing to do with availability — it is about the consistency model the database is optimized for.'
+  },
+  {
+    topic: 'Microservices',
+    q: 'What is the "Database per Service" pattern in microservices, and why is it important?',
+    opts: [
+      'Each microservice uses a separate table within the same shared database',
+      'Each microservice owns its own private database that no other service can access directly. Other services can only access that data through the owning service\'s API. This ensures loose coupling and independent schema evolution.',
+      'Each microservice has its own database user account but shares the same database instance',
+      'It means each microservice can only use NoSQL databases, not SQL databases'
+    ],
+    correct: 1,
+    concept: 'In the "Database per Service" pattern, each microservice has exclusive ownership of its data store. Service A cannot query Service B\'s database — it must call Service B\'s API. This provides: (1) Schema independence — Service A can change its tables without affecting Service B. (2) Technology freedom — Service A can use PostgreSQL while Service B uses MongoDB. (3) Independent scaling — each database can be scaled based on its own load. (4) Failure isolation — one database going down does not directly crash other services.',
+    why: 'Sharing tables means schema changes in one service can break queries in another — the coupling that microservices are meant to eliminate. Separate user accounts on the same database still share disk I/O, connection pools, and failure domains. The pattern does not mandate NoSQL — each service chooses the best data store for its needs.'
+  }
+]
+
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+
+  let para = '';
+  if (pct >= 80) para = 'You have a strong handle on database fundamentals and applied reasoning. The concepts are not just memorized — they are understood. Keep this up and DBMS questions will be a strength in any interview.';
+  else if (pct >= 55) para = 'Solid foundation with some gaps in applied scenarios. Review the concepts marked below — pay attention to the WHY behind each answer, not just the rule itself.';
+  else para = 'The core definitions need more reinforcement before the applications click into place. Start with ACID, Normalization, and Isolation Levels — those threads run through almost every other topic here.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'DBMS Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+</body>
+</html>

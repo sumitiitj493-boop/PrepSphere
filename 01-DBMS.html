@@ -7,31 +7,31 @@
     <meta name="description" content="Prepare DBMS interview questions for placements and software engineering interviews. Learn normalization, SQL, transactions, indexing, joins, ACID, and database concepts." />
     <meta name="keywords" content="DBMS interview questions, database interview preparation, SQL, normalization, ACID, indexing, transactions, database concepts" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://theprepsphere.in/01-DBMS.html" />
+    <link rel="canonical" href="https://www.theprepsphere.in/01-DBMS.html" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="DBMS Interview Questions | PrepSphere" />
     <meta property="og:description" content="Prepare DBMS interview questions for placements and software engineering interviews. Learn normalization, SQL, transactions, indexing, joins, ACID, and database concepts." />
-    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
-    <meta property="og:url" content="https://theprepsphere.in/01-DBMS.html" />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/01-DBMS.html" />
     <meta property="og:site_name" content="PrepSphere" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="DBMS Interview Questions | PrepSphere" />
     <meta name="twitter:description" content="Prepare DBMS interview questions for placements and software engineering interviews. Learn normalization, SQL, transactions, indexing, joins, ACID, and database concepts." />
-    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LearningResource",
   "name": "DBMS Interview Questions",
   "description": "Prepare DBMS interview questions for placements and software engineering interviews. Learn normalization, SQL, transactions, indexing, joins, ACID, and database concepts.",
-  "url": "https://theprepsphere.in/01-DBMS.html",
-  "image": "https://theprepsphere.in/logo.png",
+  "url": "https://www.theprepsphere.in/01-DBMS.html",
+  "image": "https://www.theprepsphere.in/logo.png",
   "learningResourceType": "Interview preparation notes",
   "educationalLevel": "Undergraduate and software engineering interview preparation",
   "provider": {
     "@type": "Organization",
     "name": "PrepSphere",
-    "url": "https://theprepsphere.in"
+    "url": "https://www.theprepsphere.in"
   }
 }
     </script>
@@ -927,6 +927,332 @@
           width: 100%;
         }
       }
+    
+      /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .table-scroll::-webkit-scrollbar { height: 4px; }
+      .table-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      @media (max-width: 700px) {
+        /* ── Better Navbar ── */
+        .navbar {
+          height: 52px;
+          padding: 0 0.65rem;
+          gap: 0.4rem;
+        }
+        .nav-brand {
+          font-size: 0.9rem;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-btns {
+          gap: 0.35rem;
+        }
+        .nav-btns button {
+          padding: 6px 9px;
+          font-size: 0.72rem;
+          min-height: 36px;
+          min-width: 36px;
+          border-radius: 8px;
+        }
+
+        /* ── Main Content ── */
+        .main {
+          padding: 1rem 0.7rem 5.5rem !important;
+        }
+
+        /* ── Concept Cards ── */
+        .concept {
+          border-radius: 12px;
+          margin-bottom: 2rem;
+        }
+        .concept-inner {
+          padding: 1.15rem 0.85rem !important;
+        }
+
+        /* ── Topic Header ── */
+        .topic-header {
+          padding: 0.5rem 0 1.25rem;
+        }
+        .topic-header h1 {
+          font-size: 1.45rem !important;
+          line-height: 1.3;
+        }
+        .topic-header p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Concept Headers ── */
+        .concept-header h2 {
+          font-size: 1.05rem !important;
+          line-height: 1.35;
+        }
+
+        /* ── Tables: Horizontal Scroll ── */
+        .table-scroll {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .compare-table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+
+        /* ── Diagrams & SVGs ── */
+        .diagram-wrap {
+          padding: 0.85rem;
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .diagram-wrap svg {
+          max-width: 100%;
+          height: auto;
+          min-width: auto;
+        }
+
+        /* ── Code Blocks ── */
+        .code-header {
+          padding: 0.4rem 0.75rem;
+        }
+        .copy-btn {
+          padding: 3px 8px;
+          font-size: 0.65rem;
+          min-height: 28px;
+        }
+
+        /* ── Content Blocks ── */
+        .one-liner {
+          padding: 0.85rem 0.95rem;
+          font-size: 0.9rem;
+          border-radius: 0 10px 10px 0;
+        }
+
+        .explanation p {
+          font-size: 0.88rem;
+        }
+
+        .key-points,
+        .gotcha,
+        .edge,
+        .analogy {
+          padding: 0.95rem;
+          border-radius: 10px;
+        }
+
+        .key-points li,
+        .gotcha p,
+        .gotcha li,
+        .edge p,
+        .analogy p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Interview Questions ── */
+        .interview-q summary {
+          padding: 0.7rem 0.85rem;
+          font-size: 0.82rem;
+          min-height: 44px;
+        }
+        .interview-q .ans {
+          padding: 0.8rem 0.85rem;
+          font-size: 0.84rem;
+        }
+
+        /* ── Badges ── */
+        .badge {
+          font-size: 0.55rem;
+          padding: 2px 7px;
+        }
+
+        /* ── Read Time ── */
+        .read-time {
+          font-size: 0.68rem;
+          padding: 3px 8px;
+        }
+
+        /* ── Back to Top ── */
+        .btt {
+          bottom: 1.25rem;
+          right: 1rem;
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+
+        /* ── Sidebar Better Touch ── */
+        .sidebar {
+          padding: 1rem 0.75rem;
+        }
+        .sidebar a {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.78rem;
+        }
+
+        /* ── Practice CTA ── */
+        .practice-cta {
+          padding: 1rem;
+          border-radius: 10px;
+        }
+        .practice-cta h2 {
+          font-size: 1.05rem;
+        }
+        .practice-cta p {
+          font-size: 0.88rem;
+        }
+        .practice-cta .practice-btn {
+          min-height: 46px;
+          font-size: 0.9rem;
+        }
+
+        /* ── General Text ── */
+        .explanation strong,
+        .key-points strong,
+        .gotcha strong,
+        .edge strong {
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 380px) {
+        /* Extra small phones */
+        .main {
+          padding: 0.85rem 0.55rem 5rem !important;
+        }
+        .concept-inner {
+          padding: 1rem 0.7rem !important;
+        }
+        .topic-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .compare-table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .nav-brand {
+          font-size: 0.82rem;
+          max-width: 95px;
+        }
+      }
+      /* ===== END MOBILE ENHANCEMENT ===== */
+
+      /* ===== PREPSPHERE UNIVERSAL SCROLL WRAPPER ===== */
+      .ps-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .ps-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .ps-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      /* Force all tables inside concept cards to be scrollable on mobile */
+      @media (max-width: 700px) {
+        .ps-scroll-wrap {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .ps-scroll-wrap table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .ps-scroll-wrap table th,
+        .ps-scroll-wrap table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+        /* SVG diagrams inside scroll wraps */
+        .ps-scroll-wrap svg {
+          min-width: 400px;
+          max-width: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .ps-scroll-wrap table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .ps-scroll-wrap svg {
+          min-width: 340px;
+        }
+      }
+      /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
+
+    /* ── READ NEXT ── */
+    .read-next-section {
+      max-width: var(--content-w, 860px);
+      margin: 60px auto 40px;
+      padding: 0 var(--content-pad, 40px);
+    }
+    .read-next-title {
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .read-next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .rn-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .rn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .rn-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rn-sub {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .rn-cta {
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    @media (max-width: 700px) {
+      .read-next-grid { grid-template-columns: 1fr; }
+    }
+
     </style>
   </head>
   <body>
@@ -1022,7 +1348,7 @@
               </p>
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Property</th>
                 <th>What It Means</th>
@@ -1060,7 +1386,7 @@
                 </td>
                 <td>Write-ahead logging (WAL), fsync</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="analogy">
               <div class="analogy-title">Real-World Analogy</div>
@@ -1172,7 +1498,7 @@
               </ul>
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Normal Form</th>
                 <th>Rule</th>
@@ -1208,7 +1534,7 @@
                 <td>Stricter 3NF — every determinant is a candidate key</td>
                 <td>Complex scenarios with overlapping candidate keys</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="analogy">
               <div class="analogy-title">The Classic Memory Trick</div>
@@ -1522,7 +1848,7 @@
               </p>
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Aspect</th>
                 <th>Normalized</th>
@@ -1558,7 +1884,7 @@
                 <td>OLTP (transactions)</td>
                 <td>OLAP (analytics), caching</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="key-points">
               <h4>When to Denormalize</h4>
@@ -1614,7 +1940,7 @@
               relationships and enforcing referential integrity.
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Aspect</th>
                 <th>Primary Key</th>
@@ -1650,7 +1976,7 @@
                 <td>None</td>
                 <td>Must reference a primary/unique key</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="code-wrap">
               <div class="code-header">
@@ -1834,7 +2160,7 @@
               with pointers to rows — multiple allowed.
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Aspect</th>
                 <th>Clustered Index</th>
@@ -1870,7 +2196,7 @@
                 <td>PRIMARY KEY</td>
                 <td>Other indexes</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="analogy">
               <div class="analogy-title">Real-World Analogy</div>
@@ -2980,7 +3306,7 @@
               Prevents dirty reads, lost updates, and other concurrency issues.
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Lock Type</th>
                 <th>Also Called</th>
@@ -2999,9 +3325,9 @@
                 <td>Only one holder, no other access</td>
                 <td>INSERT, UPDATE, DELETE</td>
               </tr>
-            </table>
+            </table></div>
 
-            <table class="compare-table" style="margin-top: 1rem">
+            <div class="table-scroll"><table class="compare-table" style="margin-top: 1rem">
               <tr>
                 <th>Lock Compatibility</th>
                 <th>Shared (S)</th>
@@ -3017,7 +3343,7 @@
                 <td class="no">✗ Conflict</td>
                 <td class="no">✗ Conflict</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="key-points">
               <h4>Lock Granularity</h4>
@@ -3264,7 +3590,7 @@
               → Serializable.
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Isolation Level</th>
                 <th>Dirty Read</th>
@@ -3300,7 +3626,7 @@
                 <td class="yes">Prevented</td>
                 <td class="no">Slowest</td>
               </tr>
-            </table>
+            </table></div>
             <p
               style="font-size: 0.8rem; color: var(--text2); margin-top: 0.5rem"
             >
@@ -3863,7 +4189,7 @@
               access patterns.
             </div>
 
-            <table class="compare-table">
+            <div class="table-scroll"><table class="compare-table">
               <tr>
                 <th>Aspect</th>
                 <th>SQL (Relational)</th>
@@ -3904,7 +4230,7 @@
                 <td>Complex queries, transactions, relationships</td>
                 <td>High volume, simple access patterns, flexible data</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="key-points">
               <h4>NoSQL Types</h4>
@@ -4002,6 +4328,29 @@
         </section>
       
 
+
+    <div class="read-next-section">
+      <div class="read-next-title">Read Next</div>
+      <div class="read-next-grid">
+        
+        <a href="02-OOPs.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#4a90e2"></span>OOPs</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="03-Computer-Networks.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#e74c3c"></span>Computer Networks</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="04-Operating-System.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#b259f0"></span>Operating System</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
         <section class="practice-cta" aria-labelledby="practice-title">
           <div>
             <h2 id="practice-title">Ready to test DBMS?</h2>
@@ -4023,6 +4372,7 @@
       </button>
       <div class="jump-menu" id="qm">
         <a href="index.html">Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
         <a href="01-DBMS.html">01. DBMS</a>
         <a href="02-OOPs.html">02. OOPs</a>
         <a href="03-Computer-Networks.html">03. Computer Networks</a>
@@ -4035,6 +4385,8 @@
         <a href="08-Git.html">08. Git</a>
         <a href="09-SQL.html">09. SQL</a>
         <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
       </div>
     </div>
     <script>

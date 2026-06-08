@@ -2,7 +2,7 @@
 // Handles per-concept tracking, topic-level rollups, and overall progress.
 
 const Progress = {
-  TOTAL_TOPICS: 12,
+  TOTAL_TOPICS: 14,
   _key: 'prepsphere_completed',
 
   getCompleted() {

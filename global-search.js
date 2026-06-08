@@ -196,6 +196,7 @@
   function scoreEntry(entry, terms) {
     const title = normalize(entry.title);
     const topic = normalize(entry.topic);
+    const chapter = normalize(entry.chapter || entry.topic);
     const keywords = normalize(entry.keywords);
     let score = 0;
 
@@ -203,7 +204,13 @@
       if (title === term) score += 80;
       if (title.includes(term)) score += 35;
       if (topic.includes(term)) score += 24;
-      if (keywords.includes(term)) score += 12;
+      if (chapter.includes(term)) score += 18;
+      if (keywords.includes(term)) score += 14;
+      // Partial keyword match (e.g. "websoc" matches "websocket")
+      const kwParts = keywords.split(/\s+/);
+      for (const kw of kwParts) {
+        if (kw.startsWith(term) && kw !== term) score += 6;
+      }
     }
 
     return score;
@@ -224,18 +231,24 @@
   function render() {
     resultsEl.innerHTML = "";
     if (!results.length) {
-      resultsEl.innerHTML = '<div class="ps-search-empty">No matches found.</div>';
+      resultsEl.innerHTML = '<div class="ps-search-empty">No matches found. Try different keywords.</div>';
       return;
     }
 
     results.forEach((entry, index) => {
+      const chapter = entry.chapter || entry.topic;
+      const isSubTopic = entry.url.includes("#");
+      const sectionLabel = isSubTopic
+        ? chapter + "  →  " + entry.title
+        : chapter;
+
       const item = document.createElement("button");
       item.type = "button";
       item.className = "ps-search-item" + (index === active ? " active" : "");
       item.setAttribute("role", "option");
       item.innerHTML = `
         <span class="ps-search-title">${entry.title}</span>
-        <span class="ps-search-meta">${entry.topic} - ${entry.url}</span>
+        <span class="ps-search-meta">${sectionLabel}</span>
       `;
       item.addEventListener("click", () => go(entry));
       resultsEl.appendChild(item);

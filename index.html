@@ -3,23 +3,25 @@
   <head>
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f5a01e">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>PrepSphere | Interview Preparation Notes and Practice</title>
     <meta name="description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
     <meta name="keywords" content="interview preparation, placement preparation, software engineering interviews, computer science notes, coding interview preparation, PrepSphere" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://theprepsphere.in/" />
+    <link rel="canonical" href="https://www.theprepsphere.in/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="PrepSphere | Interview Preparation Notes and Practice" />
     <meta property="og:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
-    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
-    <meta property="og:url" content="https://theprepsphere.in/" />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/" />
     <meta property="og:site_name" content="PrepSphere" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="PrepSphere | Interview Preparation Notes and Practice" />
     <meta name="twitter:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
-    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -27,13 +29,13 @@
     {
       "@type": "Organization",
       "name": "PrepSphere",
-      "url": "https://theprepsphere.in",
-      "logo": "https://theprepsphere.in/logo.png"
+      "url": "https://www.theprepsphere.in",
+      "logo": "https://www.theprepsphere.in/logo.png"
     },
     {
       "@type": "WebSite",
       "name": "PrepSphere",
-      "url": "https://theprepsphere.in",
+      "url": "https://www.theprepsphere.in",
       "description": "PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes.",
       "publisher": {
         "@type": "Organization",
@@ -1071,7 +1073,7 @@
         </p>
 
         <p class="about-copy">
-          Covering 12 core domains—from DBMS and System Design to Language Cores
+          Covering 14 core domains—from DBMS and System Design to Language Cores
           and Puzzles—every topic is written like a senior engineer explaining
           it to a junior. We stripped away the fluff and focused purely on what
           interviewers actually test: visual architecture, trade-offs, and
@@ -1833,6 +1835,28 @@
           texC: "#902020",
           style: "rocky",
         },
+        {
+          name: "Sys Design",
+          sub: "System Design",
+          file: "11-System-Design.html",
+          color: 0x00bcd4,
+          hex: "#00bcd4",
+          texA: "#001a1f",
+          texB: "#004858",
+          texC: "#0090a8",
+          style: "ocean",
+        },
+        {
+          name: "DSA",
+          sub: "Data Structures & Algorithms",
+          file: "12-DSA-Concepts.html",
+          color: 0xe91e63,
+          hex: "#e91e63",
+          texA: "#1a0010",
+          texB: "#580028",
+          texC: "#a01048",
+          style: "lava",
+        },
       ];
 
       // ═══════════════════════════════════════════════════════════
@@ -2468,5 +2492,6 @@
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
   <script src="feedback.js?v=4"></script>
+  <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}</script>
   <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a060b715cb314075',t:'MTc4MDUxMDg2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

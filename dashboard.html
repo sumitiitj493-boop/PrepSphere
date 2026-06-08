@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | PrepSphere</title>
+<meta name="description" content="Track your interview preparation progress across all topics. See your streak, completion status, and what to study next." />
+<meta name="keywords" content="interview preparation dashboard, progress tracker, PrepSphere dashboard" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.theprepsphere.in/dashboard.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Dashboard | PrepSphere" />
+<meta property="og:description" content="Track your interview preparation progress across all topics." />
+<meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+<meta property="og:url" content="https://www.theprepsphere.in/dashboard.html" />
+<meta property="og:site_name" content="PrepSphere" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Dashboard | PrepSphere" />
+<meta name="twitter:description" content="Track your interview preparation progress across all topics." />
+<meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="manifest" href="manifest.json">
+<style>
+  :root {
+    --bg: #0c0c14;
+    --surface: #111118;
+    --surface2: #161620;
+    --border: #1f1f30;
+    --gold: #f5a01e;
+    --gold2: #ffcc66;
+    --accent: #4f8fff;
+    --green: #00d97e;
+    --red: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky;
+    top: 0;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+
+  .page-title {
+    font-size: 14px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    border-left: 1px solid var(--border);
+    padding-left: 16px;
+  }
+
+  .btn-home {
+    font-size: 13px;
+    color: var(--gold);
+    text-decoration: none;
+    border: 1px solid var(--gold);
+    padding: 8px 20px;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-home:hover { background: var(--gold); color: #000; }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── HERO STATS ── */
+  .hero {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.blue { color: var(--accent); }
+  .stat-value.red { color: var(--red); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ── STREAK ── */
+  .streak-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .streak-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .streak-fire {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .streak-count {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .streak-label {
+    font-size: 13px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+  }
+
+  .streak-msg {
+    font-size: 14px;
+    color: var(--text2);
+    font-style: italic;
+    max-width: 280px;
+    text-align: right;
+  }
+
+  /* ── TOPIC GRID ── */
+  .section-title {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.15s;
+  }
+
+  .topic-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .topic-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .topic-info { flex: 1; }
+
+  .topic-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .topic-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 4px;
+  }
+
+  .topic-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .topic-pct {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+  }
+
+  .topic-arrow {
+    font-size: 18px;
+    color: var(--text3);
+    transition: color 0.2s;
+  }
+
+  .topic-card:hover .topic-arrow { color: var(--gold); }
+
+  /* ── READ NEXT ── */
+  .read-next-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+
+  .next-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+
+  .next-card:hover { border-color: var(--gold); }
+
+  .next-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+    min-width: 36px;
+  }
+
+  .next-info { flex: 1; }
+
+  .next-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .next-sub {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  .next-arrow { font-size: 18px; color: var(--text3); }
+
+  /* ── ACTIVITY ── */
+  .activity-section { margin-bottom: 48px; }
+
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .activity-day {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+
+  .activity-day.active { background: var(--gold); opacity: 0.7; }
+  .activity-day.active.today { opacity: 1; box-shadow: 0 0 6px rgba(245,160,30,0.5); }
+
+  .day-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .day-label {
+    font-size: 9px;
+    color: var(--text3);
+    text-align: center;
+  }
+
+  /* ── RESET ── */
+  .reset-section {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .btn-reset {
+    font-size: 12px;
+    color: var(--text3);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    .header { padding: 14px 16px; }
+    .main { padding: 24px 16px 60px; }
+    .hero { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-card { padding: 18px; }
+    .stat-value { font-size: 28px; }
+    .topic-grid { grid-template-columns: 1fr; }
+    .streak-section { flex-direction: column; text-align: center; gap: 16px; }
+    .streak-msg { text-align: center; max-width: 100%; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <a href="index.html" class="logo-link">PREPSPHERE</a>
+    <div class="page-title">DASHBOARD</div>
+  </div>
+  <a href="index.html" class="btn-home">&larr; Home</a>
+</div>
+
+<div class="main">
+
+  <!-- HERO STATS -->
+  <div class="hero" id="hero">
+    <div class="stat-card fade-up" style="animation-delay:0.1s">
+      <div class="stat-value" id="stat-topics">0</div>
+      <div class="stat-label">Topics Started</div>
+    </div>
+    <div class="stat-card fade-up" style="animation-delay:0.15s">
+      <div class="stat-value green" id="stat-complete">0</div>
+      <div class="stat-label">Completed</div>
+    </div>
+    <div class="stat-card fade-up" style="animation-delay:0.2s">
+      <div class="stat-value blue" id="stat-concepts">0</div>
+      <div class="stat-label">Concepts Read</div>
+    </div>
+    <div class="stat-card fade-up" style="animation-delay:0.25s">
+      <div class="stat-value red" id="stat-quizzes">0</div>
+      <div class="stat-label">Quizzes Taken</div>
+    </div>
+  </div>
+
+  <!-- STREAK -->
+  <div class="streak-section fade-up" style="animation-delay:0.3s" id="streak-section">
+    <div class="streak-left">
+      <div class="streak-fire">🔥</div>
+      <div>
+        <div class="streak-count" id="streak-count">0</div>
+        <div class="streak-label">day streak</div>
+      </div>
+    </div>
+    <div class="streak-msg" id="streak-msg">Start reading to build your streak!</div>
+  </div>
+
+  <!-- TOPIC PROGRESS -->
+  <div class="section-title fade-up" style="animation-delay:0.35s">Topic Progress</div>
+  <div class="topic-grid" id="topic-grid"></div>
+
+  <!-- READ NEXT -->
+  <div class="read-next-section fade-up" style="animation-delay:0.4s">
+    <div class="section-title" style="margin-bottom:0">Read Next</div>
+    <div id="read-next-list"></div>
+  </div>
+
+  <!-- ACTIVITY HEATMAP -->
+  <div class="activity-section fade-up" style="animation-delay:0.45s">
+    <div class="section-title">Activity (Last 28 Days)</div>
+    <div class="activity-grid" id="activity-grid"></div>
+    <div class="day-labels">
+      <div class="day-label">Mon</div><div class="day-label">Tue</div>
+      <div class="day-label">Wed</div><div class="day-label">Thu</div>
+      <div class="day-label">Fri</div><div class="day-label">Sat</div>
+      <div class="day-label">Sun</div>
+    </div>
+  </div>
+
+  <!-- RESET -->
+  <div class="reset-section">
+    <button class="btn-reset" onclick="resetProgress()">Reset All Progress</button>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// TOPIC DEFINITIONS
+// ═══════════════════════════════════════════════════════════
+const TOPICS = [
+  { name: "DBMS", file: "01-DBMS.html", color: "#f5a623", concepts: 15 },
+  { name: "OOPs", file: "02-OOPs.html", color: "#4a90e2", concepts: 13 },
+  { name: "Networks", file: "03-Computer-Networks.html", color: "#e74c3c", concepts: 12 },
+  { name: "OS", file: "04-Operating-System.html", color: "#b259f0", concepts: 15 },
+  { name: "C++", file: "05-Language-Core-CPP.html", color: "#3498db", concepts: 15 },
+  { name: "Java", file: "05-Language-Core-Java.html", color: "#ff8c1a", concepts: 15 },
+  { name: "Python", file: "05-Language-Core-Python.html", color: "#27ae60", concepts: 15 },
+  { name: "Puzzles", file: "06-Puzzles.html", color: "#f39c12", concepts: 12 },
+  { name: "Linux", file: "07-Linux.html", color: "#1abc9c", concepts: 15 },
+  { name: "Git", file: "08-Git.html", color: "#9b59b6", concepts: 12 },
+  { name: "SQL", file: "09-SQL.html", color: "#2980b9", concepts: 15 },
+  { name: "Projects", file: "10-Projects-Behavioral.html", color: "#c0392b", concepts: 12 },
+  { name: "System Design", file: "11-System-Design.html", color: "#00bcd4", concepts: 13 },
+  { name: "DSA", file: "12-DSA-Concepts.html", color: "#e91e63", concepts: 12 },
+];
+
+// ═══════════════════════════════════════════════════════════
+// PROGRESS TRACKING (localStorage)
+// ═══════════════════════════════════════════════════════════
+function getProgress() {
+  try {
+    const raw = localStorage.getItem('prepsphere_progress');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function getActivity() {
+  try {
+    const raw = localStorage.getItem('prepsphere_activity');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function getQuizResults() {
+  try {
+    const raw = localStorage.getItem('prepsphere_quizzes');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+
+function getStreak() {
+  try {
+    const raw = localStorage.getItem('prepsphere_streak');
+    return raw ? JSON.parse(raw) : { count: 0, lastDate: null };
+  } catch { return { count: 0, lastDate: null }; }
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ═══════════════════════════════════════════════════════════
+const progress = getProgress();
+const activity = getActivity();
+const quizzes = getQuizResults();
+const streak = getStreak();
+
+// ── Compute Stats ──
+let topicsStarted = 0;
+let topicsCompleted = 0;
+let totalConcepts = 0;
+let totalQuizCount = Object.keys(quizzes).length;
+
+const topicStats = TOPICS.map(t => {
+  const p = progress[t.file] || [];
+  const read = Array.isArray(p) ? p.length : 0;
+  const total = t.concepts;
+  const pct = total > 0 ? Math.round((read / total) * 100) : 0;
+  if (read > 0) topicsStarted++;
+  if (pct >= 100) topicsCompleted++;
+  totalConcepts += read;
+  return { ...t, read, total, pct };
+});
+
+// ── Hero Stats ──
+document.getElementById('stat-topics').textContent = topicsStarted;
+document.getElementById('stat-complete').textContent = topicsCompleted;
+document.getElementById('stat-concepts').textContent = totalConcepts;
+document.getElementById('stat-quizzes').textContent = totalQuizCount;
+
+// ── Streak ──
+const streakEl = document.getElementById('streak-count');
+const streakMsg = document.getElementById('streak-msg');
+streakEl.textContent = streak.count;
+
+if (streak.count === 0) {
+  streakMsg.textContent = "Start reading to build your streak!";
+} else if (streak.count === 1) {
+  streakMsg.textContent = "Great start! Come back tomorrow to keep it going.";
+} else if (streak.count < 7) {
+  streakMsg.textContent = `${streak.count} days strong. Keep the momentum!`;
+} else if (streak.count < 30) {
+  streakMsg.textContent = `${streak.count}-day streak! You're building a real habit.`;
+} else {
+  streakMsg.textContent = `${streak.count}-day streak. That's dedication.`;
+}
+
+// ── Topic Grid ──
+const grid = document.getElementById('topic-grid');
+topicStats.sort((a, b) => b.pct - a.pct).forEach(t => {
+  const card = document.createElement('a');
+  card.className = 'topic-card';
+  card.href = t.file;
+  card.innerHTML = `
+    <div class="topic-dot" style="background:${t.color};box-shadow:0 0 6px ${t.color}60"></div>
+    <div class="topic-info">
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-progress-bar">
+        <div class="topic-progress-fill" style="width:${t.pct}%;background:${t.color}"></div>
+      </div>
+      <div class="topic-pct">${t.read}/${t.total} concepts · ${t.pct}%</div>
+    </div>
+    <div class="topic-arrow">&rsaquo;</div>
+  `;
+  grid.appendChild(card);
+});
+
+// ── Read Next ──
+const nextList = document.getElementById('read-next-list');
+const unfinished = topicStats
+  .filter(t => t.pct < 100)
+  .sort((a, b) => b.pct - a.pct)
+  .slice(0, 3);
+
+if (unfinished.length === 0) {
+  nextList.innerHTML = '<div style="color:var(--text3);padding:16px 0;font-size:14px">All topics completed! You\'re interview-ready. 🎉</div>';
+} else {
+  unfinished.forEach((t, i) => {
+    const card = document.createElement('a');
+    card.className = 'next-card';
+    card.href = t.file;
+    card.innerHTML = `
+      <div class="next-num" style="color:${t.color}">${String(i + 1).padStart(2, '0')}</div>
+      <div class="next-info">
+        <div class="next-title">${t.name}</div>
+        <div class="next-sub">${t.read}/${t.total} concepts · ${t.pct}% complete</div>
+      </div>
+      <div class="next-arrow">&rsaquo;</div>
+    `;
+    nextList.appendChild(card);
+  });
+}
+
+// ── Activity Heatmap ──
+const actGrid = document.getElementById('activity-grid');
+const todayStr = today();
+const todayDate = new Date();
+const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+for (let i = 27; i >= 0; i--) {
+  const d = new Date(todayDate);
+  d.setDate(d.getDate() - i);
+  const key = d.toISOString().split('T')[0];
+  const day = document.createElement('div');
+  day.className = 'activity-day';
+  if (activity[key]) day.classList.add('active');
+  if (key === todayStr) day.classList.add('today');
+  day.title = `${key}: ${activity[key] || 0} concepts read`;
+  actGrid.appendChild(day);
+}
+
+// ═══════════════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════════════
+function resetProgress() {
+  if (!confirm('Reset all progress, streaks, and quiz results? This cannot be undone.')) return;
+  localStorage.removeItem('prepsphere_progress');
+  localStorage.removeItem('prepsphere_activity');
+  localStorage.removeItem('prepsphere_quizzes');
+  localStorage.removeItem('prepsphere_streak');
+  location.reload();
+}
+</script>
+</body>
+</html>

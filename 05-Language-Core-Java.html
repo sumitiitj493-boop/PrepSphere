@@ -7,31 +7,31 @@
     <meta name="description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
     <meta name="keywords" content="Java interview questions, core Java interview preparation, JVM, collections, garbage collection, multithreading, Java memory model" />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://theprepsphere.in/05-Language-Core-Java.html" />
+    <link rel="canonical" href="https://www.theprepsphere.in/05-Language-Core-Java.html" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Java Interview Questions | PrepSphere" />
     <meta property="og:description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
-    <meta property="og:image" content="https://theprepsphere.in/logo.png" />
-    <meta property="og:url" content="https://theprepsphere.in/05-Language-Core-Java.html" />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/05-Language-Core-Java.html" />
     <meta property="og:site_name" content="PrepSphere" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Java Interview Questions | PrepSphere" />
     <meta name="twitter:description" content="Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts." />
-    <meta name="twitter:image" content="https://theprepsphere.in/logo.png" />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "LearningResource",
   "name": "Java Interview Questions",
   "description": "Prepare Java interview questions covering JVM, OOP, collections, exceptions, garbage collection, multithreading, memory model, and core Java concepts.",
-  "url": "https://theprepsphere.in/05-Language-Core-Java.html",
-  "image": "https://theprepsphere.in/logo.png",
+  "url": "https://www.theprepsphere.in/05-Language-Core-Java.html",
+  "image": "https://www.theprepsphere.in/logo.png",
   "learningResourceType": "Interview preparation notes",
   "educationalLevel": "Undergraduate and software engineering interview preparation",
   "provider": {
     "@type": "Organization",
     "name": "PrepSphere",
-    "url": "https://theprepsphere.in"
+    "url": "https://www.theprepsphere.in"
   }
 }
     </script>
@@ -1115,6 +1115,332 @@
           width: 100%;
         }
       }
+    
+      /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .table-scroll::-webkit-scrollbar { height: 4px; }
+      .table-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      @media (max-width: 700px) {
+        /* ── Better Navbar ── */
+        .navbar {
+          height: 52px;
+          padding: 0 0.65rem;
+          gap: 0.4rem;
+        }
+        .nav-brand {
+          font-size: 0.9rem;
+          max-width: 120px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .nav-btns {
+          gap: 0.35rem;
+        }
+        .nav-btns button {
+          padding: 6px 9px;
+          font-size: 0.72rem;
+          min-height: 36px;
+          min-width: 36px;
+          border-radius: 8px;
+        }
+
+        /* ── Main Content ── */
+        .main {
+          padding: 1rem 0.7rem 5.5rem !important;
+        }
+
+        /* ── Concept Cards ── */
+        .concept {
+          border-radius: 12px;
+          margin-bottom: 2rem;
+        }
+        .concept-inner {
+          padding: 1.15rem 0.85rem !important;
+        }
+
+        /* ── Topic Header ── */
+        .topic-header {
+          padding: 0.5rem 0 1.25rem;
+        }
+        .topic-header h1 {
+          font-size: 1.45rem !important;
+          line-height: 1.3;
+        }
+        .topic-header p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Concept Headers ── */
+        .concept-header h2 {
+          font-size: 1.05rem !important;
+          line-height: 1.35;
+        }
+
+        /* ── Tables: Horizontal Scroll ── */
+        .table-scroll {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .compare-table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .compare-table th,
+        .compare-table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+
+        /* ── Diagrams & SVGs ── */
+        .diagram-wrap {
+          padding: 0.85rem;
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .diagram-wrap svg {
+          max-width: 100%;
+          height: auto;
+          min-width: auto;
+        }
+
+        /* ── Code Blocks ── */
+        .code-header {
+          padding: 0.4rem 0.75rem;
+        }
+        .copy-btn {
+          padding: 3px 8px;
+          font-size: 0.65rem;
+          min-height: 28px;
+        }
+
+        /* ── Content Blocks ── */
+        .one-liner {
+          padding: 0.85rem 0.95rem;
+          font-size: 0.9rem;
+          border-radius: 0 10px 10px 0;
+        }
+
+        .explanation p {
+          font-size: 0.88rem;
+        }
+
+        .key-points,
+        .gotcha,
+        .edge,
+        .analogy {
+          padding: 0.95rem;
+          border-radius: 10px;
+        }
+
+        .key-points li,
+        .gotcha p,
+        .gotcha li,
+        .edge p,
+        .analogy p {
+          font-size: 0.85rem;
+          line-height: 1.55;
+        }
+
+        /* ── Interview Questions ── */
+        .interview-q summary {
+          padding: 0.7rem 0.85rem;
+          font-size: 0.82rem;
+          min-height: 44px;
+        }
+        .interview-q .ans {
+          padding: 0.8rem 0.85rem;
+          font-size: 0.84rem;
+        }
+
+        /* ── Badges ── */
+        .badge {
+          font-size: 0.55rem;
+          padding: 2px 7px;
+        }
+
+        /* ── Read Time ── */
+        .read-time {
+          font-size: 0.68rem;
+          padding: 3px 8px;
+        }
+
+        /* ── Back to Top ── */
+        .btt {
+          bottom: 1.25rem;
+          right: 1rem;
+          width: 44px;
+          height: 44px;
+          font-size: 1.15rem;
+        }
+
+        /* ── Sidebar Better Touch ── */
+        .sidebar {
+          padding: 1rem 0.75rem;
+        }
+        .sidebar a {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.78rem;
+        }
+
+        /* ── Practice CTA ── */
+        .practice-cta {
+          padding: 1rem;
+          border-radius: 10px;
+        }
+        .practice-cta h2 {
+          font-size: 1.05rem;
+        }
+        .practice-cta p {
+          font-size: 0.88rem;
+        }
+        .practice-cta .practice-btn {
+          min-height: 46px;
+          font-size: 0.9rem;
+        }
+
+        /* ── General Text ── */
+        .explanation strong,
+        .key-points strong,
+        .gotcha strong,
+        .edge strong {
+          word-break: break-word;
+        }
+      }
+
+      @media (max-width: 380px) {
+        /* Extra small phones */
+        .main {
+          padding: 0.85rem 0.55rem 5rem !important;
+        }
+        .concept-inner {
+          padding: 1rem 0.7rem !important;
+        }
+        .topic-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .compare-table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .nav-brand {
+          font-size: 0.82rem;
+          max-width: 95px;
+        }
+      }
+      /* ===== END MOBILE ENHANCEMENT ===== */
+
+      /* ===== PREPSPHERE UNIVERSAL SCROLL WRAPPER ===== */
+      .ps-scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1.2rem 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        scrollbar-width: thin;
+      }
+      .ps-scroll-wrap::-webkit-scrollbar { height: 4px; }
+      .ps-scroll-wrap::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 99px; }
+
+      /* Force all tables inside concept cards to be scrollable on mobile */
+      @media (max-width: 700px) {
+        .ps-scroll-wrap {
+          margin: 1rem -0.25rem;
+          border-radius: 10px;
+        }
+        .ps-scroll-wrap table {
+          min-width: 420px;
+          font-size: 0.76rem;
+        }
+        .ps-scroll-wrap table th,
+        .ps-scroll-wrap table td {
+          padding: 8px 10px;
+          font-size: 0.74rem;
+        }
+        /* SVG diagrams inside scroll wraps */
+        .ps-scroll-wrap svg {
+          min-width: 400px;
+          max-width: none;
+        }
+      }
+      @media (max-width: 380px) {
+        .ps-scroll-wrap table {
+          min-width: 360px;
+          font-size: 0.72rem;
+        }
+        .ps-scroll-wrap svg {
+          min-width: 340px;
+        }
+      }
+      /* ===== END UNIVERSAL SCROLL WRAPPER ===== */
+
+    /* ── READ NEXT ── */
+    .read-next-section {
+      max-width: var(--content-w, 860px);
+      margin: 60px auto 40px;
+      padding: 0 var(--content-pad, 40px);
+    }
+    .read-next-title {
+      font-size: 12px;
+      color: var(--text3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .read-next-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .rn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .rn-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .rn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+    .rn-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rn-sub {
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .rn-cta {
+      font-size: 12px;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    @media (max-width: 700px) {
+      .read-next-grid { grid-template-columns: 1fr; }
+    }
+
     </style>
   </head>
   <body>
@@ -1258,7 +1584,7 @@
 
             <!-- DIAGRAM: nested boxes -->
             <div class="diagram">
-              <svg
+              <div class="ps-scroll-wrap"><svg
                 viewBox="0 0 520 200"
                 xmlns="http://www.w3.org/2000/svg"
                 font-family="Lato, sans-serif"
@@ -1396,7 +1722,7 @@
                 <text x="55" y="185" font-size="10" fill="#7B82A8">
                   needs JDK →
                 </text>
-              </svg>
+              </svg></div>
               <div class="diagram-cap">
                 JVM ⊂ JRE ⊂ JDK — every outer layer contains everything inside
                 it
@@ -1512,7 +1838,7 @@
             </div>
 
             <div class="diagram">
-              <svg
+              <div class="ps-scroll-wrap"><svg
                 viewBox="0 0 560 155"
                 xmlns="http://www.w3.org/2000/svg"
                 font-family="Lato, sans-serif"
@@ -1785,7 +2111,7 @@
                     <path d="M0,0L0,6L7,3z" fill="#10B981" />
                   </marker>
                 </defs>
-              </svg>
+              </svg></div>
               <div class="diagram-cap">
                 Same bytecode, different JVMs, same result — that's platform
                 independence
@@ -1890,7 +2216,7 @@
             </div>
 
             <div class="diagram">
-              <svg
+              <div class="ps-scroll-wrap"><svg
                 viewBox="0 0 580 220"
                 xmlns="http://www.w3.org/2000/svg"
                 font-family="Lato, sans-serif"
@@ -2190,7 +2516,7 @@
                 >
                   GC manages entire heap — all threads share it
                 </text>
-              </svg>
+              </svg></div>
               <div class="diagram-cap">
                 Each thread has its own Stack. All threads share one Heap. Heap
                 has Young + Old Generation + Metaspace.
@@ -2627,7 +2953,7 @@ System.out.<span class="cf">println</span>(a.<span class="cf">equals</span>(c));
               </p>
             </div>
 
-            <table class="ctable">
+            <div class="ps-scroll-wrap"><table class="ctable">
               <tr>
                 <th>Feature</th>
                 <th>HashMap</th>
@@ -2664,7 +2990,7 @@ System.out.<span class="cf">println</span>(a.<span class="cf">equals</span>(c));
                 <td>Enumerator</td>
                 <td>Weakly consistent (no exception)</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="kp">
               <div class="kp-title">Key Points</div>
@@ -3146,7 +3472,7 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
             </div>
 
             <div class="diagram">
-              <svg
+              <div class="ps-scroll-wrap"><svg
                 viewBox="0 0 600 100"
                 xmlns="http://www.w3.org/2000/svg"
                 font-family="Lato, sans-serif"
@@ -3399,7 +3725,7 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
                 >
                   GC runs alongside execution, managing heap memory continuously
                 </text>
-              </svg>
+              </svg></div>
               <div class="diagram-cap">
                 Java's complete execution pipeline — from your .java file to
                 native machine code
@@ -3535,7 +3861,7 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
               </p>
             </div>
 
-            <table class="ctable">
+            <div class="ps-scroll-wrap"><table class="ctable">
               <tr>
                 <th>Feature</th>
                 <th>String</th>
@@ -3572,7 +3898,7 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
                 <td>Build strings in loops</td>
                 <td>Multi-threaded concat</td>
               </tr>
-            </table>
+            </table></div>
 
             <div class="code-block">
               <div class="code-hdr">
@@ -3699,6 +4025,29 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
         </div>
       
 
+
+    <div class="read-next-section">
+      <div class="read-next-title">Read Next</div>
+      <div class="read-next-grid">
+        
+        <a href="05-Language-Core-Python.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#27ae60"></span>Python Core</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="06-Puzzles.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#f39c12"></span>Puzzles</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+        <a href="01-DBMS.html" class="rn-card">
+          <div class="rn-name"><span class="rn-dot" style="background:#f5a623"></span>DBMS</div>
+          <div class="rn-sub">Continue your prep journey</div>
+          <div class="rn-cta">Start reading &rsaquo;</div>
+        </a>
+      </div>
+    </div>
+
         <section class="practice-cta" aria-labelledby="practice-title">
           <div>
             <h2 id="practice-title">Ready to test Java Core?</h2>
@@ -3726,6 +4075,7 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
       </button>
       <div class="jump-menu" id="qm">
         <a href="index.html">Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
         <a href="01-DBMS.html">01. DBMS</a>
         <a href="02-OOPs.html">02. OOPs</a>
         <a href="03-Computer-Networks.html">03. Computer Networks</a>
@@ -3738,6 +4088,8 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
         <a href="08-Git.html">08. Git</a>
         <a href="09-SQL.html">09. SQL</a>
         <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
       </div>
     </div>
 

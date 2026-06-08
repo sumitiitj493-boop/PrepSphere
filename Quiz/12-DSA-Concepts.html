@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Concepts Interview Quiz</title>
+    <meta name="description" content="Test your DSA Concepts knowledge with this interview quiz. Practice questions on Time & Space Complexity, Arrays & Strings, Linked Lists, Stacks & Queues, Hash Tables, Trees & BST, and more." />
+    <meta name="keywords" content="DSA Concepts quiz, DSA Concepts interview quiz, coding interview quiz, PrepSphere" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://www.theprepsphere.in/Quiz/12-DSA-Concepts.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="DSA Concepts Interview Quiz" />
+    <meta property="og:description" content="Test your DSA Concepts knowledge with this interview quiz. Practice questions on Time & Space Complexity, Arrays & Strings, Linked Lists, Stacks & Queues, Hash Tables, Trees & BST, and more." />
+    <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta property="og:url" content="https://www.theprepsphere.in/Quiz/12-DSA-Concepts.html" />
+    <meta property="og:site_name" content="PrepSphere" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DSA Concepts Interview Quiz" />
+    <meta name="twitter:description" content="Test your DSA Concepts knowledge with this interview quiz. Practice questions on Time & Space Complexity, Arrays & Strings, Linked Lists, Stacks & Queues, Hash Tables, Trees & BST, and more." />
+    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "DSA Concepts Interview Quiz",
+  "description": "Test your DSA Concepts knowledge with this interview quiz.",
+  "url": "https://www.theprepsphere.in/Quiz/12-DSA-Concepts.html",
+  "image": "https://www.theprepsphere.in/logo.png",
+  "learningResourceType": "Interview preparation quiz",
+  "educationalLevel": "Undergraduate and software engineering interview preparation",
+  "provider": {
+    "@type": "Organization",
+    "name": "PrepSphere",
+    "url": "https://www.theprepsphere.in"
+  }
+}
+    </script>
+<style>
+  :root {
+    --bg: #0c0c14;
+    --card: #111118;
+    --border: #1f1f30;
+    --accent: #4f8fff;
+    --accent2: #ff9d00;
+    --correct: #00d97e;
+    --wrong: #ff3355;
+    --text: #e8e8f0;
+    --text2: #9090b0;
+    --text3: #555570;
+    --mono: 'Courier New', monospace;
+    --serif: Georgia, 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: rgba(12,12,20,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 100;
+  }
+
+  #topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+
+  .topic-tag {
+    font-size: 12px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    border-left: 1px solid var(--border);
+    padding-left: 20px;
+  }
+
+  #progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  #progress-bar-outer {
+    width: 180px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  #progress-label {
+    font-size: 13px;
+    color: var(--text2);
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* ── SCORE BADGE ── */
+  #score-badge {
+    font-size: 13px;
+    color: var(--correct);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── MAIN ── */
+  #main {
+    padding-top: 80px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* ── INTRO ── */
+  #intro {
+    max-width: 680px;
+    width: 100%;
+    padding: 60px 24px 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .intro-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .intro-title span { color: var(--accent); }
+
+  .intro-sub {
+    font-size: 16px;
+    color: var(--text2);
+    line-height: 1.8;
+    font-family: var(--serif);
+    margin-bottom: 40px;
+  }
+
+  .topic-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 44px;
+  }
+
+  .topic-chip {
+    font-size: 13px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topic-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .btn-start {
+    font-size: 16px;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz-screen {
+    display: none;
+    max-width: 780px;
+    width: 100%;
+    padding: 24px 24px 0;
+  }
+
+  /* ── TOPIC HEADER ── */
+  .q-topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .q-topic-badge {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+
+  .q-number {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 14px;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 0;
+  }
+
+  .q-bg-num {
+    position: absolute;
+    bottom: -8px;
+    right: 24px;
+    font-size: min(16vw, 200px);
+    font-weight: 900;
+    color: rgba(79,143,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  .q-text {
+    font-size: 22px;
+    font-family: var(--serif);
+    font-weight: 400;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 36px;
+    max-width: 90%;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: #0a0a12;
+    border: 1px solid var(--border);
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    padding: 18px 22px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+
+  .opt:hover:not(.locked) {
+    border-left-color: var(--accent);
+    background: rgba(79,143,255,0.07);
+    transform: translateX(4px);
+  }
+
+  .opt-glyph {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 26px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .opt-text {
+    font-size: 17px;
+    font-family: var(--serif);
+    line-height: 1.6;
+    color: #c0c0d8;
+    flex: 1;
+  }
+
+  .opt-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: transparent;
+    padding-top: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.05em;
+  }
+
+  .opt.correct {
+    border-left-color: var(--correct) !important;
+    background: rgba(0,217,126,0.08) !important;
+    transform: none !important;
+  }
+  .opt.correct .opt-text { color: var(--correct); }
+  .opt.correct .opt-glyph { color: var(--correct); }
+  .opt.correct .opt-tag { color: var(--correct); }
+
+  .opt.wrong {
+    border-left-color: var(--wrong) !important;
+    background: rgba(255,51,85,0.08) !important;
+    animation: shake 0.35s ease-out;
+  }
+  .opt.wrong .opt-text { color: var(--wrong); }
+  .opt.wrong .opt-glyph { color: var(--wrong); }
+  .opt.wrong .opt-tag { color: var(--wrong); }
+
+  .opt.locked { cursor: default; pointer-events: none; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    15%{transform:translateX(-7px)}
+    30%{transform:translateX(7px)}
+    45%{transform:translateX(-5px)}
+    60%{transform:translateX(5px)}
+    75%{transform:translateX(-3px)}
+    90%{transform:translateX(3px)}
+  }
+
+  /* ── EXPLANATION ── */
+  #explanation {
+    display: none;
+    background: #0d0d16;
+    border: 1px solid var(--border);
+    border-radius: 0 0 14px 14px;
+    border-top: none;
+    padding: 32px 48px 36px;
+    margin-top: -2px;
+  }
+
+  #explanation.visible { display: block; animation: fadeUp 0.35s ease forwards; }
+
+  .exp-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 28px;
+  }
+
+  .exp-section { margin-bottom: 24px; }
+
+  .exp-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .exp-label.concept { color: var(--accent); }
+  .exp-label.why { color: var(--accent2); }
+
+  .exp-text {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.9;
+    color: #b0b8cc;
+  }
+
+  .exp-text.why-text { color: #c8b890; }
+
+  .exp-interviewer {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 10px;
+    display: block;
+  }
+
+  /* ── NAV ── */
+  #nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 4px 0;
+    margin-bottom: 40px;
+  }
+
+  .nav-btn {
+    font-size: 28px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    font-family: var(--mono);
+    user-select: none;
+  }
+
+  .nav-btn:hover { color: var(--accent); background: rgba(79,143,255,0.08); }
+
+  #nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #nav-count {
+    font-size: 15px;
+    color: var(--text2);
+    letter-spacing: 0.08em;
+  }
+
+  #next-cta {
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    display: none;
+  }
+
+  /* ── RESULTS ── */
+  #results-screen {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    padding: 40px 24px 60px;
+    animation: fadeUp 0.4s ease forwards;
+  }
+
+  .results-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .results-score-line {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 36px;
+  }
+
+  .results-score-line span { color: var(--correct); font-weight: 700; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .res-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+
+  .res-card-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .res-card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .revisit-section { margin-bottom: 32px; }
+
+  .revisit-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  .revisit-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .pill {
+    font-size: 12px;
+    color: var(--accent2);
+    border: 1px solid rgba(255,157,0,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+
+  .results-para {
+    font-size: 15px;
+    font-family: var(--serif);
+    line-height: 1.85;
+    color: #9090b0;
+    font-style: italic;
+    margin-bottom: 36px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+
+  .results-actions { display: flex; gap: 14px; }
+
+  .btn-retake {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-retake:hover { background: var(--accent); color: #000; }
+
+  .btn-copy {
+    font-size: 15px;
+    font-family: var(--mono);
+    padding: 14px 36px;
+    border-radius: 8px;
+    border: 2px solid var(--accent2);
+    background: var(--accent2);
+    color: #000;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+
+  .btn-copy:hover { opacity: 0.85; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── KEYBOARD HINT ── */
+  #kb-hint {
+    position: fixed;
+    bottom: 20px;
+    right: 24px;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    text-align: right;
+    pointer-events: none;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    #topbar { padding: 0 20px; }
+    #progress-wrap { display: none; }
+    .q-card, #explanation { padding: 28px 24px; }
+    .q-text { font-size: 19px; max-width: 100%; }
+    .opt-text { font-size: 16px; }
+    .topic-list { grid-template-columns: 1fr; }
+    #kb-hint { display: none; }
+  }
+
+
+  .back-notes {
+    position: fixed;
+    top: 18px;
+    right: 24px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(15, 23, 42, 0.82);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(12px);
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .back-notes:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent);
+    background: rgba(15, 23, 42, 0.94);
+  }
+
+  @media (max-width: 640px) {
+    .back-notes {
+      top: 82px;
+      right: 12px;
+      min-height: 38px;
+      padding: 0 12px;
+      font-size: 0.76rem;
+    }
+  }
+
+
+
+</style>
+</head>
+<body>
+<a class="back-notes" href="../12-DSA-Concepts.html">&larr; Notes</a>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div id="topbar-left">
+    <div class="logo">DSA Concepts</div>
+    <div class="topic-tag" id="current-topic">INTERVIEW QUIZ</div>
+  </div>
+  <div id="progress-wrap">
+    <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    <div id="progress-label">0 / 24</div>
+  </div>
+  <div id="score-badge"></div>
+</div>
+
+<div id="main">
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-title">DSA Concepts <span>Interview</span> Quiz</div>
+    <div class="intro-sub">24 questions covering every core data structures and algorithms concept. Complexity analysis, data structure internals, and algorithm design reasoning that interviewers test.</div>
+    <div class="topic-list" id="topic-list"></div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz-screen">
+    <div class="q-topic-row">
+      <div class="q-topic-badge" id="q-topic-badge">SCALABILITY</div>
+      <div class="q-number" id="q-number">Q 01 of 24</div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="q-bg-num" id="q-bg-num">01</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div id="explanation">
+      <div class="exp-divider"></div>
+      <div class="exp-section">
+        <div class="exp-label concept">CONCEPT</div>
+        <div class="exp-text" id="exp-concept"></div>
+      </div>
+      <div class="exp-section">
+        <div class="exp-label why">WHY THIS ANSWER</div>
+        <div class="exp-text why-text" id="exp-why"></div>
+      </div>
+    </div>
+    <div id="nav-row">
+      <div class="nav-btn" onclick="navigate(-1)">&#8249;</div>
+      <div id="nav-center">
+        <div id="nav-count">1 / 24</div>
+        <div id="next-cta">press &#8594; to continue</div>
+      </div>
+      <div class="nav-btn" onclick="navigate(1)">&#8250;</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen"></div>
+
+</div>
+
+<div id="kb-hint">&#8592; &#8594; &nbsp;navigate &nbsp;&nbsp; 1–4 &nbsp;select</div>
+
+<script>
+const GLYPHS = ['A','B','C','D'];
+
+const TOPICS = [
+  'Time & Space Complexity',
+  'Arrays & Strings',
+  'Linked Lists',
+  'Stacks & Queues',
+  'Hash Tables',
+  'Trees & BST',
+  'Graphs',
+  'Sorting',
+  'Binary Search',
+  'Dynamic Programming',
+  'Recursion & Backtracking',
+  'Greedy Algorithms',
+];
+
+const Q = [
+  {
+    topic: 'Complexity',
+    q: 'An algorithm processes an array of size n with two nested loops. The outer loop runs n times, and the inner loop runs n times for each outer iteration. What is the time complexity, and can it be improved?',
+    opts: [
+      'O(n) — the loops are processed in parallel by modern CPUs',
+      'O(n\u00B2) — n iterations \u00D7 n iterations = n\u00B2 operations. It can often be improved to O(n log n) or O(n) using sorting, hash tables, or two-pointer techniques depending on the specific problem',
+      'O(2\u207F) — nested loops always indicate exponential complexity',
+      'O(n\u00B2) and it cannot be improved — any algorithm that examines all pairs must take quadratic time'
+    ],
+    correct: 1,
+    concept: 'Two nested loops over an array of size n perform n \u00D7 n = n\u00B2 operations in the worst case. This is O(n\u00B2) time complexity. However, many problems that appear to require O(n\u00B2) can be solved faster. Example: "find if two numbers sum to target" can use a hash set for O(n) instead of checking all pairs in O(n\u00B2). The two-sum problem is a classic interview question where the hash map optimization is the expected answer.',
+    why: 'Modern CPUs do not magically parallelize nested loops into linear time — the algorithmic complexity remains O(n\u00B2). Nested loops are not exponential — they are polynomial (quadratic). Many O(n\u00B2) solutions can be improved: sorting + binary search gives O(n log n), hash tables give O(n), two pointers give O(n) on sorted data.'
+  },
+  {
+    topic: 'Complexity',
+    q: 'A function makes two sequential passes over an array: one to find the maximum, another to find the minimum. What is the overall time complexity?',
+    opts: [
+      'O(n\u00B2) because there are two passes over the data',
+      'O(2n) which simplifies to O(n) — constants are dropped in Big-O notation. Each pass is O(n), and O(n) + O(n) = O(n)',
+      'O(log n) because finding min and max are logarithmic operations',
+      'O(1) because min and max can be computed without looking at all elements'
+    ],
+    correct: 1,
+    concept: 'Big-O notation describes growth rate as input size approaches infinity, ignoring constants. Two sequential passes: first pass = n operations, second pass = n operations, total = 2n operations. Since constants are dropped in Big-O, 2n \u2192 O(n). This is the same complexity as a single pass. In fact, both min and max can be found in one pass with two variables, but the Big-O complexity remains O(n) either way.',
+    why: 'Two sequential passes are additive, not multiplicative. O(n) + O(n) = O(n), not O(n\u00B2). Finding min/max requires examining every element at least once — it cannot be O(log n) or O(1) for an unsorted array. O(n\u00B2) would require nested loops (n \u00D7 n operations).'
+  },
+  {
+    topic: 'Arrays & Strings',
+    q: 'You need to find the first non-repeating character in a string of length n. What is the most efficient approach?',
+    opts: [
+      'For each character, scan the entire string to check if it appears again — O(n\u00B2) time, O(1) space',
+      'Use a hash map to count frequency of each character in one pass, then iterate the string again to find the first character with count 1 — O(n) time, O(1) space (at most 26 letters or 256 ASCII characters)',
+      'Sort the string and check adjacent characters — O(n log n) time, O(n) space',
+      'Use recursion to check each character against all others — O(2\u207F) time'
+    ],
+    correct: 1,
+    concept: 'The hash map approach uses two passes: first pass counts frequency of each character (O(n)), second pass finds the first character with frequency 1 (O(n)). Total: O(n) time. The space is O(1) because the hash map has at most 26 entries for lowercase letters or 256 for ASCII — a constant bounded by the character set, not by n. This two-pass hash map pattern appears in many string/array problems.',
+    why: 'The brute force approach works but is O(n\u00B2) — too slow for long strings. Sorting destroys the original order, so you cannot identify the "first" non-repeating character after sorting. Recursion for this problem is unnecessarily complex and does not improve efficiency.'
+  },
+  {
+    topic: 'Arrays & Strings',
+    q: 'Given an array, what is the time complexity of finding a subarray with the maximum sum, and what algorithm achieves the optimal solution?',
+    opts: [
+      'O(n\u00B2) using brute force — check all possible subarrays and their sums',
+      'O(n) using Kadane\'s algorithm — maintain the maximum sum ending at the current position. If the current element alone is greater than the sum including previous elements, start a new subarray. Track the global maximum throughout.',
+      'O(n log n) using divide and conquer — split the array and combine maximum subarray from left, right, and crossing subarrays',
+      'O(1) because the maximum subarray is always the entire array'
+    ],
+    correct: 1,
+    concept: 'Kadane\'s algorithm: initialize max_so_far = arr[0], current_max = arr[0]. For each element: current_max = max(arr[i], current_max + arr[i]). If the current element alone is bigger than extending the previous subarray, start fresh. Update max_so_far = max(max_so_far, current_max) each step. One pass, O(n) time, O(1) space. This is one of the most frequently asked DSA questions in interviews.',
+    why: 'Brute force checking all subarrays is O(n\u00B2) — correct but not optimal. Divide and conquer works in O(n log n) — correct but over-engineered when a linear solution exists. The maximum subarray is not always the entire array — consider [-1, 2, 3, -10]: the maximum subarray is [2, 3], not the entire array.'
+  },
+  {
+    topic: 'Linked Lists',
+    q: 'How do you detect a cycle in a singly linked list in O(n) time and O(1) space?',
+    opts: [
+      'Store every visited node in a hash set — if a node appears twice, there is a cycle. O(n) time, O(n) space',
+      'Use Floyd\'s Tortoise and Hare algorithm: two pointers traverse the list at different speeds (1x and 2x). If they ever meet, a cycle exists. O(n) time, O(1) space',
+      'Traverse to the end and check if the last node points to null — if it does not, there is a cycle',
+      'Count the number of nodes — if the count exceeds the expected length, there is a cycle'
+    ],
+    correct: 1,
+    concept: 'Floyd\'s cycle detection uses two pointers: slow moves 1 step at a time, fast moves 2 steps. In a list without a cycle, fast reaches null. In a list with a cycle, fast "laps" slow and they eventually meet at some node inside the cycle. This is guaranteed because fast closes the gap by 1 node per iteration. The meeting point is always inside the cycle. This is O(n) time because fast visits at most 2n nodes, and O(1) space because only two pointers are used.',
+    why: 'The hash set approach works and is O(n) time, but uses O(n) space. "Traversing to the end" does not work in a cyclic list — there is no end. Counting nodes requires detecting the cycle first, which is the problem we are trying to solve. Floyd\'s algorithm is the optimal solution because it uses constant space.'
+  },
+  {
+    topic: 'Linked Lists',
+    q: 'How do you reverse a singly linked list in O(n) time and O(1) space?',
+    opts: [
+      'Copy all node values into an array, reverse the array, and write values back to the list — O(n) time, O(n) space',
+      'Use three pointers (prev, current, next) to reverse the direction of each node\'s pointer iteratively. For each node: save next, point current to prev, advance prev to current, advance current to saved next. O(n) time, O(1) space.',
+      'Use recursion to reverse the list — O(n) time, O(1) space',
+      'A singly linked list cannot be reversed — you need a doubly linked list'
+    ],
+    correct: 1,
+    concept: 'The iterative reversal uses prev = null, current = head. Loop: next = current.next (save), current.next = prev (reverse), prev = current (advance prev), current = next (advance current). When current is null, prev is the new head. Each node\'s pointer is reversed in one pass. O(n) time, O(1) space because only three pointers are used regardless of list length.',
+    why: 'The array approach works but uses O(n) extra space. Recursion uses O(n) call stack space — not O(1). Singly linked lists absolutely can be reversed — you just change each node\'s next pointer to point backwards. The three-pointer iterative approach is the optimal in-place solution.'
+  },
+  {
+    topic: 'Stacks & Queues',
+    q: 'You need to implement a stack that supports push, pop, and getMin in O(1) time. Which data structure approach works?',
+    opts: [
+      'A single array where the minimum is recalculated on each pop by scanning the entire stack — O(1) push and pop, O(n) getMin',
+      'Two stacks: the main stack stores all elements, and a second min-stack stores the minimum value at each level. Push: push to main stack, push min(current, min-stack top) to min-stack. Pop: pop both. getMin: return min-stack top. All O(1)',
+      'A priority queue where the minimum element is always at the front — O(log n) for all operations',
+      'A linked list with a pointer to the minimum element that is updated on every operation — O(1) push and getMin, but O(n) pop because finding the new minimum requires a full scan'
+    ],
+    correct: 1,
+    concept: 'The auxiliary min-stack tracks the minimum at each stack depth. When you push 5, 3, 7, 2: main stack = [5, 3, 7, 2], min-stack = [5, 3, 3, 2]. getMin() returns 2 (min-stack top). Pop 2: main = [5, 3, 7], min-stack = [5, 3, 3]. getMin() returns 3. Pop 7: main = [5, 3], min-stack = [5, 3]. getMin() returns 3. Each stack frame remembers the minimum at that point in history, so no recalculation is needed.',
+    why: 'Scanning on pop makes getMin O(n), not O(1). Priority queues give O(log n) operations — they maintain sorted order but do not follow stack LIFO semantics. A linked list with a min pointer loses the minimum reference when that element is popped — finding the new minimum requires O(n) scan. The dual-stack approach is the only one that achieves O(1) for all three operations while maintaining stack semantics.'
+  },
+  {
+    topic: 'Stacks & Queues',
+    q: 'What data structure is used to evaluate the expression "3 + 4 \u00D7 2" correctly, ensuring multiplication happens before addition?',
+    opts: [
+      'A queue processes operators in FIFO order, so addition happens before multiplication — giving the wrong answer',
+      'A stack is used to convert infix notation to postfix (Reverse Polish Notation), then another stack evaluates the postfix expression, naturally respecting operator precedence: 3 4 2 \u00D7 + = 11',
+      'A linked list stores all numbers and operators, then a single pass from left to right evaluates them',
+      'A hash table maps operators to their precedence levels, then a binary tree is built for evaluation'
+    ],
+    correct: 1,
+    concept: 'The Shunting Yard algorithm uses a stack to convert infix expressions to postfix notation. When an operator is encountered, higher-precedence operators on the stack are popped first. For "3 + 4 \u00D7 2": push 3, see + (push to operator stack), push 4, see \u00D7 (higher precedence, push), push 2, then pop all: 4 \u00D7 2 = 8, then 3 + 8 = 11. A second stack evaluates the postfix expression by pushing operands and applying operators when they appear.',
+    why: 'A queue processes FIFO — it would evaluate left-to-right regardless of precedence (3+4=7, 7\u00D72=14, wrong answer). A single left-to-right pass over a linked list has the same problem — no precedence handling. While a hash table can store precedence levels, the actual evaluation requires a stack-based algorithm to apply that precedence correctly.'
+  },
+  {
+    topic: 'Hash Tables',
+    q: 'In a hash table using separate chaining for collision resolution, what happens when two different keys hash to the same index?',
+    opts: [
+      'One of the keys is overwritten — hash tables cannot store two keys at the same index',
+      'Both keys are stored in a linked list (or similar structure) at that index. On lookup, the hash table traverses the chain to find the exact key. Performance degrades to O(n) in the worst case if all keys hash to the same index',
+      'The hash table automatically resizes and rehashes all keys to new positions',
+      'An error is thrown — collision is a failure condition in hash tables'
+    ],
+    correct: 1,
+    concept: 'In separate chaining, each bucket (array index) contains a linked list of all key-value pairs that hash to that index. When a collision occurs, the new entry is appended to the chain at that bucket. Lookup: compute hash \u2192 go to bucket \u2192 traverse chain \u2192 compare keys. Average case is O(1) with a good hash function and proper load factor (typically rehash when load factor > 0.75). Worst case (all keys collide) degrades to O(n).',
+    why: 'Keys are not overwritten — that would lose data and is the behavior of a broken hash table. Automatic resizing happens when the load factor exceeds a threshold, not on every collision. Collisions are expected and normal — hash tables are designed to handle them gracefully through chaining or open addressing.'
+  },
+  {
+    topic: 'Hash Tables',
+    q: 'What is the load factor of a hash table, and why does it matter for performance?',
+    opts: [
+      'Load factor is the total number of buckets — more buckets means faster lookups',
+      'Load factor is the ratio of stored elements to the number of buckets (n/buckets). A high load factor means more collisions, longer chains, and slower lookups. Most implementations trigger resizing when load factor exceeds 0.75 to maintain O(1) average performance.',
+      'Load factor is the amount of memory used by the hash table — higher memory usage means better performance',
+      'Load factor does not affect performance — hash tables always have O(1) lookup regardless'
+    ],
+    correct: 1,
+    concept: 'Load factor = number of entries / number of buckets. With 75 entries in 100 buckets, load factor = 0.75. As load factor increases, the probability of collisions increases. Each collision adds a node to a chain, making lookups at that bucket slower. Java HashMap resizes (doubles the array) when load factor exceeds 0.75. This keeps the average chain length at ~0.75 elements, maintaining near-O(1) performance.',
+    why: 'Load factor is a ratio, not an absolute count of buckets. It measures how full the table is, not total memory. Hash tables absolutely do not guarantee O(1) regardless of load factor — a load factor of 10 (10 elements per bucket) would make lookups O(10) average, which degrades toward O(n) if unchecked.'
+  },
+  {
+    topic: 'Trees',
+    q: 'In a Binary Search Tree, what is the worst-case time complexity of search, and when does it occur?',
+    opts: [
+      'O(1) — BSTs always provide constant-time lookup',
+      'O(n) — occurs when the BST is skewed (essentially a linked list). For example, inserting sorted data [1, 2, 3, 4, 5] creates a right-skewed tree where each node only has a right child',
+      'O(log n) — BSTs always have logarithmic search time',
+      'O(n log n) — the worst case for any tree-based search'
+    ],
+    correct: 1,
+    concept: 'A BST is balanced when left and right subtrees have similar heights, giving O(log n) search. But if elements are inserted in sorted order, the BST becomes a linked list (skewed). For [1,2,3,4,5]: 1 is root, 2 is right child of 1, 3 is right child of 2, etc. Searching for 5 requires traversing all n nodes. Self-balancing BSTs (AVL, Red-Black trees) prevent this by rebalancing after each insertion, guaranteeing O(log n) worst case.',
+    why: 'BSTs provide O(log n) average case, not O(1) — comparison at each node narrows the search space by half only when balanced. O(log n) is the average/best case for balanced BSTs, not the worst case. O(n log n) is a sorting complexity, not related to BST search. The worst case O(n) occurs precisely when the tree degenerates into a linked list.'
+  },
+  {
+    topic: 'Trees',
+    q: 'What is the difference between a Binary Search Tree (BST) and a Balanced BST (AVL/Red-Black Tree)?',
+    opts: [
+      'There is no difference — all BSTs are balanced',
+      'A regular BST may become skewed with O(n) worst-case operations. A balanced BST (AVL or Red-Black) performs rotations after insertions/deletions to ensure the height difference between subtrees stays small, guaranteeing O(log n) worst-case for all operations',
+      'A balanced BST is always a complete binary tree — every level except the last is fully filled',
+      'AVL trees are faster than Red-Black trees for all operations'
+    ],
+    correct: 1,
+    concept: 'AVL trees maintain strict balance: the height difference between left and right subtrees of any node is at most 1. This requires more rotations but gives minimal tree height. Red-Black trees maintain looser balance using color properties — fewer rotations but slightly taller trees. Both guarantee O(log n) worst case for search, insert, and delete. AVL is better for read-heavy workloads (shorter trees). Red-Black is better for write-heavy workloads (fewer rotations on insert/delete).',
+    why: 'A regular BST can become completely unbalanced when data is inserted in sorted order — that is the entire problem balanced BSTs solve. A balanced BST is not necessarily a complete binary tree — complete trees are a stricter property. Neither AVL nor Red-Black is universally faster — each excels in different workload patterns.'
+  },
+  {
+    topic: 'Graphs',
+    q: 'You need to find the shortest path between two nodes in an unweighted graph. Which algorithm is most appropriate and why?',
+    opts: [
+      'Dijkstra\'s algorithm — it always finds the shortest path in any graph',
+      'Breadth-First Search (BFS) — in an unweighted graph, BFS explores all nodes at distance k before nodes at distance k+1, guaranteeing the first time the target is reached is via the shortest path. O(V + E) time',
+      'Depth-First Search (DFS) — it explores paths deeply and finds the shortest path efficiently',
+      'A* search — it uses heuristics to find the shortest path faster than any other algorithm'
+    ],
+    correct: 1,
+    concept: 'In an unweighted graph, every edge has cost 1. BFS explores neighbors level by level: all nodes at distance 1, then distance 2, then distance 3, etc. The first time BFS reaches the target node, it has done so via the minimum number of edges. This is guaranteed because BFS processes nodes in order of their distance from the source. Time complexity: O(V + E) where V = vertices, E = edges.',
+    why: 'Dijkstra works for weighted graphs but is overkill for unweighted graphs — it uses a priority queue for no benefit when all weights are equal. DFS does not guarantee shortest path — it goes deep first and may find a long path before a short one. A* requires a heuristic function and is designed for weighted graphs with a known target direction.'
+  },
+  {
+    topic: 'Graphs',
+    q: 'What is the key difference between BFS and DFS in terms of the data structure used and the order of exploration?',
+    opts: [
+      'BFS uses a stack (LIFO) and explores depth-first; DFS uses a queue (FIFO) and explores breadth-first',
+      'BFS uses a queue (FIFO) — explores neighbors level by level (breadth-first). DFS uses a stack (LIFO) or recursion — explores one path as deep as possible before backtracking (depth-first)',
+      'Both use the same data structure — the difference is only in implementation language',
+      'BFS is always faster than DFS for all graph problems'
+    ],
+    correct: 1,
+    concept: 'BFS uses a queue: dequeue a node, enqueue all its unvisited neighbors. This processes nodes in order of distance from the start (level 0, then level 1, then level 2...). DFS uses a stack (or recursion\'s call stack): pop a node, push all its unvisited neighbors. This goes as deep as possible along one path before backtracking. The choice between them depends on the problem: BFS for shortest paths (unweighted), DFS for topological sorting, cycle detection, and path finding.',
+    why: 'The options are swapped in the first choice — BFS uses a queue, DFS uses a stack. They use fundamentally different data structures. BFS is not always faster — for finding if a path exists (not necessarily shortest), DFS may find it faster. The data structure choice (queue vs. stack) is what determines the exploration order.'
+  },
+  {
+    topic: 'Sorting',
+    q: 'Why is Merge Sort preferred over Quick Sort for sorting linked lists?',
+    opts: [
+      'Merge Sort is always faster than Quick Sort regardless of data structure',
+      'Merge Sort\'s divide-and-conquer approach works naturally with linked lists: splitting at the middle, merging sorted lists by rearranging pointers (no random access needed). Quick Sort requires random access to pivot and partition, which is O(n) per operation on linked lists',
+      'Quick Sort cannot sort linked lists at all — it only works on arrays',
+      'Merge Sort uses less memory than Quick Sort for linked lists'
+    ],
+    correct: 1,
+    concept: 'Merge Sort splits the list into two halves (find middle using fast/slow pointers), recursively sorts each half, then merges by comparing head nodes and adjusting pointers. Merging linked lists is O(n) because you just move pointers. Quick Sort\'s partition step requires random access (jumping to pivot, swapping elements at arbitrary positions), which is O(n) per access on a linked list vs O(1) on an array. This makes Quick Sort inefficient for linked lists.',
+    why: 'Neither algorithm is always faster — Quick Sort is typically faster for arrays due to cache locality. Quick Sort can sort linked lists but is inefficient because partition requires O(n) random access operations. Merge Sort uses more memory for arrays (O(n) auxiliary space) but for linked lists, merging is done in-place by rearranging pointers — so the space advantage is data-structure dependent.'
+  },
+  {
+    topic: 'Sorting',
+    q: 'What is the best-case time complexity of Quick Sort, and when does it occur?',
+    opts: [
+      'O(n) — Quick Sort always runs in linear time for sorted input',
+      'O(n log n) — occurs when the pivot divides the array into two roughly equal halves at each step. The recursion tree has log n levels, and each level processes n elements, giving n \u00D7 log n.',
+      'O(n\u00B2) — Quick Sort always runs in quadratic time',
+      'O(log n) — Quick Sort does not process every element'
+    ],
+    correct: 1,
+    concept: 'Quick Sort\'s best case is O(n log n), occurring when the pivot consistently divides the array into nearly equal halves. At each level, the partition processes all n elements (O(n) work). With balanced partitions, the recursion depth is O(log n). Total: O(n) \u00D7 O(log n) = O(n log n). Randomized pivot selection makes this the expected case in practice — the probability of consistently bad pivots is vanishingly small.',
+    why: 'Sorted input actually gives Quick Sort\'s WORST case O(n\u00B2) when the first/last element is always chosen as pivot. O(n\u00B2) is the worst case, not the best. O(log n) is impossible for sorting — you must examine every element at least once. The best case requires balanced partitioning, which randomized pivot selection achieves with high probability.'
+  },
+  {
+    topic: 'Binary Search',
+    q: 'A sorted array of 1 million elements is rotated at an unknown pivot. How do you find the minimum element in O(log n)?',
+    opts: [
+      'Linear scan — check every element until you find where arr[i] > arr[i+1]. O(n) time',
+      'Modified binary search: compare middle element with the rightmost element. If mid > right, the minimum is in the right half. If mid \u2264 right, the minimum is in the left half (including mid). This narrows the search space by half each step — O(log n)',
+      'Sort the array first, then return the first element — O(n log n) time',
+      'Use a hash table to store all elements and find the minimum by comparing values — O(n) time, O(n) space'
+    ],
+    correct: 1,
+    concept: 'In a rotated sorted array, one half is always sorted. If arr[mid] > arr[right], the rotation point (minimum) is in the right half — move left = mid + 1. If arr[mid] \u2264 arr[right], the minimum is in the left half (including mid) — move right = mid. When left == right, you have found the minimum. O(log n) because the search space halves each iteration.',
+    why: 'Linear scan works but is O(n) — not the optimal solution. Sorting destroys the rotation information and is O(n log n). A hash table does not help find the minimum in a rotated array — it adds unnecessary space complexity. The modified binary search exploits the sorted-half property unique to rotated arrays.'
+  },
+  {
+    topic: 'Binary Search',
+    q: 'Binary search requires a sorted array. What if you need to search an unsorted array efficiently — what preprocessing step is needed, and what is the total cost?',
+    opts: [
+      'No preprocessing needed — binary search works on any array',
+      'Sort the array first using an O(n log n) algorithm, then binary search in O(log n). Total for one search: O(n log n). Total for many searches: O(n log n + k \u00D7 log n) where k is the number of searches — efficient when k is large',
+      'Use a hash table for O(1) search — no preprocessing needed',
+      'Build a binary search tree for O(log n) search with O(n) preprocessing'
+    ],
+    correct: 1,
+    concept: 'Binary search fundamentally requires sorted data. For an unsorted array: sorting costs O(n log n), then each binary search costs O(log n). For a single search, this is more expensive than a linear scan O(n). But if you perform many searches, the one-time O(n log n) sort cost is amortized: sort once, search k times in O(k log n). A hash table is better for exact-match searches (O(1)), but binary search handles range queries and nearest-neighbor searches that hash tables cannot.',
+    why: 'Binary search on an unsorted array produces wrong results — it may skip the target element. A hash table provides O(1) for exact matches but cannot handle "find the smallest element greater than X" — binary search can. A BST takes O(n log n) to build in the average case, same as sorting, but has higher constant factors due to pointer overhead.'
+  },
+  {
+    topic: 'Dynamic Programming',
+    q: 'The Fibonacci sequence using naive recursion computes fib(5) by recalculating fib(3) multiple times. How does dynamic programming eliminate this redundant computation?',
+    opts: [
+      'It uses a faster programming language to compute Fibonacci numbers more quickly',
+      'It stores previously computed results in a table (memoization) or fills a table bottom-up. Once fib(3) is computed, the result is reused wherever fib(3) is needed again. This reduces exponential O(2\u207F) time to linear O(n)',
+      'It uses a mathematical formula to compute Fibonacci numbers directly without any recursion',
+      'It runs multiple recursive calls in parallel on different CPU cores'
+    ],
+    correct: 1,
+    concept: 'Naive recursion for fib(n) creates a binary tree of calls: fib(5) \u2192 fib(4) + fib(3), fib(4) \u2192 fib(3) + fib(2), etc. fib(3) is computed twice, fib(2) three times. This gives O(2\u207F) time. DP solutions: (1) Top-down with memoization: store fib(k) in an array after computing it; before computing, check if already stored. (2) Bottom-up tabulation: compute fib(0), fib(1), fib(2), ... in order, each using previously stored values. Both reduce to O(n) time and O(n) space (further optimizable to O(1) space with two variables).',
+    why: 'The programming language does not change algorithmic complexity. The closed-form formula (Binet\'s formula) exists but has floating-point precision issues for large n. Parallelism does not reduce total work — it distributes the same exponential work across cores. DP fundamentally eliminates redundant subproblems by caching results.'
+  },
+  {
+    topic: 'Dynamic Programming',
+    q: 'The 0/1 Knapsack Problem: given items with weights [2,3,4,5] and values [3,4,5,6], and a knapsack capacity of 5, what approach finds the maximum value?',
+    opts: [
+      'Greedy: always pick the item with the highest value-to-weight ratio — simple and optimal',
+      'Dynamic programming: build a table where dp[i][w] represents the maximum value using items 0..i with capacity w. For each item, choose max(include item, exclude item). Time: O(n \u00D7 W) where n = number of items, W = capacity',
+      'Sort items by value and pick the most valuable items that fit — O(n log n)',
+      'Try all possible subsets of items and pick the best one — O(2\u207F) brute force'
+    ],
+    correct: 1,
+    concept: 'For each item and each capacity, DP decides: include this item (add its value + check remaining capacity with previous items) or exclude it (carry forward the best value without this item). dp[i][w] = max(dp[i-1][w], dp[i-1][w-weight[i]] + value[i]). For capacity 5: item 0 (w=2, v=3) fits → dp = 3. Item 1 (w=3, v=4) fits → max(3, 4) = 4. Items 0+1 (w=5) = 3+4 = 7. This is the maximum.',
+    why: 'Greedy fails for 0/1 Knapsack — it might pick a high-ratio item that prevents a better combination. Example: item with ratio 2.0 (weight 3, value 6) blocks two items with ratio 1.5 each (weight 2+2, value 3+3 = 6, but using only weight 4 instead of 3). Sorting by value ignores weight constraints. Brute force O(2\u207F) works but is impractical for large n.'
+  },
+  {
+    topic: 'Recursion',
+    q: 'In the N-Queens problem, how does backtracking work to find all valid configurations?',
+    opts: [
+      'Place all N queens randomly and check if the configuration is valid — repeat until all solutions are found',
+      'Place queens row by row. For each row, try each column. If placing a queen creates a conflict, undo (backtrack) that placement and try the next column. When all columns in a row fail, backtrack to the previous row and try its next column. Continue until all N queens are placed successfully',
+      'Use dynamic programming to build a table of all valid queen positions',
+      'Use a greedy algorithm — place each queen in the position that conflicts with the fewest existing queens'
+    ],
+    correct: 1,
+    concept: 'Backtracking is systematic trial-and-error with pruning. The algorithm: for row 0, try column 0 \u2192 check if safe \u2192 if yes, move to row 1; if no, try column 1 \u2192 ... When row N-1 is filled, a solution is found. If all columns in a row fail, backtrack to the previous row and advance its queen. This explores a tree of possibilities, pruning branches as soon as a constraint is violated (a queen is threatened). For N=8, the pruning eliminates billions of invalid configurations.',
+    why: 'Random placement has no guarantee of finding a solution in reasonable time — the probability of a random valid configuration is vanishingly small for large N. DP does not apply because the problem is not about overlapping subproblems with optimal substructure — it is about constraint satisfaction. Greedy placement does not guarantee a global solution — locally optimal choices may lead to dead ends.'
+  },
+  {
+    topic: 'Recursion',
+    q: 'What is the difference between recursion and backtracking?',
+    opts: [
+      'They are the same thing — recursion and backtracking are synonymous',
+      'Recursion is a programming technique where a function calls itself. Backtracking is a problem-solving strategy that uses recursion to explore possibilities and undo (backtrack) choices that lead to invalid solutions. All backtracking uses recursion, but not all recursion is backtracking.',
+      'Backtracking is an iterative technique — it does not use recursion',
+      'Recursion is always more efficient than backtracking'
+    ],
+    correct: 1,
+    concept: 'Recursion is simply a function calling itself: factorial(n) = n * factorial(n-1). It has a base case and a recursive case. Backtracking adds decision-making and undoing: at each recursive call, make a choice → recurse → if the result is invalid, undo the choice and try the next option. Think of recursion as the mechanism and backtracking as the strategy built on top of that mechanism.',
+    why: 'They are distinct concepts. Backtracking always uses recursion as its implementation mechanism, but recursive algorithms like merge sort, tree traversals, and factorial do not backtrack — they never undo choices. Backtracking specifically involves exploring a decision tree, pruning bad branches, and reverting state. Neither is universally more efficient — efficiency depends on the specific problem and algorithm design.'
+  },
+  {
+    topic: 'Greedy',
+    q: 'The coin change problem: given coins [1, 5, 10, 25] and amount 30, a greedy algorithm selects the largest coin first (25, then 5) = 2 coins. Why does greedy fail for coins [1, 3, 4] and amount 6?',
+    opts: [
+      'Greedy always fails for coin change problems — dynamic programming is the only solution',
+      'Greedy picks 4 first (largest \u2264 6), then needs 2 more: 1 + 1 = 3 coins total. But optimal is 3 + 3 = 2 coins. Greedy fails because the locally optimal choice (largest coin) does not lead to the globally optimal solution',
+      'Greedy fails because the coin denominations include an odd number (3)',
+      'Greedy only works for US coin denominations — it cannot be applied to any other coin system'
+    ],
+    correct: 1,
+    concept: 'Greedy algorithms make the locally optimal choice at each step, hoping it leads to a globally optimal solution. For canonical coin systems like US coins [1,5,10,25], greedy works because each coin is at least 2\u00D7 the previous coin — making the largest choice always safe. For [1,3,4], greedy picks 4 (remainder 2) \u2192 1+1 = 3 coins. Optimal: 3+3 = 2 coins. The greedy choice of 4 "uses up" budget that could have been better spent on two 3s. This is why coin change is typically solved with DP.',
+    why: 'Greedy works for many coin systems (not just US coins) — specifically canonical coin systems. It does not always fail. The issue is not odd denominations — greedy works with US coins including 5 and 25 (both odd). The fundamental issue is that locally optimal choices do not always lead to globally optimal solutions when the coin system is non-canonical.'
+  },
+  {
+    topic: 'Greedy',
+    q: 'Which of the following problems is correctly solved by a greedy algorithm?',
+    opts: [
+      '0/1 Knapsack — always pick the item with the highest value-to-weight ratio',
+      'Activity Selection — always pick the activity that finishes earliest. This leaves maximum room for subsequent activities and produces the optimal maximum number of non-overlapping activities.',
+      'N-Queens — place queens greedily in the least threatened positions',
+      'Longest Common Subsequence — always match the earliest common characters'
+    ],
+    correct: 1,
+    concept: 'Activity Selection is a classic greedy problem. Sort activities by finish time. Pick the first activity. Then repeatedly pick the next activity that starts after the last picked activity finishes. Because we always choose the earliest-finishing activity, we maximize the time remaining for future activities. This greedy choice is provably optimal — it produces the maximum number of compatible activities. Proof uses an exchange argument: any optimal solution can be transformed into the greedy solution without worsening it.',
+    why: '0/1 Knapsack fails with greedy — it requires DP. N-Queens requires backtracking — greedy placement may lead to dead ends. Longest Common Subsequence requires DP — greedy matching of earliest characters misses optimal alignments. Activity Selection is one of the few problems where the greedy approach is provably optimal.'
+  }
+]
+
+];
+
+// ── STATE ──
+let current = 0;
+let answered = {};
+let score = 0;
+
+// ── BUILD INTRO ──
+const topicListEl = document.getElementById('topic-list');
+TOPICS.forEach(t => {
+  const chip = document.createElement('div');
+  chip.className = 'topic-chip';
+  chip.textContent = t;
+  topicListEl.appendChild(chip);
+});
+
+// ── START ──
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  render(0, true);
+}
+
+// ── RENDER ──
+function render(idx, animate) {
+  const q = Q[idx];
+  const num = idx + 1;
+  const pad = String(num).padStart(2,'0');
+
+  document.getElementById('q-topic-badge').textContent = q.topic.toUpperCase();
+  document.getElementById('q-number').textContent = `Q ${pad} of ${Q.length}`;
+  document.getElementById('q-bg-num').textContent = pad;
+  document.getElementById('q-card').style.borderTopColor = 'var(--accent)';
+
+  // Progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = score > 0 ? `${score} correct` : '';
+  document.getElementById('current-topic').textContent = q.topic;
+
+  // Nav counter
+  document.getElementById('nav-count').textContent = `${num} / ${Q.length}`;
+
+  // Question text
+  const qtEl = document.getElementById('q-text');
+  qtEl.textContent = q.q;
+
+  // Shuffle options
+  let order = q._order;
+  if (!order) {
+    order = [0,1,2,3].sort(() => Math.random()-0.5);
+    q._order = order;
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  order.forEach((origIdx, di) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.orig = origIdx;
+    const isAnswered = answered[idx] !== undefined;
+
+    const glyph = document.createElement('span');
+    glyph.className = 'opt-glyph';
+    glyph.textContent = GLYPHS[di];
+
+    const txt = document.createElement('span');
+    txt.className = 'opt-text';
+    txt.textContent = q.opts[origIdx];
+
+    const tag = document.createElement('span');
+    tag.className = 'opt-tag';
+
+    div.appendChild(glyph);
+    div.appendChild(txt);
+    div.appendChild(tag);
+
+    if (isAnswered) {
+      div.classList.add('locked');
+      if (origIdx === q.correct) {
+        div.classList.add('correct');
+        tag.textContent = 'CORRECT';
+      } else if (answered[idx].chosen === origIdx) {
+        div.classList.add('wrong');
+        tag.textContent = 'WRONG';
+      }
+    } else {
+      div.onclick = () => pick(idx, origIdx, div);
+    }
+
+    if (animate && !isAnswered) {
+      div.style.opacity = '0';
+      div.style.transform = 'translateY(8px)';
+      div.style.transition = `opacity 0.2s ${di*0.06}s, transform 0.2s ${di*0.06}s`;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          div.style.opacity = '1';
+          div.style.transform = '';
+        });
+      });
+    }
+
+    optsEl.appendChild(div);
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const nextCta = document.getElementById('next-cta');
+  if (answered[idx] !== undefined) {
+    document.getElementById('exp-concept').textContent = q.concept;
+    renderWhy(q);
+    expEl.className = 'visible';
+    nextCta.style.display = 'block';
+  } else {
+    expEl.className = '';
+    expEl.style.display = 'none';
+    nextCta.style.display = 'none';
+  }
+}
+
+function renderWhy(q) {
+  const el = document.getElementById('exp-why');
+  el.innerHTML = '';
+  const parts = q.why.split(/\n/);
+  parts.forEach(part => {
+    if (part.startsWith('What the interviewer') || part.startsWith('The interviewer')) {
+      const s = document.createElement('em');
+      s.className = 'exp-interviewer';
+      s.textContent = part;
+      el.appendChild(s);
+    } else if (part.trim()) {
+      const p = document.createElement('p');
+      p.style.marginBottom = '10px';
+      p.textContent = part;
+      el.appendChild(p);
+    }
+  });
+}
+
+function pick(idx, origIdx, div) {
+  if (answered[idx] !== undefined) return;
+  const q = Q[idx];
+  const isCorrect = origIdx === q.correct;
+  answered[idx] = { chosen: origIdx, correct: isCorrect };
+  if (isCorrect) score++;
+
+  // Update all options
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.add('locked');
+    o.onclick = null;
+    const oi = parseInt(o.dataset.orig);
+    if (oi === q.correct) {
+      o.classList.add('correct');
+      o.querySelector('.opt-tag').textContent = 'CORRECT';
+    } else if (answered[idx].chosen === oi) {
+      o.classList.add('wrong');
+      o.querySelector('.opt-tag').textContent = 'WRONG';
+    }
+  });
+
+  // Update progress
+  const pct = (Object.keys(answered).length / Q.length) * 100;
+  document.getElementById('progress-bar-inner').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${Object.keys(answered).length} / ${Q.length}`;
+  document.getElementById('score-badge').textContent = `${score} correct`;
+
+  // Show explanation
+  document.getElementById('exp-concept').textContent = q.concept;
+  renderWhy(q);
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = '';
+  void expEl.offsetWidth;
+  expEl.className = 'visible';
+  document.getElementById('next-cta').style.display = 'block';
+
+  // Scroll explanation into view
+  setTimeout(() => expEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 380);
+}
+
+function navigate(dir) {
+  const newIdx = current + dir;
+  if (newIdx < 0) return;
+  if (newIdx >= Q.length) {
+    if (Object.keys(answered).length === Q.length) showResults();
+    return;
+  }
+  current = newIdx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  render(current, true);
+}
+
+// ── RESULTS ──
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const r = document.getElementById('results-screen');
+  r.style.display = 'block';
+
+  const total = Q.length;
+  const pct = Math.round((score/total)*100);
+  const wrongTopics = Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean);
+  const wrongUniq = [...new Set(wrongTopics)];
+
+  let para = '';
+  if (pct >= 80) para = 'You have a strong handle on database fundamentals and applied reasoning. The concepts are not just memorized — they are understood. Keep this up and DBMS questions will be a strength in any interview.';
+  else if (pct >= 55) para = 'Solid foundation with some gaps in applied scenarios. Review the concepts marked below — pay attention to the WHY behind each answer, not just the rule itself.';
+  else para = 'The core definitions need more reinforcement before the applications click into place. Start with ACID, Normalization, and Isolation Levels — those threads run through almost every other topic here.';
+
+  let pillsHTML = wrongUniq.map(t => `<span class="pill">${t}</span>`).join('');
+  if (!pillsHTML) pillsHTML = '<span class="pill" style="color:var(--correct);border-color:var(--correct)">ALL CORRECT</span>';
+
+  r.innerHTML = `
+    <div class="results-title">Quiz Complete</div>
+    <div class="results-score-line">You scored <span>${score} / ${total}</span> &nbsp;(${pct}%)</div>
+    <div class="results-grid">
+      <div class="res-card"><div class="res-card-label">TOTAL CORRECT</div><div class="res-card-value">${score} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">SCORE</div><div class="res-card-value">${pct}%</div></div>
+      <div class="res-card"><div class="res-card-label">TOPICS CORRECT</div><div class="res-card-value">${total - wrongTopics.length} / ${total}</div></div>
+      <div class="res-card"><div class="res-card-label">AREAS TO REVIEW</div><div class="res-card-value">${wrongUniq.length}</div></div>
+    </div>
+    <div class="revisit-section">
+      <div class="revisit-label">// TOPICS TO REVISIT</div>
+      <div class="revisit-pills">${pillsHTML}</div>
+    </div>
+    <div class="results-para">${para}</div>
+    <div class="results-actions">
+      <button class="btn-retake" onclick="retake()">RETAKE QUIZ</button>
+      <button class="btn-copy" onclick="copyWeak()">COPY WEAK AREAS</button>
+    </div>
+  `;
+}
+
+function retake() {
+  current = 0;
+  answered = {};
+  score = 0;
+  Q.forEach(q => delete q._order);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('progress-bar-inner').style.width = '0%';
+  document.getElementById('progress-label').textContent = `0 / ${Q.length}`;
+  document.getElementById('score-badge').textContent = '';
+  window.scrollTo({ top: 0 });
+  render(0, true);
+}
+
+function copyWeak() {
+  const wrongTopics = [...new Set(Q.map((q,i) => answered[i]?.correct === false ? q.topic : null).filter(Boolean))];
+  const text = wrongTopics.length > 0
+    ? 'DBMS Topics to Review:\n' + wrongTopics.map(t => '- ' + t).join('\n')
+    : 'All topics answered correctly.';
+  navigator.clipboard?.writeText(text).catch(()=>{});
+}
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-screen').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+  else if (['1','2','3','4'].includes(e.key)) {
+    const opts = document.querySelectorAll('.opt:not(.locked)');
+    const idx = parseInt(e.key) - 1;
+    if (opts[idx]) opts[idx].click();
+  }
+});
+</script>
+</body>
+</html>
