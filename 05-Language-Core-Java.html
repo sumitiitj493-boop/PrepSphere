@@ -1115,6 +1115,72 @@
           width: 100%;
         }
       }
+
+      /* ===== READ NEXT SECTION (matches screenshot style) ===== */
+      .read-next-section {
+        margin-top: 3rem;
+      }
+      .read-next-section h3 {
+        font-size: 0.85rem;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+      .read-next-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .read-next-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.35rem 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        display: block;
+      }
+      .read-next-card:hover {
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
+      }
+      .read-next-card .topic-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 9999px;
+        display: inline-block;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      .read-next-card h4 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0.6rem 0 0.35rem;
+        color: #111827;
+      }
+      .read-next-card p {
+        color: #6b7280;
+        font-size: 0.95rem;
+        margin: 0 0 1.1rem;
+        line-height: 1.5;
+      }
+      .read-next-card .start-link {
+        color: #f59e0b;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      @media (max-width: 600px) {
+        .read-next-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     
       /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
       .table-scroll {
@@ -3991,21 +4057,23 @@ System.out.<span class="cf">println</span>(f.<span class="cf">get</span>()); <sp
       >
         🌐 Hyperjump
       </button>
-      <div class="jump-menu" id="qm">
-        <a href="index.html">Home</a>
-        <a href="01-DBMS.html">01. DBMS</a>
-        <a href="02-OOPs.html">02. OOPs</a>
-        <a href="03-Computer-Networks.html">03. Computer Networks</a>
-        <a href="04-Operating-System.html">04. Operating System</a>
-        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
-        <a href="05-Language-Core-Java.html">05. Java Core</a>
-        <a href="05-Language-Core-Python.html">05. Python Core</a>
-        <a href="06-Puzzles.html">06. Puzzles</a>
-        <a href="07-Linux.html">07. Linux</a>
-        <a href="08-Git.html">08. Git</a>
-        <a href="09-SQL.html">09. SQL</a>
-        <a href="10-Projects-Behavioral.html">10. Projects</a>
-      </div>
+  <div class="jump-menu" id="qm">
+    <a href="index.html">Home</a>
+    <a href="01-DBMS.html">01. DBMS</a>
+    <a href="02-OOPs.html">02. OOPs</a>
+    <a href="03-Computer-Networks.html">03. Computer Networks</a>
+    <a href="04-Operating-System.html">04. Operating System</a>
+    <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+    <a href="05-Language-Core-Java.html">05. Java Core</a>
+    <a href="05-Language-Core-Python.html">05. Python Core</a>
+    <a href="06-Puzzles.html">06. Puzzles</a>
+    <a href="07-Linux.html">07. Linux</a>
+    <a href="08-Git.html">08. Git</a>
+    <a href="09-SQL.html">09. SQL</a>
+    <a href="10-Projects-Behavioral.html">10. Projects</a>
+    <a href="11-System-Design.html">11. System Design</a>
+    <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
+  </div>
     </div>
 
     <script>

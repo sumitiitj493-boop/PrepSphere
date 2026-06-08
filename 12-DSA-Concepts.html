@@ -913,6 +913,8 @@
         text-decoration: none;
         font-weight: 800;
         box-shadow: 0 8px 20px rgba(245, 166, 35, 0.28);
+        border: 2px solid var(--gold2);
+        text-shadow: 0 1px 3px rgba(0,0,0,0.25);
       }
       .practice-cta .practice-btn:hover {
         transform: translateY(-1px);
@@ -927,6 +929,8 @@
           width: 100%;
         }
       }
+
+
     
       /* ===== PREPSPHERE MOBILE ENHANCEMENT ===== */
       .table-scroll {
@@ -1452,11 +1456,60 @@
             <h2>Test Your DSA Knowledge</h2>
             <p>Practice questions covering all core data structures and algorithms.</p>
           </div>
-          <a href="Quiz/12-DSA-Concepts.html" class="practice-btn">Practice Quiz &rarr;</a>
+          <a href="Quiz/12-DSA-Concepts.html" class="practice-btn">Practice Quiz →</a>
+        </div>
+
+        <!-- Read Next Section -->
+        <div class="read-next-section">
+          <h3>READ NEXT</h3>
+          <div class="read-next-grid">
+            <a href="11-System-Design.html" class="read-next-card">
+              <span class="topic-dot" style="background:#3b82f6"></span>
+              <h4>11. System Design</h4>
+              <p>Continue your prep journey</p>
+              <span class="start-link">Start reading ›</span>
+            </a>
+            <a href="01-DBMS.html" class="read-next-card">
+              <span class="topic-dot" style="background:#ef4444"></span>
+              <h4>01. DBMS</h4>
+              <p>Continue your prep journey</p>
+              <span class="start-link">Start reading ›</span>
+            </a>
+            <a href="05-Language-Core-Python.html" class="read-next-card">
+              <span class="topic-dot" style="background:#f59e0b"></span>
+              <h4>05. Python Core</h4>
+              <p>Continue your prep journey</p>
+              <span class="start-link">Start reading ›</span>
+            </a>
+          </div>
+        </div>
+      </main>
         </div>
       </main>
     </div>
-    <button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+    <button class="btt" id="bttBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <div class="quick-jump">
+      <button class="jump-btn" id="jumpBtn" aria-expanded="false">🌐 Hyperjump</button>
+      <div class="jump-menu" id="qm">
+        <a href="index.html">Home</a>
+        <a href="01-DBMS.html">01. DBMS</a>
+        <a href="02-OOPs.html">02. OOPs</a>
+        <a href="03-Computer-Networks.html">03. Computer Networks</a>
+        <a href="04-Operating-System.html">04. Operating System</a>
+        <a href="05-Language-Core-CPP.html">05. C++ Core</a>
+        <a href="05-Language-Core-Java.html">05. Java Core</a>
+        <a href="05-Language-Core-Python.html">05. Python Core</a>
+        <a href="06-Puzzles.html">06. Puzzles</a>
+        <a href="07-Linux.html">07. Linux</a>
+        <a href="08-Git.html">08. Git</a>
+        <a href="09-SQL.html">09. SQL</a>
+        <a href="10-Projects-Behavioral.html">10. Projects</a>
+        <a href="11-System-Design.html">11. System Design</a>
+        <a href="12-DSA-Concepts.html">12. DSA Concepts</a>
+      </div>
+    </div>
+
     <script>
     
       function toggleTheme() {
@@ -1586,6 +1639,45 @@
 
       updateProgress();
       highlightActive();
+
+      // Hyperjump toggle and current topic highlight
+      (function() {
+        const qBtn = document.getElementById("jumpBtn");
+        const qMenu = document.getElementById("qm");
+        if (!qBtn || !qMenu) return;
+
+        qBtn.addEventListener("click", function(e) {
+          e.stopPropagation();
+          qMenu.classList.toggle("active");
+          qBtn.setAttribute("aria-expanded", qMenu.classList.contains("active"));
+        });
+
+        document.addEventListener("click", function(e) {
+          if (!qMenu.contains(e.target) && !qBtn.contains(e.target) && qMenu.classList.contains("active")) {
+            qMenu.classList.remove("active");
+            qBtn.setAttribute("aria-expanded", "false");
+          }
+        });
+
+        qMenu.querySelectorAll("a").forEach(a => {
+          a.addEventListener("click", () => {
+            qMenu.classList.remove("active");
+            qBtn.setAttribute("aria-expanded", "false");
+          });
+        });
+
+        // Highlight current topic in hyperjump menu
+        const currentPage = window.location.pathname.split("/").pop();
+        qMenu.querySelectorAll("a").forEach(link => {
+          const href = link.getAttribute("href");
+          if (href === currentPage || href.endsWith("/" + currentPage) || currentPage.endsWith(href)) {
+            link.style.background = "rgba(245, 166, 35, 0.18)";
+            link.style.fontWeight = "700";
+            link.style.color = "var(--gold)";
+            link.style.borderRadius = "4px";
+          }
+        });
+      })();
 
       document.addEventListener("click", (e) => {
         const menu = document.getElementById("qm");
