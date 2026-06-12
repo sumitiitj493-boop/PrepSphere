@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.theprepsphere.in/sitemap.xml
+Sitemap: https://theprepsphere.in/sitemap.xml

@@ -1654,28 +1654,5 @@ window.PREP_SEARCH_INDEX = [
     url: "Quiz/10-Projects-Behavioral.html",
     keywords: "behavioral quiz projects quiz soft skills quiz interview practice test questions",
   },
-  {
-    title: "System Design Quiz",
-    topic: "Quiz",
-    chapter: "System Design",
-    url: "Quiz/11-System-Design.html",
-    keywords: "system design quiz scalability quiz load balancer quiz caching quiz interview practice test",
-  },
-  {
-    title: "DSA Concepts Quiz",
-    topic: "Quiz",
-    chapter: "DSA",
-    url: "Quiz/12-DSA-Concepts.html",
-    keywords: "dsa quiz data structures quiz algorithms quiz complexity quiz interview practice test",
-  },
-
-  // ──────────────── DASHBOARD ────────────────
-  {
-    title: "Dashboard",
-    topic: "Dashboard",
-    chapter: "Dashboard",
-    url: "dashboard.html",
-    keywords: "dashboard progress tracker streak activity completion status overview",
-  },
 
 ];
