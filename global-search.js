@@ -326,6 +326,9 @@
       closeSearch();
     }
   });
+
+  // Expose globally so header search button can trigger it
+  window._openPrepSearch = openSearch;
 })();
 
 // Auto-fix quick-jump menu numbering across pages

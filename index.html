@@ -1,49 +1,73 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/png" href="/logo.png">
-    <link rel="apple-touch-icon" href="/logo.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#f5a01e">
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#f5a01e" />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>PrepSphere | Interview Preparation Notes and Practice</title>
-    <meta name="description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
-    <meta name="keywords" content="interview preparation, placement preparation, software engineering interviews, computer science notes, coding interview preparation, PrepSphere" />
+    <meta
+      name="description"
+      content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes."
+    />
+    <meta
+      name="keywords"
+      content="interview preparation, placement preparation, software engineering interviews, computer science notes, coding interview preparation, PrepSphere"
+    />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://www.theprepsphere.in/" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="PrepSphere | Interview Preparation Notes and Practice" />
-    <meta property="og:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
+    <meta
+      property="og:title"
+      content="PrepSphere | Interview Preparation Notes and Practice"
+    />
+    <meta
+      property="og:description"
+      content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes."
+    />
     <meta property="og:image" content="https://www.theprepsphere.in/logo.png" />
     <meta property="og:url" content="https://www.theprepsphere.in/" />
     <meta property="og:site_name" content="PrepSphere" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PrepSphere | Interview Preparation Notes and Practice" />
-    <meta name="twitter:description" content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes." />
-    <meta name="twitter:image" content="https://www.theprepsphere.in/logo.png" />
+    <meta
+      name="twitter:title"
+      content="PrepSphere | Interview Preparation Notes and Practice"
+    />
+    <meta
+      name="twitter:description"
+      content="PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.theprepsphere.in/logo.png"
+    />
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "name": "PrepSphere",
-      "url": "https://www.theprepsphere.in",
-      "logo": "https://www.theprepsphere.in/logo.png"
-    },
-    {
-      "@type": "WebSite",
-      "name": "PrepSphere",
-      "url": "https://www.theprepsphere.in",
-      "description": "PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "PrepSphere"
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "PrepSphere",
+            "url": "https://www.theprepsphere.in",
+            "logo": "https://www.theprepsphere.in/logo.png"
+          },
+          {
+            "@type": "WebSite",
+            "name": "PrepSphere",
+            "url": "https://www.theprepsphere.in",
+            "description": "PrepSphere is an interview preparation hub for placements and software engineering interviews, with DBMS, OS, networks, SQL, OOP, language core, Linux, Git, puzzles, projects, and behavioral notes.",
+            "publisher": {
+              "@type": "Organization",
+              "name": "PrepSphere"
+            }
+          }
+        ]
       }
-    }
-  ]
-}
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -816,10 +840,10 @@
         }
         #vig {
           background: radial-gradient(
-            ellipse 95% 82% at 50% 48%,
-            transparent 30%,
-            rgba(3, 2, 10, 0.5) 78%,
-            rgba(3, 2, 10, 0.86) 100%
+            ellipse 95% 85% at 50% 45%,
+            transparent 25%,
+            rgba(3, 2, 10, 0.45) 72%,
+            rgba(3, 2, 10, 0.88) 100%
           );
         }
         .hdr {
@@ -843,20 +867,21 @@
           letter-spacing: 1.2px;
         }
         #sidebar {
-          left: 12px;
-          right: 12px;
+          left: 10px;
+          right: 10px;
           top: auto;
-          bottom: calc(74px + env(safe-area-inset-bottom));
+          bottom: calc(60px + env(safe-area-inset-bottom));
           transform: none;
           min-width: 0;
           display: flex;
-          gap: 8px;
+          gap: 6px;
           overflow-x: auto;
-          padding: 8px;
+          padding: 6px;
           border-radius: 14px;
           scrollbar-width: none;
           -webkit-overflow-scrolling: touch;
           touch-action: pan-x;
+          border: 1px solid rgba(245, 160, 30, 0.18);
         }
         #sidebar::-webkit-scrollbar {
           display: none;
@@ -866,19 +891,32 @@
         }
         .sb-item {
           flex: 0 0 auto;
-          min-height: 34px;
-          padding: 8px 11px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(255, 255, 255, 0.035);
-          color: rgba(255, 255, 255, 0.72);
-          font-size: 10px;
+          min-height: 38px;
+          padding: 10px 14px;
+          border: 1px solid rgba(245, 160, 30, 0.18);
+          background: rgba(245, 160, 30, 0.08);
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 11px;
+          letter-spacing: 1.2px;
+          font-weight: 700;
+          border-radius: 10px;
+          white-space: nowrap;
         }
         .sb-item:hover {
-          padding-left: 11px;
+          padding-left: 14px;
+        }
+        .sb-item .sb-dot {
+          width: 10px;
+          height: 10px;
+          box-shadow: 0 0 8px currentColor;
         }
         .sp-label .nm {
-          font-size: 9px;
-          letter-spacing: 1px;
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          text-shadow:
+            0 0 30px rgba(0, 0, 0, 1),
+            0 0 15px rgba(0, 0, 0, 1),
+            0 0 5px rgba(0, 0, 0, 1);
         }
         .sp-label .sub {
           display: none;
@@ -886,14 +924,15 @@
         .sp-label .bar {
           width: 14px;
           margin-top: 3px;
+          height: 2px;
         }
         #detail {
           left: 12px;
           right: 12px;
           top: auto;
-          bottom: calc(132px + env(safe-area-inset-bottom));
+          bottom: calc(110px + env(safe-area-inset-bottom));
           width: auto;
-          padding: 16px;
+          padding: 20px;
           border-radius: 16px;
           transform: translateY(14px);
         }
@@ -904,29 +943,30 @@
           font-size: 17px;
         }
         #detail .dt-enter {
-          min-height: 42px;
-          font-size: 11px;
+          min-height: 44px;
+          font-size: 12px;
         }
         .btm {
-          left: 12px;
-          right: 12px;
-          bottom: calc(14px + env(safe-area-inset-bottom));
+          left: 10px;
+          right: 10px;
+          bottom: calc(10px + env(safe-area-inset-bottom));
           transform: none;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          border-radius: 16px;
+          display: flex;
+          justify-content: space-between;
+          border-radius: 14px;
+          padding: 0 4px;
         }
         .btm-item {
           justify-content: center;
-          min-height: 34px;
-          padding: 8px 9px;
+          min-height: 32px;
+          padding: 6px 12px;
           font-size: 8px;
-          letter-spacing: 1.2px;
+          letter-spacing: 1px;
           white-space: nowrap;
           border-right: 1px solid rgba(255, 255, 255, 0.05);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: none;
         }
-        .btm-item:nth-child(2n) {
+        .btm-item:last-child {
           border-right: none;
         }
         .btm-item:nth-child(n + 3) {
@@ -936,7 +976,7 @@
           display: none;
         }
         .mobile-hint {
-          display: inline;
+          display: none;
         }
         .about-backdrop {
           padding: 14px;
@@ -991,7 +1031,30 @@
         <div class="hdr-tag">Interview Universe</div>
       </div>
       <div class="hud">
-        <div class="hud-pill">Topics &nbsp;<span class="val">14</span></div>
+        <button
+          class="hud-pill hud-btn"
+          id="search-btn"
+          type="button"
+          aria-label="Search topics"
+        >
+          <svg
+            aria-hidden="true"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            style="display: block; flex-shrink: 0"
+          >
+            <circle cx="11" cy="11" r="6" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+          <span style="font-size: 10px; letter-spacing: 1px; font-weight: 700"
+            >Search</span
+          >
+        </button>
         <button class="hud-pill hud-btn" id="about-btn" type="button">
           About
         </button>
@@ -1097,11 +1160,18 @@
             <span class="about-dot"></span>
             <span>
               <strong>Business & Sponsorships:</strong>
-              <a href="/cdn-cgi/l/email-protection#3a4a485f4a494a525b485f7a5d575b535614595557" style="
+              <a
+                href="/cdn-cgi/l/email-protection#3a4a485f4a494a525b485f7a5d575b535614595557"
+                style="
                   margin-left: 5px;
                   color: var(--accent);
                   text-decoration: none;
-                "><span class="__cf_email__" data-cfemail="c3b3b1a6b3b0b3aba2b1a683a4aea2aaafeda0acae">[email&#160;protected]</span></a
+                "
+                ><span
+                  class="__cf_email__"
+                  data-cfemail="c3b3b1a6b3b0b3aba2b1a683a4aea2aaafeda0acae"
+                  >[email&#160;protected]</span
+                ></a
               >
             </span>
           </div>
@@ -1111,28 +1181,34 @@
     <!-- BOTTOM BAR -->
     <div class="btm">
       <div class="btm-item">
-        <div class="btm-icon"></div>
-        <span class="desktop-hint">Drag to orbit</span>
-        <span class="mobile-hint">Swipe to rotate</span>
+        <svg
+          aria-hidden="true"
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#f5a01e"
+          stroke-width="2"
+          stroke-linecap="round"
+          style="display: block; flex-shrink: 0"
+        >
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+          />
+        </svg>
+        <span>PrepSphere</span>
       </div>
       <div class="btm-item">
         <div class="btm-icon"></div>
-        <span class="desktop-hint">Scroll to zoom</span>
-        <span class="mobile-hint">All topics in frame</span>
-      </div>
-      <div class="btm-item">
-        <div class="btm-icon"></div>
-        <span class="desktop-hint">Click planet to enter</span>
-        <span class="mobile-hint">Tap a planet</span>
-      </div>
-      <div class="btm-item">
-        <div class="btm-icon"></div>
-        <span class="desktop-hint">H to reset</span>
-        <span class="mobile-hint">Use topic rail</span>
+        <span>14 Topics</span>
       </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+    <script>
       // ═══════════════════════════════════════════════════════════
       // GRAIN
       // ═══════════════════════════════════════════════════════════
@@ -1199,7 +1275,9 @@
       // ═══════════════════════════════════════════════════════════
       const W = () => window.innerWidth,
         H = () => window.innerHeight;
-      const mobileQuery = window.matchMedia("(max-width: 700px), (pointer: coarse)");
+      const mobileQuery = window.matchMedia(
+        "(max-width: 700px), (pointer: coarse)",
+      );
       const isMobileLayout = () => mobileQuery.matches;
       const canvas = document.getElementById("cv");
       const scene = new THREE.Scene();
@@ -1210,7 +1288,11 @@
         0.05,
         600,
       );
-      camera.position.set(0, isMobileLayout() ? 3 : 5, isMobileLayout() ? 31 : 22);
+      camera.position.set(
+        0,
+        isMobileLayout() ? 3 : 5,
+        isMobileLayout() ? 31 : 22,
+      );
 
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -1219,7 +1301,9 @@
         powerPreference: "high-performance",
       });
       renderer.setSize(W(), H());
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5));
+      renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5),
+      );
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -2058,7 +2142,9 @@
         camera.fov = isMobileLayout() ? 68 : 52;
         camera.aspect = W() / H();
         camera.updateProjectionMatrix();
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5));
+        renderer.setPixelRatio(
+          Math.min(window.devicePixelRatio, isMobileLayout() ? 1.7 : 2.5),
+        );
         updateCamera();
       }
 
@@ -2140,10 +2226,10 @@
       function eventHitsUi(e) {
         return Boolean(
           e.target &&
-            e.target.closest &&
-            e.target.closest(
-              ".hdr, #sidebar, #detail, .about-backdrop, .btm, .ps-search-launcher, .ps-feedback-launcher",
-            ),
+          e.target.closest &&
+          e.target.closest(
+            ".hdr, #sidebar, #detail, .about-backdrop, .btm, .ps-search-launcher, .ps-feedback-launcher",
+          ),
         );
       }
 
@@ -2270,6 +2356,36 @@
       );
       window.addEventListener("pointerup", onUp, { passive: true });
       window.addEventListener("pointercancel", onUp, { passive: true });
+      // ── SEARCH BUTTON CLICK HANDLER ──
+      const searchBtn = document.getElementById("search-btn");
+      if (searchBtn) {
+        searchBtn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (window._openPrepSearch) {
+            window._openPrepSearch();
+          }
+        });
+      }
+
+      // ── HIDE FLOATING SEARCH LAUNCHER ON INDEX PAGE ──
+      // The floating bottom-right search button is redundant since we now have
+      // a search trigger in the header. We hide it on this page but the search
+      // modal still works when triggered via header, Ctrl+K, or "/".
+      (function () {
+        var style = document.createElement("style");
+        style.textContent =
+          "#search-btn + .ps-search-launcher { display: none !important; }";
+        document.head.appendChild(style);
+        // Also hide it directly if already created
+        var checkEl = function () {
+          var el = document.querySelector(".ps-search-launcher");
+          if (el) el.style.display = "none";
+        };
+        checkEl();
+        setTimeout(checkEl, 500);
+        setTimeout(checkEl, 1500);
+      })();
+
       window.addEventListener("resize", () => {
         renderer.setSize(W(), H());
         resetView();
@@ -2491,7 +2607,46 @@
     <script src="global-search.js"></script>
     <!-- Vercel Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
-  <script src="feedback.js?v=4"></script>
-  <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}</script>
-  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a060b715cb314075',t:'MTc4MDUxMDg2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script src="feedback.js?v=4"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+      }
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'a060b715cb314075',t:'MTc4MDUxMDg2MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
 </html>
